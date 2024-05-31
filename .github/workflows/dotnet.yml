@@ -30,7 +30,6 @@ jobs:
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build --verbosity normal
-        working-directory: src/service/idam-api/
 
   build-idam-api:
     name: Build & test idam-api
@@ -52,7 +51,6 @@ jobs:
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build --verbosity normal
-        working-directory: src/service/idam-api/
 
   build-referral-api:
     name: Build & test referral-api
@@ -74,4 +72,150 @@ jobs:
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build --verbosity normal
-        working-directory: src/service/referral-api/
+
+  build-report-api:
+    name: Build & test report-api
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/service/report-api/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+  build-service-directory-api:
+    name: Build & test service-directory-api
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/service/service-directory-api/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+  build-connect-dashboard-ui:
+    name: Build & test connect-dashboard-ui
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/ui/connect-dashboard-ui/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+  build-connect-ui:
+    name: Build & test connect-ui
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/ui/connect-ui/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+  build-find-ui:
+    name: Build & test find-ui
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/ui/find-ui/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+  build-idam-maintenance-ui:
+    name: Build & test idam-maintenance-ui
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/ui/idam-maintenance-ui/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+  build-manage-ui:
+    name: Build & test manage-ui
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/ui/manage-ui/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
