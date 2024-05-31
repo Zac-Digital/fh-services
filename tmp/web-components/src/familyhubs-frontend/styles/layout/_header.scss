@@ -1,0 +1,5 @@
+/*todo: move into components, as the header can be used as a component on its own */
+
+.dfeuk-header__username > :not(:last-child) {
+    @include govuk-responsive-padding(3, "right");
+}

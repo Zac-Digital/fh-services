@@ -1,0 +1,12 @@
+﻿@page
+@model RadioModel
+@{
+    ViewData["Title"] = Model.Legend;
+}
+
+<partial name="_RadiosPage" model="Model" />
+
+@if (Model.SelectedCountry != null)
+{
+        <p>You selected @Model.SelectedCountry</p>
+}

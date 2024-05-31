@@ -1,0 +1,12 @@
+/* used by _LargeSetPaginationForm.cshtml */
+
+.govuk-pagination__link.fh-button-link {
+    @include govuk-font-size(19);
+}
+
+li.govuk-pagination__item--current {
+    .govuk-pagination__link.fh-button-link {
+        color: govuk-colour("white");
+        @include govuk-typography-weight-bold(false);
+    }
+}

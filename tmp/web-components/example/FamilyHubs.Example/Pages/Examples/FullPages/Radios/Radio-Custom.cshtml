@@ -1,0 +1,12 @@
+﻿@page
+@model RadioCustomModel
+@{
+    ViewData["Title"] = "Where do you live?";
+}
+
+<partial name="_RadiosPage" model="Model" />
+
+@if (Model.SelectedCountry != null)
+{
+    <p>You selected @Model.SelectedCountry</p>
+}

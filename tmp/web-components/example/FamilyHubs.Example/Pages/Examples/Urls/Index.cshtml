@@ -1,0 +1,20 @@
+﻿@page
+@using FamilyHubs.Example.Models
+@model IndexModel
+
+<p>@Html.FamilyHubUrl(UrlKey.ConnectWeb, "/")</p>
+<p>@Html.FamilyHubConfigUrl(UrlKey.DashboardWeb, "ExampleDashboardRelativeUrl")</p>
+<p>
+    @{
+        var withQueryParams = Html.FamilyHubConfigUrl(UrlKey.DashboardWeb, "ExampleDashboardRelativeUrl");
+        var builder = new UriBuilder(withQueryParams)
+        {
+            Query = "id=1"
+        };
+        @builder.Uri
+    }
+</p>
+<p>
+    @Model.ExampleUrl
+</p>
+<p><a href="@Html.FamilyHubUrl(UrlKey.UrlWithPath, "/La/Dashboard")">Url with path</a></p>

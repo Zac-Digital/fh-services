@@ -1,0 +1,95 @@
+﻿@using FamilyHubs.SharedKernel.Razor.FullPages.SingleTextbox
+@using FamilyHubs.SharedKernel.Razor.ErrorNext
+@model ISingleTextboxPageModel
+
+@{
+    const string textBoxId = "textbox";
+    Model.Errors.ErrorIdToHtmlElementId = _ => textBoxId;
+}
+
+@* todo: set page title in here as well? (remember need to change caller's viewdata *@
+
+<partial name="_ErrorSummaryNext" model="Model.Errors" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" novalidate>
+
+            @if (!string.IsNullOrEmpty(Model.HeadingText))
+            {
+                @* not even the GDS error summary page is consistent in whether the heading goes in the form-group or not!
+                   so we follow the prototype's lead (which I think looks better anyway).*@
+                <h1 class="govuk-heading-l">@Model.HeadingText</h1>
+            }
+            
+            @* todo: if every input is inside its own govuk-form-group, makes sense to get from Error *@
+            @* if can have >1 input in a govuk-form-group, makes sense to get from ErrorState *@
+            @* todo: do we need a HasErrors on ErrorState? *@
+
+            @{Error? error = Model.Errors.GetErrorIfTriggered(); }
+
+            <div class="govuk-form-group @(error?.FormGroupClass)">
+
+                @if (!string.IsNullOrEmpty(Model.HeadingText))
+                {
+                    @* todo: partial for hint? *@
+                    if (!string.IsNullOrEmpty(Model.HintText))
+                    {
+                        <div id="hint" class="govuk-hint">
+                            @Model.HintText
+                        </div>
+                    }
+                    <label class="govuk-label" for="@textBoxId">
+                        @Model.TextBoxLabel
+                    </label>
+                }
+                else
+                {
+                    <h1 class="govuk-label-wrapper">
+                        <label class="govuk-label govuk-label--l" for="@textBoxId">
+                            @Model.TextBoxLabel
+                        </label>
+                    </h1>
+
+                    if (!string.IsNullOrEmpty(Model.HintText))
+                    {
+                        <div id="hint" class="govuk-hint">
+                            @Model.HintText
+                        </div>
+                    }
+                }
+
+                <partial name="_ErrorMessageNext" model="error"/>
+
+                @{
+                    // we could get type, inputmode and autocomplete from the interface itself (if we swapped the text to base and introduced a text derived)
+                    // which in some ways would be neat, but it would mean that view info would be out of the view and in the interfaces
+                    string type = Model switch
+                    {
+                        ISingleTelephoneTextboxPageModel => "tel",
+                        ISingleEmailTextboxPageModel => "email",
+                        _ => "text"
+                        };
+                }
+                @* we're currently using this to gather details (name, email) that are not the person filling in the form. *@
+                @* so it doesn't make sense to autocomplete with the user's details, so we set it to off (despite GDS guidelines). *@
+                @* we might end up setting autocomplete anyway, as it can help with accessibility tools. *@
+
+                @* we're' currently using this to gather emails, which GDS recommends to switch spellcheck off for, *@
+                @* and to gather names and telephone numbers, for which it doesn't make sense to have spellcheck enabled. *@
+
+                @* todo: flags for spellcheck, autocomplete etc.?*@
+                @* todo: support govuk-input--width *@
+
+                <input class="govuk-input @(error?.InputClass)" maxlength="@(Model.MaxLength)"
+                       name="TextBoxValue" type="@type" value="@Model.TextBoxValue" inputmode="@type"
+                       spellcheck="false" autocomplete="off" id="@textBoxId"
+                       aria-describedby="@(string.IsNullOrEmpty(Model.HintText) ? "" : "hint ")@error?.InputErrorMessageParaId">
+            </div>
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+</div>

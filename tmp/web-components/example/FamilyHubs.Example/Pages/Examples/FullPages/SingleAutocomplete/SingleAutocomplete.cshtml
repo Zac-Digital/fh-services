@@ -1,0 +1,14 @@
+﻿@page
+@model SingleAutocompleteModel
+@{
+    ViewData["Title"] = Model.Label;
+}
+
+<partial name="_SingleAutocompletePage" model="Model" />
+
+@if (Model.SelectedValue != null)
+{
+    <p>
+        @Model.SelectedValue
+    </p>
+}

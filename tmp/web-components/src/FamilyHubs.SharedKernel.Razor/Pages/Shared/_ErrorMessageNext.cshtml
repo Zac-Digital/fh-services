@@ -1,0 +1,8 @@
+﻿@model FamilyHubs.SharedKernel.Razor.ErrorNext.Error?
+
+@if (Model != null)
+{
+    <p class="govuk-error-message" id="@Model.InputErrorMessageParaId">
+        <span class="govuk-visually-hidden">Error:</span> @Model.Message
+    </p>
+}

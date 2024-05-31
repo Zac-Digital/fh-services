@@ -1,0 +1,10 @@
+﻿@model FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options.IFamilyHubsUiOptions
+
+<script asp-add-nonce>
+    @if (!string.IsNullOrEmpty(Model.Analytics?.ClarityId))
+    {
+        <text>
+    window.CLARITY_ID = '@Model.Analytics.ClarityId';
+        </text>
+    }
+</script>

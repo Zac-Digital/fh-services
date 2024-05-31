@@ -1,0 +1,54 @@
+﻿@model FamilyHubs.SharedKernel.Razor.FullPages.SingleAutocomplete.ISingleAutocompletePageModel
+@{
+    const string selectId = "select";
+    Model.Errors.ErrorIdToHtmlElementId = _ => selectId;
+}
+
+<partial name="_ErrorSummaryNext" for="@Model.Errors" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form method="post" novalidate>
+
+            @* we don't care which error we get if there are multiple errors *@
+            @{ var error = Model.Errors.GetErrorIfTriggered(); }
+
+            @if (Model.ContentTop != null)
+            {
+                <div class="govuk-form-group @error?.FormGroupClass">
+                    <partial name="@Model.ContentTop" model="Model.ContentSubstitutions"/>
+                    <partial name="_ErrorMessageNext" model="error"/>
+                    <partial name="_SingleAutocompletePageSelect" model="(selectId, error, Model)" />
+                </div>
+            }
+            else
+            {
+                <div class="govuk-form-group @error?.FormGroupClass">
+                    @* todo: we could use a partial for the default content, and then reuse that partial across single page components *@
+                    @* we could have a new interface that contains a dictionary of page control data, such as the id and label,
+                        along with an instance of an interface which the full page controls implement,
+                        containing a subset of common properties, such as the errors
+                    *@
+                    <h1 class="govuk-label-wrapper">
+                        <label class="govuk-label govuk-label--l" for="@selectId">
+                            @Model.Label
+                        </label>
+                    </h1>
+                    <partial name="_ErrorMessageNext" model="error"/>
+                    <partial name="_SingleAutocompletePageSelect" model="(selectId, error, Model)"/>
+                </div>
+            }
+            
+            @if (Model.ContentBottom != null)
+            {
+                <partial name="@Model.ContentBottom" model="Model.ContentSubstitutions"/>
+            }
+
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                @Model.ButtonText
+            </button>
+        
+        </form>
+
+    </div>
+</div>

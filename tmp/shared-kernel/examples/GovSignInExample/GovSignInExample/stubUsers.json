@@ -1,0 +1,92 @@
+{
+  "GovUkOidcConfiguration": {
+    "StubAuthentication": {
+      "StubUsers": [
+        {
+          "User": {
+            "Email": "dfeAdmin.user@stub.com",
+            "Sub": "dfeAdmin.user@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "DfeAdmin"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "-1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "dfeAdmin"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1234"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "laOrgOne.LaAdmin@stub.com",
+            "Sub": "laOrgOne.LaAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "LaAdmin"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "LaAdmin"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1235"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "vcsAdmin2.VcsAdmin@stub.com",
+            "Sub": "vcsAdmin2.VcsAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "role",
+              "Value": "VcsAdmin"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "2"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "FullName",
+              "Value": "vcsAdmin2"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1236"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

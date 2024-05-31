@@ -1,0 +1,7 @@
+.fh-back-link {
+    display: none;
+
+    &.fh-back-link-visible {
+        display: inline-block;
+    }
+}

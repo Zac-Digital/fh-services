@@ -1,0 +1,54 @@
+﻿@using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Extensions
+@{
+    var familyHubsLayoutModel = ViewData.GetFamilyHubsLayoutModel();
+    var familyHubsUiOptions = familyHubsLayoutModel.FamilyHubsUiOptions.Value;
+}
+
+<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+<head>
+    <partial name="_Head.cshtml" model="familyHubsUiOptions"/>
+    @await RenderSectionAsync("Head", required: false)
+</head>
+
+<body class="govuk-template__body">
+    <script asp-add-nonce>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+
+    <partial name="_CookieBanner.cshtml" model="familyHubsUiOptions"/>
+
+    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+    <partial name="_Header.cshtml" model="familyHubsLayoutModel"/>
+
+    <div class="govuk-width-container">
+        @*todo: if don't display phase banner or back, then we should add govuk-main-wrapper--auto-spacing to <main>*@
+        @* see https://design-system.service.gov.uk/styles/layout/ *@
+        <partial name="_PhaseBanner.cshtml" model="familyHubsUiOptions"/>
+
+        @await RenderSectionAsync("Back", required: false)
+
+        <main class="govuk-main-wrapper fh-custom-main" id="main-content" role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <partial name="_Footer.cshtml" model="familyHubsUiOptions"/>
+
+    @*  is it better to include the version number in the script,
+        which means after a new deployment, if the script hasn't changed, the user browsers can used their cached version,
+        or use asp-append-version, which means that after a deployment browsers could refetch the script unnecessarily,
+        but means we wouldn't have to update these version numbers when we update the familyhubs or govuk npm packages?
+        for now we go with the more efficient version, but we might change to the easier to maintain version later *@
+
+    <script src="@(familyHubsUiOptions.PathPrefix)/js/jquery-3.7.1.min.js"></script>
+    <script src="@(familyHubsUiOptions.PathPrefix)/js/govuk-frontend-5.2.0.min.js"></script>
+    @* todo: minified version *@
+    <script src="@(familyHubsUiOptions.PathPrefix)/js/ministryofjustice-frontend-2.1.1.min.js"></script>
+    <script src="@(familyHubsUiOptions.PathPrefix)/js/dfe-frontend-alpha-1.0.1.min.js"></script>
+    <script src="@(familyHubsUiOptions.PathPrefix)/js/accessible-autocomplete-2.0.4.min.js"></script>
+    <script src="@(familyHubsUiOptions.PathPrefix)/js/familyhubs-frontend-9.2.2.min.js"></script>
+    <script src="@(familyHubsUiOptions.PathPrefix)/js/app.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

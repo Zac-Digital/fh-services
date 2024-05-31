@@ -1,0 +1,27 @@
+
+.js-enabled .fh-open-close-button {
+    display: none;
+
+    @include govuk-media-query($until: tablet) {
+        display: block;
+    }
+}
+
+.fh-open-close-button {
+    display: none;
+}
+
+.js-enabled .fh-open-close-target {
+    display: block;
+
+    @include govuk-media-query($until: tablet) {
+        display: none;
+    }
+}
+
+.js-enabled .fh-open-close-target.fh-open-close-target-user-opened {
+
+    @include govuk-media-query($until: tablet) {
+        display: block;
+    }
+}

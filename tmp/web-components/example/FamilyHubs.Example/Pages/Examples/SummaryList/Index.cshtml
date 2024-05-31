@@ -1,0 +1,58 @@
+﻿@page
+@model FamilyHubs.Example.Pages.Examples.SummaryList.IndexModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">Summary list</h1>
+
+        <p>Use a <a href="https://design-system.service.gov.uk/components/summary-list/" new-tab>summary list</a> to summarise information, for example, a user’s responses at the end of a form.</p>
+
+        <h2 class="govuk-heading-m">With Border</h2>
+
+        <summary-list>
+            <summary-row key="Empty (row shouldn't render)"></summary-row>
+            <summary-row key="Empty (should render)" show-empty></summary-row>
+
+            <summary-row key="Name">Sarah Philips</summary-row>
+            @* todo: helper for converting IEnumerable<string> to use <br/>?*@
+            <summary-row key="Address">72 Guild Street <br/> London</summary-row>
+            <summary-row key="Phone"><a phone="07700 900457"></a></summary-row>
+            <summary-row key="Email"><a email="sarah.phillips@example.com"></a></summary-row>
+            <summary-row key="Website"><a web-page="https://www.example.com">Example website</a></summary-row>
+            <summary-row key="Website new tab"><a web-page="https://www.example.com" new-tab>Example website</a></summary-row>
+            <summary-row key="Preserve whitespace" class="fh-pre-wrap">line 1
+        line 2
+          (useful when surfacing text from a textarea)</summary-row>
+
+        </summary-list>
+
+        <h2 class="govuk-heading-m">Extra classes (extra bottom margin)</h2>
+
+        <summary-list class="govuk-!-margin-bottom-9">
+            <summary-row key="Name">Sarah Philips</summary-row>
+        </summary-list>
+
+        <h2 class="govuk-heading-m">No Border</h2>
+
+        <summary-list border="false">
+            <summary-row key="Empty (row shouldn't render)"></summary-row>
+            <summary-row key="Empty (should render)" show-empty></summary-row>
+
+            <summary-row key="Name">Sarah Philips</summary-row>
+        </summary-list>
+
+        <h2 class="govuk-heading-m">With Actions</h2>
+
+        <summary-list>
+            <summary-row key="Empty (row shouldn't render)" action1="Change" action1-href="#"></summary-row>
+            <summary-row key="Empty (should render)" action1="Change" action1-href="#" show-empty></summary-row>
+
+            <summary-row key="Name" action1="Change" action1-href="#">Sarah Philips</summary-row>
+            <summary-row key="Contact details" action1="Add" action1-href="#add" action2="Change" action2-href="#change">
+                <p>07700 900457</p>
+                <p>sarah.phillips@example.com</p>
+            </summary-row>
+        </summary-list>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+﻿@page
+@model FamilyHubs.Example.Pages.Examples.OpenClose.IndexModel
+
+@* todo: let consumer decide visibility with standard device breakpoints?
+         would make this quite a bit more complex, i.e. using a mutationobserver or listening to window resize event etc.
+         think for now assume visible on mobile, as that's the case for all usages anyway*@
+@* todo: how best to handle javascript.
+         best would be to post back if no js, i.e. still work.
+         (current behaviour is to have the target visible and the open-close button hidden)*@
+
+<h1>Open close button</h1>
+
+<h2>Html</h2>
+
+<h3>Unchanging button text</h3>
+
+<button class="govuk-button govuk-button--secondary fh-open-close-button"
+        data-open-close-mobile="openCloseTarget" data-module="govuk-button" type="button">
+    Open / close filters
+</button>
+
+<div id="openCloseTarget">
+    <p>The open close target.</p>
+</div>
+
+<h3>Changing button text, target shown by default</h3>
+
+<button class="govuk-button govuk-button--secondary fh-open-close-button"
+        data-open-close-mobile="showHideTarget"
+        data-open-close-mobile-hide="Hide filters"
+        data-module="govuk-button" type="button">
+    Show filters
+</button>
+
+<div id="showHideTarget">
+    <p>The show/hide target.</p>
+</div>
+
+<h3>Changing button text, target hidden by default</h3>
+
+<button class="govuk-button govuk-button--secondary fh-open-close-button"
+        data-open-close-mobile="showHideTarget2"
+        data-open-close-mobile-hide="Hide filters"
+        @* todo: achieve this through a css class instead? *@
+        data-open-close-mobile-default="hide"
+        data-module="govuk-button" type="button">
+    Show filters
+</button>
+
+<div id="showHideTarget2">
+    <p>The show/hide target.</p>
+</div>
+
+<h2>Tag Helper</h2>
+
+<h3>Unchanging button text</h3>
+
+<open-close-button target="th-openCloseTarget">
+    Open / close filters
+</open-close-button>
+
+<div id="th-openCloseTarget">
+    <p>The open close target.</p>
+</div>
+
+<h3>Unchanging button text, extra classes</h3>
+
+<open-close-button target="th-openCloseTarget-class" class="govuk-!-font-size-36">
+    Open / close filters
+</open-close-button>
+
+
+<div id="th-openCloseTarget-class">
+    <p>The open close target.</p>
+</div>
+
+<h3>Changing button text, target shown by default</h3>
+
+<open-close-button target="th-showHideTarget" hide-text="Hide filters">
+    Show filters
+</open-close-button>
+
+<div id="th-showHideTarget">
+    <p>The show/hide target.</p>
+</div>
+
+<h3>Changing button text, target hidden by default</h3>
+
+<open-close-button target="th-showHideTarget2" hide-text="Hide filters" start-hidden>
+    Show filters
+</open-close-button>
+
+<div id="th-showHideTarget2">
+    <p>The show/hide target.</p>
+</div>

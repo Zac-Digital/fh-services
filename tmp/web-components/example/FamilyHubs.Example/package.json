@@ -1,0 +1,27 @@
+{
+
+  "//": "todo: instead of reproducing the dependencies of familyhubs-frontend, npm@8.8.0 supports --install-links",
+  "//": "https://github.com/npm/cli/issues/2339",
+  "//": "note: normal consumers of familyhubs-frontend, will just need a dependency on familyhubs-frontend, all the other dependencies here are just because this site is also being used as a test harness, rather than a straight example site",
+  "dependencies": {
+    "familyhubs-frontend": "file:../../src/familyhubs-frontend",
+    "accessible-autocomplete": "^2.0.4",
+    "@ministryofjustice/frontend": "^2.1.1",
+    "@types/gtag.js": "^0.0.12",
+    "@types/jquery": "^3.5.17",
+    "del": "^5.1.0",
+    "dfe-frontend-alpha": "^1.0.0",
+    "govuk-frontend": "5.2.0",
+    "gulp": "^4.0.2",
+    "gulp-better-rollup": "^4.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^4.0.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-terser": "^2.1.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "sass": "~1.60",
+    "typescript": "^5.2.2"
+  }
+}

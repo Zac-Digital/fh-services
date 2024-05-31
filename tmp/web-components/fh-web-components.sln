@@ -1,0 +1,215 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33617.297
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C39AFBD7-B023-435B-A517-F10A49483A29}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E487EA6C-E4AE-4FDD-A9F9-97034D3E84ED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.SharedKernel.Razor.UnitTests", "tests\FamilyHubs.SharedKernel.Razor.UnitTests\FamilyHubs.SharedKernel.Razor.UnitTests.csproj", "{C4A7A2DB-74A2-4B14-8FAB-4BFA18B6DF08}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "familyhubs-frontend", "familyhubs-frontend", "{6F173CC5-DBC4-4A9E-9D97-01AC96D27B5C}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\.npmignore = src\familyhubs-frontend\.npmignore
+		src\familyhubs-frontend\gulpfile.js = src\familyhubs-frontend\gulpfile.js
+		src\familyhubs-frontend\index.js = src\familyhubs-frontend\index.js
+		src\familyhubs-frontend\package-lock.json = src\familyhubs-frontend\package-lock.json
+		src\familyhubs-frontend\package.json = src\familyhubs-frontend\package.json
+		src\familyhubs-frontend\README.md = src\familyhubs-frontend\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "private", "private", "{E9F5F26C-D8DB-4268-88DD-A732D30ED304}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\private\gulpfile.js = src\familyhubs-frontend\private\gulpfile.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E479ECC1-F3F5-48DE-96E4-7CCF2C31EFFB}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\scripts\familyhubs.ts = src\familyhubs-frontend\scripts\familyhubs.ts
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "styles", "styles", "{31D0D7FE-E34A-414B-9059-E8ED346E7FF3}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\styles\all.scss = src\familyhubs-frontend\styles\all.scss
+		src\familyhubs-frontend\styles\_global.scss = src\familyhubs-frontend\styles\_global.scss
+		src\familyhubs-frontend\styles\_overrides.scss = src\familyhubs-frontend\styles\_overrides.scss
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wwwroot", "wwwroot", "{3F204222-C759-4625-8F31-1A15F79C410B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.SharedKernel.Razor", "src\FamilyHubs.SharedKernel.Razor\FamilyHubs.SharedKernel.Razor.csproj", "{345B8D70-8464-49AA-8993-29A164FFDB26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{3DCD5978-FEBE-423F-B967-CFCA67853771}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\scripts\components\add-another.ts = src\familyhubs-frontend\scripts\components\add-another.ts
+		src\familyhubs-frontend\scripts\components\analytics.ts = src\familyhubs-frontend\scripts\components\analytics.ts
+		src\familyhubs-frontend\scripts\components\autocomplete.ts = src\familyhubs-frontend\scripts\components\autocomplete.ts
+		src\familyhubs-frontend\scripts\components\back-links.ts = src\familyhubs-frontend\scripts\components\back-links.ts
+		src\familyhubs-frontend\scripts\components\clarity.ts = src\familyhubs-frontend\scripts\components\clarity.ts
+		src\familyhubs-frontend\scripts\components\cookie-banner.ts = src\familyhubs-frontend\scripts\components\cookie-banner.ts
+		src\familyhubs-frontend\scripts\components\cookie-functions.ts = src\familyhubs-frontend\scripts\components\cookie-functions.ts
+		src\familyhubs-frontend\scripts\components\cookies-page.ts = src\familyhubs-frontend\scripts\components\cookies-page.ts
+		src\familyhubs-frontend\scripts\components\helpers.ts = src\familyhubs-frontend\scripts\components\helpers.ts
+		src\familyhubs-frontend\scripts\components\open-close-button.ts = src\familyhubs-frontend\scripts\components\open-close-button.ts
+		src\familyhubs-frontend\scripts\components\postcode.ts = src\familyhubs-frontend\scripts\components\postcode.ts
+		src\familyhubs-frontend\scripts\components\visibility-toggle.ts = src\familyhubs-frontend\scripts\components\visibility-toggle.ts
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "layout", "layout", "{788DA990-BC17-4572-B087-042C91FF99A0}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\styles\layout\_header.scss = src\familyhubs-frontend\styles\layout\_header.scss
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{2791B765-4E73-49C5-BB09-0CD6E251F1EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{1654424A-3D61-4011-A1FD-607099F9F9B5}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\wwwroot\images\crest.png = src\familyhubs-frontend\wwwroot\images\crest.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{FA1F7A55-52FC-4D15-B061-A89331EE8FAD}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\wwwroot\js\accessible-autocomplete-2.0.4.min.js = src\familyhubs-frontend\wwwroot\js\accessible-autocomplete-2.0.4.min.js
+		src\familyhubs-frontend\wwwroot\js\accessible-autocomplete-2.0.4.min.js.map = src\familyhubs-frontend\wwwroot\js\accessible-autocomplete-2.0.4.min.js.map
+		src\familyhubs-frontend\wwwroot\js\dfe-frontend-alpha-1.0.1.min.js = src\familyhubs-frontend\wwwroot\js\dfe-frontend-alpha-1.0.1.min.js
+		src\familyhubs-frontend\wwwroot\js\familyhubs-frontend-9.2.2.min.js = src\familyhubs-frontend\wwwroot\js\familyhubs-frontend-9.2.2.min.js
+		src\familyhubs-frontend\wwwroot\js\familyhubs-frontend-9.2.2.min.js.map = src\familyhubs-frontend\wwwroot\js\familyhubs-frontend-9.2.2.min.js.map
+		src\familyhubs-frontend\wwwroot\js\govuk-frontend-5.2.0.min.js = src\familyhubs-frontend\wwwroot\js\govuk-frontend-5.2.0.min.js
+		src\familyhubs-frontend\wwwroot\js\jquery-3.7.1.js = src\familyhubs-frontend\wwwroot\js\jquery-3.7.1.js
+		src\familyhubs-frontend\wwwroot\js\jquery-3.7.1.min.js = src\familyhubs-frontend\wwwroot\js\jquery-3.7.1.min.js
+		src\familyhubs-frontend\wwwroot\js\jquery-3.7.1.min.map = src\familyhubs-frontend\wwwroot\js\jquery-3.7.1.min.map
+		src\familyhubs-frontend\wwwroot\js\ministryofjustice-frontend-2.1.1.min.js = src\familyhubs-frontend\wwwroot\js\ministryofjustice-frontend-2.1.1.min.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{423102EF-F293-4570-99B1-1B4C0D2F157A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "govuk", "govuk", "{B6832A02-35F5-4A3B-BA2F-F8BA4921565A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{A4BE1BA6-FD85-47F1-BA57-F1E65A67EC1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fonts", "fonts", "{34B840DD-1912-450A-AC66-61818C567B92}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\fonts\bold-affa96571d-v2.woff = src\familyhubs-frontend\wwwroot\lib\govuk\assets\fonts\bold-affa96571d-v2.woff
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\fonts\bold-b542beb274-v2.woff2 = src\familyhubs-frontend\wwwroot\lib\govuk\assets\fonts\bold-b542beb274-v2.woff2
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\fonts\light-94a07e06a1-v2.woff2 = src\familyhubs-frontend\wwwroot\lib\govuk\assets\fonts\light-94a07e06a1-v2.woff2
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\fonts\light-f591b13f7d-v2.woff = src\familyhubs-frontend\wwwroot\lib\govuk\assets\fonts\light-f591b13f7d-v2.woff
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{1C19143C-52F0-4E16-9E07-61E670FCF712}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\favicon.ico = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\favicon.ico
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-apple-touch-icon-152x152.png = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-apple-touch-icon-152x152.png
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-apple-touch-icon-167x167.png = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-apple-touch-icon-167x167.png
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-apple-touch-icon-180x180.png = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-apple-touch-icon-180x180.png
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-apple-touch-icon.png = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-apple-touch-icon.png
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-crest-2x.png = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-crest-2x.png
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-crest.png = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-crest.png
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-logotype-crown.png = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-logotype-crown.png
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-mask-icon.svg = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-mask-icon.svg
+		src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-opengraph-image.png = src\familyhubs-frontend\wwwroot\lib\govuk\assets\images\govuk-opengraph-image.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{D1DDC75D-F0D6-4625-A6FB-09A6DC6EF8F1}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		docs\ReleaseNotes.md = docs\ReleaseNotes.md
+		docs\ToDo.md = docs\ToDo.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{507ADCD1-8337-459E-97B0-AC429655DF20}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dfe", "dfe", "{0F619866-E57D-4579-8C39-E7510E6E3CCC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "assets", "assets", "{52DC1465-D14A-4A68-B745-070402F455A4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{162DB933-53EA-43E8-99A6-3BD544B2ADAF}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\wwwroot\lib\dfe\assets\images\dfe-logo-alt.png = src\familyhubs-frontend\wwwroot\lib\dfe\assets\images\dfe-logo-alt.png
+		src\familyhubs-frontend\wwwroot\lib\dfe\assets\images\dfe-logo.png = src\familyhubs-frontend\wwwroot\lib\dfe\assets\images\dfe-logo.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{2003D362-7F0B-4F9C-AAA0-5AB0EB865A5F}"
+	ProjectSection(SolutionItems) = preProject
+		src\familyhubs-frontend\styles\components\_accessible-autocomplete.scss = src\familyhubs-frontend\styles\components\_accessible-autocomplete.scss
+		src\familyhubs-frontend\styles\components\_add-another.scss = src\familyhubs-frontend\styles\components\_add-another.scss
+		src\familyhubs-frontend\styles\components\_back-links.scss = src\familyhubs-frontend\styles\components\_back-links.scss
+		src\familyhubs-frontend\styles\components\_dashboard.scss = src\familyhubs-frontend\styles\components\_dashboard.scss
+		src\familyhubs-frontend\styles\components\_filters.scss = src\familyhubs-frontend\styles\components\_filters.scss
+		src\familyhubs-frontend\styles\components\_open-close.scss = src\familyhubs-frontend\styles\components\_open-close.scss
+		src\familyhubs-frontend\styles\components\_pagination.scss = src\familyhubs-frontend\styles\components\_pagination.scss
+		src\familyhubs-frontend\styles\components\_time.scss = src\familyhubs-frontend\styles\components\_time.scss
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{0B8CACAA-44D6-4161-A974-89FBCD55E18E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamilyHubs.Example", "example\FamilyHubs.Example\FamilyHubs.Example.csproj", "{C6BBB9FB-F62F-42D2-96D1-7E987EA67161}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "historic", "historic", "{328B6080-7FBD-4988-8B18-E63525A395B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.3.1", "2.3.1", "{A2A5F29D-F3C6-4117-9E54-5AFFCDA5783C}"
+	ProjectSection(SolutionItems) = preProject
+		docs\historic\2.3.1\ToDo.md = docs\historic\2.3.1\ToDo.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3.0.0", "3.0.0", "{E48E445F-A57E-4899-9F72-CD1E11D6A7F2}"
+	ProjectSection(SolutionItems) = preProject
+		docs\historic\3.0.0\ToDo.md = docs\historic\3.0.0\ToDo.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C4A7A2DB-74A2-4B14-8FAB-4BFA18B6DF08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4A7A2DB-74A2-4B14-8FAB-4BFA18B6DF08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4A7A2DB-74A2-4B14-8FAB-4BFA18B6DF08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4A7A2DB-74A2-4B14-8FAB-4BFA18B6DF08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{345B8D70-8464-49AA-8993-29A164FFDB26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{345B8D70-8464-49AA-8993-29A164FFDB26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{345B8D70-8464-49AA-8993-29A164FFDB26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{345B8D70-8464-49AA-8993-29A164FFDB26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6BBB9FB-F62F-42D2-96D1-7E987EA67161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6BBB9FB-F62F-42D2-96D1-7E987EA67161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6BBB9FB-F62F-42D2-96D1-7E987EA67161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6BBB9FB-F62F-42D2-96D1-7E987EA67161}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C4A7A2DB-74A2-4B14-8FAB-4BFA18B6DF08} = {E487EA6C-E4AE-4FDD-A9F9-97034D3E84ED}
+		{6F173CC5-DBC4-4A9E-9D97-01AC96D27B5C} = {C39AFBD7-B023-435B-A517-F10A49483A29}
+		{E9F5F26C-D8DB-4268-88DD-A732D30ED304} = {6F173CC5-DBC4-4A9E-9D97-01AC96D27B5C}
+		{E479ECC1-F3F5-48DE-96E4-7CCF2C31EFFB} = {6F173CC5-DBC4-4A9E-9D97-01AC96D27B5C}
+		{31D0D7FE-E34A-414B-9059-E8ED346E7FF3} = {6F173CC5-DBC4-4A9E-9D97-01AC96D27B5C}
+		{3F204222-C759-4625-8F31-1A15F79C410B} = {6F173CC5-DBC4-4A9E-9D97-01AC96D27B5C}
+		{345B8D70-8464-49AA-8993-29A164FFDB26} = {C39AFBD7-B023-435B-A517-F10A49483A29}
+		{3DCD5978-FEBE-423F-B967-CFCA67853771} = {E479ECC1-F3F5-48DE-96E4-7CCF2C31EFFB}
+		{788DA990-BC17-4572-B087-042C91FF99A0} = {31D0D7FE-E34A-414B-9059-E8ED346E7FF3}
+		{2791B765-4E73-49C5-BB09-0CD6E251F1EB} = {3F204222-C759-4625-8F31-1A15F79C410B}
+		{1654424A-3D61-4011-A1FD-607099F9F9B5} = {3F204222-C759-4625-8F31-1A15F79C410B}
+		{FA1F7A55-52FC-4D15-B061-A89331EE8FAD} = {3F204222-C759-4625-8F31-1A15F79C410B}
+		{423102EF-F293-4570-99B1-1B4C0D2F157A} = {3F204222-C759-4625-8F31-1A15F79C410B}
+		{B6832A02-35F5-4A3B-BA2F-F8BA4921565A} = {423102EF-F293-4570-99B1-1B4C0D2F157A}
+		{A4BE1BA6-FD85-47F1-BA57-F1E65A67EC1E} = {B6832A02-35F5-4A3B-BA2F-F8BA4921565A}
+		{34B840DD-1912-450A-AC66-61818C567B92} = {A4BE1BA6-FD85-47F1-BA57-F1E65A67EC1E}
+		{1C19143C-52F0-4E16-9E07-61E670FCF712} = {A4BE1BA6-FD85-47F1-BA57-F1E65A67EC1E}
+		{0F619866-E57D-4579-8C39-E7510E6E3CCC} = {423102EF-F293-4570-99B1-1B4C0D2F157A}
+		{52DC1465-D14A-4A68-B745-070402F455A4} = {0F619866-E57D-4579-8C39-E7510E6E3CCC}
+		{162DB933-53EA-43E8-99A6-3BD544B2ADAF} = {52DC1465-D14A-4A68-B745-070402F455A4}
+		{2003D362-7F0B-4F9C-AAA0-5AB0EB865A5F} = {31D0D7FE-E34A-414B-9059-E8ED346E7FF3}
+		{C6BBB9FB-F62F-42D2-96D1-7E987EA67161} = {0B8CACAA-44D6-4161-A974-89FBCD55E18E}
+		{328B6080-7FBD-4988-8B18-E63525A395B6} = {D1DDC75D-F0D6-4625-A6FB-09A6DC6EF8F1}
+		{A2A5F29D-F3C6-4117-9E54-5AFFCDA5783C} = {328B6080-7FBD-4988-8B18-E63525A395B6}
+		{E48E445F-A57E-4899-9F72-CD1E11D6A7F2} = {328B6080-7FBD-4988-8B18-E63525A395B6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3F1A191D-2EAA-4517-BE4D-0EF5BD088FD4}
+	EndGlobalSection
+EndGlobal

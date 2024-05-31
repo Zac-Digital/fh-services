@@ -1,0 +1,49 @@
+﻿
+/*todo: rename these from app- to fh- */
+
+.js-enabled .app-js-show {
+    display: block;
+}
+
+.app-js-show {
+    display: none;
+}
+
+.fh-button-link {
+    @include govuk-link-common;
+    @include govuk-link-style-default;
+    // ^^ govuk-link-style-default assumes it's been applied to a link
+    // we can set the colour to replicate the :link pseudo-selector..
+    color: $govuk-link-colour;
+    // :hover, @active and :focus should apply to a button and will be included with the govuk-link-style-default mixin
+    // but we're stuffed to replicate the :visited pseudo-selector
+
+    @include govuk-link-print-friendly;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    background: none;
+}
+
+.fh-pre-wrap {
+    white-space: pre-wrap;
+}
+
+/* change page width to 1200px */
+
+.dfe-width-container, .govuk-width-container {
+    margin: 0 16px;
+    max-width: 1200px;
+}
+
+@media (min-width: 48.0625em) {
+    .dfe-width-container, .govuk-width-container {
+        margin: 0 32px;
+    }
+}
+
+@media (min-width: 1264px) {
+    .dfe-width-container, .govuk-width-container {
+        margin: 0 auto;
+    }
+}

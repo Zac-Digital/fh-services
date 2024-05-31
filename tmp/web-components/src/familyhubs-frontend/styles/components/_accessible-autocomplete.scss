@@ -1,0 +1,10 @@
+/* accessible-autocomplete doesn't support errors (or even proper GDS styling) */
+/* so we enhance it so that it does */
+
+.autocomplete__input.govuk-input--error {
+    border-color: $govuk-error-colour;
+
+    &:focus {
+        border-color: $govuk-input-border-colour;
+    }
+}

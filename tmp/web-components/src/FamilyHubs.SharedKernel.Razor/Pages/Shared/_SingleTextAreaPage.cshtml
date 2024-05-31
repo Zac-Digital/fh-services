@@ -1,0 +1,49 @@
+﻿@using FamilyHubs.SharedKernel.Razor.ErrorNext
+@model FamilyHubs.SharedKernel.Razor.FullPages.SingleTextArea.ISingleTextAreaPageModel
+
+@{
+    const string textAreaId = "textarea";
+    Model.Errors.ErrorIdToHtmlElementId = _ => textAreaId;
+}
+
+<partial name="_ErrorSummaryNext" for="@Model.Errors"/>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        @*todo: do we want to allow the consumer to pass through a model to the custom content partial? *@
+        <partial name="@Model.DescriptionPartial" />
+
+        <form method="post" novalidate>
+
+            @{ Error? error = Model.Errors.GetErrorIfTriggered(); }
+
+            <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="@Model.TextAreaMaxLength">
+                <div class="govuk-form-group error?.FormGroupClass">
+                    
+                    @if (Model.Label != null)
+                    {
+                        <h2 class="govuk-label-wrapper">
+                            <label class="govuk-label govuk-label--m" for="@textAreaId">
+                                @Model.Label
+                            </label>
+                        </h2>
+                    }
+
+                    <partial name="_ErrorMessageNext" model="error"/>
+
+                    <textarea asp-for="TextAreaValue" class="govuk-textarea govuk-js-character-count error?.TextAreaClass"
+                              rows="@Model.TextAreaNumberOfRows" id="@textAreaId" aria-describedby="@(textAreaId)-info error?.InputErrorMessageParaId"></textarea>
+                </div>
+
+                <div id="@(textAreaId)-info" class="govuk-hint govuk-character-count__message">
+                    You can enter up to @Model.TextAreaMaxLength characters
+                </div>
+            </div>
+
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Continue
+            </button>
+        </form>
+    </div>
+</div>

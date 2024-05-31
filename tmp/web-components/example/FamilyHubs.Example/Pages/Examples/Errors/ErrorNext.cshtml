@@ -1,0 +1,54 @@
+﻿@page
+@using FamilyHubs.SharedKernel.Razor.ErrorNext
+@model FamilyHubs.Example.Pages.Examples.Errors.ErrorNextModel
+
+@{
+    Model.Errors.ErrorIdToHtmlElementId = id => id switch
+    {
+        // todo: can we pass T instead? not sure it can be done without making the interface generic (which we can't do as then it can't be used as a razor model)
+        (int)ErrorNextModel.ExampleErrors.Error1 => "field1",
+        (int)ErrorNextModel.ExampleErrors.Error2 => "field2",
+        (int)ErrorNextModel.ExampleErrors.Error3 => "field3",
+        _ => throw new InvalidOperationException()
+    };
+}
+
+<partial name="_ErrorSummaryNext" model="@Model.Errors" />
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <form method="post" novalidate>
+
+            @{
+                Error? error1 = Model.Errors.GetErrorIfTriggered((int)ErrorNextModel.ExampleErrors.Error1);
+            }
+            <div class="govuk-form-group @(error1?.FormGroupClass)">
+                <partial name="_ErrorMessageNext" model="@error1" />
+
+                <label class="govuk-label" for="field1">Field 1</label>
+                <input asp-for="Field1" id="field1" class="govuk-input @error1?.InputClass" aria-describedby="@(error1?.InputErrorMessageParaId)" />
+            </div>
+
+            @{
+                Error? error2 = Model.Errors.GetErrorIfTriggered((int)ErrorNextModel.ExampleErrors.Error2);
+            }
+            <div class="govuk-form-group @(error2?.FormGroupClass)">
+                <partial name="_ErrorMessageNext" model="@error2" />
+
+                <label class="govuk-label" for="field2">Field 2</label>
+                <input asp-for="Field2" id="field2" class="govuk-input @error2?.InputClass" aria-describedby="@(error2?.InputErrorMessageParaId)" />
+            </div>
+
+            @{
+                Error? error3 = Model.Errors.GetErrorIfTriggered((int)ErrorNextModel.ExampleErrors.Error3);
+            }
+            <div class="govuk-form-group @(error3?.FormGroupClass)">
+                <partial name="_ErrorMessageNext" model="@error3" />
+
+                <label class="govuk-label" for="field2">Field 3</label>
+                <input asp-for="Field3" id="field3" class="govuk-input @error3?.InputClass" aria-describedby="@(error3?.InputErrorMessageParaId)" />
+            </div>
+        </form>
+    </div>
+</div>
