@@ -1,0 +1,36 @@
+﻿@page
+@model UsersModel
+@{
+    ViewData["Title"] = "Users";
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/accessible-autocomplete.min.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/accessible-autocomplete.min.js" asp-append-version="true"></script>
+}
+
+@section Back {
+    <a asp-page="Welcome" class="govuk-back-link">Back</a>
+}
+
+<form method="post">
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+            @await Html.PartialAsync("_filter", Model)
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+            @if (Model.Accounts.Items != null && Model.Accounts.Items.Any())
+            {
+                @await Html.PartialAsync("_paginatedResults", Model)
+            }
+            else
+            {
+                <h2 class="govuk-heading-m">No results found</h2>
+                <p>Try again by changing or removing filters you applied.</p>
+            }
+        </div>
+    </div>
+</form>

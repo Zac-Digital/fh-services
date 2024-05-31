@@ -1,0 +1,23 @@
+﻿@page "{cacheId}"
+@model WhichLocalAuthority
+@{
+    ViewData["Title"] = Model.PageHeading;
+    Model.ErrorElementId = "LaOrganisationName";
+}
+
+<input type="hidden" id="modelLaOrganisationName" value="@Model.LaOrganisationName" />
+
+<div class="govuk-form-group">
+    <label class="govuk-label" for="LaOrganisationName" aria-label="Organisation Name">
+        <!---Select local authority--->
+    </label>
+    <select class="govuk-select" id="LaOrganisationName" name="LaOrganisationName" aria-describedby="LaOrganisationName-hint">
+        <option value="" selected disabled></option>
+        @foreach(var option in Model.LocalAuthorities)
+        {
+            <option value="@option">@option</option>
+        }
+    </select>
+</div>
+
+

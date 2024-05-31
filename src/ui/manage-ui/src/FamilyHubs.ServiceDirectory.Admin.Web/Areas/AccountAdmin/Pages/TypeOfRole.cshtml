@@ -1,0 +1,12 @@
+﻿@page "{cacheid}"
+@model TypeOfRole
+@{
+    Layout = "~/pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = Model.Legend;
+}
+
+@section Back {
+    <a asp-page="@Model.PreviousPageLink" asp-route-cacheId="@Model.CacheId" class="govuk-back-link">Back</a>
+}
+
+<partial name="_RadiosPage" Model="@Model" />

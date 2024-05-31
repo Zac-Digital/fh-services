@@ -1,0 +1,23 @@
+﻿@page
+@model FamilyHubs.Idams.Maintenance.UI.Pages.ModifiedUserClaimsConfirmationModel
+@{
+    ViewData["Title"] = "Modified Account Claim Confirmation";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+                DfE Admin Account Claims Updated
+            </h1>
+            <div class="govuk-panel__body">
+                Admin account for<br><strong>@Model.Name</strong>
+            </div>
+        </div>
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+
+        <p>@Model.Name can now be used with modified claims.</p>
+        <p>Return to: <a href="/Welcome">Welcome Page</a></p>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+{
+    "profiles": {
+        "FamilyHubs.ServiceDirectory.Api": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "launchUrl": "swagger",
+            "environmentVariables": {
+                //"ASPNETCORE_ENVIRONMENT": "Production"
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "dotnetRunMessages": true,
+            "applicationUrl": "https://localhost:7022;http://localhost:5063"
+        },
+        "live-profile": {
+            "commandName": "Project",
+            "environmentVariables": {
+                //"ASPNETCORE_ENVIRONMENT": "Production"
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "applicationUrl": "https://localhost:7022;http://localhost:5063"
+        }
+    },
+    "$schema": "https://json.schemastore.org/launchsettings.json",
+    "iisSettings": {
+        "windowsAuthentication": false,
+        "anonymousAuthentication": true,
+        "iisExpress": {
+            "applicationUrl": "http://localhost:26948",
+            "sslPort": 44344
+        }
+    }
+}

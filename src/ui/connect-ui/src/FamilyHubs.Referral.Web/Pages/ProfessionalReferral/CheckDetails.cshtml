@@ -1,0 +1,68 @@
+﻿@page
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.CheckDetailsModel
+
+@{
+    ViewData["Title"] = "Check the details you entered before requesting a connection";
+}
+
+@section Back {
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        
+        <h1 class="govuk-heading-l">
+            Check the details you entered before requesting a connection
+        </h1>
+        
+        <summary-list class="govuk-!-margin-bottom-9">
+
+            <summary-row key="Shared privacy statement" action1="Change" action1-href="/ProfessionalReferral/SharePrivacy?serviceId=@Model.ServiceId&changing=page">Yes</summary-row>
+
+            <summary-row key="Permission to share details" action1="Change" action1-href="/ProfessionalReferral/Consent?serviceId=@Model.ServiceId&changing=page">Yes</summary-row>
+
+            <summary-row key="Name of contact" action1="Change" action1-href="/ProfessionalReferral/SupportDetails?serviceId=@Model.ServiceId&changing=page">@Model.ConnectionRequestModel!.FamilyContactFullName</summary-row>
+
+            <summary-row key="Reason for request for support" action1="Change" action1-href="/ProfessionalReferral/WhySupport?serviceId=@Model.ServiceId&changing=page">@Model.ConnectionRequestModel!.Reason</summary-row>
+
+            <summary-row key="Contact methods" action1="Change" action1-href="/ProfessionalReferral/ContactDetails?serviceId=@Model.ServiceId&changing=contact-methods">@Model.ContactMethodDisplayNames</summary-row>
+
+            @if (!string.IsNullOrEmpty(Model.ConnectionRequestModel!.EmailAddress)) {
+                <summary-row key="Email" action1="Change" action1-href="/ProfessionalReferral/Email?serviceId=@Model.ServiceId&changing=page">@Model.ConnectionRequestModel.EmailAddress</summary-row>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.ConnectionRequestModel!.TelephoneNumber)) {
+                <summary-row key="Telephone" action1="Change" action1-href="/ProfessionalReferral/Telephone?serviceId=@Model.ServiceId&changing=page">@Model.ConnectionRequestModel.TelephoneNumber</summary-row>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.ConnectionRequestModel!.TextphoneNumber)) {
+                <summary-row key="Text" action1="Change" action1-href="/ProfessionalReferral/Text?serviceId=@Model.ServiceId&changing=page">@Model.ConnectionRequestModel.TextphoneNumber</summary-row>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.Address)) {
+                <summary-row key="Address" action1="Change" action1-href="/ProfessionalReferral/Letter?serviceId=@Model.ServiceId&changing=page">@Html.Raw(Model.Address)</summary-row>
+            }
+
+            <summary-row key="How to engage" action1="Change" action1-href="/ProfessionalReferral/ContactMethods?serviceId=@Model.ServiceId&changing=page">@Model.ConnectionRequestModel!.EngageReason</summary-row>
+
+            <summary-row key="How the service can contact you" action1="Change" action1-href="/ProfessionalReferral/ContactByPhone?serviceId=@Model.ServiceId&changing=page">
+                <p>Email: @Model.ProfessionalUser.Email</p>
+                @if (Model.ConnectionRequestModel!.ReferrerTelephone != null)
+                {
+                    <p>Telephone: @Model.ConnectionRequestModel.ReferrerTelephone</p>
+                }
+            </summary-row>
+            
+        </summary-list>
+
+        <h2 class="govuk-heading-m">Now request a connection</h2>
+        
+        <form method="post">
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Confirm details and send request
+            </button>
+        </form>
+
+    </div>
+</div>

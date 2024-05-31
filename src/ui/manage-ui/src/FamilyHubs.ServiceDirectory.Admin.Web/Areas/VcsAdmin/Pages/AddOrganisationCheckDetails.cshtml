@@ -1,0 +1,21 @@
+﻿@page
+@using FamilyHubs.ServiceDirectory.Admin.Core.Models;
+@model FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages.AddOrganisationCheckDetailsModel
+@{
+    ViewData["Title"] = "Check details";
+    Layout = "~/pages/Shared/_CheckDetailsPageLayout.cshtml";
+}
+
+@if (Model.IsDfeUser)
+{
+    @if (Model.IsAddPermissionFlow)
+    {
+        @await Html.PartialAsync("_checkDetailRow", new CheckDetailsRowModel("Local authority", Model.LocalAuthority, "LocalAuthority"))
+    }
+    else
+    {
+        @await Html.PartialAsync("_checkDetailRow", new CheckDetailsRowModel("Local authority", Model.LocalAuthority, "/VcsAdmin/AddOrganisationWhichLocalAuthority", "LocalAuthority"))
+    }
+}
+
+@await Html.PartialAsync("_checkDetailRow", new CheckDetailsRowModel("Name", Model.OrganisationName, $"/VcsAdmin/AddOrganisation?changeName=true&cacheId={Model.CacheId}", "OrganisationName"))

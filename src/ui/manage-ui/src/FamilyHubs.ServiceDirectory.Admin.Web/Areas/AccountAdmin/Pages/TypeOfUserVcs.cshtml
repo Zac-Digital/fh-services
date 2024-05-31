@@ -1,0 +1,12 @@
+﻿@page "{cacheId}"
+@model TypeOfUserVcs
+@{
+    ViewData["Title"] = "What do they need to do?";
+    Layout = "~/pages/Shared/_Layout.cshtml";
+}
+
+@section Back {
+    <a asp-page="@Model.PreviousPageLink" asp-route-cacheId="@Model.CacheId" class="govuk-back-link">Back</a>
+}
+
+<partial name="_CheckboxesPage" Model="@Model" />

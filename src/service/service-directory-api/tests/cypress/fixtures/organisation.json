@@ -1,0 +1,11 @@
+{
+    "id": 0,
+    "organisationType": 1,
+    "name": "Test Organisation",
+    "description": "Test organisation description",
+    "associatedOrganisationId": null,
+    "logo": "",
+    "uri": "https://www.testorg.gov.uk/",
+    "url": "https://www.testorg.gov.uk/",
+    "adminAreaCode": "E12345678"
+}

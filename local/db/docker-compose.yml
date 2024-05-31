@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "mystrong!Pa55word"
+      ACCEPT_EULA: Y
+    restart: unless-stopped
+    volumes:
+      - "./sql/data:/var/opt/mssql/data"
+      - "./sql/log:/var/opt/mssql/log"
+      - "./sql/secrets:/var/opt/mssql/secrets"
+      - "./sql/backup:/var/opt/mssql/backup"

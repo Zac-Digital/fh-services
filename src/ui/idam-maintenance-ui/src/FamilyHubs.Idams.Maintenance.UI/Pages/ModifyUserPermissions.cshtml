@@ -1,0 +1,106 @@
+﻿@page
+@model FamilyHubs.Idams.Maintenance.UI.Pages.ModifyUserPermissionsModel
+@{
+    ViewData["Title"] = "User Permissions";
+}
+
+@section Back {
+    <a asp-page="Users" class="govuk-back-link">Back</a>
+}
+
+@section Head {
+    <link rel="stylesheet" href="~/css/accessible-autocomplete.min.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/accessible-autocomplete.min.js" asp-append-version="true"></script>
+}
+
+<h1 class="govuk-heading-l app-wrap-anywhere">Set Claims / Permissions for @Model.Name</h1>
+
+<form method="post">
+    
+    <input type="hidden" id="accountId" name="AccountId" asp-for="AccountId" />
+    @if (!Model.ValidationValid)
+    {
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    @if (string.IsNullOrEmpty(@Model.SelectedRole))
+                    {
+                        <li>
+                            <a href="#SelectedRole">Role is required</a>
+                        </li>
+                    }
+
+                    @if (@Model.SelectedRole != FamilyHubs.SharedKernel.Identity.RoleTypes.DfeAdmin && string.IsNullOrEmpty(@Model.LaOrganisationName))
+                    {
+                        <li>
+                            <a href="#OrganisationName">Organisation is required</a>
+                        </li>
+                    }
+
+                    
+                </ul>
+            </div>
+        </div>
+    }
+
+    <div class="govuk-form-group">
+        @{
+            if (@Model.ValidationValid == false && string.IsNullOrEmpty(@Model.SelectedRole))
+            {
+                <p class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> Role is required
+                </p>
+            }
+        }
+        <label class="govuk-label" for="RoleType">
+            Role
+        </label>
+        <select class="govuk-select" id="SelectedRole" name="SelectedRole" aria-describedby="SelectedRole-hint" asp-for="SelectedRole">
+            <option value="Model.SelectedRole"></option>
+            @foreach (var option in Model.RoleTypes)
+            {
+                <option value="@option">@option</option>
+            }
+        </select>
+    </div>
+
+    <input type="hidden" id="modelLaOrganisationName" value="@Model.LaOrganisationName" />
+
+
+    <div class="govuk-form-group">
+        @{
+            if (@Model.ValidationValid == false && @Model.SelectedRole != FamilyHubs.SharedKernel.Identity.RoleTypes.DfeAdmin && string.IsNullOrEmpty(@Model.LaOrganisationName))
+            {
+                <p class="govuk-error-message">
+                    <span class="govuk-visually-hidden">Error:</span> Organisation Name is required
+                </p>
+            }
+        }
+        <label class="govuk-label" for="LaOrganisationName">
+            Organisation
+        </label>
+        <select class="govuk-select" id="LaOrganisationName" name="LaOrganisationName" aria-describedby="LaOrganisationName-hint">
+            <option value="" selected disabled></option>
+
+            @foreach (var option in Model.LocalAuthorities)
+            {
+                <option value="@option">@option</option>
+            }
+        </select>
+    </div>
+
+    <p><a href="/UserClaims?accountId=@Model.AccountId&username=@Model.Name">List all user claims</a></p>
+
+    <button type="submit" class="govuk-button" data-module="govuk-button">
+        Continue
+    </button>
+</form>
+
+
+

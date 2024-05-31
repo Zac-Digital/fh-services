@@ -1,0 +1,53 @@
+﻿@page
+@model FamilyHubs.Idams.Maintenance.UI.Pages.DeleteUserModel
+@{
+    ViewData["Title"] = "Delete User";
+}
+
+@section Back {
+    <a asp-page="Users" class="govuk-back-link">Back</a>
+}
+
+<h1 class="govuk-heading-l app-wrap-anywhere">Confirm you want to delete @Model.UserName</h1>
+
+<form method="post">
+    <input type="hidden" id="accountId" name="AccountId" asp-for="AccountId" />
+
+    @if (!string.IsNullOrEmpty(Model.Error))
+    {
+        <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    <li>
+                        <a href="#DeleteUser">@Model.Error</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+
+    <div class="govuk-form-group">
+        <div class="govuk-radios" data-module="govuk-radios">
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="remove-user" type="radio" asp-for="DeleteUser" value=true>
+                <label class="govuk-label govuk-radios__label" for="remove-user">
+                    Yes, delete this user
+                </label>
+            </div>
+            <div class="govuk-radios__item">
+                <input class="govuk-radios__input" id="remove-user-2" type="radio" asp-for="DeleteUser" value=false>
+                <label class="govuk-label govuk-radios__label" for="remove-user-2">
+                    No, keep this user
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="govuk-button" data-module="govuk-button">
+        Continue
+    </button>
+
+</form>

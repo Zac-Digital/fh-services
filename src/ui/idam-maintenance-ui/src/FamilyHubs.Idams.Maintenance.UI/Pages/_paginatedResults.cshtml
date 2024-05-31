@@ -1,0 +1,26 @@
+﻿@model UsersModel
+
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-table__caption--m">Users</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header">Email</th>
+            <th scope="col" class="govuk-table__header">Phone</th>
+            <th scope="col" class="govuk-table__header">Action</th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+        @foreach (var account in Model.Accounts.Items)
+        {
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header"><a href="/ModifyUserPermissions?id=@account.Id">@account.Name</a></th>
+                <td class="govuk-table__cell">@account.Email</td>
+                <td class="govuk-table__cell">@account.PhoneNumber</td>
+                <td class="govuk-table__cell"><a href="/DeleteUser?accountId=@account.Id">Delete</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<partial name="_LargeSetPaginationForm" model='Model.Pagination' />

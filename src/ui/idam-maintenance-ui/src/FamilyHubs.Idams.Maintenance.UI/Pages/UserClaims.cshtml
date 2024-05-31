@@ -1,0 +1,33 @@
+﻿@page
+@model FamilyHubs.Idams.Maintenance.UI.Pages.UserClaimsModel
+@{
+    ViewData["Title"] = "User Claims";
+}
+
+@section Back {
+    <a href="/ModifyUserPermissions?id=@Model.AccountId" class="govuk-back-link">Back</a>
+}
+
+<h1 class="govuk-heading-l app-wrap-anywhere">User Claims for @Model.UserName</h1>
+
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-table__caption--m">Claims</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Name</th>
+            <th scope="col" class="govuk-table__header">Value</th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+        @foreach (var claim in Model.UserClaims)
+        {
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@claim.Name</th>
+                <td class="govuk-table__cell">@claim.Value</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<p>Return to: <a href="/ModifyUserPermissions?id=@Model.AccountId">Modify User Permissions Page</a></p>

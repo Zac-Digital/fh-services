@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>b0c58548-8d78-4457-a01d-c54c8cd7c582</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="4.4.1" />
+        <PackageReference Include="FamilyHubs.SharedKernel" Version="2.3.2" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.17" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.19" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.19">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\FamilyHubs.Report.Core\FamilyHubs.Report.Core.csproj" />
+        <ProjectReference Include="..\FamilyHubs.Report.Data\FamilyHubs.Report.Data.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+﻿@page "/AccountAdmin/ManagePermissions/{AccountId:long}/Delete"
+@model FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages.ManagePermissions.DeleteUserModel
+@{
+    Layout = "~/pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = Model.Legend;
+}
+
+@section Back {
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+}
+
+<partial name="_RadiosPage" Model="@Model" />

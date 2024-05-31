@@ -1,0 +1,272 @@
+{
+  "GovUkOidcConfiguration": {
+    "StubAuthentication": {
+      "StubUsers": [
+        {
+          "User": {
+            "Email": "dfeAdmin.user@stub.com",
+            "Sub": "dfeAdmin.user@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "AccountId",
+              "Value": "1"
+            },
+            {
+              "Name": "role",
+              "Value": "DfeAdmin"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "-1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Dfe Admin User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1234"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "laOrgOne.LaAdmin@stub.com",
+            "Sub": "laOrgOne.LaAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "AccountId",
+              "Value": "1"
+            },
+            {
+              "Name": "role",
+              "Value": "LaManager"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La Admin User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1235"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "laOrgOne.LaProfessional@stub.com",
+            "Sub": "laOrgOne.LaProfessional@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "AccountId",
+              "Value": "1"
+            },
+            {
+              "Name": "role",
+              "Value": "LaProfessional"
+            },
+            {
+              "Name": "OrganisationType",
+              "Value": "LA"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 6789"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "vcsAdmin2.VcsAdmin@stub.com",
+            "Sub": "vcsAdmin2.VcsAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "AccountId",
+              "Value": "1"
+            },
+            {
+              "Name": "role",
+              "Value": "VcsManager"
+            },
+            {
+              "Name": "OrganisationType",
+              "Value": "LA"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "1"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "Vcs Admin User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1236"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "laOrgTwo.LaAdmin@stub.com",
+            "Sub": "laOrgTwo.LaAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "AccountId",
+              "Value": "1"
+            },
+            {
+              "Name": "role",
+              "Value": "LaManager"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "2"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La Admin User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1235"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "laOrgThree.LaAdmin@stub.com",
+            "Sub": "laOrgThree.LaAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "AccountId",
+              "Value": "1"
+            },
+            {
+              "Name": "role",
+              "Value": "LaManager"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "3"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La Admin User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1235"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "laOrgFour.LaAdmin@stub.com",
+            "Sub": "laOrgFour.LaAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "AccountId",
+              "Value": "1"
+            },
+            {
+              "Name": "role",
+              "Value": "LaManager"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "4"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La Admin User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1235"
+            }
+          ]
+        },
+        {
+          "User": {
+            "Email": "laOrgFive.LaAdmin@stub.com",
+            "Sub": "laOrgFive.LaAdmin@stub.com"
+          },
+          "Claims": [
+            {
+              "Name": "AccountId",
+              "Value": "1"
+            },
+            {
+              "Name": "role",
+              "Value": "LaManager"
+            },
+            {
+              "Name": "OrganisationId",
+              "Value": "5"
+            },
+            {
+              "Name": "AccountStatus",
+              "Value": "Active"
+            },
+            {
+              "Name": "Name",
+              "Value": "La Admin User"
+            },
+            {
+              "Name": "PhoneNumber",
+              "Value": "0121 121 1235"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
