@@ -12,7 +12,7 @@ on:
       - "*"
 
 env:
-  DOTNET_VERSION: '7'
+  DOTNET_VERSION: '7.0.x'
 
 jobs:
   build-notification-api:
