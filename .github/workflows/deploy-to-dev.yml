@@ -17,7 +17,6 @@ jobs:
   build-and-publish-idam-api:
     name: Build, test & publish service/idam-api
     runs-on: ubuntu-latest
-    environment: development
     defaults:
       run:
         working-directory: src/service/idam-api/
