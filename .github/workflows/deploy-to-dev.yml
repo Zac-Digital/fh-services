@@ -1,0 +1,75 @@
+name: Deploy to dev
+
+concurrency: deploy-dev
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  AZURE_WEBAPP_NAME_IDAM_API: s181d01-as-fh-idam-api
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-publish-idam-api:
+    name: Build & publish service/idam-api
+    runs-on: ubuntu-latest
+    environment: development
+    defaults:
+      run:
+        working-directory: src/service/idam-api/
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency caching for faster builds
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --no-restore --verbosity normal
+      - name: Publish
+        run: dotnet publish -c Release -o release
+
+      - name: Upload artifact for deployment jobyml
+        uses: actions/upload-artifact@v3
+        with:
+          name: .net-idam-api
+          path: release
+
+  deploy-idam-api:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: [build-and-publish-idam-api]
+    
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: .net-idam-api
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME_IDAM_API }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+  
