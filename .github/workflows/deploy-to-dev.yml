@@ -3,7 +3,7 @@ name: Deploy to dev
 concurrency: deploy-dev
 
 env:
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '7'
   AZURE_WEBAPP_NAME_IDAM_API: s181d01-as-fh-idam-api
   AZURE_WEBAPP_PACKAGE_PATH: '.'
 
