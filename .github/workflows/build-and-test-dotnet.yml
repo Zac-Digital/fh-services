@@ -80,8 +80,6 @@ jobs:
         run: dotnet build --no-restore
       - name: Test
         run: dotnet test --no-build --no-restore --verbosity normal
-      - name: Publish
-        run: dotnet publish -c Release -o release
 
   build-report-api:
     name: Build & test service/report-api
