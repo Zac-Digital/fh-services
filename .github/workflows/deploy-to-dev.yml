@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   build-and-publish-idam-api:
-    name: Build & publish service/idam-api
+    name: Build, test & publish service/idam-api
     runs-on: ubuntu-latest
     environment: development
     defaults:
@@ -51,12 +51,14 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: .net-idam-api
-          path: release
+          path: ./release
 
   deploy-idam-api:
+    name: Deploy service/idam-api
     permissions:
       contents: none
     runs-on: ubuntu-latest
+    environment: development
     needs: [build-and-publish-idam-api]
     
     steps:
