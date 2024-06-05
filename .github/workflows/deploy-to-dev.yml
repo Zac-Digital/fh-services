@@ -17,6 +17,8 @@ jobs:
   build-and-publish-idam-api:
     name: Build, test & publish service/idam-api
     runs-on: ubuntu-latest
+    env:
+      STARTUP_PROJECT_PATH: src/service/idam-api/FamilyHubs.Idam.Api
     defaults:
       run:
         working-directory: src/service/idam-api/
@@ -44,13 +46,13 @@ jobs:
       - name: Test
         run: dotnet test --no-build --no-restore --verbosity normal
       - name: Publish
-        run: dotnet publish -c Release -o release
+        run: dotnet publish ${{ format('{0}/*.csproj', env.STARTUP_PROJECT_PATH) }} -c Release -o release
 
       - name: Upload artifact for deployment jobyml
         uses: actions/upload-artifact@v3
         with:
           name: .net-idam-api
-          path: src/service/idam-api/release # working-directory ignored; provide full path
+          path: ${{ format('{0}/release', env.STARTUP_PROJECT_PATH )}}
 
   deploy-idam-api:
     name: Deploy service/idam-api
