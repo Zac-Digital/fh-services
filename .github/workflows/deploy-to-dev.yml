@@ -17,11 +17,13 @@ jobs:
   build-and-publish-idam-api:
     name: Build, test & publish service/idam-api
     runs-on: ubuntu-latest
+    env:
+      WORKING_DIRECTORY: src/service/idam-api/
+      STARTUP_PROJECT_PATH: src/FamilyHubs.Idam.Api
+
     defaults:
       run:
-        working-directory: src/service/idam-api/
-    env:
-      STARTUP_PROJECT_PATH: src/FamilyHubs.Idam.Api
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -52,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: .net-idam-api
-          path: './release'
+          path: ${{ format('{0}/release', env.WORKING_DIRECTORY )}}
 
   deploy-idam-api:
     name: Deploy service/idam-api
