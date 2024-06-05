@@ -84,7 +84,7 @@ jobs:
         
       - name: Apply EF Core database migrations
         working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: pwd && ls && dotnet ef database update -c ApplicationDbContext --project ${{ env.DATA_PROJECT_PATH }} --startup-project ${{ env.STARTUP_PROJECT_PATH }}
+        run: dotnet ef database update -c ApplicationDbContext --project ${{ env.DATA_PROJECT_PATH }} --startup-project ${{ env.STARTUP_PROJECT_PATH }}
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
