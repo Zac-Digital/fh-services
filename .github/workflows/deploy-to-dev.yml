@@ -3,10 +3,13 @@ name: Deploy to dev
 concurrency: deploy-dev
 
 env:
+  # Config
   DOTNET_VERSION: '8.0.x'
   ENTITY_FRAMEWORK_VERSION: '7.*'
   AZURE_WEBAPP_NAME_IDAM_API: s181d01-as-fh-idam-api
   AZURE_WEBAPP_PACKAGE_PATH: '.'
+  # Other
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
 on:
   workflow_dispatch:
@@ -50,8 +53,8 @@ jobs:
         run: dotnet test --no-build --no-restore --verbosity normal
       - name: Publish
         run: dotnet publish ${{ format('{0}/*.csproj', env.STARTUP_PROJECT_PATH) }} -c Release -o release
-
-      - name: Upload artifact for deployment jobyml
+      
+      - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-idam-api
@@ -69,10 +72,6 @@ jobs:
       WORKING_DIRECTORY: src/service/idam-api/
       STARTUP_PROJECT_PATH: src/FamilyHubs.Idam.Api
       DATA_PROJECT_PATH: src/FamilyHubs.Idam.Data
-
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIRECTORY }}
     
     steps:
       - name: Download artifact from build job
@@ -84,6 +83,7 @@ jobs:
         run: dotnet tool install --global dotnet-ef --version ${{ env.ENTITY_FRAMEWORK_VERSION }}
         
       - name: Apply EF Core database migrations
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: pwd && ls && dotnet ef database update -c ApplicationDbContext --project ${{ env.DATA_PROJECT_PATH }} --startup-project ${{ env.STARTUP_PROJECT_PATH }}
 
       - name: App Settings Variable Substitution
@@ -106,7 +106,7 @@ jobs:
           EventGridUrl: '${{ vars.IDAM_API_EVENTGRIDURL }}'
           GovUkOidcConfiguration.BearerTokenSigningKey: '${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}'
           ServiceDirectoryApiBaseUrl: '${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}'
-          
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
