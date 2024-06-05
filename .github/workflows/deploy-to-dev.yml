@@ -4,6 +4,7 @@ concurrency: deploy-dev
 
 env:
   DOTNET_VERSION: '8.0.x'
+  ENTITY_FRAMEWORK_VERSION: '7.*'
   AZURE_WEBAPP_NAME_IDAM_API: s181d01-as-fh-idam-api
   AZURE_WEBAPP_PACKAGE_PATH: '.'
 
@@ -63,33 +64,49 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     needs: [build-and-publish-idam-api]
+
+    env:
+      WORKING_DIRECTORY: src/service/idam-api/
+      STARTUP_PROJECT_PATH: src/FamilyHubs.Idam.Api
+      DATA_PROJECT_PATH: src/FamilyHubs.Idam.Data
+
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
     
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-idam-api
+      
+      - name: Install Entity Framework
+        run: dotnet tool install --global dotnet-ef --version ${{ env.ENTITY_FRAMEWORK_VERSION }}
+        
+      - name: Apply EF Core database migrations
+        run: pwd && ls && dotnet ef database update -c ApplicationDbContext --project ${{ env.DATA_PROJECT_PATH }} --startup-project ${{ env.STARTUP_PROJECT_PATH }}
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
           files: 'appsettings.json'
         env:
-          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
-          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
-          ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
-          Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
-          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
-          Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
-          Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
-          Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
-          Crypto.DbEncryptionKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-          Crypto.KeyVaultIdentifier: ${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
-          Crypto.tenantId: ${{ vars.IDAM_API_CRYPTO_TENANTID }}
-          Crypto.UseKeyVault: ${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}
-          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
-          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
-          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
+          APPINSIGHTS_CONNECTION_STRING: '${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}'
+          APPINSIGHTS_INSTRUMENTATIONKEY: '${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}'
+          ConnectionStrings.IdamConnection: '${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}'
+          Crypto.clientId: '${{ vars.IDAM_API_CRYPTO_CLIENTID }}'
+          Crypto.clientSecret: '${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}'
+          Crypto.DbEncryptionIVKey: '${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}'
+          Crypto.DbEncryptionIVKeySecretName: '${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}'
+          Crypto.DbEncryptionKey: '${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}'
+          Crypto.DbEncryptionKeySecretName: '${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}'
+          Crypto.KeyVaultIdentifier: '${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}'
+          Crypto.tenantId: '${{ vars.IDAM_API_CRYPTO_TENANTID }}'
+          Crypto.UseKeyVault: '${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}'
+          EventGridUrl: '${{ vars.IDAM_API_EVENTGRIDURL }}'
+          GovUkOidcConfiguration.BearerTokenSigningKey: '${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}'
+          ServiceDirectoryApiBaseUrl: '${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}'
+          
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
