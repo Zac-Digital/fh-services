@@ -96,14 +96,14 @@ jobs:
           'APPINSIGHTS_INSTRUMENTATIONKEY': '${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}'
           'ConnectionStrings.IdamConnection': '${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}'
           'Crypto.clientId': '${{ vars.IDAM_API_CRYPTO_CLIENTID }}'
-          'Crypto.clientSecret': '${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}'
+          'Crypto.clientSecret': ${{ format('{0}', secrets.IDAM_API_CRYPTO_CLIENTSECRET) }}
           'Crypto.DbEncryptionIVKey': '${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}'
           'Crypto.DbEncryptionIVKeySecretName': '${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}'
           'Crypto.DbEncryptionKey': '${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}'
           'Crypto.DbEncryptionKeySecretName': '${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}'
           'Crypto.KeyVaultIdentifier': '${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}'
           'Crypto.tenantId': '${{ vars.IDAM_API_CRYPTO_TENANTID }}'
-          'Crypto.UseKeyVault': '${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}'
+          'Crypto.UseKeyVault': ${{ format('{0}', vars.IDAM_API_CRYPTO_USEKEYVAULT) }}
           'EventGridUrl': '${{ vars.IDAM_API_EVENTGRIDURL }}'
           'GovUkOidcConfiguration.BearerTokenSigningKey': '${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}'
           'ServiceDirectoryApiBaseUrl': '${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}'
