@@ -59,6 +59,7 @@ jobs:
         with:
           name: .net-idam-api
           path: ${{ format('{0}/release', env.WORKING_DIRECTORY) }}
+          if-no-files-found: error
 
   deploy-idam-api:
     name: Deploy service/idam-api
