@@ -62,8 +62,6 @@ jobs:
 
   deploy-idam-api:
     name: Deploy service/idam-api
-    permissions:
-      contents: none
     runs-on: ubuntu-latest
     environment: development
     needs: [build-and-publish-idam-api]
