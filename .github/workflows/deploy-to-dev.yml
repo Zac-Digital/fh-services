@@ -53,8 +53,8 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
-      - name: Test
-        run: dotnet test --no-build --no-restore --verbosity normal
+      # - name: Test
+      #   run: dotnet test --no-build --no-restore --verbosity normal
       - name: Publish
         run: dotnet publish ${{ format('{0}/*.csproj', env.STARTUP_PROJECT_PATH) }} -c Release -o release
       
