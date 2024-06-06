@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: .net-idam-api
-          path: release
+          path: ${{ format('{0}/release', env.WORKING_DIRECTORY) }}
 
   deploy-idam-api:
     name: Deploy service/idam-api
