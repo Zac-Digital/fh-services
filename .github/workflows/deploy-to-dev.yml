@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   build-and-publish-idam-api:
@@ -69,9 +70,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     needs: [build-and-publish-idam-api]
-    
-    permissions:
-      id-token: write
 
     env:
       WORKING_DIRECTORY: src/service/idam-api/
