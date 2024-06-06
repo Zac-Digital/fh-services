@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: .net-idam-api
-          path: ${{ env.WORKING_DIRECTORY }}
+          path: release
 
   deploy-idam-api:
     name: Deploy service/idam-api
@@ -69,28 +69,34 @@ jobs:
     needs: [build-and-publish-idam-api]
 
     env:
+      WORKING_DIRECTORY: src/service/idam-api/
       STARTUP_PROJECT_PATH: src/FamilyHubs.Idam.Api
       DATA_PROJECT_PATH: src/FamilyHubs.Idam.Data
     
     steps:
+      - uses: actions/checkout@v4
+
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
           name: .net-idam-api
+          path: release
       
       - name: Install Entity Framework
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: dotnet tool install --global dotnet-ef --version ${{ env.ENTITY_FRAMEWORK_VERSION }}
 
       - name: Info
         run: pwd && ls -la
 
       - name: Apply EF Core database migrations
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: dotnet ef database update -c ApplicationDbContext --project ${{ env.DATA_PROJECT_PATH }} --startup-project ${{ env.STARTUP_PROJECT_PATH }}
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
-          files: ${{ format('{0}/appsettings.json', env.STARTUP_PROJECT_PATH) }}
+          files: 'release/appsettings.json'
         env:
           APPINSIGHTS_CONNECTION_STRING: '${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}'
           APPINSIGHTS_INSTRUMENTATIONKEY: '${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}'
@@ -114,4 +120,4 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME_IDAM_API }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-          package: ${{ env.STARTUP_PROJECT_PATH }}
+          package: ./release
