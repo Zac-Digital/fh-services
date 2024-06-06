@@ -86,27 +86,27 @@ jobs:
           path: release
 
       - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
+        uses: tnikFi/json-file-transform@v2
         with:
           # We need to replace release/appsettings, and the appsettings in the src/ folder too, as the src folder
           # appsettings is used for the below dotnet ef database update step
           files: ${{ format('release/appsettings.json, {0}/{1}/appsettings.json', env.WORKING_DIRECTORY, env.STARTUP_PROJECT_PATH) }}
-        env:
-          'APPINSIGHTS_CONNECTION_STRING': '${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}'
-          'APPINSIGHTS_INSTRUMENTATIONKEY': '${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}'
-          'ConnectionStrings.IdamConnection': '${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}'
-          'Crypto.clientId': '${{ vars.IDAM_API_CRYPTO_CLIENTID }}'
-          'Crypto.clientSecret': ${{ format('{0}', secrets.IDAM_API_CRYPTO_CLIENTSECRET) }}
-          'Crypto.DbEncryptionIVKey': '${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}'
-          'Crypto.DbEncryptionIVKeySecretName': '${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}'
-          'Crypto.DbEncryptionKey': '${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}'
-          'Crypto.DbEncryptionKeySecretName': '${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}'
-          'Crypto.KeyVaultIdentifier': '${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}'
-          'Crypto.tenantId': '${{ vars.IDAM_API_CRYPTO_TENANTID }}'
-          'Crypto.UseKeyVault': ${{ format('{0}', vars.IDAM_API_CRYPTO_USEKEYVAULT) }}
-          'EventGridUrl': '${{ vars.IDAM_API_EVENTGRIDURL }}'
-          'GovUkOidcConfiguration.BearerTokenSigningKey': '${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}'
-          'ServiceDirectoryApiBaseUrl': '${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}'
+          key-value-pairs: |
+            APPINSIGHTS_CONNECTION_STRING=${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
+            APPINSIGHTS_INSTRUMENTATIONKEY=${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
+            ConnectionStrings.IdamConnection=${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
+            Crypto.clientId=${{ vars.IDAM_API_CRYPTO_CLIENTID }}
+            Crypto.clientSecret=${{ format('{0}', secrets.IDAM_API_CRYPTO_CLIENTSECRET) }}
+            Crypto.DbEncryptionIVKey=${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
+            Crypto.DbEncryptionIVKeySecretName=${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
+            Crypto.DbEncryptionKey=${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
+            Crypto.DbEncryptionKeySecretName=${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
+            Crypto.KeyVaultIdentifier=${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
+            Crypto.tenantId=${{ vars.IDAM_API_CRYPTO_TENANTID }}
+            Crypto.UseKeyVault=${{ format('{0}', vars.IDAM_API_CRYPTO_USEKEYVAULT) }}
+            EventGridUrl=${{ vars.IDAM_API_EVENTGRIDURL }}
+            GovUkOidcConfiguration.BearerTokenSigningKey=${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
+            ServiceDirectoryApiBaseUrl=${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
       
       # - name: 'Az CLI login'
       #   uses: azure/login@v1
