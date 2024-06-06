@@ -90,7 +90,8 @@ jobs:
         with:
           # We need to replace release/appsettings, and the appsettings in the src/ folder too, as the src folder
           # appsettings is used for the below dotnet ef database update step
-          files: ${{ format('release/appsettings.json, {0}/{1}/appsettings.json', env.WORKING_DIRECTORY, env.STARTUP_PROJECT_PATH) }}
+          # files: ${{ format('release/appsettings.json, {0}/{1}/appsettings.json', env.WORKING_DIRECTORY, env.STARTUP_PROJECT_PATH) }}
+          files: '**/appsettings.json'
           key-value-pairs: |
             APPINSIGHTS_CONNECTION_STRING=${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
             APPINSIGHTS_INSTRUMENTATIONKEY=${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
