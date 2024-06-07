@@ -86,28 +86,28 @@ jobs:
           name: .net-idam-api
           path: release
 
-      - name: App Settings Variable Substitution
-        uses: tnikFi/json-file-transform@v2
-        with:
-          # We need to replace release/appsettings, and the appsettings in the src/ folder too, as the src folder
-          # appsettings is used for the below dotnet ef database update step
-          files: ${{ format(env.APP_SETTINGS_PATTERN, env.STARTUP_PROJECT_PATH) }}
-          key-value-pairs: |
-            APPINSIGHTS_CONNECTION_STRING=${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
-            APPINSIGHTS_INSTRUMENTATIONKEY=${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
-            ConnectionStrings.IdamConnection=${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
-            Crypto.clientId=${{ vars.IDAM_API_CRYPTO_CLIENTID }}
-            Crypto.clientSecret=${{ format('{0}', secrets.IDAM_API_CRYPTO_CLIENTSECRET) }}
-            Crypto.DbEncryptionIVKey=${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
-            Crypto.DbEncryptionIVKeySecretName=${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
-            Crypto.DbEncryptionKey=${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
-            Crypto.DbEncryptionKeySecretName=${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-            Crypto.KeyVaultIdentifier=${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
-            Crypto.tenantId=${{ vars.IDAM_API_CRYPTO_TENANTID }}
-            Crypto.UseKeyVault=${{ format('{0}', vars.IDAM_API_CRYPTO_USEKEYVAULT) }}
-            EventGridUrl=${{ vars.IDAM_API_EVENTGRIDURL }}
-            GovUkOidcConfiguration.BearerTokenSigningKey=${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
-            ServiceDirectoryApiBaseUrl=${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
+#      - name: App Settings Variable Substitution
+#        uses: tnikFi/json-file-transform@v2
+#        with:
+#          # We need to replace release/appsettings, and the appsettings in the src/ folder too, as the src folder
+#          # appsettings is used for the below dotnet ef database update step
+#          files: ${{ format(env.APP_SETTINGS_PATTERN, env.STARTUP_PROJECT_PATH) }}
+#          key-value-pairs: |
+#            APPINSIGHTS_CONNECTION_STRING=${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
+#            APPINSIGHTS_INSTRUMENTATIONKEY=${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
+#            ConnectionStrings.IdamConnection=${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
+#            Crypto.clientId=${{ vars.IDAM_API_CRYPTO_CLIENTID }}
+#            Crypto.clientSecret=${{ format('{0}', secrets.IDAM_API_CRYPTO_CLIENTSECRET) }}
+#            Crypto.DbEncryptionIVKey=${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
+#            Crypto.DbEncryptionIVKeySecretName=${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
+#            Crypto.DbEncryptionKey=${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
+#            Crypto.DbEncryptionKeySecretName=${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
+#            Crypto.KeyVaultIdentifier=${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
+#            Crypto.tenantId=${{ vars.IDAM_API_CRYPTO_TENANTID }}
+#            Crypto.UseKeyVault=${{ format('{0}', vars.IDAM_API_CRYPTO_USEKEYVAULT) }}
+#            EventGridUrl=${{ vars.IDAM_API_EVENTGRIDURL }}
+#            GovUkOidcConfiguration.BearerTokenSigningKey=${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
+#            ServiceDirectoryApiBaseUrl=${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
       
       - name: 'Az CLI login'
         uses: azure/login@v1
@@ -115,38 +115,40 @@ jobs:
             client-id: ${{ secrets.AZURE_CLIENT_ID }}
             tenant-id: ${{ secrets.AZURE_TENANT_ID }}
             subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID_DEVELOPMENT }}
-      
-      - name: Whitelist GitHub runner IP
-        uses: azure/CLI@v1
+
+      - name: Get Workflow Runner IP
+        id: runner-ip
+        uses: ./.github/actions/get-runner-ip-address
+
+      - name: Add Azure Firewall Rules
+        uses: ./.github/actions/azure-firewall-ip
         with:
-          inlineScript: |
-            set -eu
-            agentIP=$(curl -s https://api.ipify.org/)
-            az sql server firewall-rule create -g ${{ env.RESOURCE_GROUP }} -s ${{ env.SQL_SERVER_RESOURCE_NAME }} -n ${{ env.SQL_SERVER_TEMP_FW_RULE_NAME }} --start-ip-address $agentIP --end-ip-address $agentIP
-            sleep 300
+          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+          action: "Add"
+          az_resource_group: ${{ env.RESOURCE_GROUP }}
+          az_sql_server_name: ${{ env.SQL_SERVER_RESOURCE_NAME }}
 
       - name: Install Entity Framework
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: dotnet tool install --global dotnet-ef --version ${{ env.ENTITY_FRAMEWORK_VERSION }}
 
-      - name: Apply EF Core database migrations
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: dotnet ef database update -c ApplicationDbContext --project ${{ env.DATA_PROJECT_PATH }} --startup-project ${{ env.STARTUP_PROJECT_PATH }}
+#      - name: Apply EF Core database migrations
+#        working-directory: ${{ env.WORKING_DIRECTORY }}
+#        run: dotnet ef database update -c ApplicationDbContext --project ${{ env.DATA_PROJECT_PATH }} --startup-project ${{ env.STARTUP_PROJECT_PATH }}
+#
+#      - name: Deploy to Azure Web App
+#        id: deploy-to-webapp
+#        uses: azure/webapps-deploy@v2
+#        with:
+#          app-name: ${{ env.AZURE_WEBAPP_NAME_IDAM_API }}
+#          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+#          package: ./release
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME_IDAM_API }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-          package: ./release
-      
-      - name: Remove GitHub runner IP from whitelist
+      - name: Remove Azure Firewall Rules
         if: always()
-        uses: azure/CLI@v1
+        uses: ./.github/actions/azure-firewall-ip
         with:
-          inlineScript: |
-            set -eu
-            agentIP=$(curl -s https://api.ipify.org/)
-            az sql server firewall-rule delete -g ${{ env.RESOURCE_GROUP }} -s ${{ env.SQL_SERVER_RESOURCE_NAME }} -n ${{ env.SQL_SERVER_TEMP_FW_RULE_NAME }} --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID_DEVELOPMENT }}
-  
+          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+          action: "Remove"
+          az_resource_group: ${{ env.RESOURCE_GROUP }}
+          az_sql_server_name: ${{ env.SQL_SERVER_RESOURCE_NAME }}
