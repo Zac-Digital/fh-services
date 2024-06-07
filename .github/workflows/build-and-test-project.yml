@@ -1,0 +1,40 @@
+name: Build & Test a .NET Project
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: true
+        type: string
+      dotnet_version:
+        required: true
+        type: string
+
+jobs:
+  build-test-project:
+    name: Build & Test ${{ inputs.working_directory }}
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET ${{ inputs.dotnet_version }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet_version }}
+
+      - name: Install Package Dependencies
+        shell: bash
+        run: dotnet restore
+
+      - name: Build .NET Application
+        shell: bash
+        run: dotnet build --no-restore
+
+      - name: Test .NET Application
+        shell: bash
+        run: dotnet test --no-build --no-restore --verbosity normal
