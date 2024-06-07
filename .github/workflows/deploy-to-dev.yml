@@ -111,17 +111,17 @@ jobs:
 #            EventGridUrl=${{ vars.IDAM_API_EVENTGRIDURL }}
 #            GovUkOidcConfiguration.BearerTokenSigningKey=${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
 #            ServiceDirectoryApiBaseUrl=${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
-      
+
+      - name: Get Workflow Runner IP
+        id: runner-ip
+        uses: ./.github/actions/get-runner-ip-address
+
       - name: 'Azure CLI Login'
         uses: azure/login@v2
         with:
             client-id: ${{ secrets.AZURE_CLIENT_ID }}
             tenant-id: ${{ secrets.AZURE_TENANT_ID }}
             subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID_DEVELOPMENT }}
-
-      - name: Get Workflow Runner IP
-        id: runner-ip
-        uses: ./.github/actions/get-runner-ip-address
 
       - name: Add Azure Firewall Rules
         uses: ./.github/actions/azure-firewall-ip
