@@ -72,7 +72,7 @@ jobs:
     name: Deploy service/idam-api
     runs-on: ubuntu-latest
     environment: development
-    needs: [build-and-publish-idam-api]
+    #needs: [build-and-publish-idam-api]
 
     env:
       WORKING_DIRECTORY: src/service/idam-api/
