@@ -14,8 +14,11 @@ env:
   SQL_SERVER_RESOURCE_NAME: s181d01-as-fh-sql-server
   SQL_SERVER_TEMP_FW_RULE_NAME: github-actions-temp
 
+#on:
+#  workflow_dispatch:
 on:
-  workflow_dispatch:
+  push:
+    branches: ["fix-deploy-dev"] # TODO: Temporary, remove after testing & replace with workflow_dispatch :)
 
 permissions:
   contents: read
