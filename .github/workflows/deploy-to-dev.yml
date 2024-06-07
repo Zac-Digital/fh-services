@@ -75,7 +75,7 @@ jobs:
       WORKING_DIRECTORY: src/service/idam-api/
       STARTUP_PROJECT_PATH: src/FamilyHubs.Idam.Api
       DATA_PROJECT_PATH: src/FamilyHubs.Idam.Data
-      APP_SETTINGS_PATTERN: '**/{release,{0}}/**/appsettings.json'
+      APP_SETTINGS_PATTERN: '**/{release,src/service/idam-api}/**/appsettings.json'
     
     steps:
       - uses: actions/checkout@v4
@@ -91,7 +91,7 @@ jobs:
         with:
           # We need to replace release/appsettings, and the appsettings in the src/ folder too, as the src folder
           # appsettings is used for the below dotnet ef database update step
-          files: ${{ format(env.APP_SETTINGS_PATTERN, env.STARTUP_PROJECT_PATH) }}
+          files: '${{ env.APP_SETTINGS_PATTERN }}'
           key-value-pairs: |
             APPINSIGHTS_CONNECTION_STRING=${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
             APPINSIGHTS_INSTRUMENTATIONKEY=${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
@@ -108,7 +108,7 @@ jobs:
             EventGridUrl=${{ vars.IDAM_API_EVENTGRIDURL }}
             GovUkOidcConfiguration.BearerTokenSigningKey=${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
             ServiceDirectoryApiBaseUrl=${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
-      
+
       - name: 'Az CLI login'
         uses: azure/login@v1
         with:
