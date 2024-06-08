@@ -5,17 +5,17 @@ name: Build & test .NET
 
 on:
   push:
-    branches: 
-      - '*'         # matches every branch that doesn't contain a '/'
-      - '*/*'       # matches every branch containing a single '/'
-      - '**'        # matches every branch
-      - '!main'     # excludes main
+    branches:
+      - "*" # matches every branch that doesn't contain a '/'
+      - "*/*" # matches every branch containing a single '/'
+      - "**" # matches every branch
+      - "!main" # excludes main
   pull_request:
-    branches: 
-      - '*'
+    branches:
+      - "*"
 
 env:
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: "8.0.x"
 
 jobs:
   build-notification-api:
@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
@@ -64,8 +64,6 @@ jobs:
   build-referral-api:
     name: Build & test service/referral-api
     runs-on: ubuntu-latest
-    env:
-      AZURE_WEBAPP_NAME: fh-referral-api
     defaults:
       run:
         working-directory: src/service/referral-api/
@@ -107,7 +105,7 @@ jobs:
 
   build-service-directory-api:
     name: Build & test service/service-directory-api
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: src/service/service-directory-api/
@@ -118,7 +116,12 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-
+      - name: Install dependencies
+        run: >
+          wget http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-amalgamation-2.4.0-5.tar.gz
+          wget http://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-2.4.0-5.tar.gz
+          tar xzf libspatialite-amalgamation-2.4.0-5.tar.gz
+          tar xzf spatialite-tools-2.4.0-5.tar.gz
       - name: Restore
         run: dotnet restore
       - name: Build
