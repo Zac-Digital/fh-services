@@ -117,9 +117,7 @@ jobs:
       - name: Install dependencies
         run: >
           wget http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-amalgamation-2.4.0-5.tar.gz
-          wget http://www.gaia-gis.it/gaia-sins/spatialite-tools-sources/spatialite-tools-2.4.0-5.tar.gz
           tar xzf libspatialite-amalgamation-2.4.0-5.tar.gz
-          tar xzf spatialite-tools-2.4.0-5.tar.gz
       - name: Restore
         run: dotnet restore
       - name: Build
