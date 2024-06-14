@@ -10,6 +10,10 @@ on:
   pull_request:        # TODO: REMOVE AFTER TESTING
     branches: ["main"] # TODO: REMOVE AFTER TESTING
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   DOTNET_VERSION: "7.0.x"
   WORKING_DIRECTORY: "${{ github.workspace }}/src/service/idam-api/"
@@ -91,7 +95,7 @@ jobs:
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
-          files: "${{ env.WORKING_DIRECTORY }}/src/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
+          files: "${{ env.WORKING_DIRECTORY }}src/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
         env:
           APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
           APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
