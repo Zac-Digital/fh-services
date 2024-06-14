@@ -87,6 +87,14 @@ jobs:
       - name: Install Entity Framework
         run: dotnet tool install --global dotnet-ef
 
+      - name: Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-        
+
       - name: Restore Project
         shell: bash
         working-directory: ${{ env.WORKING_DIRECTORY }}
