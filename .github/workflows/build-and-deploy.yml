@@ -15,52 +15,52 @@ env:
   WORKING_DIRECTORY: "${{ github.workspace }}/src/service/idam-api/"
 
 jobs:
-  build-project-upload-artifact: # TODO: This can be made generic and reusable for any project
-    name: Build Project & Upload Artifact
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ env.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Publish Project
-        shell: bash
-        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ env.WORKING_DIRECTORY }}/out
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: IDAM_API_Artifact
-          path: ${{ env.WORKING_DIRECTORY }}/out
-          if-no-files-found: error
+#  build-project-upload-artifact: # TODO: This can be made generic and reusable for any project
+#    name: Build Project & Upload Artifact
+#    runs-on: ubuntu-22.04
+#    defaults:
+#      run:
+#        working-directory: ${{ env.WORKING_DIRECTORY }}
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#        with:
+#          ref: ${{ github.ref }}
+#
+#      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+#        uses: actions/setup-dotnet@v4
+#        with:
+#          dotnet-version: ${{ env.DOTNET_VERSION }}
+#
+#      - name: Package Cache
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.nuget/packages
+#          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+#          restore-keys: |
+#            ${{ runner.os }}-nuget-
+#
+#      - name: Restore Project
+#        shell: bash
+#        run: dotnet restore
+#
+#      - name: Publish Project
+#        shell: bash
+#        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ env.WORKING_DIRECTORY }}/out
+#
+#      - name: Upload Artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: IDAM_API_Artifact
+#          path: ${{ env.WORKING_DIRECTORY }}/out
+#          if-no-files-found: error
 
 
   deploy-project-to-azure:
     name: Deploy Artifact to Azure
     runs-on: ubuntu-22.04
-    needs: [build-project-upload-artifact]
+    # needs: [build-project-upload-artifact]
     environment: Development
 
     steps:
