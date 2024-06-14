@@ -10,7 +10,7 @@ concurrency:
 on:
   push:
     branches: ["main", "release*"]
-  pull_request:
+  #pull_request: TODO: REmove fort testing
 
 env:
   DOTNET_VERSION: "8.0.x"
