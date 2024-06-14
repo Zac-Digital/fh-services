@@ -11,11 +11,11 @@ on:
     branches: ["main"] # TODO: REMOVE AFTER TESTING
 
 env:
-  DOTNET_VERSION: "8.0.x"
+  DOTNET_VERSION: "7.0.x"
   WORKING_DIRECTORY: "${{ github.workspace }}/src/service/idam-api/"
 
 jobs:
-  build-project-upload-artifact:
+  build-project-upload-artifact: # TODO: This can be made generic and reusable for any project
     name: Build Project & Upload Artifact
     runs-on: ubuntu-22.04
     defaults:
@@ -55,3 +55,34 @@ jobs:
           name: IDAM_API_Artifact
           path: ${{ env.WORKING_DIRECTORY }}/out
           if-no-files-found: error
+
+
+  deploy-project-to-azure:
+    name: Deploy Artifact to Azure
+    runs-on: ubuntu-22.04
+    needs: [build-project-upload-artifact]
+    environment: Development
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore Project
+        shell: bash
+        run: dotnet restore
+
+      - name: Install Entity Framework
+        run: dotnet tool install --global dotnet-ef
+
+        # TODO: This should fail cos I haven't added login step
+
+      - name: Apply Database Migration
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: dotnet ef database update -c ApplicationDbContext --project src/FamilyHubs.Idam.Data --startup-project src/FamilyHubs.Idam.Api --connection ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
