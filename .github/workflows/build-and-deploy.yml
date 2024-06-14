@@ -11,6 +11,7 @@ on:
     branches: ["main", "release-*"]
   pull_request:                  # TODO: REMOVE AFTER TESTING
     branches: ["fix-deploy-dev"] # TODO: REMOVE AFTER TESTING
+  workflow_dispatch:             # TODO: REMOVE AFTER TESTING
 
 env:
   DOTNET_VERSION: "8.0.x"
