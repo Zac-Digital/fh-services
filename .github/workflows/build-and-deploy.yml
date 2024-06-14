@@ -12,7 +12,7 @@ on:
 
 env:
   DOTNET_VERSION: "7.0.x"
-  ENTITY_FRAMEWORK_VERSION: "7.x"
+  ENTITY_FRAMEWORK_VERSION: "7.0.x"
   WORKING_DIRECTORY: "${{ github.workspace }}/src/service/idam-api/"
 
 jobs:
