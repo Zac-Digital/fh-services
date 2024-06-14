@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="RD-241.17011.166">
+    <data-source name="Localhost" uuid="9d05abee-aa10-4226-808a-caa14e5a2f03">
+      <database-info product="Microsoft SQL Server" version="16.00.4120" jdbc-version="4.2" driver-name="JetBrains JDBC Driver for SQL Server" driver-version="1.0" dbms="MSSQL" exact-version="16.0.4120" exact-driver-version="1.0">
+        <extra-name-characters>$#@</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <secret-storage>master_key</secret-storage>
+      <auth-provider>no-auth</auth-provider>
+      <schema-mapping>
+        <introspection-scope>
+          <node negative="1">
+            <node kind="database">
+              <name qname="FamilyHubs.Idam.Database" />
+              <name qname="FamilyHubs.Notify.Database" />
+              <name qname="fh-referral-db" />
+              <name qname="fh-service-directory-db" />
+              <node kind="schema" qname="@" />
+            </node>
+            <node kind="database" qname="s181d01-fh-report-db">
+              <node kind="schema">
+                <name qname="@" />
+                <name qname="dim" />
+              </node>
+            </node>
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+  </component>
+</project>

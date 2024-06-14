@@ -1,0 +1,56 @@
+# TODO: Test on IDAM API to start off with, then apply to the rest of the code !
+
+name: Build & Deploy
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: ["main", "release-*"]
+
+env:
+  DOTNET_VERSION: "8.0.x"
+
+jobs:
+  build-project-upload-artifact:
+    name: Build Project & Upload Artifact
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: src/service/idam-api/
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Package Cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}\.nuget\packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore Project
+        shell: bash
+        run: dotnet restore
+
+      - name: Publish Project
+        shell: bash
+        run: dotnet publish --configuration Release --no-restore --output ./out
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IDAM_API_Artifact
+          path: ./out
+          if-no-files-found: error

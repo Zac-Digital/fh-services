@@ -4,16 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="870d142d-d480-43d6-98e1-0e1c2fd3580f" name="Changes" comment="" />
+    <list default="true" id="870d142d-d480-43d6-98e1-0e1c2fd3580f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/deploy-to-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/eeeeeeee.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.family-hubs.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.family-hubs.dir/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="workflow" />
+      </list>
+    </option>
+  </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
 }</component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -38,6 +49,10 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;sqlserver.localdb&quot;,
+      &quot;sqlserver&quot;
+    ],
     &quot;rider.external.source.directories&quot;: [
       &quot;/Users/zac.king/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache&quot;,
       &quot;/Users/zac.king/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache&quot;,
@@ -54,13 +69,24 @@
       <option name="presentableId" value="Default" />
       <updated>1717754054589</updated>
       <workItem from="1717754056325" duration="13170000" />
-      <workItem from="1717768131907" duration="1506000" />
+      <workItem from="1717768131907" duration="7180000" />
+      <workItem from="1717785711747" duration="70000" />
+      <workItem from="1718007418094" duration="599000" />
+      <workItem from="1718015810363" duration="7526000" />
+      <workItem from="1718093401447" duration="1269000" />
+      <workItem from="1718102038971" duration="295000" />
+      <workItem from="1718104195523" duration="2736000" />
+      <workItem from="1718179339474" duration="1239000" />
+      <workItem from="1718199553269" duration="6536000" />
+      <workItem from="1718266015540" duration="7652000" />
+      <workItem from="1718352815468" duration="1899000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
