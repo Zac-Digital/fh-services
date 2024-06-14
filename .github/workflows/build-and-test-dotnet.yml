@@ -14,6 +14,10 @@ name: Build & test .NET
 #    branches:
 #      - '*' // TODO: Stop this from happening while testing the deploy-dev thingy :)
 
+on:
+  push:
+    branches: ["temporary"] # TODO: Stop this from happening while testing the deploy-dev thingy :)
+
 env:
   DOTNET_VERSION: '8.0.x'
 
