@@ -12,7 +12,6 @@ on:
 
 env:
   DOTNET_VERSION: "7.0.x"
-  ENTITY_FRAMEWORK_VERSION: "7.0.x"
   WORKING_DIRECTORY: "${{ github.workspace }}/src/service/idam-api/"
 
 jobs:
@@ -76,7 +75,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Install Entity Framework
-        run: dotnet tool install --global dotnet-ef --version ${{ env.ENTITY_FRAMEWORK_VERSION }}
+        run: dotnet tool install --global dotnet-ef
 
       - name: Restore Project
         shell: bash
