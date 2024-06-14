@@ -76,6 +76,7 @@ jobs:
 
       - name: Restore Project
         shell: bash
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: dotnet restore
 
       - name: Install Entity Framework
