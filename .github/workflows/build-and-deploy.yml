@@ -35,7 +35,7 @@ jobs:
       - name: Package Cache
         uses: actions/cache@v3
         with:
-          path: ${{ github.workspace }}\.nuget\packages
+          path: ${{ github.workspace }}/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
@@ -46,11 +46,11 @@ jobs:
 
       - name: Publish Project
         shell: bash
-        run: dotnet publish --configuration Release --no-restore --property:PublishDir=./out
+        run: dotnet publish --configuration Release --no-restore --property:PublishDir=./release
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: IDAM_API_Artifact
-          path: ./out
+          path: ./release
           if-no-files-found: error
