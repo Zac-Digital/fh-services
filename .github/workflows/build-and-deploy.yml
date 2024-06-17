@@ -114,8 +114,7 @@ jobs:
         with:
           input-files: |
             ${{ env.WORKING_DIRECTORY }}src/FamilyHubs.Idam.Api/appsettings.json
-          output-directory: ./out/appsettings.json
-          enable-in-place: false
+          enable-in-place: true
           enable-dump: false
         env:
           APPINSIGHTS_CONNECTION_STRING: '${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}'
@@ -133,6 +132,10 @@ jobs:
           EventGridUrl: '${{ vars.IDAM_API_EVENTGRIDURL }}'
           GovUkOidcConfiguration.BearerTokenSigningKey: '${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}'
           ServiceDirectoryApiBaseUrl: '${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}'
+
+      - name: Copy App Settings to Release
+        shell: bash
+        run: cp ${{ env.WORKING_DIRECTORY }}src/FamilyHubs.Idam.Api/appsettings.json ./out/appsettings.json
 
 #      - name: App Settings Variable Substitution
 #        uses: microsoft/variable-substitution@v1
