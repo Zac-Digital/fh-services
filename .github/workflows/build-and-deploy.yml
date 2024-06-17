@@ -114,7 +114,9 @@ jobs:
         with:
           input-files: |
             ${{ env.WORKING_DIRECTORY }}src/FamilyHubs.Idam.Api/appsettings.json
-            ./out/appsettings.json
+          output-directory: ./out/appsettings.json
+          enable-in-place: false
+          enable-dump: false
         env:
           APPINSIGHTS_CONNECTION_STRING: '${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}'
           APPINSIGHTS_INSTRUMENTATIONKEY: '${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}'
