@@ -51,7 +51,7 @@ jobs:
 
       - name: Publish Project
         shell: bash
-        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ env.WORKING_DIRECTORY }}/out
+        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ env.WORKING_DIRECTORY }}out
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -100,42 +100,35 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: dotnet restore
 
-#          - uses: iamazeem/substitute-action@v1
-#            env:
-#              ENV_VAR1: 'env_val1'
-#              ENV_VAR2: 'env_val2'
+#          - name: Replace values in JSON file
+#            uses: tnikFi/json-file-transform@v2
 #            with:
-#              input-files: |
-#                input.json
-#                input.yaml
+#              files: '**/appsettings.json'
+#              key-value-pairs: |
+#                ConnectionStrings.DefaultConnection=${{ secrets.DB_CONNECTION_STRING }}
+#                Logging.LogLevel.Default=Information
+#                AllowedHosts=localhost
 
       - name: App Settings Variable Substitution
-        uses: iamazeem/substitute-action@v1
+        uses: tnikFi/json-file-transform@v2
         with:
-          input-files: |
-            ${{ env.WORKING_DIRECTORY }}src/FamilyHubs.Idam.Api/appsettings.json
-          enable-in-place: true
-          enable-dump: false
-        env:
-          APPINSIGHTS_CONNECTION_STRING: '${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}'
-          APPINSIGHTS_INSTRUMENTATIONKEY: '${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}'
-          ConnectionStrings.IdamConnection: '${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}'
-          Crypto.clientId: '${{ vars.IDAM_API_CRYPTO_CLIENTID }}'
-          Crypto.clientSecret: '${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}'
-          Crypto.DbEncryptionIVKey: '${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}'
-          Crypto.DbEncryptionIVKeySecretName: '${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}'
-          Crypto.DbEncryptionKey: '${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}'
-          Crypto.DbEncryptionKeySecretName: '${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}'
-          Crypto.KeyVaultIdentifier: '${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}'
-          Crypto.tenantId: '${{ vars.IDAM_API_CRYPTO_TENANTID }}'
-          Crypto.UseKeyVault: '${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}'
-          EventGridUrl: '${{ vars.IDAM_API_EVENTGRIDURL }}'
-          GovUkOidcConfiguration.BearerTokenSigningKey: '${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}'
-          ServiceDirectoryApiBaseUrl: '${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}'
-
-      - name: Copy App Settings to Release
-        shell: bash
-        run: cp ${{ env.WORKING_DIRECTORY }}src/FamilyHubs.Idam.Api/appsettings.json ./out/appsettings.json
+          files: "$**/{./out,${{ env.WORKING_DIRECTORY }}src/FamilyHubs.Idam.Api}/appsettings.json"
+        key-value-pairs: |
+          APPINSIGHTS_CONNECTION_STRING='${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}'
+          APPINSIGHTS_INSTRUMENTATIONKEY='${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}'
+          ConnectionStrings.IdamConnection='${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}'
+          Crypto.clientId='${{ vars.IDAM_API_CRYPTO_CLIENTID }}'
+          Crypto.clientSecret='${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}'
+          Crypto.DbEncryptionIVKey='${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}'
+          Crypto.DbEncryptionIVKeySecretName='${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}'
+          Crypto.DbEncryptionKey='${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}'
+          Crypto.DbEncryptionKeySecretName='${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}'
+          Crypto.KeyVaultIdentifier='${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}'
+          Crypto.tenantId='${{ vars.IDAM_API_CRYPTO_TENANTID }}'
+          Crypto.UseKeyVault='${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}'
+          EventGridUrl='${{ vars.IDAM_API_EVENTGRIDURL }}'
+          GovUkOidcConfiguration.BearerTokenSigningKey='${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}'
+          ServiceDirectoryApiBaseUrl='${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}'
 
 #      - name: App Settings Variable Substitution
 #        uses: microsoft/variable-substitution@v1
