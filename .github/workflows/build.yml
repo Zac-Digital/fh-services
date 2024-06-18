@@ -17,7 +17,7 @@ jobs:
     runs-on: ${{ inputs.runner }}
     defaults:
       run:
-        working-directory: ${{ inputs.project }}
+        working-directory: ${{ github.workspace }}/${{ inputs.project }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -43,11 +43,11 @@ jobs:
 
       - name: Publish Project
         shell: bash
-        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ inputs.project }}/out
+        run: dotnet publish --configuration Release --no-restore --property:PublishDir=/out
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.project }}
-          path: ${{ inputs.project }}/out
+          path: /out
           if-no-files-found: error
