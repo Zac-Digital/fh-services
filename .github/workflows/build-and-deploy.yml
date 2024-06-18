@@ -1,72 +1,38 @@
-name: Build & Deploy
+name: Deploy to ${{ inputs.environment }}
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 on:
-  push:
-    branches: ["main", "release-*"]
-  pull_request:        # TODO: REMOVE AFTER TESTING
-    branches: ["main"] # TODO: REMOVE AFTER TESTING
-  workflow_dispatch:   # TODO: REMOVE AFTER TESTING
+  pull_request:                                  # TODO: REMOVE AFTER TESTING
+    paths:                                       # TODO: REMOVE AFTER TESTING
+      - '.github/workflows/build-and-deploy.yml' # TODO: REMOVE AFTER TESTING
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: The environment target for deployment
+        default: 'Development'
+        type: choice
+        options:
+          - 'Development'
+          - 'Test'
+          - 'Production'
 
 permissions:
   id-token: write
   contents: read
 
 env:
-  DOTNET_VERSION: "7.0.x"
   WORKING_DIRECTORY: "${{ github.workspace }}/src/service/idam-api/"
 
 jobs:
-#  build-project-upload-artifact: # TODO: This can be made generic and reusable for any project
-#    name: Build Project & Upload Artifact
-#    runs-on: ubuntu-22.04
-#    defaults:
-#      run:
-#        working-directory: ${{ env.WORKING_DIRECTORY }}
-#
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v4
-#        with:
-#          ref: ${{ github.ref }}
-#
-#      - name: Setup .NET ${{ env.DOTNET_VERSION }}
-#        uses: actions/setup-dotnet@v4
-#        with:
-#          dotnet-version: ${{ env.DOTNET_VERSION }}
-#
-#      - name: Package Cache
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.nuget/packages
-#          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-#          restore-keys: |
-#            ${{ runner.os }}-nuget-
-#
-#      - name: Restore Project
-#        shell: bash
-#        run: dotnet restore
-#
-#      - name: Publish Project
-#        shell: bash
-#        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ env.WORKING_DIRECTORY }}out
-#
-#      - name: Upload Artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: IDAM_API_Artifact
-#          path: ${{ env.WORKING_DIRECTORY }}/out
-#          if-no-files-found: error
-
-
-  deploy-project-to-azure:
-    name: Deploy Artifact to Azure
+  build-project-upload-artifact: # TODO: Convert most of this to an action
+    name: Build Project & Upload Artifact
     runs-on: ubuntu-22.04
-    # needs: [build-project-upload-artifact]
-    environment: Development
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
     steps:
       - name: Checkout Repository
@@ -74,16 +40,57 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore Project
+        shell: bash
+        run: dotnet restore
+
+      - name: Publish Project
+        shell: bash
+        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ env.WORKING_DIRECTORY }}out
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IDAM_API_Artifact
+          path: ${{ env.WORKING_DIRECTORY }}/out
+          if-no-files-found: error
+
+
+  deploy-project-to-azure:
+    name: Deploy Artifact to Azure
+    runs-on: ubuntu-22.04
+    needs: [build-project-upload-artifact]
+    environment: ${{ inputs.environment }}
+
+    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#        with:
+#          ref: ${{ github.ref }}
+
 #      - name: Download Artifact
 #        uses: actions/download-artifact@v4
 #        with:
 #          name: IDAM_API_Artifact
 #          path: ./out
 
-#      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+#      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
 #        uses: actions/setup-dotnet@v4
 #        with:
-#          dotnet-version: ${{ env.DOTNET_VERSION }}
+#          dotnet-version: ${{ vars.DOTNET_VERSION }}
 #
 #      - name: Install Entity Framework
 #        run: dotnet tool install --global dotnet-ef
@@ -122,9 +129,9 @@ jobs:
 #          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
 #          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
 
-      - name: Get Workflow Runner IP
-        id: runner-ip
-        uses: ./.github/actions/get-runner-ip-address
+#      - name: Get Workflow Runner IP
+#        id: runner-ip
+#        uses: ./.github/actions/get-runner-ip-address
 
       - name: 'Azure CLI Login'
         uses: azure/login@v2
@@ -133,13 +140,13 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Add Azure Firewall Rule
-        uses: ./.github/actions/azure-firewall-ip
-        with:
-          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
-          action: "Add"
-          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+#      - name: Add Azure Firewall Rule
+#        uses: ./.github/actions/azure-firewall-ip
+#        with:
+#          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+#          action: "Add"
+#          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+#          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
 #      - name: Apply Database Migration
 #        working-directory: ${{ env.WORKING_DIRECTORY }}
@@ -152,11 +159,11 @@ jobs:
 #          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
 #          package: ./out
 
-      - name: Remove Azure Firewall Rule
-        if: always()
-        uses: ./.github/actions/azure-firewall-ip
-        with:
-          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
-          action: "Remove"
-          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+#      - name: Remove Azure Firewall Rule
+#        if: always()
+#        uses: ./.github/actions/azure-firewall-ip
+#        with:
+#          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+#          action: "Remove"
+#          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+#          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
