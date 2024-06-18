@@ -1,0 +1,56 @@
+name: Build a Project
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        required: true
+        type: string
+      runner:
+        required: false
+        default: 'ubuntu-22.04'
+        type: choice
+        options:
+          - 'ubuntu-22.04'
+          - 'windows-2022'
+
+jobs:
+  build-project-upload-artifact:
+    name: Build & Upload ${{ inputs.project }}
+    runs-on: ${{ inputs.runner }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.project }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
+
+      - name: Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore Project
+        shell: bash
+        run: dotnet restore
+
+      - name: Publish Project
+        shell: bash
+        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ inputs.project }}/out
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.project }}
+          path: ${{ inputs.project }}/out
+          if-no-files-found: error

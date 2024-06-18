@@ -26,40 +26,10 @@ jobs:
       matrix:
         project: [ 'src/service/idam-api' ]
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        working-directory: ${{ matrix.project }}
-        shell: bash
-        run: dotnet restore
-
-      - name: Publish Project
-        working-directory: ${{ matrix.project }}
-        shell: bash
-        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ matrix.project }}/out
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.project }}
-          path: ${{ github.workspace }}/${{ matrix.project }}/out
-          if-no-files-found: error
+      - uses: ./.github/workflows/build.yml
+    with:
+      project: ${{ matrix.project }}
+    secrets: inherit
 
 #  deploy-artifact:
 #    name: Deploy Artifact
