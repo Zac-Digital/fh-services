@@ -1,4 +1,4 @@
-name: Build & Test Each .NET Project
+name: Build & Test
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
