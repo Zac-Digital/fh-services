@@ -20,27 +20,21 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  WORKING_DIRECTORY: "${{ github.workspace }}/src/service/idam-api/"
-
 jobs:
-  build-project-upload-artifact: # TODO: Convert most of this to an action
-    name: Build Project & Upload Artifact
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-
+  build-projects-upload-artifacts:
+    strategy:
+      matrix:
+        project: [ 'src/service/idam-api' ]
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
 
-      - name: Setup .NET ${{ env.DOTNET_VERSION }}
+      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
 
       - name: Package Cache
         uses: actions/cache@v4
@@ -51,39 +45,41 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore Project
+        working-directory: ${{ matrix.project }}
         shell: bash
         run: dotnet restore
 
       - name: Publish Project
+        working-directory: ${{ matrix.project }}
         shell: bash
-        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ env.WORKING_DIRECTORY }}out
+        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ matrix.project }}/out
 
       - name: Upload Artifact
+        working-directory: ${{ matrix.project }}
         uses: actions/upload-artifact@v4
         with:
-          name: IDAM_API_Artifact
-          path: ${{ env.WORKING_DIRECTORY }}/out
+          name: ${{ matrix.project }}
+          path: ${{ matrix.project }}/out
           if-no-files-found: error
 
-
-  deploy-artifact:
-    name: Deploy Artifact
-    runs-on: ubuntu-22.04
-    needs: [build-project-upload-artifact]
-    environment: ${{ inputs.environment }}
-
-    steps:
+#  deploy-artifact:
+#    name: Deploy Artifact
+#    runs-on: ubuntu-22.04
+#    needs: [build-project-upload-artifact]
+#    environment: ${{ inputs.environment }}
+#
+#    steps:
 #      - name: Checkout Repository
 #        uses: actions/checkout@v4
 #        with:
 #          ref: ${{ github.ref }}
-
+#
 #      - name: Download Artifact
 #        uses: actions/download-artifact@v4
 #        with:
 #          name: IDAM_API_Artifact
 #          path: ./out
-
+#
 #      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
 #        uses: actions/setup-dotnet@v4
 #        with:
@@ -125,18 +121,18 @@ jobs:
 #          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
 #          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
 #          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
-
+#
 #      - name: Get Workflow Runner IP
 #        id: runner-ip
 #        uses: ./.github/actions/get-runner-ip-address
-
-      - name: 'Azure CLI Login'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
+#
+#      - name: 'Azure CLI Login'
+#        uses: azure/login@v2
+#        with:
+#          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+#          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+#          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+#
 #      - name: Add Azure Firewall Rule
 #        uses: ./.github/actions/azure-firewall-ip
 #        with:
@@ -144,18 +140,18 @@ jobs:
 #          action: "Add"
 #          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
 #          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
-
+#
 #      - name: Apply Database Migration
 #        working-directory: ${{ env.WORKING_DIRECTORY }}
 #        run: dotnet ef database update -c ApplicationDbContext --project src/FamilyHubs.Idam.Data --startup-project src/FamilyHubs.Idam.Api
-
+#
 #      - name: Deploy Artifact to Azure Service App
 #        uses: azure/webapps-deploy@v3
 #        with:
 #          app-name: s181d01-as-fh-idam-api
 #          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
 #          package: ./out
-
+#
 #      - name: Remove Azure Firewall Rule
 #        if: always()
 #        uses: ./.github/actions/azure-firewall-ip
