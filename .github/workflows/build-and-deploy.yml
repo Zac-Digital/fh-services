@@ -55,11 +55,10 @@ jobs:
         run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ matrix.project }}/out
 
       - name: Upload Artifact
-        working-directory: ${{ matrix.project }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.project }}
-          path: ${{ matrix.project }}/out
+          path: ${{ github.workspace }}/${{ matrix.project }}/out
           if-no-files-found: error
 
 #  deploy-artifact:
