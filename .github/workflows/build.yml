@@ -9,10 +9,7 @@ on:
       runner:
         required: false
         default: 'ubuntu-22.04'
-        type: choice
-        options:
-          - 'ubuntu-22.04'
-          - 'windows-2022'
+        type: string
 
 jobs:
   build-project-upload-artifact:
