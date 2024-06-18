@@ -1,5 +1,3 @@
-name: Deploy to ${{ inputs.environment }}
-
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
@@ -70,7 +68,7 @@ jobs:
 
 
   deploy-project-to-azure:
-    name: Deploy Artifact to Azure
+    name: Deploy Artifact to ${{ inputs.environment }}
     runs-on: ubuntu-22.04
     needs: [build-project-upload-artifact]
     environment: ${{ inputs.environment }}
