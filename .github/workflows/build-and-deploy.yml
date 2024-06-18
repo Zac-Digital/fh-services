@@ -3,9 +3,6 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  pull_request:                                  # TODO: REMOVE AFTER TESTING
-    paths:                                       # TODO: REMOVE AFTER TESTING
-      - '.github/workflows/build-and-deploy.yml' # TODO: REMOVE AFTER TESTING
   workflow_dispatch:
     inputs:
       environment:
