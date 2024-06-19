@@ -99,7 +99,7 @@ jobs:
           APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
           ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
           Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
-          Crypto.clientSecret: ${{ format('{0}', secrets.IDAM_API_CRYPTO_CLIENTSECRET) }}
+          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
           Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
           Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
           Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
