@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="870d142d-d480-43d6-98e1-0e1c2fd3580f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/build.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/build.yml" afterDir="false" />
-    </list>
+    <list default="true" id="870d142d-d480-43d6-98e1-0e1c2fd3580f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -80,7 +78,7 @@
       <workItem from="1718266015540" duration="7652000" />
       <workItem from="1718352815468" duration="4563000" />
       <workItem from="1718747764559" duration="37000" />
-      <workItem from="1718786322324" duration="2769000" />
+      <workItem from="1718786322324" duration="3085000" />
     </task>
     <servers />
   </component>
