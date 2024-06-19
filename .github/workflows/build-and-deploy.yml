@@ -93,7 +93,7 @@ jobs:
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
-          files: "${{ env.WORKING_DIRECTORY }}src/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
+          files: "./src/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
         env:
           APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
           APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
@@ -111,16 +111,16 @@ jobs:
           GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
           ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
 
-      - name: Get Workflow Runner IP
-        id: runner-ip
-        uses: ./.github/actions/get-runner-ip-address
-
       - name: 'Azure CLI Login'
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get Workflow Runner IP
+        id: runner-ip
+        uses: ./.github/actions/get-runner-ip-address
 
       - name: Add Azure Firewall Rule
         uses: ./.github/actions/azure-firewall-ip
