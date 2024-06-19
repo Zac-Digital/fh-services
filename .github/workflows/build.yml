@@ -47,8 +47,10 @@ jobs:
         shell: bash
         run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ env.BUILD_DIRECTORY }}
 
-      - name: Get Name for Artifact
+      - name: Get PWD Name for Artifact
         id: get-name
+        outputs:
+          artifact_name: ${{ steps.get-name.outputs.artifact_name }}
         shell: bash
         run: |
           ARTIFACT_NAME=${PWD##*/}

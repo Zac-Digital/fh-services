@@ -42,8 +42,6 @@ jobs:
       project: ${{ matrix.project }}
     secrets: inherit
 
-    # TODO: Get name for artifact split out into step and passed in db migrator and artifact downloader
-
   deploy-idam:
     name: Deploy IDAM API
     runs-on: ubuntu-22.04
@@ -51,23 +49,47 @@ jobs:
     environment: ${{ inputs.environment }}
     defaults:
       run:
-        working-directory: src/service/idam-api/
+        working-directory: /src/service/idam-api/
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: idam-api
-          path: ./out
-
       - name: Setup .NET ${{ vars.DOTNET_VERSION }}
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ vars.DOTNET_VERSION }}
+
+      - name: Install Entity Framework
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore Project
+        shell: bash
+        run: dotnet restore
+
+      - name: Get PWD Name for Artifact
+        id: get-name
+        outputs:
+          artifact_name: ${{ steps.get-name.outputs.artifact_name }}
+        shell: bash
+        run: |
+          ARTIFACT_NAME=${PWD##*/}
+          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.get-name.outputs.artifact_name }}
+          path: ./out
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
@@ -90,21 +112,28 @@ jobs:
           GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
           ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
 
-      - name: Azure CLI Login
+      - name: Get Workflow Runner IP
+        id: runner-ip
+        uses: ./.github/actions/get-runner-ip-address
+
+      - name: 'Azure CLI Login'
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Run Database Migration
-        uses: ./.github/actions/database-migration
+      - name: Add Azure Firewall Rule
+        uses: ./.github/actions/azure-firewall-ip
         with:
-          db_context: ApplicationDbContext
-          db_project: FamilyHubs.Idam.Data
-          main_project: FamilyHubs.Idam.Api
-          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+          action: "Add"
+          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+
+      - name: Apply Database Migration
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: dotnet ef database update -c ApplicationDbContext --project src/FamilyHubs.Idam.Data --startup-project src/FamilyHubs.Idam.Api
 
       - name: Deploy Artifact to Azure Service App
         uses: azure/webapps-deploy@v3
@@ -112,6 +141,15 @@ jobs:
           app-name: s181d01-as-fh-idam-api
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
           package: ./out
+
+      - name: Remove Azure Firewall Rule
+        if: always()
+        uses: ./.github/actions/azure-firewall-ip
+        with:
+          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+          action: "Remove"
+          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
 #  deploy-artifact:
 #    name: Deploy Artifact
