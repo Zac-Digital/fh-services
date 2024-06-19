@@ -42,6 +42,8 @@ jobs:
       project: ${{ matrix.project }}
     secrets: inherit
 
+    # TODO: Get name for artifact split out into step and passed in db migrator and artifact downloader
+
   deploy-idam:
     name: Deploy IDAM API
     runs-on: ubuntu-22.04

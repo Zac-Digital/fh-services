@@ -50,6 +50,7 @@ runs:
         az_sql_server_name: ${{ inputs.azure_sql_server_resource_name }}
 
     - name: Apply Database Migration
+      shell: bash
       run: dotnet ef database update -c ${{ inputs.db_context }} --project src/${{ inputs.db_project }} --startup-project src/${{ inputs.main_project }}
 
     - name: Remove Azure Firewall Rule
