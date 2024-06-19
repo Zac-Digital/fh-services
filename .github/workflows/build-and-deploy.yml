@@ -122,18 +122,18 @@ jobs:
         id: runner-ip
         uses: ./.github/actions/get-runner-ip-address
 
-      - name: Add Azure Firewall Rule
-        uses: ./.github/actions/azure-firewall-ip
-        with:
-          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
-          action: "Add"
-          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
-
-      - name: Apply Database Migration
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        shell: bash
-        run: dotnet ef database update -c ApplicationDbContext --project src/FamilyHubs.Idam.Data --startup-project src/FamilyHubs.Idam.Api
+#      - name: Add Azure Firewall Rule
+#        uses: ./.github/actions/azure-firewall-ip
+#        with:
+#          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+#          action: "Add"
+#          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+#          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+#
+#      - name: Apply Database Migration
+#        working-directory: ${{ env.WORKING_DIRECTORY }}
+#        shell: bash
+#        run: dotnet ef database update -c ApplicationDbContext --project src/FamilyHubs.Idam.Data --startup-project src/FamilyHubs.Idam.Api
 
       - name: Deploy Artifact to Azure Service App
         uses: azure/webapps-deploy@v3
@@ -142,14 +142,14 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
           package: ./out
 
-      - name: Remove Azure Firewall Rule
-        if: always()
-        uses: ./.github/actions/azure-firewall-ip
-        with:
-          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
-          action: "Remove"
-          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+#      - name: Remove Azure Firewall Rule
+#        if: always()
+#        uses: ./.github/actions/azure-firewall-ip
+#        with:
+#          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+#          action: "Remove"
+#          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+#          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
 #  deploy-artifact:
 #    name: Deploy Artifact
