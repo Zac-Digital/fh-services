@@ -1,0 +1,62 @@
+name: Run Database Migration
+description: Install Entity Framework and run the Database Migration for a given project
+
+inputs:
+  db_context:
+    required: true
+    type: string
+  db_project:
+    required: true
+    type: string
+  main_project:
+    required: true
+    type: string
+  azure_resource_group:
+    required: true
+    type: string
+  azure_sql_server_resource_name:
+    required: true
+    type: string
+
+runs:
+  using: composite
+
+  steps:
+    - name: Package Cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore Project
+      shell: bash
+      run: dotnet restore
+
+    - name: Install Entity Framework
+      run: dotnet tool install --global dotnet-ef
+
+    - name: Get Workflow Runner IP
+      id: runner-ip
+      uses: ./.github/actions/get-runner-ip-address
+
+    - name: Add Azure Firewall Rule
+      uses: ./.github/actions/azure-firewall-ip
+      with:
+        ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+        action: "Add"
+        az_resource_group: ${{ inputs.azure_resource_group }}
+        az_sql_server_name: ${{ inputs.azure_sql_server_resource_name }}
+
+    - name: Apply Database Migration
+      run: dotnet ef database update -c ${{ inputs.db_context }} --project src/${{ inputs.db_project }} --startup-project src/${{ inputs.main_project }}
+
+    - name: Remove Azure Firewall Rule
+      if: always()
+      uses: ./.github/actions/azure-firewall-ip
+      with:
+        ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+        action: "Remove"
+        az_resource_group: ${{ inputs.azure_resource_group }}
+        az_sql_server_name: ${{ inputs.azure_sql_server_resource_name }}
