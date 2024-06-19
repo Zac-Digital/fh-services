@@ -45,7 +45,7 @@ jobs:
   deploy-idam:
     name: Deploy IDAM API
     runs-on: ubuntu-22.04
-    needs: [ build-project-upload-artifacts ]
+    needs: [ build-projects-upload-artifacts ]
     environment: ${{ inputs.environment }}
     defaults:
       run:
