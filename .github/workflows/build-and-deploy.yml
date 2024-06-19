@@ -93,7 +93,7 @@ jobs:
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
-          files: "${{ github.workspace }}/src/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
+          files: "src/service/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
         env:
           APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
           APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
