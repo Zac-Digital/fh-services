@@ -51,10 +51,10 @@ jobs:
       run:
         working-directory: ${{ github.workspace }}/src/service/idam-api/
     steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v4
-#        with:
-#          ref: ${{ github.ref }}
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
 #
 #      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
 #        uses: actions/setup-dotnet@v4
