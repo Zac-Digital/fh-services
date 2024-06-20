@@ -119,6 +119,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Apply Database Migration
+        id: migration
         uses: ./.github/actions/database-migration
         with:
           db_context: ApplicationDbContext
@@ -127,14 +128,10 @@ jobs:
           azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
-#      - name: Apply Database Migration
-#        working-directory: ${{ env.WORKING_DIRECTORY }}
-#        shell: bash
-#        run: dotnet ef database update -c ApplicationDbContext --project src/FamilyHubs.Idam.Data --startup-project src/FamilyHubs.Idam.Api
-#
-#      - name: Deploy Artifact to Azure Service App
-#        uses: azure/webapps-deploy@v3
-#        with:
-#          app-name: s181d01-as-fh-idam-api
-#          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-#          package: ./out
+      - name: Deploy Artifact to Azure Service App
+        if: steps.migration.outputs.status == 'success'
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: s181d01-as-fh-idam-api
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+          package: ./out
