@@ -21,153 +21,40 @@ permissions:
   contents: read
 
 jobs:
-  build-projects-upload-artifacts:
-    name: ${{ matrix.project }}
-    strategy:
-      fail-fast: true
-      matrix:
-        project: [ src/service/idam-api/,
-#                   src/service/notification-api/,
-#                   src/service/referral-api/,
-#                   src/service/report-api/,
-#                   src/service/service-directory-api/,
-#                   src/ui/connect-dashboard-ui/,
-#                   src/ui/connect-ui/,
-#                   src/ui/find-ui/,
-#                   src/ui/idam-maintenance-ui/,
-#                   src/ui/manage-ui/ ]
-                   ]
-    uses: ./.github/workflows/build.yml
-    with:
-      project: ${{ matrix.project }}
-    secrets: inherit
+#  build-projects-upload-artifacts:
+#    name: ${{ matrix.project }}
+#    strategy:
+#      fail-fast: true
+#      matrix:
+#        project: [ src/service/idam-api/,
+##                   src/service/notification-api/,
+##                   src/service/referral-api/,
+##                   src/service/report-api/,
+##                   src/service/service-directory-api/,
+##                   src/ui/connect-dashboard-ui/,
+##                   src/ui/connect-ui/,
+##                   src/ui/find-ui/,
+##                   src/ui/idam-maintenance-ui/,
+##                   src/ui/manage-ui/ ]
+#                   ]
+#    uses: ./.github/workflows/build.yml
+#    with:
+#      project: ${{ matrix.project }}
+#    secrets: inherit
 
   deploy-idam:
     name: Deploy IDAM API
     runs-on: ubuntu-22.04
-    needs: [ build-projects-upload-artifacts ]
+    # needs: [ build-projects-upload-artifacts ]
     environment: ${{ inputs.environment }}
     defaults:
       run:
         working-directory: ${{ github.workspace }}/src/service/idam-api/
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Install Entity Framework
-        shell: bash
-        run: dotnet tool install --global dotnet-ef
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Get PWD Name for Artifact
-        id: get-name
-        shell: bash
-        run: |
-          ARTIFACT_NAME=${PWD##*/}
-          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ steps.get-name.outputs.artifact_name }}
-          path: ./out
-
-      - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: "${{ github.workspace }}src/service/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
-        env:
-          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
-          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
-          ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
-          Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
-          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
-          Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
-          Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
-          Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
-          Crypto.DbEncryptionKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-          Crypto.KeyVaultIdentifier: ${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
-          Crypto.tenantId: ${{ vars.IDAM_API_CRYPTO_TENANTID }}
-          Crypto.UseKeyVault: ${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}
-          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
-          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
-          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
-
-      - name: 'Azure CLI Login'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: Get Workflow Runner IP
-        id: runner-ip
-        uses: ./.github/actions/get-runner-ip-address
-
-#      - name: Add Azure Firewall Rule
-#        uses: ./.github/actions/azure-firewall-ip
-#        with:
-#          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
-#          action: "Add"
-#          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-#          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
-#
-#      - name: Apply Database Migration
-#        working-directory: ${{ env.WORKING_DIRECTORY }}
-#        shell: bash
-#        run: dotnet ef database update -c ApplicationDbContext --project src/FamilyHubs.Idam.Data --startup-project src/FamilyHubs.Idam.Api
-
-      - name: Deploy Artifact to Azure Service App
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: s181d01-as-fh-idam-api
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-          package: ./out
-
-#      - name: Remove Azure Firewall Rule
-#        if: always()
-#        uses: ./.github/actions/azure-firewall-ip
-#        with:
-#          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
-#          action: "Remove"
-#          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-#          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
-
-#  deploy-artifact:
-#    name: Deploy Artifact
-#    runs-on: ubuntu-22.04
-#    needs: [build-project-upload-artifact]
-#    environment: ${{ inputs.environment }}
-#
-#    steps:
 #      - name: Checkout Repository
 #        uses: actions/checkout@v4
 #        with:
 #          ref: ${{ github.ref }}
-#
-#      - name: Download Artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: IDAM_API_Artifact
-#          path: ./out
 #
 #      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
 #        uses: actions/setup-dotnet@v4
@@ -175,6 +62,7 @@ jobs:
 #          dotnet-version: ${{ vars.DOTNET_VERSION }}
 #
 #      - name: Install Entity Framework
+#        shell: bash
 #        run: dotnet tool install --global dotnet-ef
 #
 #      - name: Package Cache
@@ -187,19 +75,31 @@ jobs:
 #
 #      - name: Restore Project
 #        shell: bash
-#        working-directory: ${{ env.WORKING_DIRECTORY }}
 #        run: dotnet restore
+#
+#      - name: Get PWD Name for Artifact
+#        id: get-name
+#        shell: bash
+#        run: |
+#          ARTIFACT_NAME=${PWD##*/}
+#          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+#
+#      - name: Download Artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: ${{ steps.get-name.outputs.artifact_name }}
+#          path: ./out
 #
 #      - name: App Settings Variable Substitution
 #        uses: microsoft/variable-substitution@v1
 #        with:
-#          files: "${{ env.WORKING_DIRECTORY }}src/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
+#          files: "${{ github.workspace }}/src/service/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
 #        env:
 #          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
 #          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
 #          ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
 #          Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
-#          Crypto.clientSecret: ${{ format('{0}', secrets.IDAM_API_CRYPTO_CLIENTSECRET) }}
+#          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
 #          Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
 #          Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
 #          Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
@@ -210,28 +110,29 @@ jobs:
 #          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
 #          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
 #          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
-#
-#      - name: Get Workflow Runner IP
-#        id: runner-ip
-#        uses: ./.github/actions/get-runner-ip-address
-#
-#      - name: 'Azure CLI Login'
-#        uses: azure/login@v2
-#        with:
-#          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-#          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-#          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-#
-#      - name: Add Azure Firewall Rule
-#        uses: ./.github/actions/azure-firewall-ip
-#        with:
-#          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
-#          action: "Add"
-#          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-#          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
-#
+
+      - name: 'Azure CLI Login'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get Workflow Runner IP
+        id: runner-ip
+        uses: ./.github/actions/get-runner-ip-address
+
+      - name: Add Azure Firewall Rule
+        uses: ./.github/actions/azure-firewall-ip
+        with:
+          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+          action: "Add"
+          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+
 #      - name: Apply Database Migration
 #        working-directory: ${{ env.WORKING_DIRECTORY }}
+#        shell: bash
 #        run: dotnet ef database update -c ApplicationDbContext --project src/FamilyHubs.Idam.Data --startup-project src/FamilyHubs.Idam.Api
 #
 #      - name: Deploy Artifact to Azure Service App
@@ -240,12 +141,12 @@ jobs:
 #          app-name: s181d01-as-fh-idam-api
 #          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
 #          package: ./out
-#
-#      - name: Remove Azure Firewall Rule
-#        if: always()
-#        uses: ./.github/actions/azure-firewall-ip
-#        with:
-#          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
-#          action: "Remove"
-#          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-#          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+
+      - name: Remove Azure Firewall Rule
+        if: always()
+        uses: ./.github/actions/azure-firewall-ip
+        with:
+          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+          action: "Remove"
+          az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+          az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
