@@ -124,6 +124,8 @@ jobs:
           db_context: ApplicationDbContext
           data_project_path: src/FamilyHubs.Idam.Data
           startup_project_path: src/FamilyHubs.Idam.Api
+          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
 #      - name: Apply Database Migration
 #        working-directory: ${{ env.WORKING_DIRECTORY }}
