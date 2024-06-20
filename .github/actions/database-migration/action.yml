@@ -11,6 +11,12 @@ inputs:
   startup_project_path:
     required: true
     type: string
+  azure_resource_group:
+    required: true
+    type: string
+  azure_sql_server_resource_name:
+    required: true
+    type: string
 
 runs:
   using: composite
@@ -25,8 +31,8 @@ runs:
       with:
         ip_address: ${{ steps.runner-ip.outputs.ip_address }}
         action: "Add"
-        az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-        az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+        az_resource_group: ${{ inputs.azure_resource_group }}
+        az_sql_server_name: ${{ inputs.azure_sql_server_resource_name }}
 
     - name: Apply Database Migration
       shell: bash
@@ -38,5 +44,5 @@ runs:
       with:
         ip_address: ${{ steps.runner-ip.outputs.ip_address }}
         action: "Remove"
-        az_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-        az_sql_server_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+        az_resource_group: ${{ inputs.azure_resource_group }}
+        az_sql_server_name: ${{ inputs.azure_sql_server_resource_name }}
