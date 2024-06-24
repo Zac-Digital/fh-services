@@ -21,31 +21,31 @@ permissions:
   contents: read
 
 jobs:
-#  build-projects-upload-artifacts:
-#    name: ${{ matrix.project }}
-#    strategy:
-#      fail-fast: true
-#      matrix:
-#        project: [ src/service/idam-api/,
-##                   src/service/notification-api/,
-##                   src/service/referral-api/,
-##                   src/service/report-api/,
-##                   src/service/service-directory-api/,
-##                   src/ui/connect-dashboard-ui/,
-##                   src/ui/connect-ui/,
-##                   src/ui/find-ui/,
-##                   src/ui/idam-maintenance-ui/,
-##                   src/ui/manage-ui/ ]
-#                   ]
-#    uses: ./.github/workflows/build.yml
-#    with:
-#      project: ${{ matrix.project }}
-#    secrets: inherit
+  build-projects-upload-artifacts:
+    name: ${{ matrix.project }}
+    strategy:
+      fail-fast: true
+      matrix:
+        project: [ src/service/idam-api/,
+#                   src/service/notification-api/,
+#                   src/service/referral-api/,
+#                   src/service/report-api/,
+#                   src/service/service-directory-api/,
+#                   src/ui/connect-dashboard-ui/,
+#                   src/ui/connect-ui/,
+#                   src/ui/find-ui/,
+#                   src/ui/idam-maintenance-ui/,
+#                   src/ui/manage-ui/ ]
+                   ]
+    uses: ./.github/workflows/build.yml
+    with:
+      project: ${{ matrix.project }}
+    secrets: inherit
 
   deploy-idam:
     name: Deploy IDAM API
     runs-on: ubuntu-22.04
-    # needs: [ build-projects-upload-artifacts ]
+    needs: [ build-projects-upload-artifacts ]
     environment: ${{ inputs.environment }}
     defaults:
       run:
@@ -128,10 +128,10 @@ jobs:
           azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
-      - name: Deploy Artifact to Azure Service App
-        if: steps.migration.outputs.status == 'success'
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: s181d01-as-fh-idam-api
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-          package: ./out
+#      - name: Deploy Artifact to Azure Service App
+#        if: steps.migration.outputs.status == 'success'
+#        uses: azure/webapps-deploy@v3
+#        with:
+#          app-name: s181d01-as-fh-idam-api
+#          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+#          package: ./out
