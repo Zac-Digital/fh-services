@@ -52,7 +52,7 @@ jobs:
         run: dotnet test --no-build --no-restore --verbosity minimal
 
   idam-api:
-    name: IDAM API
+    name: Idam API
     runs-on: ubuntu-22.04
     defaults:
       run:
