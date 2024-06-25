@@ -1,0 +1,18 @@
+name: Get Runner IP Address
+description: Gets the IP Address of the Workflow Runner
+
+outputs:
+  ip_address:
+    value: ${{ steps.get-ip.outputs.ip_address }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Get Workflow Runner IP
+      id: get-ip
+      shell: bash
+      run: |
+        IP=$(curl -s https://api.ipify.org/)
+        echo "IP Address = $IP"
+        echo "ip_address=$IP" >> $GITHUB_OUTPUT

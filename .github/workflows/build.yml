@@ -1,0 +1,63 @@
+name: Build a Project
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        required: true
+        type: string
+      runner:
+        required: false
+        default: 'ubuntu-22.04'
+        type: string
+
+jobs:
+  build-project-upload-artifact:
+    name: Build & Upload
+    runs-on: ${{ inputs.runner }}
+    defaults:
+      run:
+        working-directory: ${{ inputs.project }}
+    env:
+      BUILD_DIRECTORY: ${{ github.workspace }}/${{ inputs.project }}out
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
+
+      - name: Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore Project
+        shell: bash
+        run: dotnet restore
+
+      - name: Publish Project
+        shell: bash
+        run: dotnet publish --configuration Release --no-restore --property:PublishDir=${{ env.BUILD_DIRECTORY }}
+
+        # The name is the Present Working Directory, e.g., "idam-api" or "manage-ui"
+      - name: Get Name for Artifact
+        id: get-name
+        shell: bash
+        run: |
+          ARTIFACT_NAME=${PWD##*/}
+          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.get-name.outputs.artifact_name }}
+          path: ${{ env.BUILD_DIRECTORY }}
+          if-no-files-found: error
