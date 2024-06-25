@@ -27,15 +27,15 @@ jobs:
       fail-fast: true
       matrix:
         project: [ src/service/idam-api/,
-#                   src/service/notification-api/,
-#                   src/service/referral-api/,
-#                   src/service/report-api/,
-#                   src/service/service-directory-api/,
-#                   src/ui/connect-dashboard-ui/,
-#                   src/ui/connect-ui/,
-#                   src/ui/find-ui/,
-#                   src/ui/idam-maintenance-ui/,
-#                   src/ui/manage-ui/
+                   src/service/notification-api/,
+                   src/service/referral-api/,
+                   src/service/report-api/,
+                   src/service/service-directory-api/,
+                   src/ui/connect-dashboard-ui/,
+                   src/ui/connect-ui/,
+                   src/ui/find-ui/,
+                   src/ui/idam-maintenance-ui/,
+                   src/ui/manage-ui/
                    ]
     uses: ./.github/workflows/build.yml
     with:
