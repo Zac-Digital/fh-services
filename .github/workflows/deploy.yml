@@ -38,7 +38,7 @@ jobs:
                    src/ui/idam-maintenance-ui/,
                    src/ui/manage-ui/
                    ]
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/build-upload-artefact.yml
     with:
       project: ${{ matrix.project }}
     secrets: inherit
