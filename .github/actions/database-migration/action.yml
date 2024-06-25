@@ -34,9 +34,9 @@ runs:
         az_resource_group: ${{ inputs.azure_resource_group }}
         az_sql_server_name: ${{ inputs.azure_sql_server_resource_name }}
 
-#    - name: Apply Database Migration
-#      shell: bash
-#      run: dotnet ef database update -c ${{ inputs.db_context }} --project ${{ inputs.data_project_path }} --startup-project ${{ inputs.startup_project_path }}
+    - name: Apply Database Migration
+      shell: bash
+      run: dotnet ef database update -c ${{ inputs.db_context }} --project ${{ inputs.data_project_path }} --startup-project ${{ inputs.startup_project_path }}
 
     - name: Remove Azure Firewall Rule
       if: always()

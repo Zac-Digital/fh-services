@@ -22,6 +22,8 @@ inputs:
     type: string
     default: "github-actions-temp"
 
+# TODO: Put back "&> /dev/null" after testing
+
 runs:
   using: composite
 
@@ -36,4 +38,4 @@ runs:
       if: ${{ inputs.action == 'Remove' }}
       shell: bash
       run: |
-        az sql server firewall-rule delete --resource-group ${{ inputs.az_resource_group }} --server ${{ inputs.az_sql_server_name }} --name ${{ inputs.az_firewall_rule_name }} &> /dev/null
+        az sql server firewall-rule delete --resource-group ${{ inputs.az_resource_group }} --server ${{ inputs.az_sql_server_name }} --name ${{ inputs.az_firewall_rule_name }}

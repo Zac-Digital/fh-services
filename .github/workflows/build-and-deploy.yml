@@ -27,15 +27,15 @@ jobs:
       fail-fast: true
       matrix:
         project: [ src/service/idam-api/,
-#                   src/service/notification-api/,
-#                   src/service/referral-api/,
-#                   src/service/report-api/,
-#                   src/service/service-directory-api/,
-#                   src/ui/connect-dashboard-ui/,
-#                   src/ui/connect-ui/,
-#                   src/ui/find-ui/,
-#                   src/ui/idam-maintenance-ui/,
-#                   src/ui/manage-ui/ ]
+                   src/service/notification-api/,
+                   src/service/referral-api/,
+                   src/service/report-api/,
+                   src/service/service-directory-api/,
+                   src/ui/connect-dashboard-ui/,
+                   src/ui/connect-ui/,
+                   src/ui/find-ui/,
+                   src/ui/idam-maintenance-ui/,
+                   src/ui/manage-ui/ ]
                    ]
     uses: ./.github/workflows/build.yml
     with:
@@ -55,61 +55,61 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
-#
-#      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-#        uses: actions/setup-dotnet@v4
-#        with:
-#          dotnet-version: ${{ vars.DOTNET_VERSION }}
-#
-#      - name: Install Entity Framework
-#        shell: bash
-#        run: dotnet tool install --global dotnet-ef
-#
-#      - name: Package Cache
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.nuget/packages
-#          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-#          restore-keys: |
-#            ${{ runner.os }}-nuget-
-#
-#      - name: Restore Project
-#        shell: bash
-#        run: dotnet restore
-#
-#      - name: Get PWD Name for Artifact
-#        id: get-name
-#        shell: bash
-#        run: |
-#          ARTIFACT_NAME=${PWD##*/}
-#          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
-#
-#      - name: Download Artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: ${{ steps.get-name.outputs.artifact_name }}
-#          path: ./out
-#
-#      - name: App Settings Variable Substitution
-#        uses: microsoft/variable-substitution@v1
-#        with:
-#          files: "${{ github.workspace }}/src/service/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
-#        env:
-#          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
-#          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
-#          ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
-#          Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
-#          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
-#          Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
-#          Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
-#          Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
-#          Crypto.DbEncryptionKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-#          Crypto.KeyVaultIdentifier: ${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
-#          Crypto.tenantId: ${{ vars.IDAM_API_CRYPTO_TENANTID }}
-#          Crypto.UseKeyVault: ${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}
-#          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
-#          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
-#          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
+
+      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
+
+      - name: Install Entity Framework
+        shell: bash
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore Project
+        shell: bash
+        run: dotnet restore
+
+      - name: Get PWD Name for Artifact
+        id: get-name
+        shell: bash
+        run: |
+          ARTIFACT_NAME=${PWD##*/}
+          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ steps.get-name.outputs.artifact_name }}
+          path: ./out
+
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: "${{ github.workspace }}/src/service/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
+        env:
+          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
+          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
+          ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
+          Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
+          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
+          Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
+          Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
+          Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
+          Crypto.DbEncryptionKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
+          Crypto.KeyVaultIdentifier: ${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
+          Crypto.tenantId: ${{ vars.IDAM_API_CRYPTO_TENANTID }}
+          Crypto.UseKeyVault: ${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}
+          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
+          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
+          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
 
       - name: 'Azure CLI Login'
         uses: azure/login@v2
@@ -128,10 +128,10 @@ jobs:
           azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
-#      - name: Deploy Artifact to Azure Service App
-#        if: steps.migration.outputs.status == 'success'
-#        uses: azure/webapps-deploy@v3
-#        with:
-#          app-name: s181d01-as-fh-idam-api
-#          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-#          package: ./out
+      - name: Deploy Artifact to Azure Service App
+        if: steps.migration.outputs.status == 'success'
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: s181d01-as-fh-idam-api
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+          package: ./out
