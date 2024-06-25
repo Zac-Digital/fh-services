@@ -93,7 +93,7 @@ jobs:
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
-          files: "${{ github.workspace }}/src/service/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
+          files: "${{ github.workspace }}/src/service/idam-api/src/FamilyHubs.Idam.Api/appsettings.json, ./out/appsettings.json"
         env:
           APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
           APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
@@ -123,8 +123,8 @@ jobs:
         uses: ./.github/actions/database-migration
         with:
           db_context: ApplicationDbContext
-          data_project_path: src/FamilyHubs.Idam.Data
-          startup_project_path: src/FamilyHubs.Idam.Api
+          data_project_path: ${{ github.workspace }}/src/service/idam-api/src/FamilyHubs.Idam.Data
+          startup_project_path: ${{ github.workspace }}/src/service/idam-api/src/FamilyHubs.Idam.Api
           azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
