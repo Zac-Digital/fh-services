@@ -1,4 +1,4 @@
-name: Build a Project
+name: Build and upload artefact
 
 on:
   workflow_call:
