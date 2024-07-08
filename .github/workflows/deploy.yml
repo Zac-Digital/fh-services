@@ -94,8 +94,8 @@ jobs:
       - name: TEST - Fetch Secret from Azure - TEST
         run: |
           SECRET=$(az keyvault secret show --name test --vault-name s181d01-kv-fh-general)
-          echo "SECRET"
-          echo "::add-mask::SECRET"
+          echo "$SECRET"
+          echo "::add-mask::$SECRET"
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
