@@ -83,6 +83,13 @@ jobs:
 #          name: ${{ env.ARTIFACT_NAME }}
 #          path: ./out
 
+      - name: Azure CLI Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       # Testing without mask on a test value that is not secret to see if it returns correctly :)
       - name: TEST - Fetch Secret from Azure - TEST
         run: |
@@ -110,13 +117,6 @@ jobs:
           EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
           GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
           ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
-
-      - name: Azure CLI Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Apply Database Migration
         uses: ./.github/actions/database-migration
