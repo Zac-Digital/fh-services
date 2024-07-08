@@ -22,31 +22,31 @@ permissions:
   contents: read
 
 jobs:
-  build-projects-upload-artifacts:
-    name: Build
-    strategy:
-      fail-fast: true
-      matrix:
-        project: [ src/service/idam-api/,
-#                   src/service/notification-api/,
-#                   src/service/referral-api/,
-#                   src/service/report-api/,
-#                   src/service/service-directory-api/,
-#                   src/ui/connect-dashboard-ui/,
-#                   src/ui/connect-ui/,
-#                   src/ui/find-ui/,
-#                   src/ui/idam-maintenance-ui/,
-#                   src/ui/manage-ui/
-                   ]
-    uses: ./.github/workflows/build-upload-artefact.yml
-    with:
-      project: ${{ matrix.project }}
-    secrets: inherit
+#  build-projects-upload-artifacts:
+#    name: Build
+#    strategy:
+#      fail-fast: true
+#      matrix:
+#        project: [ src/service/idam-api/,
+##                   src/service/notification-api/,
+##                   src/service/referral-api/,
+##                   src/service/report-api/,
+##                   src/service/service-directory-api/,
+##                   src/ui/connect-dashboard-ui/,
+##                   src/ui/connect-ui/,
+##                   src/ui/find-ui/,
+##                   src/ui/idam-maintenance-ui/,
+##                   src/ui/manage-ui/
+#                   ]
+#    uses: ./.github/workflows/build-upload-artefact.yml
+#    with:
+#      project: ${{ matrix.project }}
+#    secrets: inherit
 
   deploy-idam:
     name: Deploy Idam API
     runs-on: ubuntu-22.04
-    needs: [ build-projects-upload-artifacts ]
+#    needs: [ build-projects-upload-artifacts ]
     env:
       ARTIFACT_NAME: idam-api
       PROJECT_NAME: FamilyHubs.Idam.Api
@@ -69,19 +69,26 @@ jobs:
         shell: bash
         run: dotnet tool install --global dotnet-ef
 
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+#      - name: Package Cache
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.nuget/packages
+#          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+#          restore-keys: |
+#            ${{ runner.os }}-nuget-
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ./out
+#      - name: Download Artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: ${{ env.ARTIFACT_NAME }}
+#          path: ./out
+
+      # Testing without mask on a test value that is not secret to see if it returns correctly :)
+      - name: TEST - Fetch Secret from Azure - TEST
+        run: |
+          SECRET=$(az keyvault secret show --name test --vault-name s181d01-kv-fh-general)
+          echo "SECRET"
+          echo "::add-mask::SECRET"
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
@@ -120,16 +127,16 @@ jobs:
           azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
-      - name: Deploy Artifact to Azure
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.APP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-          package: ./out
+#      - name: Deploy Artifact to Azure
+#        uses: azure/webapps-deploy@v3
+#        with:
+#          app-name: ${{ env.APP_NAME }}
+#          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+#          package: ./out
 
-      - name: Clear Artifact
-        if: always()
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          failOnError: false
+#      - name: Clear Artifact
+#        if: always()
+#        uses: geekyeggo/delete-artifact@v5
+#        with:
+#          name: ${{ env.ARTIFACT_NAME }}
+#          failOnError: false
