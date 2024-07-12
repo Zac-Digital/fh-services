@@ -1,4 +1,4 @@
-name: Build & Test
+name: Build & Test 2
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
@@ -20,13 +20,28 @@ jobs:
   build_and_test:
     strategy:
       matrix:
-        project: [service/notification-api, service/service-directory-api]
+        working_directory: 
+          [
+            service/notification-api,
+            service/idam-api,
+            service/service-directory-api,
+            service/referral-api,
+            service/report-api,
+            ui/connect-dashboard-ui,
+            ui/connect-ui,
+            ui/find-ui,
+            ui/idam-maintenance-ui,
+            ui/manage-ui,
+            shared/referral-shared,
+            shared/service-directory-shared,
+            shared/shared-kernel,
+            shared/web-components
+          ]
         include:
           - project: service/service-directory-api
             runs_on_windows: true
     uses: ./.github/workflows/build-and-test-template.yml
     with:
-      project_name: Build ${{ matrix.project }}
       working_directory: ${{ matrix.project }}
       dotnet_version: ${{ vars.DOTNET_VERSION }}
       runs_on: ${{ matrix.runs_on_windows && 'windows-2022' || 'ubuntu-22.04' }}

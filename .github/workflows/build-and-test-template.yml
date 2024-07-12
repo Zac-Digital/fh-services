@@ -3,9 +3,6 @@ name: Build & Test Template
 on:
   workflow_call: 
     inputs:
-      project_name:
-        required: true
-        type: string
       working_directory:
         required: true
         type: string
@@ -19,7 +16,7 @@ on:
 
 jobs:
   build_and_test:
-    name: ${{ inputs.project_name }}
+    name: ${{ inputs.working_directory }}
     runs-on: ${{ inputs.runs_on }}
     defaults:
       run:
