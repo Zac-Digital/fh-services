@@ -7,7 +7,10 @@ concurrency:
 on:
   push:
     branches: ["test-workflow"]
-
+  pull_request:
+    paths:
+      - '.github/workflows/build-and-test2.yml'
+      - 'src/**'
 #on:
 #  push:
 #    branches: ["main", "release-*"]
