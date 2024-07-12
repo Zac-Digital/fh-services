@@ -23,7 +23,7 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     defaults:
       run:
-        working-directory: /home/runner/work/fh-services/fh-services/src/${{ inputs.notification-api }}
+        working-directory: src/${{ inputs.working_directory }}
 
     steps:
       - name: Checkout Repository
