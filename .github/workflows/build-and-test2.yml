@@ -27,6 +27,6 @@ jobs:
     uses: ./.github/workflows/build-and-test-template.yml
     with:
       project_name: Build ${{ matrix.project }}
-      working_directory: service/${{ matrix.project }}
+      working_directory: ${{ matrix.project }}
       dotnet_version: ${{ vars.DOTNET_VERSION }}
       runs_on: ${{ matrix.runs_on_windows && 'windows-2022' || 'ubuntu-22.04' }}
