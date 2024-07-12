@@ -93,7 +93,7 @@ jobs:
       # Testing without mask on a test value that is not secret to see if it returns correctly :)
       - name: TEST - Fetch Secret from Azure - TEST
         run: |
-          SECRET=$(az keyvault secret show --name test --vault-name s181d01-kv-fh-general)
+          SECRET=$(az keyvault secret show --name test --vault-name s181d01-kv-fh-general --query value)
           echo "$SECRET"
           echo "::add-mask::$SECRET"
 
