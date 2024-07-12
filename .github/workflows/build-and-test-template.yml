@@ -10,9 +10,8 @@ on:
         required: true
         type: string
       runs_on:
-        required: false
+        required: true
         type: string
-        default: ubuntu-22.04
 
 jobs:
   build_and_test:
