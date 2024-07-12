@@ -23,7 +23,7 @@ jobs:
     runs-on: ${{ inputs.runs_on }}
     defaults:
       run:
-        working-directory: src/${{ inputs.notification-api }}
+        working-directory: ${{ safe.directory }}/src/${{ inputs.notification-api }}
 
     steps:
       - name: Checkout Repository
