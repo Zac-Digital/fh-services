@@ -60,14 +60,14 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Install Entity Framework
-        shell: bash
-        run: dotnet tool install --global dotnet-ef
+#      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
+#        uses: actions/setup-dotnet@v4
+#        with:
+#          dotnet-version: ${{ vars.DOTNET_VERSION }}
+#
+#      - name: Install Entity Framework
+#        shell: bash
+#        run: dotnet tool install --global dotnet-ef
 
 #      - name: Package Cache
 #        uses: actions/cache@v4
@@ -97,35 +97,35 @@ jobs:
           echo "$SECRET"
           echo "::add-mask::$SECRET"
 
-      - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
-        env:
-          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
-          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
-          ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
-          Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
-          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
-          Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
-          Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
-          Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
-          Crypto.DbEncryptionKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-          Crypto.KeyVaultIdentifier: ${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
-          Crypto.tenantId: ${{ vars.IDAM_API_CRYPTO_TENANTID }}
-          Crypto.UseKeyVault: ${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}
-          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
-          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
-          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
+#      - name: App Settings Variable Substitution
+#        uses: microsoft/variable-substitution@v1
+#        with:
+#          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
+#        env:
+#          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
+#          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
+#          ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
+#          Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
+#          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
+#          Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
+#          Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
+#          Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
+#          Crypto.DbEncryptionKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
+#          Crypto.KeyVaultIdentifier: ${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
+#          Crypto.tenantId: ${{ vars.IDAM_API_CRYPTO_TENANTID }}
+#          Crypto.UseKeyVault: ${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}
+#          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
+#          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
+#          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
 
-      - name: Apply Database Migration
-        uses: ./.github/actions/database-migration
-        with:
-          db_context: ApplicationDbContext
-          data_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.DATA_PROJECT_NAME }}
-          startup_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}
-          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+#      - name: Apply Database Migration
+#        uses: ./.github/actions/database-migration
+#        with:
+#          db_context: ApplicationDbContext
+#          data_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.DATA_PROJECT_NAME }}
+#          startup_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}
+#          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+#          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
 #      - name: Deploy Artifact to Azure
 #        uses: azure/webapps-deploy@v3
