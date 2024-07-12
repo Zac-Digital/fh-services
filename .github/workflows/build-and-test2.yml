@@ -40,6 +40,7 @@ jobs:
       project_name: Service Directory API
       working_directory: service/service-directory-api
       dotnet_version: ${{ vars.DOTNET_VERSION }}
+      runs_on: windows-2022
       
   referral-api:
     uses: ./.github/workflows/build-and-test-template.yml
