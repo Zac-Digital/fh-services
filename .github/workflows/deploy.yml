@@ -90,12 +90,38 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Testing without mask on a test value that is not secret to see if it returns correctly :)
-      - name: TEST - Fetch Secret from Azure - TEST
+      - name: Fetch Secret from Azure
         run: |
-          SECRET=$(az keyvault secret show --name test --vault-name s181d01-kv-fh-general --query value)
-          echo "$SECRET"
-          echo "::add-mask::$SECRET"
+          IDAM_API_APPINSIGHTS_CONNECTION_STRING=$(az keyvault secret show --name IDAM-API-APPINSIGHTS-CONNECTION-STRING --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY=$(az keyvault secret show --name IDAM-API-APPINSIGHTS-INSTRUMENTATIONKEY --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION=$(az keyvault secret show --name IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CRYPTO_CLIENTID=$(az keyvault secret show --name IDAM-API-CRYPTO-CLIENTID --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CRYPTO_CLIENTSECRET=$(az keyvault secret show --name IDAM-API-CRYPTO-CLIENTSECRET --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CRYPTO_DBENCRYPTIONIVKEY=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONIVKEY --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONIVKEYSECRETNAME --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CRYPTO_DBENCRYPTIONKEY=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONKEY --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONKEYSECRETNAME --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CRYPTO_KEYVAULTIDENTIFIER=$(az keyvault secret show --name IDAM-API-CRYPTO-KEYVAULTIDENTIFIER --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CRYPTO_TENANTID=$(az keyvault secret show --name IDAM-API-CRYPTO-TENANTID --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_CRYPTO_USEKEYVAULT=$(az keyvault secret show --name IDAM-API-CRYPTO-USEKEYVAULT --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_EVENTGRIDURL=$(az keyvault secret show --name IDAM-API-EVENTGRIDURL --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY=$(az keyvault secret show --name IDAM-API-GOVUKOIDCCONFIGURATION-BEARERTOKENSIGNINGKEY --vault-name s181d01-kv-fh-general --query value -o tsv)
+          IDAM_API_SERVICEDIRECTORYAPIBASEURL=$(az keyvault secret show --name IDAM-API-SERVICEDIRECTORYAPIBASEURL --vault-name s181d01-kv-fh-general --query value -o tsv)
+          echo "::add-mask::$IDAM_API_APPINSIGHTS_CONNECTION_STRING" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CRYPTO_CLIENTID" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CRYPTO_CLIENTSECRET" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CRYPTO_DBENCRYPTIONIVKEY" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CRYPTO_DBENCRYPTIONKEY" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CRYPTO_KEYVAULTIDENTIFIER" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CRYPTO_TENANTID" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_CRYPTO_USEKEYVAULT" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_EVENTGRIDURL" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY" >> $GITHUB_OUTPUT
+          echo "::add-mask::$IDAM_API_SERVICEDIRECTORYAPIBASEURL" >> $GITHUB_OUTPUT
 
 #      - name: App Settings Variable Substitution
 #        uses: microsoft/variable-substitution@v1
