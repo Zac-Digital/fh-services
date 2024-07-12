@@ -1,0 +1,116 @@
+name: Build & Test
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: ["test-workflow"]
+
+#on:
+#  push:
+#    branches: ["main", "release-*"]
+#  pull_request:
+#    paths:
+#      - '.github/workflows/build-and-test.yml'
+#      - 'src/**'
+
+jobs:
+  notification-api:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Notification API
+      working_directory: service/notification-api
+      dotnet_version: vars.DOTNET_VERSION
+      
+  idam-api:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Idam API
+      working_directory: service/idam-api
+      dotnet_version: vars.DOTNET_VERSION
+      
+  service-directory-api:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Service Directory API
+      working_directory: service/service-directory-api
+      dotnet_version: vars.DOTNET_VERSION
+      
+  referral-api:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Referral API
+      working_directory: service/referral-api
+      dotnet_version: vars.DOTNET_VERSION
+      
+  report-api:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Report API
+      working_directory: service/report-api
+      dotnet_version: vars.DOTNET_VERSION
+
+  connect-dashboard-ui:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Connect Dashboard UI
+      working_directory: ui/connect-dashboard-ui
+      dotnet_version: vars.DOTNET_VERSION
+      
+  connect-ui:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Connect UI
+      working_directory: ui/connect-ui
+      dotnet_version: vars.DOTNET_VERSION
+      
+  find-ui:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Find UI
+      working_directory: ui/find-ui
+      dotnet_version: vars.DOTNET_VERSION
+      
+  idam-maintenance-ui:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: IDAM Maintenance UI
+      working_directory: ui/idam-maintenance-ui
+      dotnet_version: vars.DOTNET_VERSION
+      
+  manage-ui:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: IDAM Maintenance UI
+      working_directory: ui/manage-ui
+      dotnet_version: vars.DOTNET_VERSION
+      
+  referral-shared:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Referral Shared
+      working_directory: shared/referral-shared
+      dotnet_version: vars.DOTNET_VERSION
+      
+  service-directory-shared:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Service Directory Shared
+      working_directory: shared/service-directory-shared
+      dotnet_version: vars.DOTNET_VERSION
+      
+  shared-kernel:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Kernel Shared
+      working_directory: shared/shared-kernel
+      dotnet_version: vars.DOTNET_VERSION
+      
+  web-components:
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Web Components Shared
+      working_directory: shared/web-components
+      dotnet_version: vars.DOTNET_VERSION
