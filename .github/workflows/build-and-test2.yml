@@ -1,0 +1,32 @@
+name: Build & Test
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: ["test-workflow"]
+
+#on:
+#  push:
+#    branches: ["main", "release-*"]
+#  pull_request:
+#    paths:
+#      - '.github/workflows/build-and-test.yml'
+#      - 'src/**'
+
+jobs:
+  build_and_test:
+    strategy:
+      matrix:
+        project: [service/notification-api, service-directory-api]
+        include:
+          - project: service-directory-api
+            runs_on_windows: true
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Build ${{ matrix.project }}
+      working_directory: service/${{ matrix.project }}
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+      runs_on: ${{ matrix.runs_on && 'windows-2022' || 'ubuntu-22.04' }}
