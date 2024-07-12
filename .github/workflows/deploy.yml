@@ -22,31 +22,31 @@ permissions:
   contents: read
 
 jobs:
-#  build-projects-upload-artifacts:
-#    name: Build
-#    strategy:
-#      fail-fast: true
-#      matrix:
-#        project: [ src/service/idam-api/,
-##                   src/service/notification-api/,
-##                   src/service/referral-api/,
-##                   src/service/report-api/,
-##                   src/service/service-directory-api/,
-##                   src/ui/connect-dashboard-ui/,
-##                   src/ui/connect-ui/,
-##                   src/ui/find-ui/,
-##                   src/ui/idam-maintenance-ui/,
-##                   src/ui/manage-ui/
-#                   ]
-#    uses: ./.github/workflows/build-upload-artefact.yml
-#    with:
-#      project: ${{ matrix.project }}
-#    secrets: inherit
+  build-projects-upload-artifacts:
+    name: Build
+    strategy:
+      fail-fast: true
+      matrix:
+        project: [ src/service/idam-api/,
+#                   src/service/notification-api/,
+#                   src/service/referral-api/,
+#                   src/service/report-api/,
+#                   src/service/service-directory-api/,
+#                   src/ui/connect-dashboard-ui/,
+#                   src/ui/connect-ui/,
+#                   src/ui/find-ui/,
+#                   src/ui/idam-maintenance-ui/,
+#                   src/ui/manage-ui/
+                   ]
+    uses: ./.github/workflows/build-upload-artefact.yml
+    with:
+      project: ${{ matrix.project }}
+    secrets: inherit
 
   deploy-idam:
     name: Deploy Idam API
     runs-on: ubuntu-22.04
-#    needs: [ build-projects-upload-artifacts ]
+    needs: [ build-projects-upload-artifacts ]
     env:
       ARTIFACT_NAME: idam-api
       PROJECT_NAME: FamilyHubs.Idam.Api
@@ -77,11 +77,11 @@ jobs:
 #          restore-keys: |
 #            ${{ runner.os }}-nuget-
 
-#      - name: Download Artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: ${{ env.ARTIFACT_NAME }}
-#          path: ./out
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ./out
 
       - name: Azure CLI Login
         uses: azure/login@v2
@@ -108,26 +108,26 @@ jobs:
           echo "IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY=$(az keyvault secret show --name IDAM-API-GOVUKOIDCCONFIGURATION-BEARERTOKENSIGNINGKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
           echo "IDAM_API_SERVICEDIRECTORYAPIBASEURL=$(az keyvault secret show --name IDAM-API-SERVICEDIRECTORYAPIBASEURL --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
 
-#      - name: App Settings Variable Substitution
-#        uses: microsoft/variable-substitution@v1
-#        with:
-#          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
-#        env:
-#          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
-#          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
-#          ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
-#          Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
-#          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
-#          Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
-#          Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
-#          Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
-#          Crypto.DbEncryptionKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-#          Crypto.KeyVaultIdentifier: ${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
-#          Crypto.tenantId: ${{ vars.IDAM_API_CRYPTO_TENANTID }}
-#          Crypto.UseKeyVault: ${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}
-#          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
-#          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
-#          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
+      - name: App Settings Variable Substitution
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
+        env:
+          APPINSIGHTS_CONNECTION_STRING: '$IDAM_API_APPINSIGHTS_CONNECTION_STRING'
+          APPINSIGHTS_INSTRUMENTATIONKEY: '$IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY'
+          ConnectionStrings.IdamConnection: '$IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION'
+          Crypto.clientId: '$IDAM_API_CRYPTO_CLIENTID'
+          Crypto.clientSecret: '$IDAM_API_CRYPTO_CLIENTSECRET'
+          Crypto.DbEncryptionIVKey: '$IDAM_API_CRYPTO_DBENCRYPTIONIVKEY'
+          Crypto.DbEncryptionIVKeySecretName: '$IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME'
+          Crypto.DbEncryptionKey: '$IDAM_API_CRYPTO_DBENCRYPTIONKEY'
+          Crypto.DbEncryptionKeySecretName: '$IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME'
+          Crypto.KeyVaultIdentifier: '$IDAM_API_CRYPTO_KEYVAULTIDENTIFIER'
+          Crypto.tenantId: '$IDAM_API_CRYPTO_TENANTID'
+          Crypto.UseKeyVault: '$IDAM_API_CRYPTO_USEKEYVAULT'
+          EventGridUrl: '$IDAM_API_EVENTGRIDURL'
+          GovUkOidcConfiguration.BearerTokenSigningKey: '$IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY'
+          ServiceDirectoryApiBaseUrl: '$IDAM_API_SERVICEDIRECTORYAPIBASEURL'
 
 #      - name: Apply Database Migration
 #        uses: ./.github/actions/database-migration
@@ -138,16 +138,15 @@ jobs:
 #          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
 #          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
-#      - name: Deploy Artifact to Azure
-#        uses: azure/webapps-deploy@v3
-#        with:
-#          app-name: ${{ env.APP_NAME }}
-#          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-#          package: ./out
+      - name: Deploy Artifact to Azure
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.APP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+          package: ./out
 
-#      - name: Clear Artifact
-#        if: always()
-#        uses: geekyeggo/delete-artifact@v5
-#        with:
-#          name: ${{ env.ARTIFACT_NAME }}
-#          failOnError: false
+      - name: Clear Artifact
+        if: always()
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
