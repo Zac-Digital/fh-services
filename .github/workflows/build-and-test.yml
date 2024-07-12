@@ -14,533 +14,100 @@ on:
 
 jobs:
   notification-api:
-    name: Notification API
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/service/notification-api
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Notification API
+      working_directory: service/notification-api
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   idam-api:
-    name: Idam API
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/service/idam-api
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Idam API
+      working_directory: service/idam-api
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   service-directory-api:
-    name: Service Directory API
-    runs-on: windows-2022
-    defaults:
-      run:
-        working-directory: src/service/service-directory-api
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Service Directory API
+      working_directory: service/service-directory-api
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+      runs_on: windows-2022
+  
   referral-api:
-    name: Referral API
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/service/referral-api
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Referral API
+      working_directory: service/referral-api
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   report-api:
-    name: Report API
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/service/report-api
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Report API
+      working_directory: service/report-api
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
 
   connect-dashboard-ui:
-    name: Connect Dashboard UI
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/ui/connect-dashboard-ui
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Connect Dashboard UI
+      working_directory: ui/connect-dashboard-ui
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   connect-ui:
-    name: Connect UI
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/ui/connect-ui
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Connect UI
+      working_directory: ui/connect-ui
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   find-ui:
-    name: Find UI
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/ui/find-ui
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Find UI
+      working_directory: ui/find-ui
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   idam-maintenance-ui:
-    name: IDAM Maintenance UI
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/ui/idam-maintenance-ui
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: IDAM Maintenance UI
+      working_directory: ui/idam-maintenance-ui
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   manage-ui:
-    name: Manage UI
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/ui/manage-ui
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: IDAM Maintenance UI
+      working_directory: ui/manage-ui
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   referral-shared:
-    name: Referral Shared
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/shared/referral-shared
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Referral Shared
+      working_directory: shared/referral-shared
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   service-directory-shared:
-    name: Service Directory Shared
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/shared/service-directory-shared
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Service Directory Shared
+      working_directory: shared/service-directory-shared
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   shared-kernel:
-    name: Kernel Shared
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/shared/shared-kernel
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
-
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Kernel Shared
+      working_directory: shared/shared-kernel
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
+  
   web-components:
-    name: Web Components Shared
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: src/shared/web-components
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-
-      - name: Restore Project
-        shell: bash
-        run: dotnet restore
-
-      - name: Build Project
-        shell: bash
-        run: dotnet build --no-restore
-
-      - name: Test Project
-        shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
+    uses: ./.github/workflows/build-and-test-template.yml
+    with:
+      project_name: Web Components Shared
+      working_directory: shared/web-components
+      dotnet_version: ${{ vars.DOTNET_VERSION }}
