@@ -99,8 +99,6 @@ jobs:
 #          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 #          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name:
-
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
