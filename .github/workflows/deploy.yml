@@ -72,7 +72,7 @@ jobs:
       - name: Test
         shell: bash
         run: |
-          KV=$(echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}" | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }} | base64 --decode)
+          KV=$(echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}" | base64 --decode | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }})
           echo "$KV"
 
 #      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
