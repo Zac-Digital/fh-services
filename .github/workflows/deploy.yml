@@ -28,7 +28,6 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       prefix: IDAM-API
-      keyvault_name: ${{ vars.KEYVAULT_NAME }}
 
 #  build-projects-upload-artifacts:
 #    name: Build
