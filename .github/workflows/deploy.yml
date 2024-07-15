@@ -93,7 +93,7 @@ jobs:
       - name: Fetch Secrets from Azure
         id: kv
         run: |
-          TEST=$(az keyvault secret list --vault-name s181d01-kv-fh-general --maxresults 256 --query value --output tsv)
+          TEST=$(az keyvault secret list --vault-name s181d01-kv-fh-general --query value --output tsv)
           echo "$TEST"
 
 #      - name: Fetch Secrets from Azure
