@@ -22,22 +22,13 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    name: Test
-    runs-on: ubuntu-22.04
-    environment: ${{ inputs.environment }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Fetch Secrets for IDAM API
-        uses: ./.github/workflows/fetch-secrets.yml
-        with:
-          environment: ${{ inputs.environment }}
-          prefix: IDAM-API
-          keyvault_name: ${{ vars.KEYVAULT_NAME }}
+  idam-api-fetch-secrets:
+    name: IDAM API - Fetch Secrets
+    uses: ./.github/workflows/fetch-secrets.yml
+    with:
+      environment: ${{ inputs.environment }}
+      prefix: IDAM-API
+      keyvault_name: ${{ vars.KEYVAULT_NAME }}
 
 #  build-projects-upload-artifacts:
 #    name: Build
