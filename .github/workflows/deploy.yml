@@ -102,7 +102,8 @@ jobs:
       - name: Test
         run: |
           echo "Test"
-          echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}"
+          TEST=$(echo -n "${{ needs.idam-api-fetch-secrets.outputs.kv }}" | openssl enc -aes-256-cbc -pbkdf2 -d -salt -k "${{ secrets.MASK_PASSKEY }}");
+          echo "$TEST"
 
 #      - name: App Settings Variable Substitution
 #        uses: microsoft/variable-substitution@v1
