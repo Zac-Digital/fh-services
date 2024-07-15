@@ -99,27 +99,29 @@ jobs:
 #          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 #          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name:
+
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
 #          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
           files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json"
         env:
-          APPINSIGHTS_CONNECTION_STRING: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM-API-APPINSIGHTS-CONNECTION-STRING }}
-          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
-          ConnectionStrings.IdamConnection: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
-          Crypto.clientId: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_CLIENTID }}
-          Crypto.clientSecret: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_CLIENTSECRET }}
-          Crypto.DbEncryptionIVKey: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
-          Crypto.DbEncryptionIVKeySecretName: ${{ needs.idam-api-fetch-secrets.outputs.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
-          Crypto.DbEncryptionKey: ${{ needs.idam-api-fetch-secrets.outputs.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
-          Crypto.DbEncryptionKeySecretName: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-          Crypto.KeyVaultIdentifier: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
-          Crypto.tenantId: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_TENANTID }}
-          Crypto.UseKeyVault: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_USEKEYVAULT }}
-          EventGridUrl: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_EVENTGRIDURL }}
-          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
-          ServiceDirectoryApiBaseUrl: ${{ needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
+          APPINSIGHTS_CONNECTION_STRING: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM-API-APPINSIGHTS-CONNECTION-STRING) }}
+          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY) }}
+          ConnectionStrings.IdamConnection: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION) }}
+          Crypto.clientId: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_CLIENTID) }}
+          Crypto.clientSecret: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_CLIENTSECRET) }}
+          Crypto.DbEncryptionIVKey: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY) }}
+          Crypto.DbEncryptionIVKeySecretName: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME) }}
+          Crypto.DbEncryptionKey: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONKEY) }}
+          Crypto.DbEncryptionKeySecretName: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME) }}
+          Crypto.KeyVaultIdentifier: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER) }}
+          Crypto.tenantId: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_TENANTID) }}
+          Crypto.UseKeyVault: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_USEKEYVAULT) }}
+          EventGridUrl: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_EVENTGRIDURL) }}
+          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY) }}
+          ServiceDirectoryApiBaseUrl: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_SERVICEDIRECTORYAPIBASEURL) }}
 
 #      - name: Apply Database Migration
 #        uses: ./.github/actions/database-migration
