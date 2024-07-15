@@ -69,6 +69,11 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      - name: Test
+        shell: bash
+        run: |
+          echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}"
+
 #      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
 #        uses: actions/setup-dotnet@v4
 #        with:
