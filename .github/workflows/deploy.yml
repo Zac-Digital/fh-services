@@ -103,8 +103,6 @@ jobs:
         run: |
           echo "Test"
           echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}"
-          echo "::add-mask::${{ needs.idam-api-fetch-secrets.outputs.kv }}"
-          echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}"
 
 #      - name: App Settings Variable Substitution
 #        uses: microsoft/variable-substitution@v1
