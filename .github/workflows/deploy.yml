@@ -72,7 +72,8 @@ jobs:
       - name: Test
         shell: bash
         run: |
-          echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}"
+          KV=$(echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}" | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }} | base64 --decode)
+          echo "$KV"
 
 #      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
 #        uses: actions/setup-dotnet@v4
