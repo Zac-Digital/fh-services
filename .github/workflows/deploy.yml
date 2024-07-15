@@ -91,43 +91,44 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Fetch Secret from Azure
+        id: kv
         run: |
-          echo "IDAM_API_APPINSIGHTS_CONNECTION_STRING=$(az keyvault secret show --name IDAM-API-APPINSIGHTS-CONNECTION-STRING --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY=$(az keyvault secret show --name IDAM-API-APPINSIGHTS-INSTRUMENTATIONKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION=$(az keyvault secret show --name IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CRYPTO_CLIENTSECRET=$(az keyvault secret show --name IDAM-API-CRYPTO-CLIENTSECRET --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CRYPTO_CLIENTID=$(az keyvault secret show --name IDAM-API-CRYPTO-CLIENTID --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CRYPTO_DBENCRYPTIONIVKEY=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONIVKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONIVKEYSECRETNAME --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CRYPTO_DBENCRYPTIONKEY=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONKEYSECRETNAME --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CRYPTO_KEYVAULTIDENTIFIER=$(az keyvault secret show --name IDAM-API-CRYPTO-KEYVAULTIDENTIFIER --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CRYPTO_TENANTID=$(az keyvault secret show --name IDAM-API-CRYPTO-TENANTID --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_CRYPTO_USEKEYVAULT=$(az keyvault secret show --name IDAM-API-CRYPTO-USEKEYVAULT --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_EVENTGRIDURL=$(az keyvault secret show --name IDAM-API-EVENTGRIDURL --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY=$(az keyvault secret show --name IDAM-API-GOVUKOIDCCONFIGURATION-BEARERTOKENSIGNINGKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
-          echo "IDAM_API_SERVICEDIRECTORYAPIBASEURL=$(az keyvault secret show --name IDAM-API-SERVICEDIRECTORYAPIBASEURL --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_ENV"
+          echo "IDAM_API_APPINSIGHTS_CONNECTION_STRING=$(az keyvault secret show --name IDAM-API-APPINSIGHTS-CONNECTION-STRING --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY=$(az keyvault secret show --name IDAM-API-APPINSIGHTS-INSTRUMENTATIONKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION=$(az keyvault secret show --name IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CRYPTO_CLIENTID=$(az keyvault secret show --name IDAM-API-CRYPTO-CLIENTID --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CRYPTO_CLIENTSECRET=$(az keyvault secret show --name IDAM-API-CRYPTO-CLIENTSECRET --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CRYPTO_DBENCRYPTIONIVKEY=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONIVKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONIVKEYSECRETNAME --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CRYPTO_DBENCRYPTIONKEY=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME=$(az keyvault secret show --name IDAM-API-CRYPTO-DBENCRYPTIONKEYSECRETNAME --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CRYPTO_KEYVAULTIDENTIFIER=$(az keyvault secret show --name IDAM-API-CRYPTO-KEYVAULTIDENTIFIER --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CRYPTO_TENANTID=$(az keyvault secret show --name IDAM-API-CRYPTO-TENANTID --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_CRYPTO_USEKEYVAULT=$(az keyvault secret show --name IDAM-API-CRYPTO-USEKEYVAULT --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_EVENTGRIDURL=$(az keyvault secret show --name IDAM-API-EVENTGRIDURL --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY=$(az keyvault secret show --name IDAM-API-GOVUKOIDCCONFIGURATION-BEARERTOKENSIGNINGKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          echo "IDAM_API_SERVICEDIRECTORYAPIBASEURL=$(az keyvault secret show --name IDAM-API-SERVICEDIRECTORYAPIBASEURL --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
           files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
         env:
-          APPINSIGHTS_CONNECTION_STRING: '$IDAM_API_APPINSIGHTS_CONNECTION_STRING'
-          APPINSIGHTS_INSTRUMENTATIONKEY: '$IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY'
-          ConnectionStrings.IdamConnection: '$IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION'
-          Crypto.clientId: '$IDAM_API_CRYPTO_CLIENTID'
-          Crypto.clientSecret: '$IDAM_API_CRYPTO_CLIENTSECRET'
-          Crypto.DbEncryptionIVKey: '$IDAM_API_CRYPTO_DBENCRYPTIONIVKEY'
-          Crypto.DbEncryptionIVKeySecretName: '$IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME'
-          Crypto.DbEncryptionKey: '$IDAM_API_CRYPTO_DBENCRYPTIONKEY'
-          Crypto.DbEncryptionKeySecretName: '$IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME'
-          Crypto.KeyVaultIdentifier: '$IDAM_API_CRYPTO_KEYVAULTIDENTIFIER'
-          Crypto.tenantId: '$IDAM_API_CRYPTO_TENANTID'
-          Crypto.UseKeyVault: '$IDAM_API_CRYPTO_USEKEYVAULT'
-          EventGridUrl: '$IDAM_API_EVENTGRIDURL'
-          GovUkOidcConfiguration.BearerTokenSigningKey: '$IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY'
-          ServiceDirectoryApiBaseUrl: '$IDAM_API_SERVICEDIRECTORYAPIBASEURL'
+          APPINSIGHTS_CONNECTION_STRING: ${{ steps.kv.outputs.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
+          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ steps.kv.outputs.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
+          ConnectionStrings.IdamConnection: ${{ steps.kv.outputs.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
+          Crypto.clientId: ${{ steps.kv.outputs.IDAM_API_CRYPTO_CLIENTID }}
+          Crypto.clientSecret: ${{ steps.kv.outputs.IDAM_API_CRYPTO_CLIENTSECRET }}
+          Crypto.DbEncryptionIVKey: ${{ steps.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
+          Crypto.DbEncryptionIVKeySecretName: ${{ steps.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
+          Crypto.DbEncryptionKey: ${{ steps.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
+          Crypto.DbEncryptionKeySecretName: ${{ steps.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
+          Crypto.KeyVaultIdentifier: ${{ steps.kv.outputs.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
+          Crypto.tenantId: ${{ steps.kv.outputs.IDAM_API_CRYPTO_TENANTID }}
+          Crypto.UseKeyVault: ${{ steps.kv.outputs.IDAM_API_CRYPTO_USEKEYVAULT }}
+          EventGridUrl: ${{ steps.kv.outputs.IDAM_API_EVENTGRIDURL }}
+          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.kv.outputs.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
+          ServiceDirectoryApiBaseUrl: ${{ steps.kv.outputs.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
 
 #      - name: Apply Database Migration
 #        uses: ./.github/actions/database-migration
