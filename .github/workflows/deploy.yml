@@ -95,7 +95,7 @@ jobs:
         run: |
           IDAM_API_APPINSIGHTS_CONNECTION_STRING=$((RANDOM))
           echo "::add-mask::$IDAM_API_APPINSIGHTS_CONNECTION_STRING"
-          echo "::set-output name=IDAM_API_APPINSIGHTS_CONNECTION_STRING::$IDAM_API_APPINSIGHTS_CONNECTION_STRING"
+          echo "IDAM_API_APPINSIGHTS_CONNECTION_STRING::$IDAM_API_APPINSIGHTS_CONNECTION_STRING" >> $GITHUB_OUTPUT
 #          echo "IDAM_API_APPINSIGHTS_CONNECTION_STRING=::add-mask::$(az keyvault secret show --name IDAM-API-APPINSIGHTS-CONNECTION-STRING --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
 #          echo "IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY=$(az keyvault secret show --name IDAM-API-APPINSIGHTS-INSTRUMENTATIONKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
 #          echo "IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION=$(az keyvault secret show --name IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
