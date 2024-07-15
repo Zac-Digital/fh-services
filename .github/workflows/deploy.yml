@@ -22,14 +22,6 @@ permissions:
   contents: read
 
 jobs:
-  idam-api-fetch-secrets:
-    name: IDAM API - Fetch Secrets
-    uses: ./.github/workflows/fetch-secrets.yml
-    with:
-      environment: ${{ inputs.environment }}
-      prefix: IDAM-API
-    secrets: inherit
-
 #  build-projects-upload-artifacts:
 #    name: Build
 #    strategy:
@@ -50,6 +42,14 @@ jobs:
 #    with:
 #      project: ${{ matrix.project }}
 #    secrets: inherit
+
+  idam-api-fetch-secrets:
+    name: IDAM API - Fetch Secrets
+    uses: ./.github/workflows/fetch-secrets.yml
+    with:
+      environment: ${{ inputs.environment }}
+      prefix: IDAM-API
+    secrets: inherit
 
   idam-deploy:
     name: IDAM API - Deploy
