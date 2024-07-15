@@ -104,7 +104,8 @@ jobs:
         run: |
           echo "Test"
           SECRET=${{ needs.idam-api-fetch-secrets.outputs.kv }}
-          TEST=$(echo -n "$SECRET" | openssl enc -aes-256-cbc -pbkdf2 -d -salt -k "${{ secrets.MASK_PASSKEY }}");
+          echo "$SECRET"
+          TEST=$(echo -n "$SECRET" | base64 --decode | openssl enc -aes-256-cbc -pbkdf2 -d -salt -k "${{ secrets.MASK_PASSKEY }}");
           echo "$TEST"
 
 #      - name: App Settings Variable Substitution
