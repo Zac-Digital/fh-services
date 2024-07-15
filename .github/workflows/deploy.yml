@@ -93,7 +93,9 @@ jobs:
       - name: Fetch Secret from Azure
         id: kv
         run: |
-          echo "IDAM_API_APPINSIGHTS_CONNECTION_STRING=::add-mask::$(az keyvault secret show --name IDAM-API-APPINSIGHTS-CONNECTION-STRING --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
+          IDAM_API_APPINSIGHTS_CONNECTION_STRING=${PWD##*/}
+          echo "::add-mask::$IDAM_API_APPINSIGHTS_CONNECTION_STRING" >> "$GITHUB_OUTPUT"
+#          echo "IDAM_API_APPINSIGHTS_CONNECTION_STRING=::add-mask::$(az keyvault secret show --name IDAM-API-APPINSIGHTS-CONNECTION-STRING --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
 #          echo "IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY=$(az keyvault secret show --name IDAM-API-APPINSIGHTS-INSTRUMENTATIONKEY --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
 #          echo "IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION=$(az keyvault secret show --name IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
 #          echo "IDAM_API_CRYPTO_CLIENTID=$(az keyvault secret show --name IDAM-API-CRYPTO-CLIENTID --vault-name s181d01-kv-fh-general --query value -o tsv)" >> "$GITHUB_OUTPUT"
