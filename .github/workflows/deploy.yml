@@ -99,15 +99,6 @@ jobs:
 #          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
 #          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Test
-        shell: bash
-        run: |
-          echo "Test"
-          SECRET=${{ needs.idam-api-fetch-secrets.outputs.kv }}
-          echo "$SECRET"
-          TEST=$(echo -n "$SECRET" | base64 --decode | openssl enc -aes-256-cbc -pbkdf2 -d -salt -k "${{ secrets.MASK_PASSKEY }}");
-          echo "$TEST"
-
 #      - name: App Settings Variable Substitution
 #        uses: microsoft/variable-substitution@v1
 #        with:
