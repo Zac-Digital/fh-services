@@ -28,6 +28,7 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       prefix: IDAM-API
+    secrets: inherit
 
 #  build-projects-upload-artifacts:
 #    name: Build
