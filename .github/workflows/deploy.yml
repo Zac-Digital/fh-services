@@ -61,22 +61,14 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-#      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-#        uses: actions/setup-dotnet@v4
-#        with:
-#          dotnet-version: ${{ vars.DOTNET_VERSION }}
-#
-#      - name: Install Entity Framework
-#        shell: bash
-#        run: dotnet tool install --global dotnet-ef
+      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
 
-#      - name: Package Cache
-#        uses: actions/cache@v4
-#        with:
-#          path: ~/.nuget/packages
-#          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-#          restore-keys: |
-#            ${{ runner.os }}-nuget-
+      - name: Install Entity Framework
+        shell: bash
+        run: dotnet tool install --global dotnet-ef
 
       - name: Download Artifact
         uses: actions/download-artifact@v4
@@ -102,7 +94,6 @@ jobs:
             $key = $key -replace '-','_'
             $value = az keyvault secret show --name $item --vault-name ${{ vars.KEYVAULT_NAME }} --query value --output tsv
             Write-Output "::add-mask::$value"
-            Write-Output $key
             Write-Output "$key=$value" >> $env:GITHUB_OUTPUT
           }
 
@@ -127,14 +118,14 @@ jobs:
           GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
           ServiceDirectoryApiBaseUrl: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPIBASEURL }}
 
-#      - name: Apply Database Migration
-#        uses: ./.github/actions/database-migration
-#        with:
-#          db_context: ApplicationDbContext
-#          data_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.DATA_PROJECT_NAME }}
-#          startup_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}
-#          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-#          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+      - name: Apply Database Migration
+        uses: ./.github/actions/database-migration
+        with:
+          db_context: ApplicationDbContext
+          data_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.DATA_PROJECT_NAME }}
+          startup_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}
+          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
       - name: Deploy Artifact to Azure
         uses: azure/webapps-deploy@v3
