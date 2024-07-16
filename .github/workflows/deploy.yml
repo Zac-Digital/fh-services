@@ -22,40 +22,31 @@ permissions:
   contents: read
 
 jobs:
-#  build-projects-upload-artifacts:
-#    name: Build
-#    strategy:
-#      fail-fast: true
-#      matrix:
-#        project: [ src/service/idam-api/,
-##                   src/service/notification-api/,
-##                   src/service/referral-api/,
-##                   src/service/report-api/,
-##                   src/service/service-directory-api/,
-##                   src/ui/connect-dashboard-ui/,
-##                   src/ui/connect-ui/,
-##                   src/ui/find-ui/,
-##                   src/ui/idam-maintenance-ui/,
-##                   src/ui/manage-ui/
-#                   ]
-#    uses: ./.github/workflows/build-upload-artefact.yml
-#    with:
-#      project: ${{ matrix.project }}
-#    secrets: inherit
-
-#  idam-api-fetch-secrets:
-#    name: IDAM API - Fetch Secrets
-#    uses: ./.github/workflows/fetch-secrets.yml
-#    with:
-#      environment: ${{ inputs.environment }}
-#      prefix: IDAM-API
-#    secrets: inherit
+  build-projects-upload-artifacts:
+    name: Build
+    strategy:
+      fail-fast: true
+      matrix:
+        project: [ src/service/idam-api/,
+#                   src/service/notification-api/,
+#                   src/service/referral-api/,
+#                   src/service/report-api/,
+#                   src/service/service-directory-api/,
+#                   src/ui/connect-dashboard-ui/,
+#                   src/ui/connect-ui/,
+#                   src/ui/find-ui/,
+#                   src/ui/idam-maintenance-ui/,
+#                   src/ui/manage-ui/
+                   ]
+    uses: ./.github/workflows/build-upload-artefact.yml
+    with:
+      project: ${{ matrix.project }}
+    secrets: inherit
 
   idam-deploy:
     name: IDAM API - Deploy
     runs-on: ubuntu-22.04
-#    needs: [ build-projects-upload-artifacts ]
-#    needs: [ idam-api-fetch-secrets ]
+    needs: [ build-projects-upload-artifacts ]
     env:
       ARTIFACT_NAME: idam-api
       KV_PREFIX: IDAM-API
@@ -87,20 +78,11 @@ jobs:
 #          restore-keys: |
 #            ${{ runner.os }}-nuget-
 
-#      - name: Download Artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: ${{ env.ARTIFACT_NAME }}
-#          path: ./out
-
-#      - name: Decode & Decrypt
-#        id: decode
-#        shell: bash
-#        run: |
-#          KV=$(echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}" | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }} | base64 --decode)
-#          echo "$KV"
-#          echo "::add-mask::$KV"
-#          echo "kv=$KV" >> "$GITHUB.OUTPUT"
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ./out
 
       - name: Azure CLI Login
         uses: azure/login@v2
@@ -119,40 +101,30 @@ jobs:
             $key = $item -replace '${{ env.KV_PREFIX }}-',''
             $key = $key -replace '-','_'
             $value = az keyvault secret show --name $item --vault-name ${{ vars.KEYVAULT_NAME }} --query value
+            Write-Output "::add-mask::$value"
             Write-Output "$key=$($value)" >> "$env:GITHUB_OUTPUT"
           }
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
-          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json"
+          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
         env:
           APPINSIGHTS_CONNECTION_STRING: ${{ steps.fetch.outputs.APPINSIGHTS_CONNECTION_STRING }}
           APPINSIGHTS_INSTRUMENTATIONKEY: ${{ steps.fetch.outputs.APPINSIGHTS_INSTRUMENTATIONKEY }}
           ConnectionStrings.IdamConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_IDAMCONNECTION }}
           Crypto.clientId: ${{ steps.fetch.outputs.CRYPTO_CLIENTID }}
-
-#      - name: App Settings Variable Substitution
-#        uses: microsoft/variable-substitution@v1
-#        with:
-##          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
-#          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json"
-#        env:
-#          APPINSIGHTS_CONNECTION_STRING: ${{ fromJSON(steps.kv.outputs.kv.IDAM-API-APPINSIGHTS-CONNECTION-STRING) }}
-#          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY) }}
-#          ConnectionStrings.IdamConnection: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION) }}
-#          Crypto.clientId: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_CLIENTID) }}
-#          Crypto.clientSecret: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_CLIENTSECRET) }}
-#          Crypto.DbEncryptionIVKey: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY) }}
-#          Crypto.DbEncryptionIVKeySecretName: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME) }}
-#          Crypto.DbEncryptionKey: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.outputs.IDAM_API_CRYPTO_DBENCRYPTIONKEY) }}
-#          Crypto.DbEncryptionKeySecretName: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME) }}
-#          Crypto.KeyVaultIdentifier: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER) }}
-#          Crypto.tenantId: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_TENANTID) }}
-#          Crypto.UseKeyVault: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_CRYPTO_USEKEYVAULT) }}
-#          EventGridUrl: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_EVENTGRIDURL) }}
-#          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY) }}
-#          ServiceDirectoryApiBaseUrl: ${{ fromJSON(needs.idam-api-fetch-secrets.outputs.kv.IDAM_API_SERVICEDIRECTORYAPIBASEURL) }}
+          Crypto.clientSecret: ${{ steps.fetch.outputs.CRYPTO-CLIENTSECRET }}
+          Crypto.DbEncryptionIVKey: ${{ steps.fetch.outputs.CRYPTO-DBENCRYPTIONIVKEY }}
+          Crypto.DbEncryptionIVKeySecretName: ${{ steps.fetch.outputs.CRYPTO-DBENCRYPTIONIVKEYSECRETNAME }}
+          Crypto.DbEncryptionKey: ${{ steps.fetch.outputs.CRYPTO-DBENCRYPTIONKEY }}
+          Crypto.DbEncryptionKeySecretName: ${{ steps.fetch.outputs.CRYPTO-DBENCRYPTIONKEYSECRETNAME }}
+          Crypto.KeyVaultIdentifier: ${{ steps.fetch.outputs.CRYPTO-KEYVAULTIDENTIFIER }}
+          Crypto.tenantId: ${{ steps.fetch.outputs.CRYPTO-TENANTID }}
+          Crypto.UseKeyVault: ${{ steps.fetch.outputs.CRYPTO-USEKEYVAULT }}
+          EventGridUrl: ${{ steps.fetch.outputs.EVENTGRIDURL }}
+          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION-BEARERTOKENSIGNINGKEY }}
+          ServiceDirectoryApiBaseUrl: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPIBASEURL }}
 
 #      - name: Apply Database Migration
 #        uses: ./.github/actions/database-migration
@@ -163,15 +135,15 @@ jobs:
 #          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
 #          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
 
-#      - name: Deploy Artifact to Azure
-#        uses: azure/webapps-deploy@v3
-#        with:
-#          app-name: ${{ env.APP_NAME }}
-#          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-#          package: ./out
+      - name: Deploy Artifact to Azure
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.APP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+          package: ./out
 
-#      - name: Clear Artifact
-#        if: always()
-#        uses: geekyeggo/delete-artifact@v5
-#        with:
-#          name: ${{ env.ARTIFACT_NAME }}
+      - name: Clear Artifact
+        if: always()
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
