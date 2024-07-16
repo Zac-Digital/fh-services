@@ -98,14 +98,14 @@ jobs:
         run: |
           KV=$(echo ${{ needs.idam-api-fetch-secrets.outputs.kv }} | base64 --decode <<<${{ needs.idam-api-fetch-secrets.outputs.kv }} | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }})
           echo "::add-mask::$KV"
-          echo "kv=$KV" >> "$GITHUB_OUTPUT"
+          echo "kv=$(jq $KV | tojson)" >> "$GITHUB.OUTPUT"
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
         with:
           files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json"
         env:
-          APPINSIGHTS_CONNECTION_STRING: fromJSON(${{ steps.decode.outputs.kv }})["IDAM_API_APPINSIGHTS_CONNECTION_STRING"]
+          APPINSIGHTS_CONNECTION_STRING: ${{ fromJSON(steps.decode.outputs.kv.IDAM_API_APPINSIGHTS_CONNECTION_STRING) }}
           APPINSIGHTS_INSTRUMENTATIONKEY: ${{ steps.decode.outputs.kv.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
           ConnectionStrings.IdamConnection: ${{ steps.decode.outputs.kv.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
           Crypto.clientId: ${{ steps.decode.outputs.kv.IDAM_API_CRYPTO_CLIENTID }}
