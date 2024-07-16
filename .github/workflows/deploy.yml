@@ -96,9 +96,9 @@ jobs:
         id: decode
         shell: bash
         run: |
-          KV="$(echo ${{ needs.idam-api-fetch-secrets.outputs.kv }} | base64 --decode <<<${{ needs.idam-api-fetch-secrets.outputs.kv }} | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }})"
+          KV=$(echo ${{ needs.idam-api-fetch-secrets.outputs.kv }} | base64 --decode <<<${{ needs.idam-api-fetch-secrets.outputs.kv }} | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }})
+          echo "$KV"
           echo "::add-mask::$KV"
-          echo "kv=$(jq $KV | tojson)" >> "$GITHUB.OUTPUT"
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
