@@ -100,9 +100,10 @@ jobs:
           foreach ($item in $arr) {
             $key = $item -replace '${{ env.KV_PREFIX }}-',''
             $key = $key -replace '-','_'
-            $value = az keyvault secret show --name $item --vault-name ${{ vars.KEYVAULT_NAME }} --query value
+            $value = az keyvault secret show --name $item --vault-name ${{ vars.KEYVAULT_NAME }} --query value --output tsv
             Write-Output "::add-mask::$value"
-            Write-Output "$key=$($value)" >> "$env:GITHUB_OUTPUT"
+            Write-Output $key
+            Write-Output "$key=$value" >> $env:GITHUB_OUTPUT
           }
 
       - name: App Settings Variable Substitution
@@ -114,16 +115,16 @@ jobs:
           APPINSIGHTS_INSTRUMENTATIONKEY: ${{ steps.fetch.outputs.APPINSIGHTS_INSTRUMENTATIONKEY }}
           ConnectionStrings.IdamConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_IDAMCONNECTION }}
           Crypto.clientId: ${{ steps.fetch.outputs.CRYPTO_CLIENTID }}
-          Crypto.clientSecret: ${{ steps.fetch.outputs.CRYPTO-CLIENTSECRET }}
-          Crypto.DbEncryptionIVKey: ${{ steps.fetch.outputs.CRYPTO-DBENCRYPTIONIVKEY }}
-          Crypto.DbEncryptionIVKeySecretName: ${{ steps.fetch.outputs.CRYPTO-DBENCRYPTIONIVKEYSECRETNAME }}
-          Crypto.DbEncryptionKey: ${{ steps.fetch.outputs.CRYPTO-DBENCRYPTIONKEY }}
-          Crypto.DbEncryptionKeySecretName: ${{ steps.fetch.outputs.CRYPTO-DBENCRYPTIONKEYSECRETNAME }}
-          Crypto.KeyVaultIdentifier: ${{ steps.fetch.outputs.CRYPTO-KEYVAULTIDENTIFIER }}
-          Crypto.tenantId: ${{ steps.fetch.outputs.CRYPTO-TENANTID }}
-          Crypto.UseKeyVault: ${{ steps.fetch.outputs.CRYPTO-USEKEYVAULT }}
+          Crypto.clientSecret: ${{ steps.fetch.outputs.CRYPTO_CLIENTSECRET }}
+          Crypto.DbEncryptionIVKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEY }}
+          Crypto.DbEncryptionIVKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
+          Crypto.DbEncryptionKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEY }}
+          Crypto.DbEncryptionKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
+          Crypto.KeyVaultIdentifier: ${{ steps.fetch.outputs.CRYPTO_KEYVAULTIDENTIFIER }}
+          Crypto.tenantId: ${{ steps.fetch.outputs.CRYPTO_TENANTID }}
+          Crypto.UseKeyVault: ${{ steps.fetch.outputs.CRYPTO_USEKEYVAULT }}
           EventGridUrl: ${{ steps.fetch.outputs.EVENTGRIDURL }}
-          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION-BEARERTOKENSIGNINGKEY }}
+          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
           ServiceDirectoryApiBaseUrl: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPIBASEURL }}
 
 #      - name: Apply Database Migration
