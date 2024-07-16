@@ -97,6 +97,7 @@ jobs:
         shell: bash
         run: |
           KV=$(echo ${{ needs.idam-api-fetch-secrets.outputs.kv }} | base64 --decode <<<${{ needs.idam-api-fetch-secrets.outputs.kv }} | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }})
+          echo ${{ needs.idam-api-fetch-secrets.outputs.kv }}
           echo "::add-mask::$KV"
           echo "kv=$KV" >> "$GITHUB.OUTPUT"
 
