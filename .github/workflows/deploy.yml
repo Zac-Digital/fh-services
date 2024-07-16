@@ -72,8 +72,7 @@ jobs:
       - name: Test
         shell: bash
         run: |
-          echo '::add-mask::${{ needs.idam-api-fetch-secrets.outputs.kv }}'
-          KV=$(echo "${{ needs.idam-api-fetch-secrets.outputs.kv }}" | base64 --decode | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }})
+          KV=$(echo ${{ needs.idam-api-fetch-secrets.outputs.kv }} | base64 --decode | gpg --decrypt --quiet --batch --passphrase ${{ secrets.MASK_PASSKEY }}) >/dev/null 2>&1
           echo "::add-mask::$KV"
           echo "$KV"
 
