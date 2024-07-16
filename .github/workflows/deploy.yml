@@ -113,21 +113,14 @@ jobs:
         id: fetch
         shell: pwsh
         run: |-
-          $output = @{}
           $names = az keyvault secret list --vault-name ${{ vars.KEYVAULT_NAME }} --query "[?starts_with(name, '${{ env.KV_PREFIX }}-')].name" --output json
           $arr = $names | ConvertFrom-Json
           foreach ($item in $arr) {
             $key = $item -replace '${{ env.KV_PREFIX }}-',''
             $key = $key -replace '-','_'
             $value = az keyvault secret show --name $item --vault-name ${{ vars.KEYVAULT_NAME }} --query value
-            Write-Output "::add-mask::$value"
             Write-Output "$key=$($value)" >> "$env:GITHUB_OUTPUT"
-            $output[$key]=$value
           }
-          $OUTPUT = $output | ConvertTo-Json -Compress
-          Write-Output "$OUTPUT"
-          Write-Output "::add-mask::$OUTPUT"
-          Write-Output "kv=$($OUTPUT)" >> "$env:GITHUB_OUTPUT"
 
       - name: App Settings Variable Substitution
         uses: microsoft/variable-substitution@v1
