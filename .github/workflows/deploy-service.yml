@@ -69,11 +69,6 @@ jobs:
           keyvault_prefix: ${{ inputs.keyvault_prefix }}
           files: "${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}/appsettings.json, ./out/appsettings.json"
 
-      - name: Test
-        run: |
-          echo "Test Step"
-          echo ${{ steps.substitution.outputs.publish_profile }}
-
       - name: Deploy Artifact to Azure
         uses: azure/webapps-deploy@v3
         with:
