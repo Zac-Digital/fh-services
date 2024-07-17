@@ -27,9 +27,6 @@ on:
       azure_app_name:
         required: true
         type: string
-      azure_publish_profile:
-        required: true
-        type: string
 
 jobs:
   deploy-service:
@@ -84,8 +81,8 @@ jobs:
       - name: Deploy Artifact to Azure
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ steps.fetch.outputs.AZURE-WEBAPP-PUBLISH-PROFILE }}
-          publish-profile: ${{ inputs.azure_publish_profile }}
+          app-name: ${{ inputs.azure_app_name }}
+          publish-profile: ${{ steps.fetch.outputs.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./out
 
       - name: Clear Artifact
