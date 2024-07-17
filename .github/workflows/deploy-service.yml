@@ -1,13 +1,9 @@
 name: Deploy Service
-run-name: ${{ inputs.service_name }} - Deploy
 
 on:
   workflow_call:
     inputs:
       environment:
-        required: true
-        type: string
-      service_name:
         required: true
         type: string
       artifact_name:
@@ -22,6 +18,9 @@ on:
       data_project_name:
         required: true
         type: string
+      database_context:
+        required: true
+        type: string
       project_type:
         required: true
         type: string
@@ -31,6 +30,7 @@ on:
 
 jobs:
   deploy-service:
+    name: Download Artefact & Deploy Project
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     steps:
@@ -71,7 +71,7 @@ jobs:
       - name: Apply Database Migration
         uses: ./.github/actions/database-migration
         with:
-          db_context: ApplicationDbContext
+          db_context: ${{ inputs.database_context }}
           data_project_path: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.data_project_name }}
           startup_project_path: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}
           azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}

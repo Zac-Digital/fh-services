@@ -23,14 +23,14 @@ permissions:
 
 jobs:
   build-projects-upload-artifacts:
-    name: Build
+    name: ${{ matrix.project }}
     strategy:
       fail-fast: true
       matrix:
         project: [ src/service/idam-api/,
 #                   src/service/notification-api/,
 #                   src/service/referral-api/,
-#                   src/service/report-api/,
+                   src/service/report-api/,
 #                   src/service/service-directory-api/,
 #                   src/ui/connect-dashboard-ui/,
 #                   src/ui/connect-ui/,
@@ -44,14 +44,31 @@ jobs:
     secrets: inherit
 
   idam-deploy:
+    name: IDAM API
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
       environment: ${{ inputs.environment }}
-      service_name: IDAM API
       artifact_name: idam-api
       keyvault_prefix: IDAM-API
       project_name: FamilyHubs.Idam.Api
       data_project_name: FamilyHubs.Idam.Data
+      database_context: ApplicationDbContext
       project_type: service
       azure_app_name: s181d01-as-fh-idam-api
+    secrets: inherit
+
+  report-deploy:
+    name: Report API
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: report-api
+      keyvault_prefix: REPORT-API
+      project_name: FamilyHubs.Report.Api
+      data_project_name: FamilyHubs.Report.Data
+      database_context: ReportDbContext
+      project_type: service
+      azure_app_name: s181d01-as-fh-report-api
+    secrets: inherit
