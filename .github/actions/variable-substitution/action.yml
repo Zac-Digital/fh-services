@@ -1,0 +1,100 @@
+name: Fetch Secrets & Perform an App Settings Variable Substitution
+description: Fetch secrets from Azure KeyVault for an API/UI and update the App Settings with them
+
+inputs:
+  keyvault_name:
+    required: true
+    type: string
+  keyvault_prefix:
+    required: true
+    description: The prefix of the KeyVault Key, e.g., IDAM-API-SECRET-NAME will have the prefix IDAM-API
+    type: string
+  files:
+    required: true
+    description: Comma seperated list of files to update
+    type: string
+
+runs:
+  using: composite
+
+  steps:
+    - name: Fetch Secrets from Azure
+      id: fetch
+      shell: pwsh
+      run: |-
+        $names = az keyvault secret list --vault-name ${{ inputs.keyvault_name }} --query "[?starts_with(name, '${{ inputs.keyvault_prefix }}-')].name" --output json
+        $arr = $names | ConvertFrom-Json
+        foreach ($item in $arr) {
+          $key = $item -replace '${{ inputs.keyvault_prefix }}-',''
+          $key = $key -replace '-','_'
+          $value = az keyvault secret show --name $item --vault-name ${{ inputs.keyvault_name }} --query value --output tsv
+          Write-Output "::add-mask::$value"
+          Write-Output "$key=$value" >> $env:GITHUB_OUTPUT
+        }
+
+      # Keys that aren't in an appsettings.json file and aren't in the fetch step's output are ignored ..
+      # .. so each API / UI only populates what is relevant to it.
+    - name: App Settings Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ${{ inputs.files }}
+      env:
+        APPINSIGHTS_CONNECTION_STRING: ${{ steps.fetch.outputs.APPINSIGHTS_CONNECTION_STRING }}
+        APPINSIGHTS_INSTRUMENTATIONKEY: ${{ steps.fetch.outputs.APPINSIGHTS_INSTRUMENTATIONKEY }}
+        ConnectionStrings.IdamConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_IDAMCONNECTION }}
+        Crypto.clientId: ${{ steps.fetch.outputs.CRYPTO_CLIENTID }}
+        Crypto.clientSecret: ${{ steps.fetch.outputs.CRYPTO_CLIENTSECRET }}
+        Crypto.DbEncryptionIVKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEY }}
+        Crypto.DbEncryptionIVKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
+        Crypto.DbEncryptionKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEY }}
+        Crypto.DbEncryptionKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
+        Crypto.KeyVaultIdentifier: ${{ steps.fetch.outputs.CRYPTO_KEYVAULTIDENTIFIER }}
+        Crypto.tenantId: ${{ steps.fetch.outputs.CRYPTO_TENANTID }}
+        Crypto.UseKeyVault: ${{ steps.fetch.outputs.CRYPTO_USEKEYVAULT }}
+        EventGridUrl: ${{ steps.fetch.outputs.EVENTGRIDURL }}
+        GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
+        ServiceDirectoryApiBaseUrl: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPIBASEURL }}
+        ConnectionStrings.ServiceDirectoryConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_SERVICEDIRECTORYCONNECTION }}
+        GovNotifySetting.ManageAPIKey: ${{ steps.fetch.outputs.GOVNOTIFYSETTING_MANAGEAPIKEY }}
+        GovNotifySetting.ConnectAPIKey: ${{ steps.fetch.outputs.GOVNOTIFYSETTING_CONNECTAPIKEY }}
+        ConnectionStrings.NotificationConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_NOTIFICATIONCONNECTION }}
+        ConnectionStrings.ReferralConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_REFERRALCONNECTION }}
+        ConnectionStrings.ReportConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_REPORTCONNECTION }}
+        FamilyHubsUi.Urls.ThisWeb: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_THISWEB }}
+        FamilyHubsUi.PathPrefix: ${{ steps.fetch.outputs.FAMILYHUBSUI_PATHPREFIX }}
+        ServiceDirectoryUrl: ${{ steps.fetch.outputs.SERVICEDIRECTORYURL }}
+        ReferralApiUrl: ${{ steps.fetch.outputs.REFERRALAPIURL }}
+        Idams.Endpoint: ${{ steps.fetch.outputs.IDAMS_ENDPOINT }}
+        GovUkOidcConfiguration.PathBasedRouting.SubSiteTriggerPaths: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_PATHBASEDROUTING_SUBSITETRIGGERPATHS }}
+        GovUkOidcConfiguration.PathBasedRouting.DiscriminatorPath: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_PATHBASEDROUTING_DISCRIMINATORPATH }}
+        FamilyHubsUi.Urls.GovUkLoginAccountPage: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_GOVUKLOGINACCOUNTPAGE }}
+        FamilyHubsUi.Urls.DashboardWeb: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_DASHBOARDWEB }}
+        DataProtection.TenantId: ${{ steps.fetch.outputs.DATAPROTECTION_TENANTID }}
+        DataProtection.KeyIdentifier: ${{ steps.fetch.outputs.DATAPROTECTION_KEYIDENTIFIER }}
+        DataProtection.ClientSecret: ${{ steps.fetch.outputs.DATAPROTECTION_CLIENTSECRET }}
+        DataProtection.ClientId: ${{ steps.fetch.outputs.DATAPROTECTION_CLIENTID }}
+        ConnectionStrings.SharedKernelConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_SHAREDKERNELCONNECTION }}
+        ServiceDirectoryAPI.Endpoint: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPI_ENDPOINT }}
+        BlobStorageFilename: ${{ steps.fetch.outputs.BLOBSTORAGEFILENAME }}
+        BlobStorageConnectionString: ${{ steps.fetch.outputs.BLOBSTORAGECONNECTIONSTRING }}
+        SqlServerCache.Connection: ${{ steps.fetch.outputs.SQLSERVERCACHE_CONNECTION }}
+        CacheConnection: ${{ steps.fetch.outputs.CACHECONNECTION }}
+        FamilyHubsUi.Urls.ConnectWeb: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_CONNECTWEB }}
+        FamilyHubsUi.Urls.FindWeb: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_FINDWEB }}
+        FamilyHubsUi.Urls.ManageWeb: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_MANAGEWEB }}
+        GovUkLoginAccountPage: ${{ steps.fetch.outputs.GOVUKLOGINACCOUNTPAGE }}
+        GovUkOidcConfiguration.AppHost: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_APPHOST }}
+        GovUkOidcConfiguration.IdamsApiBaseUrl: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_IDAMSAPIBASEURL }}
+        GovUkOidcConfiguration.Oidc.BaseUrl: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_OIDC_BASEURL }}
+        GovUkOidcConfiguration.Oidc.ClientId: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_OIDC_CLIENTID }}
+        GovUkOidcConfiguration.Oidc.KeyVaultIdentifier: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_OIDC_KEYVAULTIDENTIFIER }}
+        GovUkOidcConfiguration.Oidc.TwoFactorEnabled: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_OIDC_TWOFACTORENABLED }}
+        GovUkOidcConfiguration.StubAuthentication.UseStubAuthentication: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_STUBAUTHENTICATION_USESTUBAUTHENTICATION }}
+        GovUkOidcConfiguration.StubAuthentication.UseStubClaims: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_STUBAUTHENTICATION_USESTUBCLAIMS }}
+        GovUkOidcConfiguration.Urls.NoClaimsRedirect: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_URLS_NOCLAIMSREDIRECT }}
+        GovUkOidcConfiguration.Urls.SignedOutRedirect: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_URLS_SIGNEDOUTREDIRECT }}
+        GovUkOidcConfiguration.Urls.TermsAndConditionsRedirect: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_URLS_TERMSANDCONDITIONSREDIRECT }}
+        IdamApi: ${{ steps.fetch.outputs.IDAMAPI }}
+        Notification.Endpoint: ${{ steps.fetch.outputs.NOTIFICATION_ENDPOINT }}
+        ReferralApiBaseUrl: ${{ steps.fetch.outputs.REFERRALAPIBASEURL }}
+        ReportingApiBaseUrl: ${{ steps.fetch.outputs.REPORTINGAPIBASEURL }}
