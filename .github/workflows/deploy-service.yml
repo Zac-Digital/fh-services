@@ -84,7 +84,7 @@ jobs:
       - name: Deploy Artifact to Azure
         uses: azure/webapps-deploy@v3
         with:
-          app-name: ${{ inputs.azure_app_name }}
+          app-name: ${{ steps.fetch.outputs.AZURE-WEBAPP-PUBLISH-PROFILE }}
           publish-profile: ${{ inputs.azure_publish_profile }}
           package: ./out
 

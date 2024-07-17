@@ -56,7 +56,6 @@ jobs:
       database_context: ApplicationDbContext
       project_type: service
       azure_app_name: s181d01-as-fh-idam-api
-      azure_publish_profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
     secrets: inherit
 
   manage-deploy:
@@ -70,5 +69,4 @@ jobs:
       project_name: FamilyHubs.ServiceDirectory.Admin.Web
       project_type: ui
       azure_app_name: s181d01-as-fh-sd-admin-ui
-      azure_publish_profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_MANAGE_UI }}
     secrets: inherit
