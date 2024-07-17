@@ -117,6 +117,10 @@ jobs:
           EventGridUrl: ${{ steps.fetch.outputs.EVENTGRIDURL }}
           GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
           ServiceDirectoryApiBaseUrl: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPIBASEURL }}
+          MadeUpSetting: ${{ steps.fetch.outputs.MADE_UP_SETTING }}
+          AnotherMadeUpOne: ${{ steps.fetch.outputs.NOT_IN_APPSETTINGS }}
+          DoesThisAffectIt: ${{ steps.fetch.outputs.NOT_FOR_IDAM }}
+          AnyNewKeysMadeHmm: ${{ steps.fetch.outputs.RANDOM_OTHER_APPSETTING }}
 
       - name: Apply Database Migration
         uses: ./.github/actions/database-migration
