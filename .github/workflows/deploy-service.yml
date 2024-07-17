@@ -68,6 +68,13 @@ jobs:
           keyvault_prefix: ${{ inputs.keyvault_prefix }}
           files: "${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}/appsettings.json, ./out/appsettings.json"
 
+      - name: Deploy Artifact to Azure
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ inputs.azure_app_name }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+          package: ./out
+
       - name: Apply Database Migration
         if: ${{ inputs.data_project_name != '' && inputs.database_context != ''}}
         uses: ./.github/actions/database-migration
@@ -77,13 +84,6 @@ jobs:
           startup_project_path: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}
           azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
           azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
-
-      - name: Deploy Artifact to Azure
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ inputs.azure_app_name }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-          package: ./out
 
       - name: Clear Artifact
         if: always()

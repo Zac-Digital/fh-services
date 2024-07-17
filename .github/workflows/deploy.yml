@@ -36,7 +36,7 @@ jobs:
 #                   src/ui/connect-ui/,
 #                   src/ui/find-ui/,
 #                   src/ui/idam-maintenance-ui/,
-                   src/ui/manage-ui/
+#                   src/ui/manage-ui/
                    ]
     uses: ./.github/workflows/build-upload-artefact.yml
     with:
@@ -58,15 +58,15 @@ jobs:
       azure_app_name: s181d01-as-fh-idam-api
     secrets: inherit
 
-  manage-deploy:
-    name: Manage UI
-    needs: [ build-projects-upload-artifacts ]
-    uses: ./.github/workflows/deploy-service.yml
-    with:
-      environment: ${{ inputs.environment }}
-      artifact_name: manage-ui
-      keyvault_prefix: MANAGE-UI
-      project_name: FamilyHubs.ServiceDirectory.Admin.Web
-      project_type: ui
-      azure_app_name: s181d01-as-fh-sd-admin-ui
-    secrets: inherit
+#  manage-deploy:
+#    name: Manage UI
+#    needs: [ build-projects-upload-artifacts ]
+#    uses: ./.github/workflows/deploy-service.yml
+#    with:
+#      environment: ${{ inputs.environment }}
+#      artifact_name: manage-ui
+#      keyvault_prefix: MANAGE-UI
+#      project_name: FamilyHubs.ServiceDirectory.Admin.Web
+#      project_type: ui
+#      azure_app_name: s181d01-as-fh-sd-admin-ui
+#    secrets: inherit

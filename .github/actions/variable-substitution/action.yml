@@ -28,6 +28,10 @@ runs:
           $key = $item -replace '${{ inputs.keyvault_prefix }}-',''
           $key = $key -replace '-','_'
           $value = az keyvault secret show --name $item --vault-name ${{ inputs.keyvault_name }} --query value --output tsv
+          if ($key -eq "API_AZURE_WEBAPP_PUBLISH_PROFILE")
+          {
+            Write-Output $value
+          }
           Write-Output "::add-mask::$value"
           Write-Output "$key=$value" >> $env:GITHUB_OUTPUT
         }
