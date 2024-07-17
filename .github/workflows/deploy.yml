@@ -44,105 +44,14 @@ jobs:
     secrets: inherit
 
   idam-deploy:
-    name: IDAM API - Deploy
-    runs-on: ubuntu-22.04
     needs: [ build-projects-upload-artifacts ]
-    env:
-      ARTIFACT_NAME: idam-api
-      KV_PREFIX: IDAM-API
-      PROJECT_NAME: FamilyHubs.Idam.Api
-      DATA_PROJECT_NAME: FamilyHubs.Idam.Data
-      PROJECT_TYPE: service
-      APP_NAME: s181d01-as-fh-idam-api # TODO: Env variable
-    environment: ${{ inputs.environment }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
-
-      - name: Install Entity Framework
-        shell: bash
-        run: dotnet tool install --global dotnet-ef
-
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ./out
-
-      - name: Azure CLI Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: App Settings Variable Substitution
-        uses: ./.github/actions/variable-substitution
-        with:
-          keyvault_name: ${{ vars.KEYVAULT_NAME }}
-          keyvault_prefix: ${{ env.KV_PREFIX }}
-          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
-
-#      - name: Fetch Secrets from Azure
-#        id: fetch
-#        shell: pwsh
-#        run: |-
-#          $names = az keyvault secret list --vault-name ${{ vars.KEYVAULT_NAME }} --query "[?starts_with(name, '${{ env.KV_PREFIX }}-')].name" --output json
-#          $arr = $names | ConvertFrom-Json
-#          foreach ($item in $arr) {
-#            $key = $item -replace '${{ env.KV_PREFIX }}-',''
-#            $key = $key -replace '-','_'
-#            $value = az keyvault secret show --name $item --vault-name ${{ vars.KEYVAULT_NAME }} --query value --output tsv
-#            Write-Output "::add-mask::$value"
-#            Write-Output "$key=$value" >> $env:GITHUB_OUTPUT
-#          }
-#
-#      - name: App Settings Variable Substitution
-#        uses: microsoft/variable-substitution@v1
-#        with:
-#          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
-#        env:
-#          APPINSIGHTS_CONNECTION_STRING: ${{ steps.fetch.outputs.APPINSIGHTS_CONNECTION_STRING }}
-#          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ steps.fetch.outputs.APPINSIGHTS_INSTRUMENTATIONKEY }}
-#          ConnectionStrings.IdamConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_IDAMCONNECTION }}
-#          Crypto.clientId: ${{ steps.fetch.outputs.CRYPTO_CLIENTID }}
-#          Crypto.clientSecret: ${{ steps.fetch.outputs.CRYPTO_CLIENTSECRET }}
-#          Crypto.DbEncryptionIVKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEY }}
-#          Crypto.DbEncryptionIVKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
-#          Crypto.DbEncryptionKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEY }}
-#          Crypto.DbEncryptionKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-#          Crypto.KeyVaultIdentifier: ${{ steps.fetch.outputs.CRYPTO_KEYVAULTIDENTIFIER }}
-#          Crypto.tenantId: ${{ steps.fetch.outputs.CRYPTO_TENANTID }}
-#          Crypto.UseKeyVault: ${{ steps.fetch.outputs.CRYPTO_USEKEYVAULT }}
-#          EventGridUrl: ${{ steps.fetch.outputs.EVENTGRIDURL }}
-#          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
-#          ServiceDirectoryApiBaseUrl: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPIBASEURL }}
-
-      - name: Apply Database Migration
-        uses: ./.github/actions/database-migration
-        with:
-          db_context: ApplicationDbContext
-          data_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.DATA_PROJECT_NAME }}
-          startup_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}
-          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
-
-      - name: Deploy Artifact to Azure
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.APP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-          package: ./out
-
-      - name: Clear Artifact
-        if: always()
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      service_name: IDAM API
+      artifact_name: idam-api
+      keyvault_prefix: IDAM-API
+      project_name: FamilyHubs.Idam.Api
+      data_project_name: FamilyHubs.Idam.Data
+      project_type: service
+      azure_app_name: s181d01-as-fh-idam-api
