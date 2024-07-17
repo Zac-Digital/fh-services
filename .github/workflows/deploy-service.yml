@@ -16,15 +16,18 @@ on:
         required: true
         type: string
       data_project_name:
-        required: true
+        required: false
         type: string
       database_context:
-        required: true
+        required: false
         type: string
       project_type:
         required: true
         type: string
       azure_app_name:
+        required: true
+        type: string
+      azure_publish_profile:
         required: true
         type: string
 
@@ -69,6 +72,7 @@ jobs:
           files: "${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}/appsettings.json, ./out/appsettings.json"
 
       - name: Apply Database Migration
+        if: ${{ inputs.data_project_name != '' && inputs.database_context != ''}}
         uses: ./.github/actions/database-migration
         with:
           db_context: ${{ inputs.database_context }}
@@ -81,7 +85,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ inputs.azure_app_name }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
+          publish-profile: ${{ inputs.azure_publish_profile }}
           package: ./out
 
       - name: Clear Artifact
