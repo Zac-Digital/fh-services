@@ -65,7 +65,7 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       artifact_name: notification-api
-      keyvault_prefix: NOTIFICATION-API
+      keyvault_prefix: NOTIFICATIONS-API
       project_name: FamilyHubs.Notification.Api
       data_project_name: FamilyHubs.Notification.Data
       database_context: ApplicationDbContext
