@@ -166,8 +166,6 @@ jobs:
       artifact_name: idam-maintenance-ui
       keyvault_prefix: IDAM-MAINTENANCE-UI
       project_name: FamilyHubs.Idams.Maintenance.UI
-      data_project_name: FamilyHubs.Idams.Maintenance.Data
-      database_context: ApplicationDbContext
       project_type: ui
       azure_app_name: s181d01-as-fh-idam-maintenance-ui
     secrets: inherit
