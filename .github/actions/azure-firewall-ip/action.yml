@@ -18,9 +18,8 @@ inputs:
     required: true
     type: string
   az_firewall_rule_name:
-    required: false
+    required: true
     type: string
-    default: "github-actions-temp"
 
 runs:
   using: composite
