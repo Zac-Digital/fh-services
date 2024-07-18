@@ -110,12 +110,12 @@ jobs:
     with:
       environment: ${{ inputs.environment }}
       artifact_name: service-directory-api
-      keyvault_prefix: SERVICE-DIRECTORY-API
+      keyvault_prefix: SD-API
       project_name: FamilyHubs.ServiceDirectory.Api
       data_project_name: FamilyHubs.ServiceDirectory.Data
       database_context: ApplicationDbContext
       project_type: service
-      azure_app_name: s181d01-as-fh-idam-api
+      azure_app_name: s181d01-as-fh-sd-api
     secrets: inherit
 
   ui-connect-dashboard-deploy:
@@ -169,7 +169,7 @@ jobs:
       data_project_name: FamilyHubs.Idams.Maintenance.Data
       database_context: ApplicationDbContext
       project_type: ui
-      azure_app_name: s181d01-as-fh-sd-admin-ui
+      azure_app_name: s181d01-as-fh-idam-maintenance-ui
     secrets: inherit
 
   ui-manage-deploy:
