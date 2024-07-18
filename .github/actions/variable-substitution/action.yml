@@ -27,17 +27,17 @@ runs:
       shell: pwsh
       run: |-
         $names = az keyvault secret list --vault-name ${{ inputs.keyvault_name }} --query "[?starts_with(name, '${{ inputs.keyvault_prefix }}-')].name" --output json
+        Write-Output "KeyVault Names = $names"
         $arr = $names | ConvertFrom-Json
-        Write-Output "KeyVault Names = $arr"
         foreach ($item in $arr) {
           $key = $item -replace '${{ inputs.keyvault_prefix }}-',''
           $key = $key -replace '-','_'
           $value = az keyvault secret show --name $item --vault-name ${{ inputs.keyvault_name }} --query value --output tsv
+          Write-Output "::add-mask::$value"
           if ($key -eq "AZURE_WEBAPP_PUBLISH_PROFILE")
           {
             Write-Output "publish_profile=""$value""" >> $env:GITHUB_OUTPUT
           }
-          Write-Output "::add-mask::$value"
           Write-Output "$key=$value" >> $env:GITHUB_OUTPUT
         }
 
