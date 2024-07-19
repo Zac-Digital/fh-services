@@ -113,7 +113,7 @@ public class IdamsTelemetryPiiRedactor : ITelemetryInitializer
                 {
                     requestTelemetry.Url = Sanitize(SiteQueryStringRegex, requestTelemetry.Url);
                 }
-                if (requestTelemetry.Name.IndexOf("DeleteAllUserSessions") > -1)
+                if (requestTelemetry.Name.IndexOf("DeleteAllUserSessions/") > -1)
                 {
                     if (requestTelemetry.Name.IndexOf("@") > -1)
                     {

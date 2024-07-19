@@ -30,4 +30,3 @@ To Apply Latest Schema Manually
 <br />
  dotnet ef database update --project ..\FamilyHubs.Idam.data
 <br />
-

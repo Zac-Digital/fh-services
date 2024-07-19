@@ -7,6 +7,8 @@ public interface IServiceDirectoryService
 {
     Task<List<OrganisationDto>?> GetAllOrganisations();
     Task<List<OrganisationDto>?> GetOrganisationsByAssociatedId(long id);
+    Task<List<OrganisationDto>?> GetOrganisationsByName(string name);
+    Task<List<OrganisationDto>?> GetOrganisationsByIds(IEnumerable<long> ids);
 }
 
 public class ServiceDirectoryService : IServiceDirectoryService
@@ -18,12 +20,12 @@ public class ServiceDirectoryService : IServiceDirectoryService
         _httpClient = httpClient;
     }
 
-    public async Task<List<OrganisationDto>?> GetAllOrganisations()
+    private async Task<List<OrganisationDto>?> GetOrganisationsByUri(string uri)
     {
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(_httpClient.BaseAddress + $"api/organisations")
+            RequestUri = new Uri(_httpClient.BaseAddress + uri)
         };
 
         using var response = await _httpClient.SendAsync(request);
@@ -35,25 +37,29 @@ public class ServiceDirectoryService : IServiceDirectoryService
         }
 
         return JsonSerializer.Deserialize<List<OrganisationDto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    }
 
+    public async Task<List<OrganisationDto>?> GetAllOrganisations()
+    {
+        return await GetOrganisationsByUri("api/organisations");
     }
 
     public async Task<List<OrganisationDto>?> GetOrganisationsByAssociatedId(long id)
     {
-        var request = new HttpRequestMessage
-        {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri(_httpClient.BaseAddress + $"api/organisationsByAssociatedOrganisation?id={id}")
-        };
+        return await GetOrganisationsByUri($"api/organisationsByAssociatedOrganisation?id={id}");
+    }
 
-        using var response = await _httpClient.SendAsync(request);
+    public async Task<List<OrganisationDto>?> GetOrganisationsByName(string name)
+    {
+        return await GetOrganisationsByUri($"api/organisations?name={name}");
+    }
 
-        var json = await response.Content.ReadAsStringAsync();
-        if (string.IsNullOrEmpty(json))
-        {
-            throw new Exception("Invalid response from ServiceDirectory Api");
-        }
+    public async Task<List<OrganisationDto>?> GetOrganisationsByIds(IEnumerable<long> ids)
+    {
+        var enumerable = ids.ToList();
+        if (!enumerable.Any()) return new List<OrganisationDto>();
 
-        return JsonSerializer.Deserialize<List<OrganisationDto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var query = string.Join("&ids=", enumerable);
+        return await GetOrganisationsByUri($"api/organisations?ids={query}");
     }
 }

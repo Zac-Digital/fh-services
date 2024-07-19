@@ -7,7 +7,6 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
 
 namespace FamilyHubs.Idam.Core.Queries.GetAccounts;
 
@@ -31,10 +30,8 @@ public class GetAccountsCommand : IRequest<PaginatedList<Account>?>
         UserName = userName;
         Email = email;
         OrganisationName = organisationName;
-#pragma warning disable S1125
-        IsLaUser = isLaUser.HasValue ? isLaUser.Value : false;
-        IsVcsUser = isVcsUser.HasValue ? isVcsUser.Value : false;
-#pragma warning restore S1125
+        IsLaUser = isLaUser ?? false;
+        IsVcsUser = isVcsUser ?? false;
         SortBy = sortBy ?? "Name_Ascending";
     }
 }
@@ -66,7 +63,8 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
         {
             var authorisedOrganisations = await GetUserAuthorisedOrganisations();
 
-            if(!TryGetRequestedAssociatedOrganisations(request.RequestedOrganisationId, authorisedOrganisations, out var organisations))
+            var (success, organisations) = await TryGetRequestedAssociatedOrganisations(request.RequestedOrganisationId, authorisedOrganisations);
+            if(!success)
             {
                 //  No organisations listed to return users from
                 return null;
@@ -81,77 +79,64 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
         }
     }
 
-    private async Task<List<OrganisationDto>?> GetUserAuthorisedOrganisations()
+    private async Task<IUserOrganisationsFilter> GetUserAuthorisedOrganisations()
     {
-        var user = _httpContextAccessor?.HttpContext?.GetFamilyHubsUser();
-        long organisationId;
+        var user = _httpContextAccessor.HttpContext?.GetFamilyHubsUser();
 
-        if(!long.TryParse(user?.OrganisationId, out organisationId))
+        if (!long.TryParse(user?.OrganisationId, out var organisationId))
         {
             throw new UnauthorizedAccessException("Invalid Bearer token, Organisation Claim is invalid");
         }
 
-        if(organisationId == -1 && user.Role == RoleTypes.DfeAdmin)
+        if (organisationId == -1 && user.Role == RoleTypes.DfeAdmin)
         {
-            return await _serviceDirectoryService.GetAllOrganisations();// DefAdmins can view users related to all organisations
+            return new UserOrganisationsFilterAdmin(_serviceDirectoryService);// DfeAdmins can view users related to all organisations
         }
 
         // Returns only organisations that the current bearer token has access to
-        return await _serviceDirectoryService.GetOrganisationsByAssociatedId(organisationId);
+        return new UserOrganisationsFilterStandard(
+            await _serviceDirectoryService.GetOrganisationsByAssociatedId(organisationId)
+        );
 
     }
 
-    private bool TryGetRequestedAssociatedOrganisations(long? requestedOrganisationId, List<OrganisationDto>? authorisedOrganisations, out List<OrganisationDto> organisations)
+    private static async Task<(bool, IUserOrganisationsFilter)> TryGetRequestedAssociatedOrganisations(long? requestedOrganisationId, IUserOrganisationsFilter authorisedOrganisations)
     {
         //  If no organisations return false
-        if (authorisedOrganisations == null || !authorisedOrganisations.Any())
+        if (!authorisedOrganisations.Any)
         {
-            organisations = new List<OrganisationDto>();
-            return false;
+            return (false, new UserOrganisationsFilterStandard());
         }
 
         //If no Id requested, return all authorised organisations
         if (!requestedOrganisationId.HasValue)
         {
-            organisations = authorisedOrganisations; 
-        }
-        else
-        {
-            //  Filter authorised organisations for requested associated organisations
-            organisations = authorisedOrganisations.Where(x => x.Id == requestedOrganisationId || x.AssociatedOrganisationId == requestedOrganisationId).ToList();
+            return (authorisedOrganisations.Any, authorisedOrganisations);
         }
 
+        //  Filter authorised organisations for requested associated organisations
+        //organisations = authorisedOrganisations.Where(x => x.Id == requestedOrganisationId || x.AssociatedOrganisationId == requestedOrganisationId).ToList();
 
-        //  If no organisations exist after filtering return false
-        if (organisations == null || !organisations.Any())
-        {
-            return false;
-        }
-
-        return true;
+        var organisations = await authorisedOrganisations.Requested(requestedOrganisationId.Value);
+        return (organisations.Any, organisations);
     }
 
-    private async Task<PaginatedList<Account>?> GetUsers(List<OrganisationDto> organisations, GetAccountsCommand request)
+    private async Task<PaginatedList<Account>?> GetUsers(IUserOrganisationsFilter organisations, GetAccountsCommand request)
     {
-        
         var pageNumber = request.PageNumber.GetValueOrDefault();
         var pageSize = request.PageSize.GetValueOrDefault();
 
-        var accountsQuery = CreateFilteredQuery(organisations, request);
+        var accountsQuery = await CreateFilteredQuery(organisations, request);
+        accountsQuery = SortQuery(accountsQuery, request);
 
-        IEnumerable<Account> users = await accountsQuery.ToListAsync();
-        AttachOrganisationNameToUserClaims(users, organisations);
-
-        users = SortQuery(users, request);
-
-        var totalCount = users.Count();
+        var totalCount = accountsQuery.Count();
         if(totalCount == 0)
             return null;
 
         if (pageNumber > 0)
         {
             //  Only paginate if page parameters passed in
-            users = users.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            accountsQuery = accountsQuery.Skip((pageNumber - 1) * pageSize).Take(pageSize);
         }
         else
         {
@@ -160,36 +145,19 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
             pageSize = totalCount;
         }
 
-        var result = new PaginatedList<Account>(users.ToList(), totalCount, pageNumber, pageSize);
+        var users = await accountsQuery.ToListAsync();
+        await AttachOrganisationNameToUserClaims(users, organisations);
+        var result = new PaginatedList<Account>(users, totalCount, pageNumber, pageSize);
 
         return result;
     }
 
-    private IQueryable<Account> CreateFilteredQuery(List<OrganisationDto> organisations, GetAccountsCommand request)
+    private async Task<IQueryable<Account>> CreateFilteredQuery(IUserOrganisationsFilter organisations, GetAccountsCommand request)
     {
-        IEnumerable<string> organisationIds;
-        if (string.IsNullOrEmpty(request.OrganisationName))
-        {
-            organisationIds = organisations.Select(x => x.Id.ToString());
-        }
-        else
-        {
-            organisationIds = organisations.Where(x => x.Name.ToLower().Contains(request.OrganisationName.ToLower())).Select(x => x.Id.ToString());
-        }
-
-        var accountsQuery = _dbContext.Accounts.Where(x =>
-            x.Claims.Any(x => x.Name == FamilyHubsClaimTypes.OrganisationId && organisationIds.Contains(x.Value))
-        );
-
-        accountsQuery = accountsQuery.Where(x => x.Status == Data.Entities.AccountStatus.Active);
-
-        if (!string.IsNullOrEmpty(request.UserName) || !string.IsNullOrEmpty(request.Email))
-        {
-            var accounts = FindAccounts(accountsQuery, request);
-
-            accountsQuery = accountsQuery.Where(x => accounts.Select(x => x.Id).Contains(x.Id));
-        }
+        var accountsQuery = await organisations
+            .Filter(_dbContext.Accounts, request.OrganisationName);
             
+        accountsQuery = accountsQuery.Where(x => x.Status == Data.Entities.AccountStatus.Active);
 
         if (request.IsLaUser != request.IsVcsUser) // If both values are the same dont filter
         {
@@ -204,23 +172,34 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
                 roles = new List<string> { RoleTypes.VcsProfessional, RoleTypes.VcsManager, RoleTypes.VcsDualRole };
             }
 
-            accountsQuery = accountsQuery.Where(x=>
-                x.Claims.Any(x => x.Name == FamilyHubsClaimTypes.Role && roles.Contains(x.Value)));
+            accountsQuery = accountsQuery.Where(acc=>
+                acc.Claims.Any(claim => claim.Name == FamilyHubsClaimTypes.Role && roles.Contains(claim.Value)));
+        }
+
+        if (!string.IsNullOrEmpty(request.UserName) || !string.IsNullOrEmpty(request.Email))
+        {
+            var accounts = FindAccounts(accountsQuery, request).Select(acc => acc.Id);
+
+            accountsQuery = _dbContext.Accounts.Where(x => accounts.Contains(x.Id));
         }
 
         return accountsQuery;
     }
 
-    private List<Account> FindAccounts(IQueryable<Account> activeAccounts, GetAccountsCommand request)
+    private static IEnumerable<Account> FindAccounts(IQueryable<Account> activeAccounts, GetAccountsCommand request)
     {
-        int pageNumber = 0;
-        int currentCount = 0;
-        List<Account> accounts = new List<Account>();
+        const int pageSize = 1000;
+
+        var pageNumber = 0;
+        int currentCount;
+        var accounts = new HashSet<Account>();
 
         do
         {
-
-            List<Account> entities = activeAccounts.Skip(pageNumber).Take(1000).ToList();
+            var entities = activeAccounts
+                .IgnoreAutoIncludes()
+                .OrderBy(a => a.Id)
+                .Skip(pageNumber*pageSize).Take(pageSize).ToList();
 
             pageNumber++;
             currentCount = entities.Count;
@@ -228,59 +207,40 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
             if (!string.IsNullOrEmpty(request.UserName))
             {
                 var results = entities.Where(x => x.Name.ToLower().Contains(request.UserName.ToLower()));
-                if (results.Any())
-                {
-                    accounts.AddRange(results);        
-                }
+                accounts.UnionWith(results);
             }
-                 
 
             if (!string.IsNullOrEmpty(request.Email))
             {
                 var results = entities.Where(x => x.Email.ToLower().Contains(request.Email.ToLower()));
-                if (results.Any())
-                {
-                    accounts.AddRange(results);
-                }
+                accounts.UnionWith(results);
             }
-            
-        } while (currentCount > 999);
+        } while (currentCount >= pageSize);
 
         return accounts;
     }
 
-    private IEnumerable<Account> SortQuery(IEnumerable<Account> accounts, GetAccountsCommand request)
+    private IQueryable<Account> SortQuery(IQueryable<Account> accounts, GetAccountsCommand request)
     {
-        switch (request.SortBy)
+        return request.SortBy switch
         {
-            case "Name_Ascending":
-                return accounts.OrderBy(x => x.Name);
-
-            case "Name_Descending":
-                return accounts.OrderByDescending(x => x.Name);
-
-            case "Email_Ascending":
-                return accounts.OrderBy(x => x.Email);
-
-            case "Email_Descending":
-                return accounts.OrderByDescending(x => x.Email);
-
-            case "Organisation_Ascending":
-                return accounts.OrderBy(x => x.Claims.First(x => x.Name == OrganisationNameClaim).Value);
-
-            case "Organisation_Descending":
-                return accounts.OrderByDescending(x => x.Claims.First(x => x.Name == OrganisationNameClaim).Value);
-
-            default:
-                throw new ArgumentException("Invalid parameter 'sortBy', value must be Name, Email or Organisation");
-        }
+            "Name_Ascending" => accounts.OrderBy(a => a.Name),
+            "Name_Descending" => accounts.OrderByDescending(a => a.Name),
+            "Email_Ascending" => accounts.OrderBy(a => a.Email),
+            "Email_Descending" => accounts.OrderByDescending(a => a.Email),
+            "Organisation_Ascending" => accounts.OrderBy(a => a.Claims.First(claim => claim.Name == OrganisationNameClaim).Value),
+            "Organisation_Descending" => accounts.OrderByDescending(a => a.Claims.First(claim => claim.Name == OrganisationNameClaim).Value),
+            _ => throw new ArgumentException("Invalid parameter 'sortBy', value must be Name, Email or Organisation")
+        };
     }
 
-    private void AttachOrganisationNameToUserClaims(IEnumerable<Account> accounts, List<OrganisationDto> organisations)
+    private static async Task AttachOrganisationNameToUserClaims(IEnumerable<Account> accounts, IUserOrganisationsFilter organisations)
     {
-        foreach (var user in accounts)
+        var users = accounts.Select(user => (user, user.Claims.First(y => y.Name == FamilyHubsClaimTypes.OrganisationId).Value)).ToList();
+        var organisationMap = await organisations.MapFor(users.Select(u => u.Value));
+        foreach (var (user, claimOrgId) in users)
         {
-            var organisation = organisations.First(x => x.Id.ToString() == user.Claims.First(y => y.Name == FamilyHubsClaimTypes.OrganisationId).Value);
+            var organisation = organisationMap[claimOrgId];
             user.Claims.Add(new AccountClaim { AccountId = user.Id, Name = OrganisationNameClaim, Value = organisation.Name });
         }
     }

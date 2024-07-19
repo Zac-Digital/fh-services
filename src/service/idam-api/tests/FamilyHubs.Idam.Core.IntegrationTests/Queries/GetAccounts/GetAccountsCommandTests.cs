@@ -5,6 +5,7 @@ using FamilyHubs.SharedKernel.Identity;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Security.Claims;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 
 namespace FamilyHubs.Idam.Core.IntegrationTests.Queries.GetAccounts;
 
@@ -13,12 +14,15 @@ public class GetAccountsCommandTests : DataIntegrationTestBase<GetAccountsComman
     [Theory]
     [InlineData(RoleTypes.DfeAdmin, -1, true)]
     [InlineData(RoleTypes.LaManager, 1, false)]
-    public async Task Handle_BasedOnBearerRole_CorrectServiceDirectoryEndpointCalled(string role, long organisationId, bool getAllOrganisationsCalled)
+    public async Task Handle_BasedOnBearerRole_CorrectServiceDirectoryEndpointCalled(string role, long organisationId, bool getMultipleOrganisations)
     {
         //Arrange
         await CreateAccountClaim();
 
         var mockServiceDirectoryService = new Mock<IServiceDirectoryService>();
+        mockServiceDirectoryService.Setup(x => x.GetOrganisationsByAssociatedId(It.IsAny<long>())).Returns(TestDataProvider.GetOrganisations());
+        mockServiceDirectoryService.Setup(x => x.GetOrganisationsByIds(It.IsAny<IEnumerable<long>>())).Returns(TestDataProvider.GetOrganisations());
+
         var mockHttpContextAccessor = GetMockHttpContextAccessor(organisationId, role);
         var command = new GetAccountsCommand(null, null, null, null, null, null, null, null, null);
 
@@ -32,14 +36,15 @@ public class GetAccountsCommandTests : DataIntegrationTestBase<GetAccountsComman
         await handler.Handle(command, new CancellationToken());
 
         //Assert
-        if (getAllOrganisationsCalled)
+        mockServiceDirectoryService.Verify(x => x.GetAllOrganisations(), Times.Never);
+        if (getMultipleOrganisations)
         {
-            mockServiceDirectoryService.Verify(x => x.GetAllOrganisations(), Times.Once);
+            mockServiceDirectoryService.Verify(x => x.GetOrganisationsByIds(It.IsAny<IEnumerable<long>>()), Times.Once);
             mockServiceDirectoryService.Verify(x => x.GetOrganisationsByAssociatedId(It.IsAny<long>()), Times.Never);
         }
         else
         {
-            mockServiceDirectoryService.Verify(x => x.GetAllOrganisations(), Times.Never);
+            mockServiceDirectoryService.Verify(x => x.GetOrganisationsByIds(It.IsAny<IEnumerable<long>>()), Times.Never);
             mockServiceDirectoryService.Verify(x => x.GetOrganisationsByAssociatedId(It.IsAny<long>()), Times.Once);
         }
 
@@ -63,9 +68,12 @@ public class GetAccountsCommandTests : DataIntegrationTestBase<GetAccountsComman
         var mockServiceDirectoryService = new Mock<IServiceDirectoryService>();
 
         mockServiceDirectoryService.Setup(x => x.GetAllOrganisations()).Returns(TestDataProvider.GetOrganisations());
+        mockServiceDirectoryService.Setup(x => x.GetOrganisationsByAssociatedId(It.IsAny<long>())).Returns(TestDataProvider.GetOrganisations());
+        mockServiceDirectoryService.Setup(x => x.GetOrganisationsByIds(It.IsAny<IEnumerable<long>>())).Returns(TestDataProvider.GetOrganisations());
+        mockServiceDirectoryService.Setup(x => x.GetOrganisationsByName(It.IsAny<string>())).Returns<string>(async name =>
+            (await TestDataProvider.GetOrganisations())!.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList());
 
         var mockHttpContextAccessor = GetMockHttpContextAccessor(-1, RoleTypes.DfeAdmin);
-
 
         var command = new GetAccountsCommand(null, null, null, userName, email, organisationName, null, null, null);
 
