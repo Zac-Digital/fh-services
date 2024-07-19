@@ -1,12 +1,14 @@
-﻿using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options.HealthCheck;
-using FamilyHubs.SharedKernel.Razor.Health;
+﻿using System.Reflection;
+using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options.HealthCheck;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Microsoft.Extensions.DependencyInjection;
+namespace FamilyHubs.SharedKernel.Razor.Health;
 
 public static class FamilyHubsHealthCheckExtensions
 {
@@ -53,13 +55,22 @@ public static class FamilyHubsHealthCheckExtensions
         return builder;
     }
 
-    public static WebApplication MapFamilyHubsHealthChecks(this WebApplication app)
+    public static WebApplication MapFamilyHubsHealthChecks(this WebApplication app, Assembly? assembly = null)
     {
-        app.MapHealthChecks("/health", new HealthCheckOptions
+        app.MapHealthChecks("/api/health", new HealthCheckOptions
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
+
+        if (assembly != null)
+        {
+            var infoPipeline = ((IEndpointRouteBuilder)app).CreateApplicationBuilder()
+                .UseMiddleware<VersionInfoMiddleware>(assembly)
+                .Build();
+
+            app.Map("/api/info", infoPipeline).WithDisplayName("Info endpoint");
+        }
 
         return app;
     }
