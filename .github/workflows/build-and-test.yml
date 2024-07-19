@@ -35,7 +35,7 @@ jobs:
             shared/web-components
           ]
         include:
-          - project: service/service-directory-api
+          - working_directory: service/service-directory-api
             runs_on_windows: true
     uses: ./.github/workflows/build-and-test-template.yml
     with:
