@@ -1,4 +1,4 @@
-﻿using FamilyHubs.Report.Data.Entities;
+using FamilyHubs.Report.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.Report.Data.Repository;
@@ -44,7 +44,6 @@ public class ReportDbContext : DbContext, IReportDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Table Mapping
-
         modelBuilder.HasDefaultSchema("dim");
 
         modelBuilder.Entity<ServiceSearchFact>(entity =>

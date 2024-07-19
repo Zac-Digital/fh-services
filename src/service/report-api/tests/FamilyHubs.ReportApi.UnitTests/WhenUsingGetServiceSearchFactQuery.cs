@@ -1,4 +1,5 @@
 using FamilyHubs.Report.Core.Queries.ServiceSearchFacts;
+using FamilyHubs.Report.Core.Queries.ServiceSearchFacts.Requests;
 using FamilyHubs.Report.Data.Entities;
 using FamilyHubs.Report.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -130,7 +131,7 @@ public class WhenUsingGetServiceSearchFactQuery
     {
         DateTime dateTime = DateTime.Parse(dateStr);
 
-        int result = await _getServiceSearchFactQuery.GetSearchCountForAdmin(dateTime, ServiceType.InformationSharing, days);
+        int result = await _getServiceSearchFactQuery.GetSearchCountForAdmin(new SearchCountRequest(dateTime, ServiceType.InformationSharing, days));
 
         Assert.Equal(expected, result);
     }
@@ -150,7 +151,7 @@ public class WhenUsingGetServiceSearchFactQuery
     {
         DateTime dateTime = DateTime.Parse(dateStr);
 
-        int result = await _getServiceSearchFactQuery.GetSearchCountForLa(dateTime, ServiceType.InformationSharing, 1, days);
+        int result = await _getServiceSearchFactQuery.GetSearchCountForLa(new LaSearchCountRequest(dateTime, ServiceType.InformationSharing, 1, days));
 
         Assert.Equal(expected, result);
     }
@@ -160,7 +161,7 @@ public class WhenUsingGetServiceSearchFactQuery
     [InlineData(ServiceType.FamilyExperience, 0)]
     public async Task Then_GetTotalSearchCountForAdmin_Should_Return_ExpectedResult(ServiceType serviceTypeId, int expected)
     {
-        int result = await _getServiceSearchFactQuery.GetTotalSearchCountForAdmin(serviceTypeId);
+        int result = await _getServiceSearchFactQuery.GetTotalSearchCountForAdmin(new TotalSearchCountRequest(serviceTypeId));
 
         Assert.Equal(expected, result);
     }
@@ -172,7 +173,7 @@ public class WhenUsingGetServiceSearchFactQuery
     [InlineData(2, ServiceType.FamilyExperience, 0)]
     public async Task Then_GetTotalSearchCountForLa_Should_Return_ExpectedResult(long laOrgId, ServiceType serviceTypeId, int expected)
     {
-        int result = await _getServiceSearchFactQuery.GetTotalSearchCountForLa(laOrgId, serviceTypeId);
+        int result = await _getServiceSearchFactQuery.GetTotalSearchCountForLa(new LaTotalSearchCountRequest(serviceTypeId, laOrgId));
 
         Assert.Equal(expected, result);
     }
