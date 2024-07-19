@@ -24,7 +24,7 @@ namespace FamilyHubs.Idam.Api.Controllers
         public async Task<string> Create([FromBody] AddUserSessionCommand request, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(request, cancellationToken);
-            _ = _mediator.Send(new DeleteExpiredUserSessionsCommand(), cancellationToken);//do not await
+            _ = await _mediator.Send(new DeleteExpiredUserSessionsCommand(), cancellationToken).ConfigureAwait(false);
             HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
             HttpContext.Response.Headers.Add("Location", $"Api/UserSession/{result}");
             return result;
@@ -62,12 +62,18 @@ namespace FamilyHubs.Idam.Api.Controllers
             return result;
         }
 
-        [HttpDelete()]
+        [HttpDelete]
         [Route("DeleteAllUserSessions/{email}")]
         public async Task DeleteAllUserSessions(string email, CancellationToken cancellationToken)
         {
             var command = new DeleteAllUserSessionsCommand { Email = email };
             await _mediator.Send(command, cancellationToken);
+        }
+
+        [HttpDelete("DeleteAllUserSessions")]
+        public async Task DeleteAllUserSessionsByEmail(string email, CancellationToken cancellationToken)
+        {
+            await DeleteAllUserSessions(email, cancellationToken);
         }
 
         [HttpPut("{sid}")]

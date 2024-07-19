@@ -1,17 +1,14 @@
-using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.Report.Core.Queries.ServiceSearchFacts.Requests;
 
 namespace FamilyHubs.Report.Core.Queries.ServiceSearchFacts;
 
 public interface IGetServiceSearchFactQuery
 {
-    Task<int> GetSearchCountForAdmin(DateTime date, ServiceType serviceTypeId, int amountOfDays,
-        CancellationToken cancellationToken = default);
+    Task<int> GetSearchCountForAdmin(SearchCountRequest request, CancellationToken cancellationToken = default);
 
-    Task<int> GetSearchCountForLa(DateTime date, ServiceType serviceTypeId, long laOrgId, int amountOfDays,
-        CancellationToken cancellationToken = default);
+    Task<int> GetSearchCountForLa(LaSearchCountRequest request, CancellationToken cancellationToken = default);
 
-    Task<int> GetTotalSearchCountForAdmin(ServiceType serviceTypeId, CancellationToken cancellationToken = default);
+    Task<int> GetTotalSearchCountForAdmin(TotalSearchCountRequest request, CancellationToken cancellationToken = default);
 
-    Task<int> GetTotalSearchCountForLa(long laOrgId, ServiceType serviceTypeId,
-        CancellationToken cancellationToken = default);
+    Task<int> GetTotalSearchCountForLa(LaTotalSearchCountRequest request, CancellationToken cancellationToken = default);
 }

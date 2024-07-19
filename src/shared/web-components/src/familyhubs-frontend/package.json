@@ -1,6 +1,6 @@
 {
   "name": "familyhubs-frontend",
-  "version": "9.2.2",
+  "version": "9.3.1",
   "description": "FamilyHubs Frontend contains the code you need to start building a Family Hubs website on top of the GOVUK Design System",
   "main": "index.js",
   "scripts": {
@@ -36,6 +36,7 @@
     "govuk-frontend": "5.2.0",
     "gulp": "^4.0.2",
     "gulp-better-rollup": "^4.0.1",
+    "rollup": "^1.32.1",
     "gulp-concat": "^2.6.1",
     "gulp-csso": "^4.0.1",
     "gulp-rename": "^2.0.0",

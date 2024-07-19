@@ -1,5 +1,6 @@
 using System.Text.Json;
 using FamilyHubs.Report.Core.Queries.ServiceSearchFacts;
+using FamilyHubs.Report.Core.Queries.ServiceSearchFacts.Requests;
 using FamilyHubs.Report.Data.Entities;
 using FamilyHubs.Report.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -163,7 +164,7 @@ public class WhenUsingGetFourWeekBreakdownQuery
         };
 
         WeeklyReportBreakdown result =
-            await _getFourWeekBreakdownQuery.GetFourWeekBreakdownForAdmin(_searchDate, ServiceType.InformationSharing);
+            await _getFourWeekBreakdownQuery.GetFourWeekBreakdownForAdmin(new SearchBreakdownRequest(_searchDate, ServiceType.InformationSharing));
 
         Assert.Equal(JsonSerializer.Serialize(expected), JsonSerializer.Serialize(result));
     }
@@ -200,7 +201,7 @@ public class WhenUsingGetFourWeekBreakdownQuery
         };
 
         WeeklyReportBreakdown result =
-            await _getFourWeekBreakdownQuery.GetFourWeekBreakdownForLa(_searchDate, ServiceType.InformationSharing, 1);
+            await _getFourWeekBreakdownQuery.GetFourWeekBreakdownForLa(new LaSearchBreakdownRequest(_searchDate, ServiceType.InformationSharing, 1));
 
         Assert.Equal(JsonSerializer.Serialize(expected), JsonSerializer.Serialize(result));
     }
@@ -237,7 +238,7 @@ public class WhenUsingGetFourWeekBreakdownQuery
         };
 
         WeeklyReportBreakdown result =
-            await _getFourWeekBreakdownQuery.GetFourWeekBreakdownForLa(_searchDate, ServiceType.InformationSharing, 2);
+            await _getFourWeekBreakdownQuery.GetFourWeekBreakdownForLa(new LaSearchBreakdownRequest(_searchDate, ServiceType.InformationSharing, 2));
 
         Assert.Equal(JsonSerializer.Serialize(expected), JsonSerializer.Serialize(result));
     }

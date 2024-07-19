@@ -11,6 +11,7 @@ public record ReferralDto : DtoBase<long>
     public required ReferralStatusDto Status { get; set; }
 
     public string? ReasonForDecliningSupport { get; set; }
+
     public DateTime? Created { get; set; }
     public DateTime? LastModified { get; set; }
     

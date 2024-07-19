@@ -1,3 +1,4 @@
+using FamilyHubs.Report.Core.Queries.ServiceSearchFacts.Requests;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel.Reports.WeeklyBreakdown;
 
@@ -12,14 +13,11 @@ public class GetFourWeekBreakdownQuery : IGetFourWeekBreakdownQuery
         _getServiceSearchFactQuery = getServiceSearchFactQuery;
     }
 
-    public async Task<WeeklyReportBreakdown> GetFourWeekBreakdownForAdmin(DateTime date, ServiceType serviceTypeId,
-        CancellationToken cancellationToken = default) =>
-        GetWeeklyReportBreakdown(await GetWeeklyReports(date, serviceTypeId, null, cancellationToken));
+    public async Task<WeeklyReportBreakdown> GetFourWeekBreakdownForAdmin(SearchBreakdownRequest request, CancellationToken cancellationToken = default) =>
+        GetWeeklyReportBreakdown(await GetWeeklyReports(request.Date!.Value, request.ServiceTypeId!.Value, null, cancellationToken));
 
-    public async Task<WeeklyReportBreakdown> GetFourWeekBreakdownForLa(DateTime date, ServiceType serviceTypeId,
-        long laOrgId,
-        CancellationToken cancellationToken = default) =>
-        GetWeeklyReportBreakdown(await GetWeeklyReports(date, serviceTypeId, laOrgId, cancellationToken));
+    public async Task<WeeklyReportBreakdown> GetFourWeekBreakdownForLa(LaSearchBreakdownRequest request, CancellationToken cancellationToken = default) =>
+        GetWeeklyReportBreakdown(await GetWeeklyReports(request.Date!.Value, request.ServiceTypeId!.Value, request.LaOrgId!.Value, cancellationToken));
 
     private async Task<WeeklyReport[]> GetWeeklyReports(DateTime currentDate, ServiceType serviceTypeId, long? laOrgId,
         CancellationToken cancellationToken)
@@ -49,9 +47,9 @@ public class GetFourWeekBreakdownQuery : IGetFourWeekBreakdownQuery
     private async Task<int> GetSearchCount(long? laOrgId, DateTime date, ServiceType serviceTypeId, int amountOfDays,
         CancellationToken cancellationToken)
         => laOrgId == null
-            ? await _getServiceSearchFactQuery.GetSearchCountForAdmin(date, serviceTypeId, amountOfDays,
+            ? await _getServiceSearchFactQuery.GetSearchCountForAdmin(new SearchCountRequest(date, serviceTypeId, amountOfDays),
                 cancellationToken)
-            : await _getServiceSearchFactQuery.GetSearchCountForLa(date, serviceTypeId, (long)laOrgId, amountOfDays,
+            : await _getServiceSearchFactQuery.GetSearchCountForLa(new LaSearchCountRequest(date, serviceTypeId, (long)laOrgId, amountOfDays),
                 cancellationToken);
 
     private static string GetMondayToSundayName(DateTime dateSunday)

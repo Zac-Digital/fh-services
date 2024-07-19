@@ -2,9 +2,11 @@ using EFCoreSecondLevelCacheInterceptor;
 using FamilyHubs.Report.Api.Endpoints;
 using FamilyHubs.Report.Api.Middleware;
 using FamilyHubs.Report.Core.Queries.ServiceSearchFacts;
+using FamilyHubs.Report.Core.Queries.ServiceSearchFacts.Validators;
 using FamilyHubs.Report.Data;
 using FamilyHubs.Report.Data.Repository;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
+using FluentValidation;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -67,6 +69,7 @@ public class Program
 
         services.AddTransient<IGetServiceSearchFactQuery, GetServiceSearchFactQuery>();
         services.AddTransient<IGetFourWeekBreakdownQuery, GetFourWeekBreakdownQuery>();
+        services.AddValidatorsFromAssembly(typeof(LaRequestValidator).Assembly);
 
         services.AddSingleton<MinimalAdminReportEndPoints>();
         services.AddSingleton<MinimalLaReportEndPoints>();

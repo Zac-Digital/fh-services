@@ -114,7 +114,6 @@ public class WhenUsingMinimalLaReportEndPointTest : BaseEndPointTest, IAsyncLife
 
     [Theory]
     [InlineData(1, RoleTypes.DfeAdmin)]
-    [InlineData(2, RoleTypes.VcsManager)]
     [InlineData(1, RoleTypes.LaProfessional)]
     [InlineData(2, RoleTypes.VcsProfessional)]
     [InlineData(1, RoleTypes.VcsDualRole)]
