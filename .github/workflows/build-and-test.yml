@@ -41,5 +41,4 @@ jobs:
     with:
       working_directory: ${{ matrix.working_directory }}
       dotnet_version: ${{ vars.DOTNET_VERSION }}
-      run_install_spatialite: ${{ matrix.run_install_spatialite }}
-      
+      run_install_spatialite: ${{ matrix.run_install_spatialite && true || false }}
