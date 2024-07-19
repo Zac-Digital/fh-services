@@ -17,6 +17,9 @@ inputs:
   azure_sql_server_resource_name:
     required: true
     type: string
+  az_firewall_rule_name:
+    required: true
+    type: string
 
 runs:
   using: composite
@@ -33,6 +36,7 @@ runs:
         action: "Add"
         az_resource_group: ${{ inputs.azure_resource_group }}
         az_sql_server_name: ${{ inputs.azure_sql_server_resource_name }}
+        az_firewall_rule_name: ${{ inputs.az_firewall_rule_name }}
 
     - name: Apply Database Migration
       shell: bash
@@ -46,3 +50,4 @@ runs:
         action: "Remove"
         az_resource_group: ${{ inputs.azure_resource_group }}
         az_sql_server_name: ${{ inputs.azure_sql_server_resource_name }}
+        az_firewall_rule_name: ${{ inputs.az_firewall_rule_name }}
