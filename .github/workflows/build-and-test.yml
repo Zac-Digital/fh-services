@@ -36,9 +36,9 @@ jobs:
           ]
         include:
           - working_directory: service/service-directory-api
-            run_install_spatialite: true
+            runs_on_windows: true
     uses: ./.github/workflows/build-and-test-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}
       dotnet_version: ${{ vars.DOTNET_VERSION }}
-      run_install_spatialite: ${{ matrix.run_install_spatialite && true || false }}
+      runs_on: ${{ matrix.runs_on_windows && 'windows-2022' || 'ubuntu-22.04' }}
