@@ -10,11 +10,12 @@ on:
         required: true
         type: string
       runs_on:
-        required: true
-        type: string
-      run_install_spatialite:
-        type: boolean
         required: false
+        type: string
+        default: 'ubuntu-22.04'
+      run_install_spatialite:
+        required: false
+        type: boolean
         default: false
 
 jobs:
