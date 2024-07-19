@@ -6,7 +6,7 @@ concurrency:
 
 on:
   push:
-    branches: ["main", "release-*", "fhg-5472-update-step-names"]
+    branches: ["main", "release-*", "fhg-5472-update-build-step-names"]
   pull_request:
     paths:
       - '.github/workflows/build-and-test.yml'
