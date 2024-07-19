@@ -4,6 +4,7 @@ using FamilyHubs.Report.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FamilyHubs.Report.Data.Migrations
 {
     [DbContext(typeof(ReportDbContext))]
-    partial class ReportDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240627104112_ChangeSchemaFromDimToSVCD_STG")]
+    partial class ChangeSchemaFromDimToSVCD_STG
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,6 +64,7 @@ namespace FamilyHubs.Report.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<long?>("OrganisationKey")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.Property<string>("RequestCorrelationId")
@@ -80,6 +84,7 @@ namespace FamilyHubs.Report.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<long?>("UserAccountKey")
+                        .IsRequired()
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -94,7 +99,7 @@ namespace FamilyHubs.Report.Data.Migrations
 
                     b.HasIndex("UserAccountKey");
 
-                    b.ToTable("ConnectionRequestsSentFacts", "dim");
+                    b.ToTable("ConnectionRequestsSentFact", "svcd_stg");
                 });
 
             modelBuilder.Entity("FamilyHubs.Report.Data.Entities.DateDim", b =>
@@ -394,10 +399,8 @@ namespace FamilyHubs.Report.Data.Migrations
                         .HasPrecision(7)
                         .HasColumnType("datetime2(7)");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(320)
-                        .HasColumnType("nvarchar(320)");
+                    b.Property<long>("CreatedById")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -408,10 +411,8 @@ namespace FamilyHubs.Report.Data.Migrations
                         .HasPrecision(7)
                         .HasColumnType("datetime2(7)");
 
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(320)
-                        .HasColumnType("nvarchar(320)");
+                    b.Property<long>("LastModifiedById")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .IsRequired()
