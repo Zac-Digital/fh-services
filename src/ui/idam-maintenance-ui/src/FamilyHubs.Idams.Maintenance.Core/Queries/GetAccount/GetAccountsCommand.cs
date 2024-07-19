@@ -8,18 +8,18 @@ using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.Idams.Maintenance.Core.Queries.GetAccount;
 
-
 public class GetAccountsCommand : IRequest<PaginatedList<Account>>
 {
-    public GetAccountsCommand(string? userName, string? email, long? organisationId, bool? isLaUser, bool? isVcsUser, string? sortBy, int pageNumer = 1, int pagesize = 10)
+    public GetAccountsCommand(string? userName, string? email, long? organisationId, bool? isLaUser, bool? isVcsUser,
+        string? sortBy, int pageNumer = 1, int pagesize = 10)
     {
         PageNumber = pageNumer;
         PageSize = pagesize;
         UserName = userName;
         Email = email;
         OrganisationId = organisationId;
-        IsLaUser = isLaUser;
-        IsVcsUser = isVcsUser;
+        IsLaUser = isLaUser ?? false; // Treat NULL Db columns as effectively False for these two.
+        IsVcsUser = isVcsUser ?? false;
         SortBy = sortBy;
     }
 
@@ -28,10 +28,9 @@ public class GetAccountsCommand : IRequest<PaginatedList<Account>>
     public string? UserName { get; }
     public string? Email { get; }
     public long? OrganisationId { get; }
-    public bool? IsLaUser { get; }
-    public bool? IsVcsUser { get; }
+    public bool IsLaUser { get; }
+    public bool IsVcsUser { get; }
     public string? SortBy { get; }
-
 }
 
 public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, PaginatedList<Account>>
@@ -49,90 +48,86 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
     {
         try
         {
-            int totalrecords = _dbContext.Accounts.Count();
             IQueryable<Account> query = _dbContext.Accounts;
 
             if (!string.IsNullOrEmpty(request.UserName) || !string.IsNullOrEmpty(request.Email))
             {
-                var accounts = FindAccounts(query, request);
-
-                query = query.Where(x => accounts.Select(x => x.Id).Contains(x.Id));
+                query = await FilterByNameOrEmail(query, request.UserName, request.Email, cancellationToken);
             }
 
-            if (request.OrganisationId != null) 
+            if (request.OrganisationId != null)
             {
-                query = query.Where(x => x.Claims.Any(x => x.Name == FamilyHubsClaimTypes.OrganisationId && x.Value.Contains(request.OrganisationId.Value.ToString())));
+                query = query.Where(account => account.Claims.Any(claim =>
+                    claim.Name == FamilyHubsClaimTypes.OrganisationId &&
+                    claim.Value == request.OrganisationId.ToString()));
             }
 
-            List<string>? roles = null;
-
-            if (request.IsLaUser != null && request.IsLaUser.Value)
+            if (request.IsLaUser && request.IsVcsUser)
             {
-                roles = new List<string> { RoleTypes.LaProfessional, RoleTypes.LaManager, RoleTypes.LaDualRole };
+                query = query.Where(account =>
+                    account.Claims.Any(claim => RoleGroups.LaOrVcsProfessionalOrDualRole.Contains(claim.Value)));
             }
-
-            if (request.IsVcsUser != null && request.IsVcsUser.Value)
+            else if (request.IsLaUser)
             {
-                roles = new List<string> { RoleTypes.VcsProfessional, RoleTypes.VcsManager, RoleTypes.VcsDualRole };
+                query = query.Where(account =>
+                    account.Claims.Any(claim => RoleGroups.LaProfessionalOrDualRole.Contains(claim.Value)));
             }
-
-            if (roles != null && roles.Any()) 
+            else if (request.IsVcsUser)
             {
-                query = query.Where(x => x.Claims.Any(x => x.Name == FamilyHubsClaimTypes.Role && roles.Contains(x.Value)));
+                query = query.Where(account =>
+                    account.Claims.Any(claim => RoleGroups.VcsProfessionalOrDualRole.Contains(claim.Value)));
             }
-            
 
-            var listAccount = await query.Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize)
-                .ToListAsync();
-            
+            int resultRowCount = await query.CountAsync(cancellationToken);
 
-            var result = new PaginatedList<Account>(listAccount.ToList(), totalrecords, request.PageNumber, request.PageSize);
-            return result;
+            List<Account> result = await query
+                .Skip(request.PageSize * (request.PageNumber - 1))
+                .Take(request.PageSize)
+                .ToListAsync(cancellationToken);
+
+            return new PaginatedList<Account>(result, resultRowCount, request.PageNumber, request.PageSize);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred Getting Accounts");
+            _logger.LogError(ex, "Error thrown in GetAccountCommand");
             throw;
         }
     }
 
-    private List<Account> FindAccounts(IQueryable<Account> activeAccounts, GetAccountsCommand request)
+    /*
+     * Since the IDAM DB fields are all encrypted, we have to load the database into memory for decryption
+     * before we can work on it.
+     *
+     * Since this has the potential to use too many resources (e.g., 10,000 users), we load and process the
+     * accounts in batches, until we have gone through the database to find users by name or email.
+     */
+    private async Task<IQueryable<Account>> FilterByNameOrEmail(IQueryable<Account> query, string? userName, string? email, CancellationToken cancellationToken)
     {
-        int pageNumber = 0;
-        int currentCount = 0;
-        List<Account> accounts = new List<Account>();
+        int rowCount = await _dbContext.Accounts.CountAsync(cancellationToken);
+        int batch = 0;
+        const int batchSize = 500;
+        int batchTotal = (int)Math.Ceiling((double)rowCount / batchSize);
 
-        do
+        List<long> batchResultList = new();
+
+        while (batch < batchTotal)
         {
+            IEnumerable<long> accountBatch = (await _dbContext.Accounts
+                    .Skip(batchSize * batch)
+                    .Take(batchSize)
+                    .Select(account => new {account.Id, account.Name, account.Email})
+                    .ToListAsync(cancellationToken))
+                .Where(account =>
+                    (!string.IsNullOrEmpty(userName) && account.Name.Contains(userName, StringComparison.InvariantCultureIgnoreCase))
+                    ||
+                    (!string.IsNullOrEmpty(email) && account.Email.Contains(email, StringComparison.InvariantCultureIgnoreCase)))
+                .Select(account => account.Id);
 
-            List<Account> entities = activeAccounts.Skip(pageNumber).Take(1000).ToList();
+            batchResultList.AddRange(accountBatch);
 
-            pageNumber++;
-            currentCount = entities.Count;
+            batch++;
+        }
 
-            if (!string.IsNullOrEmpty(request.UserName))
-            {
-                var results = entities.Where(x => x.Name.ToLower().Contains(request.UserName.ToLower()));
-                if (results.Any())
-                {
-                    accounts.AddRange(results);
-                }
-            }
-
-
-            if (!string.IsNullOrEmpty(request.Email))
-            {
-                var results = entities.Where(x => x.Email.ToLower().Contains(request.Email.ToLower()));
-                if (results.Any())
-                {
-                    accounts.AddRange(results);
-                }
-            }
-
-        } while (currentCount > 999);
-
-        return accounts;
+        return query.Where(account => batchResultList.Contains(account.Id));
     }
 }
-
-

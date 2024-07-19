@@ -62,7 +62,8 @@ public class UsersModel : PageModel
         PageNum = pageNum ?? 1;
         var organisations = await _serviceDirectoryClient.GetOrganisations();
         LocalAuthorities = organisations.Select(x => x.Name).ToList();
-        Accounts = await _idamService.GetAccounts(Name, Email, null,  IsLaUser, IsVcsUser, SortBy, PageNum, PageSize);
+        long? orgId = organisations.FirstOrDefault(org => org.Name.Equals(organisation))?.Id;
+        Accounts = await _idamService.GetAccounts(Name, Email, orgId,  IsLaUser, IsVcsUser, SortBy, PageNum, PageSize);
         Pagination = new LargeSetPagination(Accounts.TotalPages, PageNum);
     }
 
