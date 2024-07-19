@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   build-projects-upload-artifacts:
-    name: ${{ matrix.project }}
+    name: ${{ matrix.job_name }}
     strategy:
       fail-fast: true
       matrix:
@@ -38,13 +38,34 @@ jobs:
                    src/ui/idam-maintenance-ui/,
                    src/ui/manage-ui/
                    ]
+        include:
+          - project: src/service/idam-api/
+            job_name: "Build - IDAM API"
+          - project: src/service/notification-api/
+            job_name: "Build - Notification API"
+          - project: src/service/referral-api/
+            job_name: "Build - Referral API"
+          - project: src/service/report-api/
+            job_name: "Build - Report API"
+          - project: src/service/service-directory-api/
+            job_name: "Build - Service Directory API"
+          - project: src/ui/connect-dashboard-ui/
+            job_name: "Build - Connect Dashboard UI"
+          - project: src/ui/connect-ui/
+            job_name: "Build - Connect UI"
+          - project: src/ui/find-ui/
+            job_name: "Build - Find UI"
+          - project: src/ui/idam-maintenance-ui/
+            job_name: "Build - IDAM Maintenance UI"
+          - project: src/ui/manage-ui/
+            job_name: "Build - Manage UI"
     uses: ./.github/workflows/build-upload-artefact.yml
     with:
       project: ${{ matrix.project }}
     secrets: inherit
 
   api-idam-deploy:
-    name: IDAM API
+    name: Deploy - IDAM API
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
@@ -59,7 +80,7 @@ jobs:
     secrets: inherit
 
   api-notification-deploy:
-    name: Notification API
+    name: Deploy - Notification API
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
@@ -74,7 +95,7 @@ jobs:
     secrets: inherit
 
   api-referral-deploy:
-    name: Referral API
+    name: Deploy - Referral API
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
@@ -89,7 +110,7 @@ jobs:
     secrets: inherit
 
   api-report-deploy:
-    name: Report API
+    name: Deploy - Report API
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
@@ -104,7 +125,7 @@ jobs:
     secrets: inherit
 
   api-service-directory-deploy:
-    name: Service Directory API
+    name: Deploy - Service Directory API
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
@@ -119,7 +140,7 @@ jobs:
     secrets: inherit
 
   ui-connect-dashboard-deploy:
-    name: Connect Dashboard UI
+    name: Deploy - Connect Dashboard UI
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
@@ -132,7 +153,7 @@ jobs:
     secrets: inherit
 
   ui-connect-deploy:
-    name: Connect UI
+    name: Deploy - Connect UI
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
@@ -145,7 +166,7 @@ jobs:
     secrets: inherit
 
   ui-find-deploy:
-    name: Find UI
+    name: Deploy - Find UI
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
@@ -158,7 +179,7 @@ jobs:
     secrets: inherit
 
   ui-idam-maintenance-deploy:
-    name: IDAM Maintenance UI
+    name: Deploy - IDAM Maintenance UI
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
@@ -171,7 +192,7 @@ jobs:
     secrets: inherit
 
   ui-manage-deploy:
-    name: Manage UI
+    name: Deploy - Manage UI
     needs: [ build-projects-upload-artifacts ]
     uses: ./.github/workflows/deploy-service.yml
     with:
