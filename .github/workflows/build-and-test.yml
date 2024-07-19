@@ -34,10 +34,38 @@ jobs:
             shared/web-components
           ]
         include:
+          - project: service/notification-api
+            job_name: Build/Test - Notification API
+          - project: service/idam-api
+            job_name: Build/Test - IDAM API
           - project: service/service-directory-api
             runs_on_windows: true
+            job_name: Build/Test - Service Directory API
+          - project: service/referral-api
+            job_name: Build/Test - Referral API
+          - project: service/report-api
+            job_name: Build/Test - Report API
+          - project: ui/connect-dashboard-ui
+            job_name: Build/Test - Connection Dashboard UI
+          - project: ui/connect-ui
+            job_name: Build/Test - Connection UI
+          - project: ui/find-ui
+            job_name: Build/Test - Find UI
+          - project: ui/idam-maintenance-ui
+            job_name: Build/Test - IDAM Maintenance UI
+          - project: ui/manage-ui
+            job_name: Build/Test - Manage UI
+          - project: shared/referral-shared
+            job_name: Build/Test - Referral Shared
+          - project: shared/service-directory-shared
+            job_name: Build/Test - Service Directory Shared
+          - project: shared/shared-kernel
+            job_name: Build/Test - Shared Kernel
+          - project: shared/web-components
+            job_name: Build/Test - Web Components
     uses: ./.github/workflows/build-and-test-template.yml
     with:
       working_directory: ${{ matrix.project }}
       dotnet_version: ${{ vars.DOTNET_VERSION }}
       runs_on: ${{ matrix.runs_on_windows && 'windows-2022' || 'ubuntu-22.04' }}
+      job_name: ${{ matrix.job_name }}
