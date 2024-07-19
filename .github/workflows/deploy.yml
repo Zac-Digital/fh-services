@@ -59,7 +59,7 @@ jobs:
             job_name: "Build - IDAM Maintenance UI"
           - project: src/ui/manage-ui/
             job_name: "Build - Manage UI"
-    uses: ./.github/workflows/build-upload-artefact.yml
+    uses: ./.github/workflows/build-upload-artifact.yml
     with:
       project: ${{ matrix.project }}
     secrets: inherit

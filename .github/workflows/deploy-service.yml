@@ -30,7 +30,7 @@ on:
 
 jobs:
   deploy-service:
-    name: Download Artefact & Deploy Project
+    name: Download Artifact & Deploy Project
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     steps:
@@ -48,7 +48,7 @@ jobs:
         shell: bash
         run: dotnet tool install --global dotnet-ef
 
-      - name: Download Artefact
+      - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
@@ -63,7 +63,7 @@ jobs:
 
       # We replace two appsettings.json files for our deployments..
       #   1. In the checked out repository, because the DB migration step reads the connection string from it
-      #   2. In the downloaded artefact, because this is deployed to Azure
+      #   2. In the downloaded artifact, because this is deployed to Azure
       - name: App Settings Variable Substitution
         id: substitution
         uses: ./.github/actions/variable-substitution
@@ -72,7 +72,7 @@ jobs:
           keyvault_prefix: ${{ inputs.keyvault_prefix }}
           files: "${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}/appsettings.json, ./out/appsettings.json"
 
-      - name: Deploy Artefact to Azure
+      - name: Deploy Artifact to Azure
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ inputs.azure_app_name }}

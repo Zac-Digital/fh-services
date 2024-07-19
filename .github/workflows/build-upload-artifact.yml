@@ -13,7 +13,7 @@ on:
 
 jobs:
   build-project-upload-artifact:
-    name: Build Project & Upload Artifact
+    name: Build & Upload
     runs-on: ${{ inputs.runner }}
     defaults:
       run:
