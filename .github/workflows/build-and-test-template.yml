@@ -12,6 +12,10 @@ on:
       runs_on:
         required: true
         type: string
+      run_install_spatialite:
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   build_and_test:
@@ -43,6 +47,13 @@ jobs:
       - name: Restore Project
         shell: bash
         run: dotnet restore
+
+      # We need this step sometimes to run tests on Ubuntu (it doesn't come with
+      # unix runners, but is installed by default on Windows runners)
+      - name: Install Spatialite
+        if: ${{ inputs.run_install_spatialite == true }}
+        run: >
+          sudo apt-get install libsqlite3-mod-spatialite
 
       - name: Build Project
         shell: bash

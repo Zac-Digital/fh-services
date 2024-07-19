@@ -36,7 +36,7 @@ jobs:
           ]
         include:
           - working_directory: service/service-directory-api
-            runs_on_windows: true
+            run_install_spatialite: true
     uses: ./.github/workflows/build-and-test-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}
