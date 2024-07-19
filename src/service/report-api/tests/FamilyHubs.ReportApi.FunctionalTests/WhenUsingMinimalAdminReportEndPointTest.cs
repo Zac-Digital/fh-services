@@ -114,7 +114,8 @@ public class WhenUsingMinimalAdminReportEndPointTest : BaseEndPointTest, IAsyncL
     {
         ConnectionRequests cR = new()
         {
-            Made = requestsMade
+            Made = requestsMade,
+            Accepted = requestsMade,
         };
 
         string expectedJsonStr = JsonSerializer.Serialize(cR, JsonOptions);
@@ -137,29 +138,34 @@ public class WhenUsingMinimalAdminReportEndPointTest : BaseEndPointTest, IAsyncL
         {
             Totals = new ConnectionRequests
             {
-                Made = 28
+                Made = 28,
+                Accepted = 28,
             },
             WeeklyReports = new[]
             {
                 new ConnectionRequestsDated
                 {
                     Date = "1 January to 7 January",
-                    Made = 7
+                    Made = 7,
+                    Accepted = 7,
                 },
                 new ConnectionRequestsDated
                 {
                     Date = "8 January to 14 January",
-                    Made = 7
+                    Made = 7,
+                    Accepted = 7,
                 },
                 new ConnectionRequestsDated
                 {
                     Date = "15 January to 21 January",
-                    Made = 7
+                    Made = 7,
+                    Accepted = 7,
                 },
                 new ConnectionRequestsDated
                 {
                     Date = "22 January to 28 January",
-                    Made = 7
+                    Made = 7,
+                    Accepted = 7,
                 }
             }
         };
@@ -186,29 +192,34 @@ public class WhenUsingMinimalAdminReportEndPointTest : BaseEndPointTest, IAsyncL
         {
             Totals = new ConnectionRequests
             {
-                Made = 28
+                Made = 28,
+                Accepted = 28,
             },
             WeeklyReports = new[]
             {
                 new ConnectionRequestsDated
                 {
                     Date = "29 January to 4 February",
-                    Made = 7
+                    Made = 7,
+                    Accepted = 7,
                 },
                 new ConnectionRequestsDated
                 {
                     Date = "5 February to 11 February",
-                    Made = 7
+                    Made = 7,
+                    Accepted = 7,
                 },
                 new ConnectionRequestsDated
                 {
                     Date = "12 February to 18 February",
-                    Made = 7
+                    Made = 7,
+                    Accepted = 7,
                 },
                 new ConnectionRequestsDated
                 {
                     Date = "19 February to 25 February",
-                    Made = 7
+                    Made = 7,
+                    Accepted = 7,
                 }
             }
         };
@@ -233,7 +244,8 @@ public class WhenUsingMinimalAdminReportEndPointTest : BaseEndPointTest, IAsyncL
     {
         ConnectionRequests cR = new()
         {
-            Made = 60
+            Made = 60,
+            Accepted = 60,
         };
 
         string expectedJsonStr = JsonSerializer.Serialize(cR, JsonOptions);

@@ -63,8 +63,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         await SeedTimeDimTable(reportDbContext);
         await SeedServiceSearchesDimTable(reportDbContext);
         await SeedOrganisationDimTable(reportDbContext);
+        await SeedUserAccountDimTable(reportDbContext);
         await SeedServiceSearchFactTable(reportDbContext);
         await SeedConnectionRequestsSentFact(reportDbContext);
+        await SeedConnectionRequestsFact(reportDbContext);
     }
 
     private static async Task SeedDateDimTable(IReportDbContext reportDbContext)
@@ -195,6 +197,56 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         await reportDbContext.SaveChangesAsync();
     }
 
+    private static async Task SeedUserAccountDimTable(IReportDbContext reportDbContext)
+    {
+        UserAccountDim userDimOne = new()
+        {
+            UserAccountKey = 1,
+            UserAccountId = 1,
+            UserAccountRoleTypeId = byte.MaxValue,
+            UserAccountRoleTypeName = "",
+            OrganisationTypeId = byte.MaxValue,
+            OrganisationTypeName = "",
+            OrganisationId = 1,
+            OrganisationName = "",
+            Name = "",
+            Email = "",
+            Status = byte.MaxValue,
+            Created = DateTime.UtcNow,
+            CreatedBy = "",
+            LastModified = DateTime.UtcNow,
+            LastModifiedBy = "",
+            SysStartTime = DateTime.UtcNow,
+            SysEndTime = DateTime.UtcNow
+        };
+
+        UserAccountDim userDimTwo = new()
+        {
+            UserAccountKey = 2,
+            UserAccountId = 2,
+            UserAccountRoleTypeId = byte.MaxValue,
+            UserAccountRoleTypeName = "",
+            OrganisationTypeId = byte.MaxValue,
+            OrganisationTypeName = "",
+            OrganisationId = 2,
+            OrganisationName = "",
+            Name = "",
+            Email = "",
+            Status = byte.MaxValue,
+            Created = DateTime.UtcNow,
+            CreatedBy = "",
+            LastModified = DateTime.UtcNow,
+            LastModifiedBy = "",
+            SysStartTime = DateTime.UtcNow,
+            SysEndTime = DateTime.UtcNow
+        };
+
+        reportDbContext.AddUserAccountDim(userDimOne);
+        reportDbContext.AddUserAccountDim(userDimTwo);
+
+        await reportDbContext.SaveChangesAsync();
+    }
+
     private static async Task SeedServiceSearchFactTable(IReportDbContext reportDbContext)
     {
         int dateKey = 1;
@@ -264,6 +316,47 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 ConnectionRequestsSentMetricsId = 0,
                 RequestTimestamp = DateTime.UtcNow,
                 RequestCorrelationId = "",
+                Created = DateTime.UtcNow,
+                CreatedBy = long.MaxValue,
+                Modified = DateTime.UtcNow,
+                ModifiedBy = long.MaxValue
+            });
+        }
+
+        await reportDbContext.SaveChangesAsync();
+    }
+
+    private static async Task SeedConnectionRequestsFact(IReportDbContext reportDbContext)
+    {
+        int dateKey = 1;
+
+        // January
+        for (int i = 1; i <= 31; i++)
+        {
+            reportDbContext.AddConnectionRequestsFact(new ConnectionRequestsFact
+            {
+                DateKey = dateKey++,
+                TimeKey = 1,
+                OrganisationKey = 1,
+                UserAccountKey = 1,
+                ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted,
+                Created = DateTime.UtcNow,
+                CreatedBy = long.MaxValue,
+                Modified = DateTime.UtcNow,
+                ModifiedBy = long.MaxValue
+            });
+        }
+
+        // February
+        for (int i = 1; i <= 29; i++)
+        {
+            reportDbContext.AddConnectionRequestsFact(new ConnectionRequestsFact
+            {
+                DateKey = dateKey++,
+                TimeKey = 1,
+                OrganisationKey = 2,
+                UserAccountKey = 1,
+                ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted,
                 Created = DateTime.UtcNow,
                 CreatedBy = long.MaxValue,
                 Modified = DateTime.UtcNow,

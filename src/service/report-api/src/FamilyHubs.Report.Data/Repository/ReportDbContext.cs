@@ -13,6 +13,8 @@ public class ReportDbContext : DbContext, IReportDbContext
 
     public DbSet<ConnectionRequestsSentFact> ConnectionRequestsSentFacts { get; init; } = null!;
 
+    public DbSet<ConnectionRequestsFact> ConnectionRequestsFacts { get; init; } = null!;
+
     public DbSet<DateDim> DateDim { get; init; } = null!;
 
     public DbSet<TimeDim> TimeDim { get; init; } = null!;
@@ -21,9 +23,13 @@ public class ReportDbContext : DbContext, IReportDbContext
 
     public DbSet<OrganisationDim> OrganisationDim { get; init; }= null!;
 
+    public DbSet<UserAccountDim> UserAccountDim { get; init; }= null!;
+
     IQueryable<ServiceSearchFact> IReportDbContext.ServiceSearchFacts => ServiceSearchFacts;
 
     IQueryable<ConnectionRequestsSentFact> IReportDbContext.ConnectionRequestsSentFacts => ConnectionRequestsSentFacts;
+
+    IQueryable<ConnectionRequestsFact> IReportDbContext.ConnectionRequestsFacts => ConnectionRequestsFacts;
 
     public void AddServiceSearchFact(ServiceSearchFact serviceSearchFact) => ServiceSearchFacts.Add(serviceSearchFact);
 
@@ -35,8 +41,13 @@ public class ReportDbContext : DbContext, IReportDbContext
 
     public void AddOrganisationDim(OrganisationDim organisationDim) => OrganisationDim.Add(organisationDim);
 
+    public void AddUserAccountDim(UserAccountDim userAccountDim) => UserAccountDim.Add(userAccountDim);
+
     public void AddConnectionRequestsSentFact(ConnectionRequestsSentFact connectionRequestsSentFact) =>
         ConnectionRequestsSentFacts.Add(connectionRequestsSentFact);
+
+    public void AddConnectionRequestsFact(ConnectionRequestsFact connectionRequestsFact) =>
+        ConnectionRequestsFacts.Add(connectionRequestsFact);
 
     public Task<int> ExecuteRawSql(FormattableString sql, CancellationToken cancellationToken = default) =>
         Database.ExecuteSqlAsync(sql, cancellationToken);
@@ -139,6 +150,23 @@ public class ReportDbContext : DbContext, IReportDbContext
             entity.Property(e => e.ModifiedBy).IsRequired();
         });
 
+        modelBuilder.Entity<ConnectionRequestsFact>(entity =>
+        {
+            entity.HasKey(e => e.Id).IsClustered();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.Property(e => e.DateKey).IsRequired();
+            entity.Property(e => e.TimeKey).IsRequired();
+            entity.Property(e => e.OrganisationKey).IsRequired();
+            entity.Property(e => e.UserAccountKey).IsRequired();
+            entity.Property(e => e.ConnectionRequestServiceKey).IsRequired();
+            entity.Property(e => e.ConnectionRequestStatusTypeKey).IsRequired();
+            entity.Property(e => e.ConnectionRequestId).IsRequired();
+            entity.Property(e => e.Created).IsRequired().HasPrecision(7);
+            entity.Property(e => e.CreatedBy).IsRequired();
+            entity.Property(e => e.Modified).IsRequired().HasPrecision(7);
+            entity.Property(e => e.ModifiedBy).IsRequired();
+        });
+
         modelBuilder.Entity<OrganisationDim>().ToTable("OrganisationDim", schema: "idam");
         modelBuilder.Entity<OrganisationDim>(entity =>
         {
@@ -218,6 +246,30 @@ public class ReportDbContext : DbContext, IReportDbContext
             .IsRequired(false);
 
         modelBuilder.Entity<ConnectionRequestsSentFact>()
+            .HasOne(e => e.UserAccountDim)
+            .WithMany()
+            .HasForeignKey(e => e.UserAccountKey)
+            .IsRequired(false);
+
+        modelBuilder.Entity<ConnectionRequestsFact>()
+            .HasOne(e => e.DateDim)
+            .WithMany()
+            .HasForeignKey(e => e.DateKey)
+            .IsRequired();
+
+        modelBuilder.Entity<ConnectionRequestsFact>()
+            .HasOne(e => e.TimeDim)
+            .WithMany()
+            .HasForeignKey(e => e.TimeKey)
+            .IsRequired();
+
+        modelBuilder.Entity<ConnectionRequestsFact>()
+            .HasOne(e => e.OrganisationDim)
+            .WithMany()
+            .HasForeignKey(e => e.OrganisationKey)
+            .IsRequired(false);
+
+        modelBuilder.Entity<ConnectionRequestsFact>()
             .HasOne(e => e.UserAccountDim)
             .WithMany()
             .HasForeignKey(e => e.UserAccountKey)
