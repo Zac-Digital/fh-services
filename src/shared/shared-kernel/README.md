@@ -1,6 +1,6 @@
 # fh-shared-kernel
 
-DDD shared kernel for the family hubs projects containing artefacts that can be shared across projects.
+DDD shared kernel for the family hubs projects containing artifacts that can be shared across projects.
 
 # FamilyHubs Shared Kernel
 

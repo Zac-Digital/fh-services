@@ -1,0 +1,97 @@
+name: Deploy Service
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      artifact_name:
+        required: true
+        type: string
+      keyvault_prefix:
+        required: true
+        type: string
+      project_name:
+        required: true
+        type: string
+      data_project_name:
+        required: false
+        type: string
+      database_context:
+        required: false
+        type: string
+      project_type:
+        required: true
+        type: string
+      azure_app_name:
+        required: true
+        type: string
+
+jobs:
+  deploy-service:
+    name: Download Artifact & Deploy Project
+    runs-on: ubuntu-22.04
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION }}
+
+      - name: Install Entity Framework
+        shell: bash
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: ./out
+
+      - name: Azure CLI Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # We replace two appsettings.json files for our deployments..
+      #   1. In the checked out repository, because the DB migration step reads the connection string from it
+      #   2. In the downloaded artifact, because this is deployed to Azure
+      - name: App Settings Variable Substitution
+        id: substitution
+        uses: ./.github/actions/variable-substitution
+        with:
+          keyvault_name: ${{ vars.KEYVAULT_NAME }}
+          keyvault_prefix: ${{ inputs.keyvault_prefix }}
+          files: "${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}/appsettings.json, ./out/appsettings.json"
+
+      - name: Deploy Artifact to Azure
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ inputs.azure_app_name }}
+          publish-profile: ${{ steps.substitution.outputs.publish_profile }}
+          package: ./out
+
+      - name: Apply Database Migration
+        if: ${{ inputs.data_project_name != '' && inputs.database_context != ''}}
+        uses: ./.github/actions/database-migration
+        with:
+          db_context: ${{ inputs.database_context }}
+          data_project_path: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.data_project_name }}
+          startup_project_path: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}
+          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
+          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+          az_firewall_rule_name: ${{ inputs.artifact_name }}
+
+      - name: Clear Artifact
+        if: always()
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: ${{ inputs.artifact_name }}

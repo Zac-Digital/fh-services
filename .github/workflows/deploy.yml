@@ -23,7 +23,7 @@ permissions:
 
 jobs:
   build-projects-upload-artifacts:
-    name: Build
+    name: ${{ matrix.job_name }}
     strategy:
       fail-fast: true
       matrix:
@@ -38,91 +38,168 @@ jobs:
                    src/ui/idam-maintenance-ui/,
                    src/ui/manage-ui/
                    ]
-    uses: ./.github/workflows/build-upload-artefact.yml
+        include:
+          - project: src/service/idam-api/
+            job_name: "Build - IDAM API"
+          - project: src/service/notification-api/
+            job_name: "Build - Notification API"
+          - project: src/service/referral-api/
+            job_name: "Build - Referral API"
+          - project: src/service/report-api/
+            job_name: "Build - Report API"
+          - project: src/service/service-directory-api/
+            job_name: "Build - Service Directory API"
+          - project: src/ui/connect-dashboard-ui/
+            job_name: "Build - Connect Dashboard UI"
+          - project: src/ui/connect-ui/
+            job_name: "Build - Connect UI"
+          - project: src/ui/find-ui/
+            job_name: "Build - Find UI"
+          - project: src/ui/idam-maintenance-ui/
+            job_name: "Build - IDAM Maintenance UI"
+          - project: src/ui/manage-ui/
+            job_name: "Build - Manage UI"
+    uses: ./.github/workflows/build-upload-artifact.yml
     with:
       project: ${{ matrix.project }}
     secrets: inherit
 
-  deploy-idam:
-    name: Deploy Idam API
-    runs-on: ubuntu-22.04
+  api-idam-deploy:
+    name: Deploy - IDAM API
     needs: [ build-projects-upload-artifacts ]
-    env:
-      ARTIFACT_NAME: idam-api
-      PROJECT_NAME: FamilyHubs.Idam.Api
-      DATA_PROJECT_NAME: FamilyHubs.Idam.Data
-      PROJECT_TYPE: service
-      APP_NAME: s181d01-as-fh-idam-api
-    environment: ${{ inputs.environment }}
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: idam-api
+      keyvault_prefix: IDAM-API
+      project_name: FamilyHubs.Idam.Api
+      data_project_name: FamilyHubs.Idam.Data
+      database_context: ApplicationDbContext
+      project_type: service
+      azure_app_name: s181d01-as-fh-idam-api
+    secrets: inherit
 
-      - name: Setup .NET ${{ vars.DOTNET_VERSION }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION }}
+  api-notification-deploy:
+    name: Deploy - Notification API
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: notification-api
+      keyvault_prefix: NOTIFICATIONS-API
+      project_name: FamilyHubs.Notification.Api
+      data_project_name: FamilyHubs.Notification.Data
+      database_context: ApplicationDbContext
+      project_type: service
+      azure_app_name: s181d01-as-fh-notification-api
+    secrets: inherit
 
-      - name: Install Entity Framework
-        shell: bash
-        run: dotnet tool install --global dotnet-ef
+  api-referral-deploy:
+    name: Deploy - Referral API
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: referral-api
+      keyvault_prefix: REFERRAL-API
+      project_name: FamilyHubs.Referral.Api
+      data_project_name: FamilyHubs.Referral.Data
+      database_context: ApplicationDbContext
+      project_type: service
+      azure_app_name: s181d01-as-fh-referral-api
+    secrets: inherit
 
-      - name: Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+  api-report-deploy:
+    name: Deploy - Report API
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: report-api
+      keyvault_prefix: REPORT-API
+      project_name: FamilyHubs.Report.Api
+      data_project_name: FamilyHubs.Report.Data
+      database_context: ReportDbContext
+      project_type: service
+      azure_app_name: s181d01-as-fh-report-api
+    secrets: inherit
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ./out
+  api-service-directory-deploy:
+    name: Deploy - Service Directory API
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: service-directory-api
+      keyvault_prefix: SD-API
+      project_name: FamilyHubs.ServiceDirectory.Api
+      data_project_name: FamilyHubs.ServiceDirectory.Data
+      database_context: ApplicationDbContext
+      project_type: service
+      azure_app_name: s181d01-as-fh-sd-api
+    secrets: inherit
 
-      - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: "${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}/appsettings.json, ./out/appsettings.json"
-        env:
-          APPINSIGHTS_CONNECTION_STRING: ${{ secrets.IDAM_API_APPINSIGHTS_CONNECTION_STRING }}
-          APPINSIGHTS_INSTRUMENTATIONKEY: ${{ vars.IDAM_API_APPINSIGHTS_INSTRUMENTATIONKEY }}
-          ConnectionStrings.IdamConnection: ${{ secrets.IDAM_API_CONNECTIONSTRINGS_IDAMCONNECTION }}
-          Crypto.clientId: ${{ vars.IDAM_API_CRYPTO_CLIENTID }}
-          Crypto.clientSecret: ${{ secrets.IDAM_API_CRYPTO_CLIENTSECRET }}
-          Crypto.DbEncryptionIVKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONIVKEY }}
-          Crypto.DbEncryptionIVKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
-          Crypto.DbEncryptionKey: ${{ secrets.IDAM_API_CRYPTO_DBENCRYPTIONKEY }}
-          Crypto.DbEncryptionKeySecretName: ${{ vars.IDAM_API_CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-          Crypto.KeyVaultIdentifier: ${{ vars.IDAM_API_CRYPTO_KEYVAULTIDENTIFIER }}
-          Crypto.tenantId: ${{ vars.IDAM_API_CRYPTO_TENANTID }}
-          Crypto.UseKeyVault: ${{ vars.IDAM_API_CRYPTO_USEKEYVAULT }}
-          EventGridUrl: ${{ vars.IDAM_API_EVENTGRIDURL }}
-          GovUkOidcConfiguration.BearerTokenSigningKey: ${{ secrets.IDAM_API_GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
-          ServiceDirectoryApiBaseUrl: ${{ vars.IDAM_API_SERVICEDIRECTORYAPIBASEURL }}
+  ui-connect-dashboard-deploy:
+    name: Deploy - Connect Dashboard UI
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: connect-dashboard-ui
+      keyvault_prefix: CONNECT-DASHBOARD-UI
+      project_name: FamilyHubs.RequestForSupport.Web
+      project_type: ui
+      azure_app_name: s181d01-as-fh-ref-dash-ui
+    secrets: inherit
 
-      - name: Azure CLI Login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ui-connect-deploy:
+    name: Deploy - Connect UI
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: connect-ui
+      keyvault_prefix: CONNECT-UI
+      project_name: FamilyHubs.Referral.Web
+      project_type: ui
+      azure_app_name: s181d01-as-fh-referral-ui
+    secrets: inherit
 
-      - name: Apply Database Migration
-        uses: ./.github/actions/database-migration
-        with:
-          db_context: ApplicationDbContext
-          data_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.DATA_PROJECT_NAME }}
-          startup_project_path: ${{ github.workspace }}/src/${{ env.PROJECT_TYPE }}/${{ env.ARTIFACT_NAME }}/src/${{ env.PROJECT_NAME }}
-          azure_resource_group: ${{ vars.AZURE_RESOURCE_GROUP }}
-          azure_sql_server_resource_name: ${{ vars.AZURE_SQL_SERVER_RESOURCE_NAME }}
+  ui-find-deploy:
+    name: Deploy - Find UI
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: find-ui
+      keyvault_prefix: FIND-UI
+      project_name: FamilyHubs.ServiceDirectory.Web
+      project_type: ui
+      azure_app_name: s181d01-as-fh-sd-ui
+    secrets: inherit
 
-      - name: Deploy Artifact to Azure
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: ${{ env.APP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_IDAM_API }}
-          package: ./out
+  ui-idam-maintenance-deploy:
+    name: Deploy - IDAM Maintenance UI
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: idam-maintenance-ui
+      keyvault_prefix: IDAM-MAINTENANCE-UI
+      project_name: FamilyHubs.Idams.Maintenance.UI
+      project_type: ui
+      azure_app_name: s181d01-as-fh-idam-maintenance-ui
+    secrets: inherit
+
+  ui-manage-deploy:
+    name: Deploy - Manage UI
+    needs: [ build-projects-upload-artifacts ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: manage-ui
+      keyvault_prefix: MANAGE-UI
+      project_name: FamilyHubs.ServiceDirectory.Admin.Web
+      project_type: ui
+      azure_app_name: s181d01-as-fh-sd-admin-ui
+    secrets: inherit

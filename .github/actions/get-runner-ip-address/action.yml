@@ -9,10 +9,23 @@ runs:
   using: composite
 
   steps:
+    # Try and get the IP address of the Runner up-to MAX_TRIES times, waiting for an increasing delay for each failure
     - name: Get Workflow Runner IP
       id: get-ip
       shell: bash
       run: |
-        IP=$(curl -s https://api.ipify.org/)
-        echo "IP Address = $IP"
-        echo "ip_address=$IP" >> $GITHUB_OUTPUT
+        MAX_TRIES=8
+        DELAY=1
+        for TRY in $(seq $MAX_TRIES); do
+          IP=$(curl -s https://api.ipify.org/)
+          if [[ $IP =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "IP Address = $IP"
+            echo "ip_address=$IP" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "Attempt $TRY / $MAX_TRIES to get IP address failed..."
+          sleep $DELAY
+          DELAY=$((DELAY + 1))
+        done
+        echo "Failed to get IP address after $MAX_TRIES attempts..."
+        exit 1
