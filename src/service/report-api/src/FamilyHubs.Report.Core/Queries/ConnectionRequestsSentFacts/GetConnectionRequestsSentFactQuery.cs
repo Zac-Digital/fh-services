@@ -20,7 +20,7 @@ public class GetConnectionRequestsSentFactQuery : IGetConnectionRequestsSentFact
     {
         var startDate = request.Date!.Value.AddDays(-request.AmountOfDays!.Value);
 
-        var query = _reportDbContext.ConnectionRequestsSentFacts
+        var madeQuery = _reportDbContext.ConnectionRequestsSentFacts
             .Include(crsf => crsf.DateDim)
             .Where(crsf => crsf.DateDim.Date > startDate && crsf.DateDim.Date <= request.Date!.Value);
 
@@ -31,7 +31,7 @@ public class GetConnectionRequestsSentFactQuery : IGetConnectionRequestsSentFact
 
         return new ConnectionRequests
         {
-            Made = await _reportDbContext.CountAsync(query, cancellationToken),
+            Made = await _reportDbContext.CountAsync(madeQuery, cancellationToken),
             Accepted = await _reportDbContext.CountAsync(acceptedQuery, cancellationToken),
         };
     }

@@ -157,7 +157,6 @@ public class ReportDbContext : DbContext, IReportDbContext
             entity.Property(e => e.DateKey).IsRequired();
             entity.Property(e => e.TimeKey).IsRequired();
             entity.Property(e => e.OrganisationKey).IsRequired();
-            entity.Property(e => e.UserAccountKey).IsRequired();
             entity.Property(e => e.ConnectionRequestServiceKey).IsRequired();
             entity.Property(e => e.ConnectionRequestStatusTypeKey).IsRequired();
             entity.Property(e => e.ConnectionRequestId).IsRequired();
@@ -267,12 +266,6 @@ public class ReportDbContext : DbContext, IReportDbContext
             .HasOne(e => e.OrganisationDim)
             .WithMany()
             .HasForeignKey(e => e.OrganisationKey)
-            .IsRequired(false);
-
-        modelBuilder.Entity<ConnectionRequestsFact>()
-            .HasOne(e => e.UserAccountDim)
-            .WithMany()
-            .HasForeignKey(e => e.UserAccountKey)
             .IsRequired(false);
 
         base.OnModelCreating(modelBuilder);

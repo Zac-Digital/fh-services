@@ -64,10 +64,6 @@ namespace FamilyHubs.Report.Data.Migrations
                     b.Property<int>("TimeKey")
                         .HasColumnType("int");
 
-                    b.Property<long?>("UserAccountKey")
-                        .IsRequired()
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
@@ -77,8 +73,6 @@ namespace FamilyHubs.Report.Data.Migrations
                     b.HasIndex("OrganisationKey");
 
                     b.HasIndex("TimeKey");
-
-                    b.HasIndex("UserAccountKey");
 
                     b.ToTable("ConnectionRequestsFacts", "dim");
                 });

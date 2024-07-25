@@ -21,7 +21,6 @@ namespace FamilyHubs.Report.Data.Migrations
                     DateKey = table.Column<int>(type: "int", nullable: false),
                     TimeKey = table.Column<int>(type: "int", nullable: false),
                     OrganisationKey = table.Column<long>(type: "bigint", nullable: false),
-                    UserAccountKey = table.Column<long>(type: "bigint", nullable: false),
                     ConnectionRequestServiceKey = table.Column<long>(type: "bigint", nullable: false),
                     ConnectionRequestStatusTypeKey = table.Column<short>(type: "smallint", nullable: false),
                     ConnectionRequestId = table.Column<long>(type: "bigint", nullable: false),
@@ -54,12 +53,6 @@ namespace FamilyHubs.Report.Data.Migrations
                         principalTable: "TimeDim",
                         principalColumn: "TimeKey",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ConnectionRequestsFacts_UserAccountDim_UserAccountKey",
-                        column: x => x.UserAccountKey,
-                        principalSchema: "idam",
-                        principalTable: "UserAccountDim",
-                        principalColumn: "UserAccountKey");
                 });
 
             migrationBuilder.CreateIndex(
@@ -79,12 +72,6 @@ namespace FamilyHubs.Report.Data.Migrations
                 schema: "dim",
                 table: "ConnectionRequestsFacts",
                 column: "TimeKey");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ConnectionRequestsFacts_UserAccountKey",
-                schema: "dim",
-                table: "ConnectionRequestsFacts",
-                column: "UserAccountKey");
         }
 
         /// <inheritdoc />

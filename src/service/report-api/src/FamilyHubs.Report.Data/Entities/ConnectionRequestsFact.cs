@@ -15,8 +15,10 @@ public class ConnectionRequestsFact
     public long? OrganisationKey { get; init; }
     [NotMapped] public OrganisationDim OrganisationDim { get; init; } = null!;
 
+#if UserAccount
     public long? UserAccountKey { get; init; }
     [NotMapped] public UserAccountDim UserAccountDim { get; init; } = null!;
+#endif
 
     public long ConnectionRequestServiceKey { get; init; }
 

@@ -52,20 +52,6 @@ public class WhenUsingGetConnectionRequestsSentQuery
             }
         };
 
-        List<UserAccountDim> userAccountDimList = new()
-        {
-            new UserAccountDim
-            {
-                UserAccountId = 1,
-                OrganisationId = 1
-            },
-            new UserAccountDim
-            {
-                UserAccountId = 2,
-                OrganisationId = 2
-            }
-        };
-
         List<ConnectionRequestsSentFact> connectionRequestsSentFactList = new()
         {
             new ConnectionRequestsSentFact
@@ -123,70 +109,56 @@ public class WhenUsingGetConnectionRequestsSentQuery
             {
                 DateKey = 2,
                 OrganisationKey = 1,
-                UserAccountKey = 1,
                 DateDim = dateDimList[2],
                 OrganisationDim = organisationDimList[0],
-                UserAccountDim = userAccountDimList[0],
                 ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
             },
             new ConnectionRequestsFact
             {
                 DateKey = 2,
                 OrganisationKey = 1,
-                UserAccountKey = 1,
                 DateDim = dateDimList[2],
                 OrganisationDim = organisationDimList[0],
-                UserAccountDim = userAccountDimList[0],
                 ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
             },
             new ConnectionRequestsFact
             {
                 DateKey = 2,
                 OrganisationKey = 2,
-                UserAccountKey = 1,
                 DateDim = dateDimList[2],
                 OrganisationDim = organisationDimList[1],
-                UserAccountDim = userAccountDimList[0],
                 ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
             },
             new ConnectionRequestsFact
             {
                 DateKey = 2,
                 OrganisationKey = 2,
-                UserAccountKey = 1,
                 DateDim = dateDimList[2],
                 OrganisationDim = organisationDimList[1],
-                UserAccountDim = userAccountDimList[0],
                 ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
             },
             new ConnectionRequestsFact
             {
                 DateKey = 3,
                 OrganisationKey = 1,
-                UserAccountKey = 1,
                 DateDim = dateDimList[3],
                 OrganisationDim = organisationDimList[0],
-                UserAccountDim = userAccountDimList[0],
                 ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
             },
             new ConnectionRequestsFact
             {
                 DateKey = 3,
                 OrganisationKey = 2,
-                UserAccountKey = 1,
                 DateDim = dateDimList[3],
                 OrganisationDim = organisationDimList[1],
-                UserAccountDim = userAccountDimList[0],
                 ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
             },
             new ConnectionRequestsFact
             {
                 DateKey = 0,
                 OrganisationKey = 2,
-                UserAccountKey = 1,
                 DateDim = dateDimList[0],
                 OrganisationDim = organisationDimList[1],
-                UserAccountDim = userAccountDimList[0],
                 ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
             }
         };
