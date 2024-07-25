@@ -15,7 +15,7 @@ on:
 
 jobs:
   build_and_test:
-    name: ${{ inputs.working_directory }}
+    name: Build Project & Run Tests
     runs-on: ${{ inputs.runs_on }}
     defaults:
       run:
