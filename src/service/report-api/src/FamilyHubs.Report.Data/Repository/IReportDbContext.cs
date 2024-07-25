@@ -8,6 +8,8 @@ public interface IReportDbContext
 
     public IQueryable<ConnectionRequestsSentFact> ConnectionRequestsSentFacts { get; }
 
+    public IQueryable<ConnectionRequestsFact> ConnectionRequestsFacts { get; }
+
     public void AddServiceSearchFact(ServiceSearchFact serviceSearchFact);
 
     public void AddDateDim(DateDim dateDim);
@@ -18,7 +20,11 @@ public interface IReportDbContext
 
     public void AddOrganisationDim(OrganisationDim organisationDim);
 
+    public void AddUserAccountDim(UserAccountDim userAccountDim);
+
     public void AddConnectionRequestsSentFact(ConnectionRequestsSentFact connectionRequestsSentFact);
+
+    public void AddConnectionRequestsFact(ConnectionRequestsFact connectionRequestsFact);
 
     Task<int> ExecuteRawSql(FormattableString sql, CancellationToken cancellationToken = default);
 

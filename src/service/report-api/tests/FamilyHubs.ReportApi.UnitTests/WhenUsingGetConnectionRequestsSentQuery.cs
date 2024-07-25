@@ -30,6 +30,11 @@ public class WhenUsingGetConnectionRequestsSentQuery
             {
                 DateKey = 2,
                 Date = DateTime.Parse("2024-06-08")
+            },
+            new DateDim
+            {
+                DateKey = 3,
+                Date = DateTime.Parse("2024-06-04")
             }
         };
 
@@ -98,6 +103,66 @@ public class WhenUsingGetConnectionRequestsSentQuery
             }
         };
 
+        List<ConnectionRequestsFact> connectionRequestsFactList = new()
+        {
+            new ConnectionRequestsFact
+            {
+                DateKey = 2,
+                OrganisationKey = 1,
+                DateDim = dateDimList[2],
+                OrganisationDim = organisationDimList[0],
+                ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
+            },
+            new ConnectionRequestsFact
+            {
+                DateKey = 2,
+                OrganisationKey = 1,
+                DateDim = dateDimList[2],
+                OrganisationDim = organisationDimList[0],
+                ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
+            },
+            new ConnectionRequestsFact
+            {
+                DateKey = 2,
+                OrganisationKey = 2,
+                DateDim = dateDimList[2],
+                OrganisationDim = organisationDimList[1],
+                ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
+            },
+            new ConnectionRequestsFact
+            {
+                DateKey = 2,
+                OrganisationKey = 2,
+                DateDim = dateDimList[2],
+                OrganisationDim = organisationDimList[1],
+                ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
+            },
+            new ConnectionRequestsFact
+            {
+                DateKey = 3,
+                OrganisationKey = 1,
+                DateDim = dateDimList[3],
+                OrganisationDim = organisationDimList[0],
+                ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
+            },
+            new ConnectionRequestsFact
+            {
+                DateKey = 3,
+                OrganisationKey = 2,
+                DateDim = dateDimList[3],
+                OrganisationDim = organisationDimList[1],
+                ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
+            },
+            new ConnectionRequestsFact
+            {
+                DateKey = 0,
+                OrganisationKey = 2,
+                DateDim = dateDimList[0],
+                OrganisationDim = organisationDimList[1],
+                ConnectionRequestStatusTypeKey = (short)ReferralStatus.Accepted
+            }
+        };
+
         IReportDbContext reportDbContextMock = Substitute.For<IReportDbContext>();
 
         reportDbContextMock.ConnectionRequestsSentFacts.Returns(connectionRequestsSentFactList.AsQueryable());
@@ -109,22 +174,34 @@ public class WhenUsingGetConnectionRequestsSentQuery
                 return Task.FromResult(queryable.Count());
             });
 
+        reportDbContextMock.ConnectionRequestsFacts.Returns(connectionRequestsFactList.AsQueryable());
+
+        reportDbContextMock.CountAsync(Arg.Any<IQueryable<ConnectionRequestsFact>>(), Arg.Any<CancellationToken>())
+            .Returns(callInfo =>
+            {
+                var queryable = callInfo.ArgAt<IQueryable<ConnectionRequestsFact>>(0);
+                return Task.FromResult(queryable.Count());
+            });
+
         _getConnectionRequestsSentFactQuery = new GetConnectionRequestsSentFactQuery(reportDbContextMock);
     }
 
     [Theory]
-    [InlineData("2024-08-08", 1, 4)]
-    [InlineData("2024-08-04", 1, 2)]
-    [InlineData("2024-06-08", 1, 1)]
-    [InlineData("2024-08-08", 7, 6)]
-    [InlineData("2024-08-04", 7, 2)]
-    [InlineData("2024-06-08", 7, 1)]
-    [InlineData("2024-12-31", 365, 7)]
-    public async Task Then_GetConnectionRequestsForAdmin_Should_Return_ExpectedResult(string dateStr, int days, int requestsMade)
+    [InlineData("2024-08-08", 1, 4, 1)]
+    [InlineData("2024-08-04", 1, 2, 0)]
+    [InlineData("2024-06-08", 1, 1, 4)]
+    [InlineData("2024-06-04", 1, 0, 2)]
+    [InlineData("2024-08-08", 7, 6, 1)]
+    [InlineData("2024-08-04", 7, 2, 0)]
+    [InlineData("2024-06-08", 7, 1, 6)]
+    [InlineData("2024-06-04", 7, 0, 2)]
+    [InlineData("2024-12-31", 365, 7, 7)]
+    public async Task Then_GetConnectionRequestsForAdmin_Should_Return_ExpectedResult(string dateStr, int days, int requestsMade, int requestsAccepted)
     {
         ConnectionRequests expected = new()
         {
-            Made = requestsMade
+            Made = requestsMade,
+            Accepted = requestsAccepted,
         };
 
         DateTime dateTime = DateTime.Parse(dateStr);
@@ -141,7 +218,8 @@ public class WhenUsingGetConnectionRequestsSentQuery
     {
         ConnectionRequests expected = new()
         {
-            Made = 7
+            Made = 7,
+            Accepted = 7,
         };
 
         ConnectionRequests result = await _getConnectionRequestsSentFactQuery.GetTotalConnectionRequestsForAdmin();
@@ -150,18 +228,21 @@ public class WhenUsingGetConnectionRequestsSentQuery
     }
 
     [Theory]
-    [InlineData("2024-08-08", 1, 2)]
-    [InlineData("2024-08-04", 1, 1)]
-    [InlineData("2024-06-08", 1, 0)]
-    [InlineData("2024-08-08", 7, 3)]
-    [InlineData("2024-08-04", 7, 1)]
-    [InlineData("2024-06-08", 7, 0)]
-    [InlineData("2024-12-31", 365, 3)]
-    public async Task Then_GetConnectionRequestsForLa_Should_Return_ExpectedResult(string dateStr, int days, int requestsMade)
+    [InlineData("2024-08-08", 1, 2, 0)]
+    [InlineData("2024-08-04", 1, 1, 0)]
+    [InlineData("2024-06-08", 1, 0, 2)]
+    [InlineData("2024-06-04", 1, 0, 1)]
+    [InlineData("2024-08-08", 7, 3, 0)]
+    [InlineData("2024-08-04", 7, 1, 0)]
+    [InlineData("2024-06-08", 7, 0, 3)]
+    [InlineData("2024-06-04", 7, 0, 1)]
+    [InlineData("2024-12-31", 365, 3, 3)]
+    public async Task Then_GetConnectionRequestsForLa_Should_Return_ExpectedResult(string dateStr, int days, int requestsMade, int requestsAccepted)
     {
         ConnectionRequests expected = new()
         {
-            Made = requestsMade
+            Made = requestsMade,
+            Accepted = requestsAccepted,
         };
 
         DateTime dateTime = DateTime.Parse(dateStr);
@@ -178,7 +259,8 @@ public class WhenUsingGetConnectionRequestsSentQuery
     {
         ConnectionRequests expected = new()
         {
-            Made = 3
+            Made = 3,
+            Accepted = 3
         };
 
         LaConnectionRequestsTotalRequest request = new(10);

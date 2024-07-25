@@ -4,6 +4,7 @@ using FamilyHubs.Report.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FamilyHubs.Report.Data.Migrations
 {
     [DbContext(typeof(ReportDbContext))]
-    partial class ReportDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240718133509_AddConnectionRequestsFactTable")]
+    partial class AddConnectionRequestsFactTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,6 +67,10 @@ namespace FamilyHubs.Report.Data.Migrations
                     b.Property<int>("TimeKey")
                         .HasColumnType("int");
 
+                    b.Property<long?>("UserAccountKey")
+                        .IsRequired()
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"));
@@ -73,6 +80,8 @@ namespace FamilyHubs.Report.Data.Migrations
                     b.HasIndex("OrganisationKey");
 
                     b.HasIndex("TimeKey");
+
+                    b.HasIndex("UserAccountKey");
 
                     b.ToTable("ConnectionRequestsFacts", "dim");
                 });

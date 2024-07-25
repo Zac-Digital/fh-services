@@ -56,6 +56,7 @@ public class GetConnectionRequestsSentFactFourWeekBreakdownQuery : IGetConnectio
         {
             Date = WeeklyBreakdownCommon.GetMondayToSundayName(date),
             Made = connectionRequests.Made,
+            Accepted = connectionRequests.Accepted,
         };
     }
 
@@ -66,6 +67,7 @@ public class GetConnectionRequestsSentFactFourWeekBreakdownQuery : IGetConnectio
             Totals = new ConnectionRequests
             {
                 Made = weeklyReports.Sum(weeklyReport => weeklyReport.Made),
+                Accepted = weeklyReports.Sum(weeklyReport => weeklyReport.Accepted),
             }
         };
 }

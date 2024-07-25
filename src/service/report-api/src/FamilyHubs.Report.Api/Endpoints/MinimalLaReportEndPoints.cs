@@ -58,7 +58,7 @@ public class MinimalLaReportEndPoints
                 return await getServiceSearchFactQuery.GetTotalSearchCountForLa(request);
             });
 
-        app.MapGet("report/connection-requests-past-7-days/organisation/{LaOrgId:long}",
+        app.MapGet("report/connection-requests-past-7-days/organisation/{laOrgId:long}",
             [Authorize(Roles = AllowedRoles)]
             async (
                 long? laOrgId,
@@ -71,7 +71,7 @@ public class MinimalLaReportEndPoints
                 return await getConnectionRequestsSentFactQuery.GetConnectionRequestsForLa(request);
             });
 
-        app.MapGet("report/connection-requests-4-week-breakdown/organisation/{lAOrgId:long}",
+        app.MapGet("report/connection-requests-4-week-breakdown/organisation/{laOrgId:long}",
             [Authorize(Roles = AllowedRoles)]
             async (
                 DateTime? date,

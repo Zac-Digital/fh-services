@@ -18,54 +18,79 @@ public class GetConnectionRequestsSentFactQuery : IGetConnectionRequestsSentFact
     public async Task<ConnectionRequests> GetConnectionRequestsForAdmin(ConnectionRequestsRequest request,
         CancellationToken cancellationToken = default)
     {
-        DateTime startDate = request.Date!.Value.AddDays(-request.AmountOfDays!.Value);
+        var startDate = request.Date!.Value.AddDays(-request.AmountOfDays!.Value);
 
-        IQueryable<ConnectionRequestsSentFact> query = _reportDbContext.ConnectionRequestsSentFacts
-            .Include(cRSf => cRSf.DateDim)
-            .Where(cRSf => cRSf.DateDim.Date > startDate && cRSf.DateDim.Date <= request.Date!.Value);
+        var madeQuery = _reportDbContext.ConnectionRequestsSentFacts
+            .Include(crsf => crsf.DateDim)
+            .Where(crsf => crsf.DateDim.Date > startDate && crsf.DateDim.Date <= request.Date!.Value);
+
+        var acceptedQuery = _reportDbContext.ConnectionRequestsFacts
+            .Include(crf => crf.DateDim)
+            .Where(crf => crf.DateDim.Date > startDate && crf.DateDim.Date <= request.Date!.Value &&
+                          crf.ConnectionRequestStatusTypeKey == (short)ReferralStatus.Accepted);
 
         return new ConnectionRequests
         {
-            Made = await _reportDbContext.CountAsync(query, cancellationToken)
+            Made = await _reportDbContext.CountAsync(madeQuery, cancellationToken),
+            Accepted = await _reportDbContext.CountAsync(acceptedQuery, cancellationToken),
         };
     }
 
-    public async Task<ConnectionRequests> GetTotalConnectionRequestsForAdmin(
-        CancellationToken cancellationToken = default)
-        => new()
+    public async Task<ConnectionRequests> GetTotalConnectionRequestsForAdmin(CancellationToken cancellationToken = default)
+    {
+        var acceptedQuery = _reportDbContext.ConnectionRequestsFacts
+            .Where(crf => crf.ConnectionRequestStatusTypeKey == (short)ReferralStatus.Accepted);
+
+        return new ConnectionRequests
         {
-            Made = await _reportDbContext.CountAsync(_reportDbContext.ConnectionRequestsSentFacts, cancellationToken)
+            Made = await _reportDbContext.CountAsync(_reportDbContext.ConnectionRequestsSentFacts, cancellationToken),
+            Accepted = await _reportDbContext.CountAsync(acceptedQuery, cancellationToken),
         };
+    }
 
     public async Task<ConnectionRequests> GetConnectionRequestsForLa(LaConnectionRequestsRequest request,
         CancellationToken cancellationToken = default)
     {
-        DateTime startDate = request.Date!.Value.AddDays(-request.AmountOfDays!.Value);
+        var startDate = request.Date!.Value.AddDays(-request.AmountOfDays!.Value);
 
-        IQueryable<ConnectionRequestsSentFact> query = _reportDbContext.ConnectionRequestsSentFacts
-            .Include(cRSf => cRSf.DateDim)
-            .Include(cRSf => cRSf.OrganisationDim)
-            .Where(cRSf => cRSf.OrganisationDim != null)
-            .Where(cRSf => cRSf.DateDim.Date > startDate && cRSf.DateDim.Date <= request.Date!.Value)
-            .Where(cRSf => cRSf.OrganisationDim!.OrganisationId == request.LaOrgId!.Value);
+        var madeQuery = _reportDbContext.ConnectionRequestsSentFacts
+            .Include(crsf => crsf.DateDim)
+            .Include(crsf => crsf.OrganisationDim)
+            .Where(crsf => crsf.OrganisationDim != null)
+            .Where(crsf => crsf.DateDim.Date > startDate && crsf.DateDim.Date <= request.Date!.Value)
+            .Where(crsf => crsf.OrganisationDim!.OrganisationId == request.LaOrgId!.Value);
+
+        var acceptedQuery = _reportDbContext.ConnectionRequestsFacts
+            .Include(crf => crf.DateDim)
+            .Include(crf => crf.OrganisationDim)
+            .Where(crf => crf.DateDim.Date > startDate && crf.DateDim.Date <= request.Date!.Value)
+            .Where(crf => crf.OrganisationDim.OrganisationId == request.LaOrgId!.Value &&
+                          crf.ConnectionRequestStatusTypeKey == (short)ReferralStatus.Accepted);
 
         return new ConnectionRequests
         {
-            Made = await _reportDbContext.CountAsync(query, cancellationToken)
+            Made = await _reportDbContext.CountAsync(madeQuery, cancellationToken),
+            Accepted = await _reportDbContext.CountAsync(acceptedQuery, cancellationToken),
         };
     }
 
     public async Task<ConnectionRequests> GetTotalConnectionRequestsForLa(LaConnectionRequestsTotalRequest request,
         CancellationToken cancellationToken = default)
     {
-        IQueryable<ConnectionRequestsSentFact> query = _reportDbContext.ConnectionRequestsSentFacts
-            .Include(cRSf => cRSf.OrganisationDim)
-            .Where(cRSf => cRSf.OrganisationDim != null)
-            .Where(cRSf => cRSf.OrganisationDim!.OrganisationId == request.LaOrgId!.Value);
+        var madeQuery = _reportDbContext.ConnectionRequestsSentFacts
+            .Include(crsf => crsf.OrganisationDim)
+            .Where(crsf => crsf.OrganisationDim != null)
+            .Where(crsf => crsf.OrganisationDim!.OrganisationId == request.LaOrgId!.Value);
+
+        var acceptedQuery = _reportDbContext.ConnectionRequestsFacts
+            .Include(crf => crf.OrganisationDim)
+            .Where(crf => crf.OrganisationDim.OrganisationId == request.LaOrgId!.Value &&
+                          crf.ConnectionRequestStatusTypeKey == (short)ReferralStatus.Accepted);
 
         return new ConnectionRequests
         {
-            Made = await _reportDbContext.CountAsync(query, cancellationToken)
+            Made = await _reportDbContext.CountAsync(madeQuery, cancellationToken),
+            Accepted = await _reportDbContext.CountAsync(acceptedQuery, cancellationToken),
         };
     }
 }
