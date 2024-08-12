@@ -35,6 +35,7 @@ jobs:
                    src/service/referral-api/,
                    src/service/report-api/,
                    src/service/service-directory-api/,
+                   src/service/mock-hsda-api,
                    src/ui/connect-dashboard-ui/,
                    src/ui/connect-ui/,
                    src/ui/find-ui/,
@@ -52,6 +53,8 @@ jobs:
             job_name: "Build - Report API"
           - project: src/service/service-directory-api/
             job_name: "Build - Service Directory API"
+          - project: src/service/mock-hsda-api/
+            job_name: "Build - Mock HSDA API"  
           - project: src/ui/connect-dashboard-ui/
             job_name: "Build - Connect Dashboard UI"
           - project: src/ui/connect-ui/
@@ -139,6 +142,20 @@ jobs:
       database_context: ApplicationDbContext
       project_type: service
       azure_app_name: as-fh-sd-api
+    secrets: inherit
+
+  api-service-mock-hsda-deploy:
+    name: Deploy - Mock HSDA API
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: mock-hsda-api
+      keyvault_prefix: MOCK-HSDA-API
+      project_name: FamilyHubs.Mock-Hsda.Api
+      data_project_name: FamilyHubs.Mock-Hsda.Api
+      database_context: MockDbContext
+      project_type: service
+      azure_app_name: as-fh-open-referral-mock-api
     secrets: inherit
 
   ui-connect-dashboard-deploy:
