@@ -55,7 +55,7 @@ jobs:
             job_name: "Build - Service Directory API"
           - project: src/service/mock-hsda-api/
             job_name: "Build - Mock HSDA API"
-            dotnet_version: "8.0.x"
+            dotnet_version_override: "8.0.x"
           - project: src/ui/connect-dashboard-ui/
             job_name: "Build - Connect Dashboard UI"
           - project: src/ui/connect-ui/
@@ -69,7 +69,7 @@ jobs:
     uses: ./.github/workflows/build-upload-artifact.yml
     with:
       project: ${{ matrix.project }}
-      dotnet_version: ${{ matrix.dotnet_version || vars.DOTNET_VERSION }}
+      dotnet_version: ${{ matrix.dotnet_version_override || vars.DOTNET_VERSION }}
 
   api-idam-deploy:
     name: Deploy - IDAM API
