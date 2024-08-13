@@ -6,7 +6,7 @@ concurrency:
 
 on:
   push:
-    branches: ["main", "release-*", "feature/fhb-531-pipeline-ci-cd"]
+    branches: ["main", "release-*"]
   pull_request:
     paths:
       - '.github/workflows/build-and-test.yml'
