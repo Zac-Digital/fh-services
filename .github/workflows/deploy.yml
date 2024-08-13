@@ -146,9 +146,24 @@ jobs:
       azure_app_name: as-fh-sd-api
     secrets: inherit
 
+  api-service-mock-hsda-deploy:
+    name: Deploy - Mock HSDA API
+    needs: [ api-service-directory-deploy ]
+    uses: ./.github/workflows/deploy-service.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: mock-hsda-api
+      keyvault_prefix: MOCK-HSDA-API
+      project_name: FamilyHubs.Mock-Hsda.Api
+      data_project_name: FamilyHubs.Mock-Hsda.Api
+      database_context: MockDbContext
+      project_type: service
+      azure_app_name: as-fh-open-referral-mock-api
+    secrets: inherit
+    
   ui-connect-dashboard-deploy:
     name: Deploy - Connect Dashboard UI
-    needs: [ api-service-directory-deploy ]
+    needs: [ api-service-mock-hsda-deploy ]
     uses: ./.github/workflows/deploy-service.yml
     with:
       environment: ${{ inputs.environment }}
@@ -210,18 +225,4 @@ jobs:
       project_type: ui
       azure_app_name: as-fh-sd-admin-ui
     secrets: inherit
-  
-  api-service-mock-hsda-deploy:
-    name: Deploy - Mock HSDA API
-    needs: [ ui-idam-maintenance-deploy ]
-    uses: ./.github/workflows/deploy-service.yml
-    with:
-      environment: ${{ inputs.environment }}
-      artifact_name: mock-hsda-api
-      keyvault_prefix: MOCK-HSDA-API
-      project_name: FamilyHubs.Mock-Hsda.Api
-      data_project_name: FamilyHubs.Mock-Hsda.Api
-      database_context: MockDbContext
-      project_type: service
-      azure_app_name: as-fh-open-referral-mock-api
-    secrets: inherit  
+ 
