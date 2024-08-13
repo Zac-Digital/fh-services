@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Pages.performance_data;
 
-[Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleGroups.LaManagerOrDualRole},{RoleGroups.VcsManagerOrDualRole}")]
+[Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleGroups.LaManagerOrDualRole}")]
 public class ConnectPerformanceDataModel : HeaderPageModel
 {
     public string Title => "Performance data for Connect families to support";
