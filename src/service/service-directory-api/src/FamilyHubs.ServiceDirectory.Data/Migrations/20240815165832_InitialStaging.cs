@@ -19,8 +19,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                 schema: "staging",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Json = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastModified = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },

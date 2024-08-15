@@ -2,7 +2,7 @@
 
 public class ServicesTemp
 {
-    public long Id { get; set; }
+    public Guid Id { get; set; }
     public required string Json { get; set; }
     public required DateTime LastModified { get; set; }
 }
