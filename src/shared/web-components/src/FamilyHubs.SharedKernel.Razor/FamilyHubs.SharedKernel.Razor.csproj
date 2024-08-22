@@ -26,7 +26,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.21.0" />
 		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" Version="0.21.0" />
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.12.0.78982">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
