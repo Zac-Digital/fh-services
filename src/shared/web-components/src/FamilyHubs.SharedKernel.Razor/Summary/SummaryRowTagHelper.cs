@@ -12,6 +12,7 @@ public class SummaryRowTagHelper : TagHelper
     public string? Action2Href { get; set; }
     public bool ShowEmpty { get; set; } = false;
     public string? Class { get; set; }
+    public string? TestId { get; set; }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
@@ -31,7 +32,7 @@ public class SummaryRowTagHelper : TagHelper
 
             output.Content.SetHtmlContent(
                 $@"<dt class='govuk-summary-list__key'>{Key}</dt>
-                <dd class='govuk-summary-list__value {Class}'>{finalValue}</dd>");
+                <dd class='govuk-summary-list__value {Class}' data-test-id='{TestId??Key.ToLowerInvariant().Replace(' ', '-')}'>{finalValue}</dd>");
 
             string divClass = "govuk-summary-list__row";
             if (string.IsNullOrWhiteSpace(Action1))
