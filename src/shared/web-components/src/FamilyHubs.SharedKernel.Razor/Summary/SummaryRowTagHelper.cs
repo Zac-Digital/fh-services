@@ -56,12 +56,12 @@ public class SummaryRowTagHelper : TagHelper
         }
     }
 
-    private string ActionLink(string action, string? href, string key)
+    private static string ActionLink(string action, string? href, string key)
     {
         return $"<a href='{href}'>{action}<span class='govuk-visually-hidden'> {key.ToLower(CultureInfo.CurrentCulture)}</span></a>";
     }
 
-    private string ActionListItem(string actionLink)
+    private static string ActionListItem(string actionLink)
     {
         return $"<li class='govuk-summary-list__actions-list-item'>{actionLink}</li>";
     }
