@@ -33,7 +33,57 @@
         
         @* todo: summary list?? *@
 
-        <table class="govuk-table">
+        @* todo: data-testid *@
+
+        <summary-list>
+            <summary-row key="Support it offers">
+                @foreach (var serviceTaxonomy in Model.LocalOffer.Taxonomies)
+                {
+                    @serviceTaxonomy.Name
+                }
+            </summary-row>
+            
+            <summary-row key="Does support relate to children or young people?">
+                @{
+                    var eligibility = Model.LocalOffer?.Eligibilities?.FirstOrDefault();
+                    if (eligibility != null)
+                    {
+                        // todo: magic number
+                        <text>@eligibility.MinimumAge to @(eligibility.MaximumAge == 127 ? "25+" : eligibility.MaximumAge) years old</text>
+                    }
+                }
+            </summary-row>
+            
+            <summary-row key="Languages">
+                @if (Model.LocalOffer?.Languages is { Count: > 0 })
+                {
+                    @Model.GetLanguagesAsString(Model.LocalOffer.Languages)
+                }
+            </summary-row>
+
+            <summary-row key="Cost">
+                @if (Model.LocalOffer?.CostOptions?.Count > 0)
+                {
+                    <td class="govuk-table__cell" data-testid="cost-value">
+                        Yes, it costs money to use. @Model.LocalOffer?.CostOptions?.FirstOrDefault()?.AmountDescription
+                    </td>
+                }
+                else
+                {
+                    <td class="govuk-table__cell" data-testid="cost-value">Free</td>
+                }
+            </summary-row>
+
+            <summary-row key="How this service is provided">
+                @if (Model.LocalOffer?.ServiceDeliveries != null && Model.LocalOffer?.ServiceDeliveries?.Count > 0)
+                {
+                    @Model.GetDeliveryMethodsAsString(Model.LocalOffer?.ServiceDeliveries)
+                }
+            </summary-row>
+
+        </summary-list>
+
+        @*         <table class="govuk-table">
             <thead class="govuk-table__head"></thead>
             <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
@@ -103,7 +153,8 @@
                 }
             }
             </tbody>
-        </table>
+        </table> *@
+
         <h2 class="govuk-heading-m">More details</h2>
         <p data-testid="description-value">@Model.LocalOffer?.Description</p>
         <h2 class="govuk-heading-m">Connect a family to this service</h2>
