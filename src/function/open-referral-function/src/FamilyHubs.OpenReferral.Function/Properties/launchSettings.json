@@ -2,7 +2,7 @@
   "profiles": {
     "FamilyHubs.OpenReferral.Function": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7064",
+      "commandLineArgs": "--port 7275",
       "launchBrowser": false
     }
   }
