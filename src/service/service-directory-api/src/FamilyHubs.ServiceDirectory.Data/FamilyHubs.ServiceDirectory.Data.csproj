@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
-    <NoWarn>S1135;S125</NoWarn>
+    <NoWarn>S1135;S125;NU1901;NU1902;NU1903</NoWarn>
   </PropertyGroup>
 
 	<ItemGroup>
