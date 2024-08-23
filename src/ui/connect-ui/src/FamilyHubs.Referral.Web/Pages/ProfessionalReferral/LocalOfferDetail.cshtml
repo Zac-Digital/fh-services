@@ -35,10 +35,11 @@
 
         <summary-list class="govuk-!-margin-bottom-9">
             <summary-row key="Support it offers" show-empty>
-                @foreach (var serviceTaxonomy in Model.LocalOffer.Taxonomies)
-                {
-                    @serviceTaxonomy.Name
-                }
+                @Html.Raw(string.Join("<br>",
+                    Model.LocalOffer.Taxonomies
+                         .Select(t => t.Name)
+                         .OrderBy(n => n)
+                        ))
             </summary-row>
             
             <summary-row key="Does support relate to children or young people?" show-empty>
