@@ -32,7 +32,7 @@ public class SummaryRowTagHelper : TagHelper
 
             output.Content.SetHtmlContent(
                 $@"<dt class='govuk-summary-list__key'>{Key}</dt>
-                <dd class='govuk-summary-list__value {Class}' data-test-id='{TestId??Key.ToLowerInvariant().Replace(' ', '-')}'>{finalValue}</dd>");
+                <dd class='govuk-summary-list__value {Class}' data-test-id='{TestId??Sluggify(Key)}'>{finalValue}</dd>");
 
             string divClass = "govuk-summary-list__row";
             if (string.IsNullOrWhiteSpace(Action1))
@@ -54,6 +54,33 @@ public class SummaryRowTagHelper : TagHelper
         {
             output.SuppressOutput();
         }
+    }
+
+    //todo: extension?
+    private static string Sluggify(string input)
+    {
+        //todo: throw?
+        //if (string.IsNullOrEmpty(input))
+        //    return string.Empty;
+
+        ReadOnlySpan<char> lowerInput = input.ToLowerInvariant();
+
+        Span<char> result = stackalloc char[lowerInput.Length];
+        int resultIndex = 0;
+
+        foreach (var c in lowerInput)
+        {
+            if (char.IsLetterOrDigit(c))
+            {
+                result[resultIndex++] = c;
+            }
+            else if (c == ' ')
+            {
+                result[resultIndex++] = '-';
+            }
+        }
+
+        return new string(result[..resultIndex]).Trim('-');
     }
 
     private static string ActionLink(string action, string? href, string key)
