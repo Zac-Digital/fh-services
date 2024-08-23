@@ -1,5 +1,9 @@
 # Release Notes
 
+# 9.4
+
+Add <unordered-list> tag helper.
+
 # 9.3
 
 Add /info page which returns app's build version. Can include build number / commit hash etc.
