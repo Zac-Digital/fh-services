@@ -5,6 +5,8 @@
 Add /info page which returns app's build version. Can include build number / commit hash etc.
 To help identify what version of code is live.
 
+* 9.3.2 Add support for data-testid attribute to summary rows (used by summary card and summary list)
+
 # 9.2
 
 Add support for a page component with a single autocomplete textbox (or select drop-down when no Javascript).
