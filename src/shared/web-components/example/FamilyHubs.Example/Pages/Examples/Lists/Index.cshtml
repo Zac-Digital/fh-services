@@ -1,0 +1,43 @@
+﻿@page
+@model FamilyHubs.Example.Pages.Examples.Lists.UnorderedListModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-l">Lists</h1>
+
+        <p>
+            Use <a href="https://design-system.service.gov.uk/styles/lists/" new-tab>lists</a> to make blocks of text easier to read, and to break information into manageable chunks.
+        </p>
+
+        @{
+            var listItems = new List<string> { "Item 1", "Item 2", "Item 3" };
+        }
+
+        <unordered-list items="@listItems"></unordered-list>
+
+        <unordered-list>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+        </unordered-list>
+
+        <h2 class="govuk-heading-m">Bulleted lists</h2>
+        
+        <p>Introduce bulleted lists with a lead-in line ending in a colon. Start each item with a lowercase letter, and do not use a full stop at the end.</p>
+        
+        @* todo: have lead in line as an optional attribute? *@
+        @* todo: have a spaced attribute *@
+
+        <p class="govuk-body">You can buy:</p>
+        <unordered-list items="@listItems" bulleted></unordered-list>
+        
+        <p class="govuk-body">You can buy:</p>
+        <unordered-list bulleted>
+            <li>Item 1</li>
+            <li>Item 2</li>
+            <li>Item 3</li>
+        </unordered-list>
+
+    </div>
+</div>
