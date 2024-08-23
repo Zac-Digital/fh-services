@@ -35,16 +35,21 @@
 
         <summary-list class="govuk-!-margin-bottom-9">
             <summary-row key="Support it offers" show-empty>
-                @Html.Raw(string.Join("<br>",
+                    @if (Model.LocalOffer.Taxonomies.Any())
+                    {
+                        <unordered-list items="@Model.LocalOffer.Taxonomies.Select(t => t.Name).Order()">
+                        </unordered-list>
+                    }
+                    @*                 @Html.Raw(string.Join("<br>",
                     Model.LocalOffer.Taxonomies
-                         .Select(t => t.Name)
-                         .OrderBy(n => n)
-                        ))
+                        .Select(t => t.Name)
+                        .Order()
+                )) *@
             </summary-row>
             
             <summary-row key="Does support relate to children or young people?" show-empty>
                 @{
-                    var eligibility = Model.LocalOffer?.Eligibilities?.FirstOrDefault();
+                    var eligibility = Model.LocalOffer.Eligibilities.FirstOrDefault();
                     if (eligibility == null)
                     {
                         <text>No</text>
@@ -57,10 +62,19 @@
             </summary-row>
             
             <summary-row key="Languages" show-empty>
-                @if (Model.LocalOffer?.Languages is { Count: > 0 })
+                @if (Model.LocalOffer.Languages.Any())
                 {
-                    @Model.GetLanguagesAsString(Model.LocalOffer.Languages)
-                }
+                    <unordered-list items="@Model.LocalOffer.Languages.Select(t=> t.Name).Order()">
+                    </unordered-list>
+
+                    @*                     <ul class="govuk-list">
+                    </ul>
+                    @Html.Raw(string.Join("<br>",
+                        Model.LocalOffer.Languages
+                            .Select(t => t.Name)
+                            .Order()
+                    ))
+ *@                }
             </summary-row>
 
             <summary-row key="Cost" show-empty>

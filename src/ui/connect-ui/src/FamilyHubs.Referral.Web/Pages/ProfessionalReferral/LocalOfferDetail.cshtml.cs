@@ -81,13 +81,6 @@ public class LocalOfferDetailModel : HeaderPageModel
         return result;
     }
 
-    //todo: don't show languages if there are none
-    public string GetLanguagesAsString(ICollection<LanguageDto>? languageDtos)
-    {
-        // they should already be sorted by name, but for safety we do it again
-        return string.Join(", ", languageDtos?.Select(d => d.Name).Order() ?? Enumerable.Empty<string>());
-    }
-
     private void GetContactDetails()
     {
         //If delivery type is In-Person, get phone from service at location -> link contacts -> contact -> phone
