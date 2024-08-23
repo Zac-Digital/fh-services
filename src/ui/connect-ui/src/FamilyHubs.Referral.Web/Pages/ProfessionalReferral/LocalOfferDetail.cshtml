@@ -28,25 +28,19 @@
             @Model.LocalOffer.Summary
         </p>
         <h2 class="govuk-heading-m">Service details</h2>
-@*     </div>
-    <div class="govuk-grid-column-two-thirds"> *@
-        
-        @* todo: summary list?? *@
 
-        @* todo: data-testid *@
         @* todo: update value display *@
-        @* todo: show rows with empty values *@
         @* todo: add comment to story about different responsiveness (mobile) - proto doesn't seem to be responding correctly *@
 
         <summary-list class="govuk-!-margin-bottom-9">
-            <summary-row key="Support it offers">
+            <summary-row key="Support it offers" show-empty>
                 @foreach (var serviceTaxonomy in Model.LocalOffer.Taxonomies)
                 {
                     @serviceTaxonomy.Name
                 }
             </summary-row>
             
-            <summary-row key="Does support relate to children or young people?">
+            <summary-row key="Does support relate to children or young people?" show-empty>
                 @{
                     var eligibility = Model.LocalOffer?.Eligibilities?.FirstOrDefault();
                     if (eligibility != null)
@@ -57,14 +51,14 @@
                 }
             </summary-row>
             
-            <summary-row key="Languages">
+            <summary-row key="Languages" show-empty>
                 @if (Model.LocalOffer?.Languages is { Count: > 0 })
                 {
                     @Model.GetLanguagesAsString(Model.LocalOffer.Languages)
                 }
             </summary-row>
 
-            <summary-row key="Cost">
+            <summary-row key="Cost" show-empty>
                 @if (Model.LocalOffer?.CostOptions?.Count > 0)
                 {
                     <td class="govuk-table__cell" data-testid="cost-value">
@@ -77,7 +71,7 @@
                 }
             </summary-row>
 
-            <summary-row key="How this service is provided">
+            <summary-row key="How this service is provided" show-empty>
                 @if (Model.LocalOffer?.ServiceDeliveries != null && Model.LocalOffer?.ServiceDeliveries?.Count > 0)
                 {
                     @Model.GetDeliveryMethodsAsString(Model.LocalOffer?.ServiceDeliveries)
