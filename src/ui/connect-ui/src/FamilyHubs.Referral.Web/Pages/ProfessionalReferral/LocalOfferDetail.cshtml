@@ -31,6 +31,7 @@
 
         @* todo: update value display *@
         @* todo: add comment to story about different responsiveness (mobile) - proto doesn't seem to be responding correctly *@
+        @* todo: add comment to story that where the proto and story don't mention service property permutations, matched the display from the check details page in Manage*@
 
         <summary-list class="govuk-!-margin-bottom-9">
             <summary-row key="Support it offers" show-empty>
@@ -43,10 +44,13 @@
             <summary-row key="Does support relate to children or young people?" show-empty>
                 @{
                     var eligibility = Model.LocalOffer?.Eligibilities?.FirstOrDefault();
-                    if (eligibility != null)
+                    if (eligibility == null)
                     {
-                        // todo: magic number
-                        <text>@eligibility.MinimumAge to @(eligibility.MaximumAge == 127 ? "25+" : eligibility.MaximumAge) years old</text>
+                        <text>No</text>
+                    }
+                    else
+                    {
+                        <text>Yes, @AgeToString(eligibility.MinimumAge) years old to @AgeToString(eligibility.MaximumAge) years old</text>
                     }
                 }
             </summary-row>
@@ -226,3 +230,10 @@
         }
     </div>
 </div>
+
+@functions {
+    private static string AgeToString(int age)
+    {
+        return age == 127 ? "25+" : age.ToString();
+    }
+}
