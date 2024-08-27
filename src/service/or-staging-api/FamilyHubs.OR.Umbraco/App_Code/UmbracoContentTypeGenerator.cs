@@ -4,8 +4,11 @@ using System.Text.Json.Serialization;
 using Humanizer;
 using Newtonsoft.Json;
 using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Strings;
+using Umbraco.Cms.Web.Common.UmbracoContext;
+using DataType = Umbraco.Cms.Core.Models.DataType;
 
 namespace FamilyHubs.OR.Umbraco;
 
@@ -22,6 +25,7 @@ public interface IUmbracoContentTypeGenerator
 
 public class UmbracoContentTypeGenerator(
     IContentTypeService contentTypeService,
+    IContentService contentService,
     IUmbracoDataTypeLoader umbracoDataTypeLoader,
     IShortStringHelper shortStringHelper,
     ILogger<UmbracoContentTypeGenerator> logger
@@ -32,6 +36,13 @@ public class UmbracoContentTypeGenerator(
         public bool DropIfExists { get; init; }
         public string ItemIcon { get; init; } = "";
         public string ParentItemIcon { get; init; } = "";
+        public GenerateParentContentItemOption? GenerateParentContentItem { get; init; }
+
+        public enum GenerateParentContentItemOption
+        {
+            CreateIfNotExists,
+            DropIfExistsAndCreate
+        }
     }
     
     public async Task GenerateUmbracoDocumentType<TModel>(Guid creatingUserId, GeneratorOptions options)
@@ -98,7 +109,6 @@ public class UmbracoContentTypeGenerator(
     private async Task<IContentType> GenerateUmbracoDocumentTypeParent(string childModelName, Guid creatingUserId, GeneratorOptions options)
     {
         string name = PluraliseOpenReferralContentType(childModelName);
-        string alias = shortStringHelper.CleanString(name, CleanStringType.CamelCase);
 
         IContentType? existingDocumentType = contentTypeService.Get(name);
         if (existingDocumentType is not null)
@@ -118,6 +128,9 @@ public class UmbracoContentTypeGenerator(
 
         logger.LogDebug("Generating and creating parent document type '{Name}' for document type '{ChildName}'...", name, childModelName);
     
+        string alias = ToAlias(name);
+        string childAlias = ToAlias(childModelName);
+        
         ContentType contentType = new(shortStringHelper, -1)
         {
             Name = name,
@@ -125,10 +138,39 @@ public class UmbracoContentTypeGenerator(
             Description = "Default description",
             Icon = options.ParentItemIcon,
             AllowedAsRoot = true,
+            AllowedContentTypes = new List<ContentTypeSort>
+            {
+                new(Guid.NewGuid(), 0, childAlias)
+            }
         };
 
         await contentTypeService.CreateAsync(contentType, creatingUserId);
         logger.LogInformation("Generated and created parent document type '{Name}' for document type '{ChildName}'", name, childModelName);
+
+        if (options.GenerateParentContentItem is not null)
+        {
+            IContent? existingParentNode = contentService.GetRootContent().FirstOrDefault(node => node.Name == name);
+            if (existingParentNode is not null)
+            {
+                switch (options.GenerateParentContentItem)
+                {
+                    case GeneratorOptions.GenerateParentContentItemOption.CreateIfNotExists:
+                        logger.LogWarning("Skipping creation of parent content item: item {Name} already exists in the document tree.", name);
+                        break;
+                    
+                    case GeneratorOptions.GenerateParentContentItemOption.DropIfExistsAndCreate:
+                        contentService.Delete(existingParentNode);
+                        logger.LogInformation("Deleted existing parent node for '{Name}' (Guid = {Guid})", name, existingDocumentType!.AsGuid());
+                        break;
+                }
+            }
+
+            IContent parentNode = contentService.CreateAndSave(name, -1, alias);
+            contentService.Publish(parentNode, ["*"]);
+            
+            logger.LogInformation("Created new parent node for '{Name}'", name);
+        }
+        
         return contentType;
     }
 
@@ -163,9 +205,9 @@ public class UmbracoContentTypeGenerator(
             if (!IsOpenReferralType(genericType))
             {
                 logger.LogWarning(
-                    "Could not determine best content type property for {PropertyName}: Property type {PropertyTypeName} is not supported.",
+                    "Could not determine best content type property for {PropertyName}: Property type {PropertyTypeName} is not a supported Open Referral type.",
                     propertyInfo.Name,
-                    propertyInfo.PropertyType.Name
+                    genericType
                 );
 
                 umbracoProperty = await BuildDefaultUmbracoPropertyType(propertyInfo);
@@ -263,6 +305,8 @@ public class UmbracoContentTypeGenerator(
 
         return plural;
     }
+    
+    private string ToAlias(string name) => shortStringHelper.CleanString(name, CleanStringType.CamelCase);
 
-    private static bool IsOpenReferralType(Type type) => type.GetFullNameWithAssembly().StartsWith("FamilyHubs.OR.Umbraco.Models.OpenReferral");
+    private static bool IsOpenReferralType(Type type) => type.GetFullNameWithAssembly().StartsWith("FamilyHubs.OR.Umbraco.Models.HSDS");
 }

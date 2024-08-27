@@ -1,6 +1,7 @@
 using System.Text.Json;
-using FamilyHubs.OR.Umbraco.Models.OpenReferral;
+using FamilyHubs.OR.Umbraco.Models.HSDS;
 using Microsoft.AspNetCore.Mvc;
+using Attribute = FamilyHubs.OR.Umbraco.Models.HSDS.Attribute;
 
 namespace FamilyHubs.OR.Umbraco.Controllers
 {
@@ -31,7 +32,11 @@ namespace FamilyHubs.OR.Umbraco.Controllers
             {
                 DropIfExists = configuration["UmbracoContentTypeGenerator:DropIfExists"]?.ToLower() == "true",
                 ItemIcon = configuration["UmbracoContentTypeGenerator:ItemIcon"] ?? "",
-                ParentItemIcon = configuration["UmbracoContentTypeGenerator:ParentItemIcon"] ?? ""
+                ParentItemIcon = configuration["UmbracoContentTypeGenerator:ParentItemIcon"] ?? "",
+                GenerateParentContentItem = !string.IsNullOrWhiteSpace(configuration["UmbracoContentTypeGenerator:GenerateParentContentItem"]) ?
+                    Enum.Parse<UmbracoContentTypeGenerator.GeneratorOptions.GenerateParentContentItemOption>(
+                    configuration["UmbracoContentTypeGenerator:GenerateParentContentItem"]!
+                ) : null
             };
 
             // Log generatorOptions as JSON to logger
@@ -41,40 +46,40 @@ namespace FamilyHubs.OR.Umbraco.Controllers
                 generatorOptions);
             await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<TaxonomyTerm>(creatingUserId,
                 generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Models.OpenReferral.Attribute>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<ServiceArea>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Language>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Address>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Accessibility>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<OrganizationIdentifier>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Funding>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Program>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<CostOption>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<RequiredDocument>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Phone>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Schedule>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Contact>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Location>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<ServiceAtLocation>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Organization>(creatingUserId,
-                generatorOptions);
-            await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Service>(creatingUserId,
-                generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Attribute>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<ServiceArea>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Language>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Address>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Accessibility>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<OrganizationIdentifier>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Funding>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Program>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<CostOption>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<RequiredDocument>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Phone>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Schedule>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Contact>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Location>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<ServiceAtLocation>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Organization>(creatingUserId,
+            //     generatorOptions);
+            // await umbracoContentTypeGenerator.GenerateUmbracoDocumentType<Service>(creatingUserId,
+            //     generatorOptions);
 
             logger.LogInformation("Open Referral document types generated.");
 

@@ -1,6 +1,7 @@
-using FamilyHubs.OR.Umbraco.Models.OpenReferral;
+using FamilyHubs.OR.Umbraco.Models.HSDS;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Attribute = FamilyHubs.OR.Umbraco.Models.HSDS.Attribute;
 
 namespace FamilyHubs.OR.Umbraco.Controllers.OpenReferral;
 
@@ -24,7 +25,7 @@ public class ServiceController(
         // recursion run
         List<Accessibility> accessibilities = TypeExplorer.GetAllNestedPropertiesOfType<Accessibility>(model).ToList();
         List<Address> addresses = TypeExplorer.GetAllNestedPropertiesOfType<Address>(model).ToList();
-        List<Models.OpenReferral.Attribute> attributes = TypeExplorer.GetAllNestedPropertiesOfType<Models.OpenReferral.Attribute>(model).ToList();
+        List<Attribute> attributes = TypeExplorer.GetAllNestedPropertiesOfType<Attribute>(model).ToList();
         List<Contact> contacts = TypeExplorer.GetAllNestedPropertiesOfType<Contact>(model).ToList();
         List<CostOption> costOptions = TypeExplorer.GetAllNestedPropertiesOfType<CostOption>(model).ToList();
         List<Funding> fundings = TypeExplorer.GetAllNestedPropertiesOfType<Funding>(model).ToList();
