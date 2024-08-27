@@ -1,34 +1,51 @@
+using System.Net;
 using FamilyHubs.OpenReferral.Function.ClientServices;
 using FamilyHubs.OpenReferral.Function.Entities;
 using FamilyHubs.OpenReferral.Function.Repository;
 using FamilyHubs.ServiceDirectory.Data.Entities.Staging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker.Http;
 
 namespace FamilyHubs.OpenReferral.Function.Functions;
 
-public class ApiReceiver(ILogger<ApiReceiver> logger, HsdaApiService hsdaApiService, IFunctionDbContext functionDbContext)
+public class ApiReceiver(
+    ILogger<ApiReceiver> logger,
+    HsdaApiService hsdaApiService,
+    IFunctionDbContext functionDbContext)
 {
     [Function("ApiReceiver")]
-    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "POST")] HttpRequest request)
+    public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "POST")] HttpRequestData req)
     {
         logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        ServiceJson[] serviceJsonList = await hsdaApiService.GetServices();
+        (HttpStatusCode httpStatusCode, ServiceJson[]? serviceJsonList) = await hsdaApiService.GetServices();
 
-        await UpdateDatabase(serviceJsonList);
+        if (httpStatusCode != HttpStatusCode.OK) return req.CreateResponse(httpStatusCode);
 
-        return new OkObjectResult("Welcome to Azure Functions!");
+        try
+        {
+            await UpdateDatabase(serviceJsonList);
+        }
+        catch (Exception e)
+        {
+            logger.LogError("{exception}", e.Message);
+            return req.CreateResponse(HttpStatusCode.InternalServerError);
+        }
+
+        return req.CreateResponse(HttpStatusCode.OK);
     }
 
-    private async Task UpdateDatabase(ServiceJson[] serviceJsonList)
+    private async Task UpdateDatabase(ServiceJson[]? serviceJsonList)
     {
+        ArgumentNullException.ThrowIfNull(serviceJsonList);
+
+        logger.LogInformation("Truncating database before inserting services..");
         await functionDbContext.TruncateServicesTempAsync();
 
         foreach (ServiceJson serviceJson in serviceJsonList)
         {
+            logger.LogInformation("Adding service with ID {serviceId} to the database..", serviceJson.Id);
             functionDbContext.AddServiceTemp(new ServicesTemp
             {
                 Id = Guid.Parse(serviceJson.Id),
@@ -37,6 +54,7 @@ public class ApiReceiver(ILogger<ApiReceiver> logger, HsdaApiService hsdaApiServ
             });
         }
 
+        logger.LogInformation("Saving changes to the database..");
         await functionDbContext.SaveChangesAsync();
     }
 }
