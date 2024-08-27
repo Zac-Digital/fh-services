@@ -19,7 +19,7 @@ public class ApiReceiver(
     {
         logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        (HttpStatusCode httpStatusCode, ServiceJson[]? serviceJsonList) = await hsdaApiService.GetServices();
+        (HttpStatusCode httpStatusCode, List<ServiceJson>? serviceJsonList) = await hsdaApiService.GetServices();
 
         if (httpStatusCode != HttpStatusCode.OK) return req.CreateResponse(httpStatusCode);
 
@@ -36,7 +36,7 @@ public class ApiReceiver(
         return req.CreateResponse(HttpStatusCode.OK);
     }
 
-    private async Task UpdateDatabase(ServiceJson[]? serviceJsonList)
+    private async Task UpdateDatabase(List<ServiceJson>? serviceJsonList)
     {
         ArgumentNullException.ThrowIfNull(serviceJsonList);
 

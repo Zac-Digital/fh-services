@@ -7,16 +7,18 @@ namespace FamilyHubs.OpenReferral.Function.ClientServices;
 
 public class HsdaApiService(ILogger<HsdaApiService> logger)
 {
-    private readonly HttpClient _httpClient = new() { BaseAddress = new Uri(Environment.GetEnvironmentVariable("ApiConnection")!) };
+    private readonly HttpClient _httpClient = new()
+        { BaseAddress = new Uri(Environment.GetEnvironmentVariable("ApiConnection")!) };
 
-    public async Task<(HttpStatusCode, ServiceJson[]?)> GetServices()
+    public async Task<(HttpStatusCode, List<ServiceJson>?)> GetServices()
     {
         (HttpStatusCode httpStatusCode, string? jsonResponse) = await HttpGet("/services");
 
-        if (httpStatusCode != HttpStatusCode.OK) return (httpStatusCode, null);
-        if (jsonResponse is null)
+        if (httpStatusCode != HttpStatusCode.OK || jsonResponse is null)
         {
-            logger.LogError("JSON response for /services is null");
+            logger.LogError(
+                "Failed to get the service list from /services | Status Code = {httpStatusCode}, JSON = {jsonResponse}",
+                httpStatusCode, jsonResponse);
             return (httpStatusCode, null);
         }
 
@@ -30,37 +32,38 @@ public class HsdaApiService(ILogger<HsdaApiService> logger)
 
         logger.LogInformation("Found {serviceCount} service(s)..", serviceList.Count);
 
-        ServiceJson[] serviceJsonList = new ServiceJson[serviceList.Count];
+        List<ServiceJson> serviceJsonList = [];
 
-        for (int i = 0; i < serviceList.Count; i++)
+        foreach (JToken service in serviceList)
         {
-            string serviceId = serviceList[i]["id"]!.ToString();
-
-            logger.LogInformation("Fetching service with id {serviceId}", serviceId);
+            string serviceId = service["id"]!.ToString();
             (httpStatusCode, jsonResponse) = await GetServiceById(serviceId);
 
-            if (httpStatusCode != HttpStatusCode.OK)
+            if (httpStatusCode != HttpStatusCode.OK || jsonResponse is null)
             {
-                logger.LogWarning("Failed to get service information for service with ID {serviceId}, continuing..", serviceId);
+                logger.LogWarning(
+                    "Failed to get /service/{serviceId} | Status Code = {httpStatusCode}, JSON = {jsonResponse}",
+                    serviceId, httpStatusCode, jsonResponse);
                 continue;
             }
 
-            serviceJsonList[i] = new ServiceJson
-            {
-                Id = serviceId,
-                Json = jsonResponse!
-            };
+            serviceJsonList.Add(new ServiceJson { Id = serviceId, Json = jsonResponse });
         }
 
         return (httpStatusCode, serviceJsonList);
     }
 
-    private async Task<(HttpStatusCode, string?)> GetServiceById(string serviceId) => await HttpGet("/services/" + serviceId);
+    private async Task<(HttpStatusCode, string?)> GetServiceById(string serviceId)
+    {
+        logger.LogInformation("Fetching service with id {serviceId}", serviceId);
+        return await HttpGet("/services/" + serviceId);
+    }
 
     private async Task<(HttpStatusCode, string?)> HttpGet(string endpoint)
     {
         using HttpResponseMessage response = await _httpClient.GetAsync(endpoint);
-        logger.LogInformation("GET {endpoint} returned Status Code -> {httpStatusCode}", endpoint, response.StatusCode);
-        return (response.StatusCode, response.StatusCode == HttpStatusCode.OK ? await response.Content.ReadAsStringAsync() : null);
+        logger.LogInformation("GET {endpoint} | Status Code = {httpStatusCode}", endpoint, response.StatusCode);
+        return (response.StatusCode,
+            response.StatusCode == HttpStatusCode.OK ? await response.Content.ReadAsStringAsync() : null);
     }
 }
