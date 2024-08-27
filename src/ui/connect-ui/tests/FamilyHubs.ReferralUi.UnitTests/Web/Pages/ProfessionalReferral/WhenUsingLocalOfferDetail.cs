@@ -144,17 +144,4 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.Website.Should().Be("https://www.google.com");
         localOfferDetailModel.Email.Should().Be("Contact@email.com");
     }
-
-    [Fact]
-    public void ThenGetDeliveryMethodsAsString_WithNullCollection()
-    {
-        //Arrange
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockIIdamsClient.Object);
-
-        //Act
-        string result = localOfferDetailModel.GetDeliveryMethodsAsString(default!);
-
-        //Assert
-        result.Should().Be(string.Empty);
-    }
 }

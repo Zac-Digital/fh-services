@@ -78,9 +78,11 @@
             </summary-row>
 
             <summary-row key="How this service is provided" show-empty>
-                @if (Model.LocalOffer?.ServiceDeliveries != null && Model.LocalOffer?.ServiceDeliveries?.Count > 0)
+                @if (Model.LocalOffer.ServiceDeliveries.Any())
                 {
-                    @Model.GetDeliveryMethodsAsString(Model.LocalOffer?.ServiceDeliveries)
+                    @* todo: display name *@
+                    @string.Join(", ", Model.LocalOffer.ServiceDeliveries.Select(s => s.Name).Order())
+                    //@Model.GetDeliveryMethodsAsString(Model.LocalOffer?.ServiceDeliveries)
                 }
             </summary-row>
 
