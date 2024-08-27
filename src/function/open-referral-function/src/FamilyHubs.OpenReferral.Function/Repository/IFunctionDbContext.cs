@@ -1,6 +1,6 @@
 using FamilyHubs.ServiceDirectory.Data.Entities.Staging;
 
-namespace FamilyHubs.OpenReferral.Function.Functions.Repository;
+namespace FamilyHubs.OpenReferral.Function.Repository;
 
 public interface IFunctionDbContext
 {

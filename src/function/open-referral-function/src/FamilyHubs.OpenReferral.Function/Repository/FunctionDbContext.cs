@@ -1,7 +1,7 @@
 using FamilyHubs.ServiceDirectory.Data.Entities.Staging;
 using Microsoft.EntityFrameworkCore;
 
-namespace FamilyHubs.OpenReferral.Function.Functions.Repository;
+namespace FamilyHubs.OpenReferral.Function.Repository;
 
 public class FunctionDbContext(DbContextOptions<FunctionDbContext> options) : DbContext(options), IFunctionDbContext
 {

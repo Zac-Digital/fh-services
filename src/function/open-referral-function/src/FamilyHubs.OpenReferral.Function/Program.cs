@@ -1,4 +1,4 @@
-using FamilyHubs.OpenReferral.Function.Functions.Repository;
+using FamilyHubs.OpenReferral.Function.Repository;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
