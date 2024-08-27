@@ -27,7 +27,6 @@
         <p class="govuk-!-margin-bottom-6 fh-pre-wrap" data-testid="service-summary">@Model.LocalOffer.Summary</p>
         <h2 class="govuk-heading-m">Service details</h2>
 
-        @* todo: add comment to story about different responsiveness (mobile) - proto doesn't seem to be responding correctly *@
         @* todo: add comment to story that where the proto and story don't mention service property permutations, matched the display from the check details page in Manage*@
         @* todo: show bsl, translations in language? *@
 
@@ -74,6 +73,7 @@
             <summary-row key="How this service is provided" show-empty>
                 @if (Model.LocalOffer.ServiceDeliveries?.Any() == true)
                 {
+                    @* todo: In Person, not InPerson *@
                     @string.Join(", ", Model.LocalOffer.ServiceDeliveries.Select(s => s.Name).Order())
                 }
             </summary-row>
