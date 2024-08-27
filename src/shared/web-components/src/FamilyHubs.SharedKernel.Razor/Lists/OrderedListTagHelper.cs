@@ -13,8 +13,6 @@ public class OrderedListTagHelper : TagHelper
 
     public string? Class { get; set; }
 
-    //public bool Numbered { get; set; }
-
     /// <summary>
     /// Add extra spacing between list items.
     /// </summary>

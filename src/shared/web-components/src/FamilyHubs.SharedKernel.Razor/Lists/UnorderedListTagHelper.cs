@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FamilyHubs.SharedKernel.Razor.Lists;
 
@@ -15,7 +14,6 @@ public class UnorderedListTagHelper : TagHelper
     public string? Class { get; set; }
 
     public bool Bulleted { get; set; }
-    //public bool Numbered { get; set; }
 
     /// <summary>
     /// Add extra spacing between list items.
@@ -24,10 +22,8 @@ public class UnorderedListTagHelper : TagHelper
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
-        //output.TagName = Numbered ? "ol" : "ul";
         output.TagName = "ul";
 
-        //output.Attributes.SetAttribute("class", $"govuk-list {(Bulleted ? "govuk-list--bullet" : "")} {(Numbered ? "govuk-list--number" : "")} {(Spaced ? "govuk-list--spaced" : "")} {Class}");
         output.Attributes.SetAttribute("class", $"govuk-list {(Bulleted ? "govuk-list--bullet" : "")} {(Spaced ? "govuk-list--spaced" : "")} {Class}");
 
         string content;
