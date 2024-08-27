@@ -1,3 +1,4 @@
+using FamilyHubs.OpenReferral.Function.ClientServices;
 using FamilyHubs.OpenReferral.Function.Repository;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,9 @@ IHost host = new HostBuilder()
     {
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
+
+        services.AddSingleton<HsdaApiService>();
+
         services.AddDbContext<IFunctionDbContext, FunctionDbContext>(options =>
         {
             options.UseSqlServer(Environment.GetEnvironmentVariable("ServiceDirectoryConnection"))
