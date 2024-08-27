@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FamilyHubs.SharedKernel.Razor.Lists;
 
-[HtmlTargetElement("govuk-ul")]
-public class UnorderedListTagHelper : TagHelper
+[HtmlTargetElement("govuk-ol")]
+public class OrderedListTagHelper : TagHelper
 {
     /// <summary>
     /// An optional list of items to display in the list.
@@ -14,7 +13,6 @@ public class UnorderedListTagHelper : TagHelper
 
     public string? Class { get; set; }
 
-    public bool Bulleted { get; set; }
     //public bool Numbered { get; set; }
 
     /// <summary>
@@ -24,11 +22,9 @@ public class UnorderedListTagHelper : TagHelper
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
-        //output.TagName = Numbered ? "ol" : "ul";
-        output.TagName = "ul";
+        output.TagName = "ol";
 
-        //output.Attributes.SetAttribute("class", $"govuk-list {(Bulleted ? "govuk-list--bullet" : "")} {(Numbered ? "govuk-list--number" : "")} {(Spaced ? "govuk-list--spaced" : "")} {Class}");
-        output.Attributes.SetAttribute("class", $"govuk-list {(Bulleted ? "govuk-list--bullet" : "")} {(Spaced ? "govuk-list--spaced" : "")} {Class}");
+        output.Attributes.SetAttribute("class", $"govuk-list govuk-list--number {(Spaced ? "govuk-list--spaced" : "")} {Class}");
 
         string content;
         if (Items != null)
