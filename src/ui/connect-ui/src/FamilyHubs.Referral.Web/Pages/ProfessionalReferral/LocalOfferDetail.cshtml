@@ -1,4 +1,7 @@
 ﻿@page
+@using FamilyHubs.SharedKernel.Enums
+@using FamilyHubs.SharedKernel.Razor.Lists
+@using FamilyHubs.SharedKernel.Razor.Summary
 @model LocalOfferDetailModel
 @{
     ViewData["Title"] = Model.LocalOffer.Name;
@@ -72,8 +75,13 @@
             <summary-row key="How this service is provided" show-empty>
                 @if (Model.LocalOffer.ServiceDeliveries?.Any() == true)
                 {
-                    @* todo: In Person, not InPerson *@
-                    @string.Join(", ", Model.LocalOffer.ServiceDeliveries.Select(s => s.Name).Order())
+                    @string.Join(", ", Model.LocalOffer.ServiceDeliveries
+                        .Select(s =>
+                        {
+                            string desc = s.Name.ToDescription();
+                            return desc[0] + desc[1..].ToLower();
+                        })
+                        .Order())
                 }
             </summary-row>
         </summary-list>
