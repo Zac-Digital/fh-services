@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace FamilyHubs.OpenReferral.Function.Functions;
 
@@ -23,8 +24,13 @@ public class ApiReceiver(ILogger<ApiReceiver> logger, IFunctionDbContext dbServi
 
         logger.LogInformation("{JsonResponse}", jsonResponse);
 
+        string? serviceId = JObject.Parse(jsonResponse)["contents"]?[0]?["id"]?.ToString();
+
+        logger.LogInformation("Service ID = {ServiceId}", serviceId);
+
         ServicesTemp servicesTemp = new()
         {
+            Id = new Guid(serviceId!),
             Json = jsonResponse,
             LastModified = DateTime.UtcNow
         };
