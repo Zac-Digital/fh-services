@@ -1,7 +1,6 @@
 using System.Text.Json;
 using FamilyHubs.OR.Umbraco.Models.HSDS;
 using Microsoft.AspNetCore.Mvc;
-using Attribute = FamilyHubs.OR.Umbraco.Models.HSDS.Attribute;
 
 namespace FamilyHubs.OR.Umbraco.Controllers
 {
