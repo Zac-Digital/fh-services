@@ -2,13 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Humanizer;
-using Newtonsoft.Json;
 using Umbraco.Cms.Core.Models;
-using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Strings;
-using Umbraco.Cms.Web.Common.UmbracoContext;
-using DataType = Umbraco.Cms.Core.Models.DataType;
 
 namespace FamilyHubs.OR.Umbraco;
 
@@ -20,15 +16,15 @@ public interface IUmbracoContentTypeGenerator
     /// <typeparam name="TModel">The type used to create the document type.</typeparam>
     /// <param name="creatingUserId">The ID of the user the creation is assigned too (Guid.Empty does not work!)</param>
     /// <param name="options"></param>
-    Task GenerateUmbracoDocumentType<TModel>(Guid creatingUserId, UmbracoContentTypeGenerator.GeneratorOptions options);
+    Task GenerateUmbracoDocumentType<TModel>(Guid creatingUserId, UmbracoContentGenerator.GeneratorOptions options);
 }
 
-public class UmbracoContentTypeGenerator(
+public class UmbracoContentGenerator(
     IContentTypeService contentTypeService,
     IContentService contentService,
     IUmbracoDataTypeLoader umbracoDataTypeLoader,
     IShortStringHelper shortStringHelper,
-    ILogger<UmbracoContentTypeGenerator> logger
+    ILogger<UmbracoContentGenerator> logger
 ) : IUmbracoContentTypeGenerator
 {
     public class GeneratorOptions

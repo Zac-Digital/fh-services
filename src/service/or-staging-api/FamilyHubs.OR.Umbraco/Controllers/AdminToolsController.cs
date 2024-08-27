@@ -27,13 +27,13 @@ namespace FamilyHubs.OR.Umbraco.Controllers
             Guid creatingUserId = new(configuration["UmbracoContentTypeGenerator:CreatingUserId"] 
                 ?? throw new InvalidOperationException("UmbracoContentTypeGenerator:CreatingUserId not set in config."));
 
-            UmbracoContentTypeGenerator.GeneratorOptions generatorOptions = new()
+            UmbracoContentGenerator.GeneratorOptions generatorOptions = new()
             {
                 DropIfExists = configuration["UmbracoContentTypeGenerator:DropIfExists"]?.ToLower() == "true",
                 ItemIcon = configuration["UmbracoContentTypeGenerator:ItemIcon"] ?? "",
                 ParentItemIcon = configuration["UmbracoContentTypeGenerator:ParentItemIcon"] ?? "",
                 GenerateParentContentItem = !string.IsNullOrWhiteSpace(configuration["UmbracoContentTypeGenerator:GenerateParentContentItem"]) ?
-                    Enum.Parse<UmbracoContentTypeGenerator.GeneratorOptions.GenerateParentContentItemOption>(
+                    Enum.Parse<UmbracoContentGenerator.GeneratorOptions.GenerateParentContentItemOption>(
                     configuration["UmbracoContentTypeGenerator:GenerateParentContentItem"]!
                 ) : null
             };
