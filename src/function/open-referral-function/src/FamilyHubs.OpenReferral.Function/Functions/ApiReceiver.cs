@@ -17,33 +17,51 @@ public class ApiReceiver(ILogger<ApiReceiver> logger, IFunctionDbContext functio
     {
         logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        string jsonResponse = await GetServicesFromApi();
+        Dictionary<string, string> serviceList = await GetServiceListFromApi();
 
-        logger.LogInformation("{JsonResponse}", jsonResponse);
+        logger.LogInformation("Service Count -> {serviceCount}", serviceList.Count);
 
-        await UpdateDatabase(jsonResponse);
+        await UpdateDatabase(serviceList);
 
         return new OkObjectResult("Welcome to Azure Functions!");
     }
 
-    private async Task<string> GetServicesFromApi()
+    private static async Task<Dictionary<string, string>> GetServiceListFromApi()
     {
         using HttpResponseMessage response = await HttpClient.GetAsync("/services");
+        string jsonResponse = await response.Content.ReadAsStringAsync();
+
+        JArray serviceList = JArray.Parse(JObject.Parse(jsonResponse)["contents"]!.ToString());
+        Dictionary<string, string> serviceByIdMap = new Dictionary<string, string>();
+
+        foreach (JToken service in serviceList)
+        {
+            string serviceId = service["id"]!.ToString();
+            serviceByIdMap.Add(serviceId, await GetServiceByIdFromApi(serviceId));
+        }
+
+        return serviceByIdMap;
+    }
+
+    private static async Task<string> GetServiceByIdFromApi(string serviceId)
+    {
+        using HttpResponseMessage response = await HttpClient.GetAsync("/services/" + serviceId);
         return await response.Content.ReadAsStringAsync();
     }
 
-    private async Task UpdateDatabase(string jsonResponse)
+    private async Task UpdateDatabase(Dictionary<string, string> serviceByIdMap)
     {
         await functionDbContext.TruncateServicesTempAsync();
 
-        string serviceId = JObject.Parse(jsonResponse)["contents"]?[0]?["id"]?.ToString()!;
-
-        functionDbContext.AddServiceTemp(new ServicesTemp
+        foreach (KeyValuePair<string, string> service in serviceByIdMap)
         {
-            Id = Guid.Parse(serviceId),
-            Json = jsonResponse,
-            LastModified = DateTime.UtcNow
-        });
+            functionDbContext.AddServiceTemp(new ServicesTemp
+            {
+                Id = Guid.Parse(service.Key),
+                Json = service.Value,
+                LastModified = DateTime.UtcNow
+            });
+        }
 
         await functionDbContext.SaveChangesAsync();
     }
