@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Collections.Generic;
 using System.Text;
 
 namespace FamilyHubs.SharedKernel.Razor.Lists;
@@ -11,13 +12,15 @@ public class UnorderedListTagHelper : TagHelper
     /// </summary>
     public IEnumerable<string>? Items { get; set; }
 
+    public string? Class { get; set; }
+
     public bool Bulleted { get; set; }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
         output.TagName = "ul";
 
-        output.Attributes.SetAttribute("class", Bulleted ? "govuk-list govuk-list--bullet" : "govuk-list");
+        output.Attributes.SetAttribute("class", $"govuk-list {(Bulleted ? "govuk-list--bullet" : "")} {Class}");
 
         string content;
         if (Items != null)
