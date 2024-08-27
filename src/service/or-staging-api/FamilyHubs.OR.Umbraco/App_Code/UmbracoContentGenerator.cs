@@ -5,10 +5,11 @@ using Humanizer;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Strings;
+using Umbraco.Cms.Infrastructure.Scoping;
 
 namespace FamilyHubs.OR.Umbraco;
 
-public interface IUmbracoContentTypeGenerator
+public interface IUmbracoContentGenerator
 {
     /// <summary>
     /// Generates an umbraco document type based on a given generic type.
@@ -24,8 +25,9 @@ public class UmbracoContentGenerator(
     IContentService contentService,
     IUmbracoDataTypeLoader umbracoDataTypeLoader,
     IShortStringHelper shortStringHelper,
-    ILogger<UmbracoContentGenerator> logger
-) : IUmbracoContentTypeGenerator
+    ILogger<UmbracoContentGenerator> logger,
+    IScopeProvider scopeProvider
+) : IUmbracoContentGenerator
 {
     public class GeneratorOptions
     {
@@ -46,25 +48,25 @@ public class UmbracoContentGenerator(
         string name = typeof(TModel).Name;
         string alias = shortStringHelper.CleanString(name, CleanStringType.CamelCase);
 
-        IContentType parentDocumentType = await GenerateUmbracoDocumentTypeParent(name, creatingUserId, options);
+        IContentType parentContentType = await GenerateUmbracoDocumentTypeParent(name, creatingUserId, options);
 
-        IContentType? existingDocumentType = contentTypeService.Get(name);
-        if (existingDocumentType is not null)
+        IContentType? existingContentType = contentTypeService.Get(name);
+        if (existingContentType is not null)
         {
             if (options.DropIfExists)
             {
-                logger.LogDebug("Document type '{Name}' already exists; dropping it...", name);
-                await contentTypeService.DeleteAsync(existingDocumentType.GetUdi().Guid, creatingUserId);
+                logger.LogDebug("Content type '{Name}' already exists; dropping it...", name);
+                await contentTypeService.DeleteAsync(existingContentType.GetUdi().Guid, creatingUserId);
                 logger.LogInformation("Dropped document type '{Name}'", name);
             }
             else
             {
-                logger.LogWarning("Document type '{Name}' already exists; skipping creation.", name);
+                logger.LogWarning("Content type '{Name}' already exists; skipping creation.", name);
                 return;
             }
         }
         
-        logger.LogDebug("Generating and creating document type '{Name}'...", name);
+        logger.LogDebug("Generating and creating content type '{Name}'...", name);
 
         ContentType contentType = new(shortStringHelper, -1)
         {
@@ -94,12 +96,7 @@ public class UmbracoContentGenerator(
         logger.LogInformation("Generated and created document type '{Name}'", name);
 
         // Allow the parent content type to list this content type underneath it
-        parentDocumentType.AllowedContentTypes = [new ContentTypeSort(contentType.GetUdi().Guid, 0, contentType.Alias)];
-        
-        logger.LogInformation(
-            "Added document type '{Name}' to parent document type '{ParentName}'",
-            name,
-            parentDocumentType.Name);
+        await AllowContentTypeOnParentContentType(parentContentType, contentType);
     }
 
     private async Task<IContentType> GenerateUmbracoDocumentTypeParent(string childModelName, Guid creatingUserId, GeneratorOptions options)
@@ -133,11 +130,7 @@ public class UmbracoContentGenerator(
             Alias = alias,
             Description = "Default description",
             Icon = options.ParentItemIcon,
-            AllowedAsRoot = true,
-            AllowedContentTypes = new List<ContentTypeSort>
-            {
-                new(Guid.NewGuid(), 0, childAlias)
-            }
+            AllowedAsRoot = true
         };
 
         await contentTypeService.CreateAsync(contentType, creatingUserId);
@@ -170,6 +163,42 @@ public class UmbracoContentGenerator(
         return contentType;
     }
 
+    private async Task AllowContentTypeOnParentContentType(
+        IContentType parentContentType,
+        IContentType allowedContentType)
+    {
+        using IScope scope = scopeProvider.CreateScope();
+        
+        // TODO: The below is a hack to work around an apparent bug in Umbraco when allowing content types
+        //
+        // The proper (broken) way:
+        // parentContentType.AllowedContentTypes =
+        // [
+        //     new ContentTypeSort(Guid.NewGuid(), 1, allowedContentType.Alias)
+        // ];
+        //
+        // await contentTypeService.UpdateAsync(parentContentType, creatingUserId);
+        
+        await scope.Database.ExecuteAsync(
+            $"""
+             INSERT INTO [dbo].[cmsContentTypeAllowedContentType] (Id, AllowedId, SortOrder)
+             VALUES (@0, @1, @2)
+             """,
+            parentContentType.Id,
+            allowedContentType.Id,
+            0);
+
+        scope.Complete();
+        
+        logger.LogInformation("Updated {ParentName} ({ParentId}, {ParentAlias}) content type to allow children of type {ChildName} ({ChildId}, {ChildAlias})", 
+            parentContentType.Name,
+            parentContentType.Id,
+            parentContentType.Alias,
+            allowedContentType.Name,
+            allowedContentType.Id,
+            allowedContentType.Alias);
+    }
+    
     private async Task<PropertyType> BuildUmbracoPropertyTypeFromPropertyInfo(PropertyInfo propertyInfo)
     {
         PropertyType umbracoProperty;

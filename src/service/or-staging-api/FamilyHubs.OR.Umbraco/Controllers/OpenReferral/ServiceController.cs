@@ -8,7 +8,7 @@ namespace FamilyHubs.OR.Umbraco.Controllers.OpenReferral;
 [ApiController]
 [Route("api/open-referral/[controller]")]
 public class ServiceController(
-    IUmbracoContentTypeGenerator umbracoContentTypeGenerator
+    IUmbracoContentGenerator umbracoContentGenerator
 ) : Controller
 {
     /// <summary>

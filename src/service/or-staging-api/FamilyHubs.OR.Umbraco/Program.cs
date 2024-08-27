@@ -13,7 +13,7 @@ internal class Program
             .AddComposers()
             .Build();
 
-        builder.Services.AddSingleton<IUmbracoContentTypeGenerator, UmbracoContentGenerator>();
+        builder.Services.AddSingleton<IUmbracoContentGenerator, UmbracoContentGenerator>();
         builder.Services.AddSingleton<IUmbracoDataTypeLoader, UmbracoDataTypeLoader>();
 
         WebApplication app = builder.Build();
