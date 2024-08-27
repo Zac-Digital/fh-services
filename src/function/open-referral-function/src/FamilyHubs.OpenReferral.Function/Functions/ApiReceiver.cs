@@ -1,3 +1,4 @@
+using FamilyHubs.OpenReferral.Function.Entities;
 using FamilyHubs.OpenReferral.Function.Repository;
 using FamilyHubs.ServiceDirectory.Data.Entities.Staging;
 using Microsoft.Azure.Functions.Worker;
@@ -17,30 +18,34 @@ public class ApiReceiver(ILogger<ApiReceiver> logger, IFunctionDbContext functio
     {
         logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        Dictionary<string, string> serviceList = await GetServiceListFromApi();
+        ServiceJson[] serviceJsonList = await GetServiceListFromApi();
 
-        logger.LogInformation("Service Count -> {serviceCount}", serviceList.Count);
+        logger.LogInformation("Service Count -> {serviceCount}", serviceJsonList.Length);
 
-        await UpdateDatabase(serviceList);
+        await UpdateDatabase(serviceJsonList);
 
         return new OkObjectResult("Welcome to Azure Functions!");
     }
 
-    private static async Task<Dictionary<string, string>> GetServiceListFromApi()
+    private static async Task<ServiceJson[]> GetServiceListFromApi()
     {
         using HttpResponseMessage response = await HttpClient.GetAsync("/services");
         string jsonResponse = await response.Content.ReadAsStringAsync();
 
         JArray serviceList = JArray.Parse(JObject.Parse(jsonResponse)["contents"]!.ToString());
-        Dictionary<string, string> serviceByIdMap = new Dictionary<string, string>();
+        ServiceJson[] serviceJsonList = new ServiceJson[serviceList.Count];
 
-        foreach (JToken service in serviceList)
+        for (int i = 0; i < serviceList.Count; i++)
         {
-            string serviceId = service["id"]!.ToString();
-            serviceByIdMap.Add(serviceId, await GetServiceByIdFromApi(serviceId));
+            string serviceId = serviceList[i]["id"]!.ToString();
+            serviceJsonList[i] = new ServiceJson()
+            {
+                Id = serviceId,
+                Json = await GetServiceByIdFromApi(serviceId)
+            };
         }
 
-        return serviceByIdMap;
+        return serviceJsonList;
     }
 
     private static async Task<string> GetServiceByIdFromApi(string serviceId)
@@ -49,16 +54,16 @@ public class ApiReceiver(ILogger<ApiReceiver> logger, IFunctionDbContext functio
         return await response.Content.ReadAsStringAsync();
     }
 
-    private async Task UpdateDatabase(Dictionary<string, string> serviceByIdMap)
+    private async Task UpdateDatabase(ServiceJson[] serviceJsonList)
     {
         await functionDbContext.TruncateServicesTempAsync();
 
-        foreach (KeyValuePair<string, string> service in serviceByIdMap)
+        foreach (ServiceJson serviceJson in serviceJsonList)
         {
             functionDbContext.AddServiceTemp(new ServicesTemp
             {
-                Id = Guid.Parse(service.Key),
-                Json = service.Value,
+                Id = Guid.Parse(serviceJson.Id),
+                Json = serviceJson.Json,
                 LastModified = DateTime.UtcNow
             });
         }
