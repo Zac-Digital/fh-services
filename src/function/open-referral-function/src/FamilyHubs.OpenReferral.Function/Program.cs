@@ -1,4 +1,6 @@
+using FamilyHubs.OpenReferral.Function.Functions.Repository;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -8,6 +10,11 @@ IHost host = new HostBuilder()
     {
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
+        services.AddDbContext<IFunctionDbContext, FunctionDbContext>(options =>
+        {
+            options.UseSqlServer(Environment.GetEnvironmentVariable("ServiceDirectoryConnection"))
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
     })
     .Build();
 
