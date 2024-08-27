@@ -33,11 +33,10 @@
 
         <summary-list class="govuk-!-margin-bottom-9">
             <summary-row key="Support it offers" show-empty>
-                    @if (Model.LocalOffer.Taxonomies?.Any() == true)
-                    {
-                        <unordered-list items="@Model.LocalOffer.Taxonomies.Select(t => t.Name).Order()">
-                        </unordered-list>
-                    }
+                @if (Model.LocalOffer.Taxonomies?.Any() == true)
+                {
+                    <govuk-ul items="@Model.LocalOffer.Taxonomies.Select(t => t.Name).Order()"></govuk-ul>
+                }
             </summary-row>
             
             <summary-row key="Does support relate to children or young people?" show-empty>
@@ -79,7 +78,6 @@
                     @string.Join(", ", Model.LocalOffer.ServiceDeliveries.Select(s => s.Name).Order())
                 }
             </summary-row>
-
         </summary-list>
 
         <h2 class="govuk-heading-m">More details</h2>
