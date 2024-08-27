@@ -26,6 +26,7 @@ jobs:
             service/service-directory-api,
             service/referral-api,
             service/report-api,
+            service/or-staging-api,
             ui/connect-dashboard-ui,
             ui/connect-ui,
             ui/find-ui,
@@ -48,6 +49,8 @@ jobs:
             job_name: "Test - Referral API"
           - working_directory: service/report-api
             job_name: "Test - Report API"
+          - working_directory: service/or-staging-api
+            job_name: "Test - Open Referral Staging API"
           - working_directory: ui/connect-dashboard-ui
             job_name: "Test - Connect Dashboard UI"
           - working_directory: ui/connect-ui
