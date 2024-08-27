@@ -56,8 +56,7 @@
             <summary-row key="Languages" show-empty>
                 @if (Model.LocalOffer.Languages?.Any() == true)
                 {
-                    <unordered-list items="@Model.LocalOffer.Languages.Select(t=> t.Name).Order()">
-                    </unordered-list>
+                    <govuk-ul items="@Model.LocalOffer.Languages.Select(t=> t.Name).Order()"></govuk-ul>
                 }
             </summary-row>
 
