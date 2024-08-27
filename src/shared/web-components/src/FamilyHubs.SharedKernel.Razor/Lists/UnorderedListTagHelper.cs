@@ -3,19 +3,16 @@ using System.Text;
 
 namespace FamilyHubs.SharedKernel.Razor.Lists;
 
-[HtmlTargetElement("unordered-list")]
-public class ListTagHelper : TagHelper
+[HtmlTargetElement("govuk-ul")]
+public class UnorderedListTagHelper : TagHelper
 {
     /// <summary>
     /// An optional list of items to display in the list.
     /// </summary>
-    //[HtmlAttributeName("items")]
     public IEnumerable<string>? Items { get; set; }
 
-    //[HtmlAttributeName("bulleted")]
-    public bool Bulleted { get; set; }// = false;
+    public bool Bulleted { get; set; }
 
-    //public override void Process(TagHelperContext context, TagHelperOutput output)
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
         output.TagName = "ul";
