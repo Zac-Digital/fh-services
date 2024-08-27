@@ -56,13 +56,9 @@ public class SummaryRowTagHelper : TagHelper
         }
     }
 
-    //todo: extension?
+    //todo: string extension?
     private static string Sluggify(string input)
     {
-        //todo: throw?
-        //if (string.IsNullOrEmpty(input))
-        //    return string.Empty;
-
         ReadOnlySpan<char> lowerInput = input.ToLowerInvariant();
 
         Span<char> result = stackalloc char[lowerInput.Length];
