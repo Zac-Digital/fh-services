@@ -1,8 +1,13 @@
 # Release Notes
 
+# 9.5
+
+Rename `<unordered-list>` to `govuk-ul` and improve.
+Add `govuk-ol` tag helper.
+
 # 9.4
 
-Add <unordered-list> tag helper.
+Add `<unordered-list>` tag helper.
 
 # 9.3
 
