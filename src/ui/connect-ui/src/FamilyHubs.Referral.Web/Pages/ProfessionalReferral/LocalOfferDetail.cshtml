@@ -27,13 +27,13 @@
         <p class="govuk-!-margin-bottom-6 fh-pre-wrap" data-testid="service-summary">@Model.LocalOffer.Summary</p>
         <h2 class="govuk-heading-m">Service details</h2>
 
-        @* todo: update value display *@
         @* todo: add comment to story about different responsiveness (mobile) - proto doesn't seem to be responding correctly *@
         @* todo: add comment to story that where the proto and story don't mention service property permutations, matched the display from the check details page in Manage*@
+        @* todo: show bsl, translations in language? *@
 
         <summary-list class="govuk-!-margin-bottom-9">
             <summary-row key="Support it offers" show-empty>
-                    @if (Model.LocalOffer.Taxonomies.Any())
+                    @if (Model.LocalOffer.Taxonomies?.Any() == true)
                     {
                         <unordered-list items="@Model.LocalOffer.Taxonomies.Select(t => t.Name).Order()">
                         </unordered-list>
@@ -42,7 +42,7 @@
             
             <summary-row key="Does support relate to children or young people?" show-empty>
                 @{
-                    var eligibility = Model.LocalOffer.Eligibilities.FirstOrDefault();
+                    var eligibility = Model.LocalOffer.Eligibilities?.FirstOrDefault();
                     if (eligibility == null)
                     {
                         <text>No</text>
@@ -55,7 +55,7 @@
             </summary-row>
             
             <summary-row key="Languages" show-empty>
-                @if (Model.LocalOffer.Languages.Any())
+                @if (Model.LocalOffer.Languages?.Any() == true)
                 {
                     <unordered-list items="@Model.LocalOffer.Languages.Select(t=> t.Name).Order()">
                     </unordered-list>
@@ -63,24 +63,20 @@
             </summary-row>
 
             <summary-row key="Cost" show-empty>
-                @if (Model.LocalOffer?.CostOptions?.Count > 0)
+                @if (Model.LocalOffer.CostOptions?.Any() == true)
                 {
-                    <td class="govuk-table__cell" data-testid="cost-value">
-                        Yes, it costs money to use. @Model.LocalOffer?.CostOptions?.FirstOrDefault()?.AmountDescription
-                    </td>
+                    <text>Yes, it costs money to use. @Model.LocalOffer.CostOptions.First().AmountDescription</text>
                 }
                 else
                 {
-                    <td class="govuk-table__cell" data-testid="cost-value">Free</td>
+                    <text>Free</text>
                 }
             </summary-row>
 
             <summary-row key="How this service is provided" show-empty>
-                @if (Model.LocalOffer.ServiceDeliveries.Any())
+                @if (Model.LocalOffer.ServiceDeliveries?.Any() == true)
                 {
-                    @* todo: display name *@
                     @string.Join(", ", Model.LocalOffer.ServiceDeliveries.Select(s => s.Name).Order())
-                    //@Model.GetDeliveryMethodsAsString(Model.LocalOffer?.ServiceDeliveries)
                 }
             </summary-row>
 
