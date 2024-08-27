@@ -7,8 +7,6 @@ public class FunctionDbContext(DbContextOptions<FunctionDbContext> options) : Db
 {
     public DbSet<ServicesTemp> ServicesTemp { get; init; } = null!;
 
-    IQueryable<ServicesTemp> IFunctionDbContext.ServicesTemp => ServicesTemp;
-
     public void AddServiceTemp(ServicesTemp serviceTemp) => ServicesTemp.Add(serviceTemp);
 
     public Task TruncateServicesTempAsync() => Database.ExecuteSqlRawAsync("TRUNCATE TABLE [staging].[services_temp]");

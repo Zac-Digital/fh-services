@@ -4,8 +4,6 @@ namespace FamilyHubs.OpenReferral.Function.Repository;
 
 public interface IFunctionDbContext
 {
-    public IQueryable<ServicesTemp> ServicesTemp { get; }
-
     public void AddServiceTemp(ServicesTemp serviceTemp);
 
     public Task TruncateServicesTempAsync();
