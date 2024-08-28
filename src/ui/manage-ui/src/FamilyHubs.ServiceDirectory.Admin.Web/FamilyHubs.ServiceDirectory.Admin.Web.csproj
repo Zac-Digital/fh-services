@@ -11,10 +11,11 @@
 		<!--<TreatWarningsAsErrors>True</TreatWarningsAsErrors>-->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+		<NuGetAuditMode>direct</NuGetAuditMode>
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<NoWarn>S101;S125;S1135;NU1901;NU1902;NU1903</NoWarn>
+		<NoWarn>S101;S125;S1135</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
