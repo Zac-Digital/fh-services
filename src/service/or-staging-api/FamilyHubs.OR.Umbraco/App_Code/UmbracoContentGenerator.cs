@@ -9,6 +9,9 @@ using Umbraco.Cms.Infrastructure.Scoping;
 
 namespace FamilyHubs.OR.Umbraco;
 
+/// <summary>
+/// Generates Umbraco content and content types.
+/// </summary>
 public interface IUmbracoContentGenerator
 {
     /// <summary>
@@ -99,7 +102,10 @@ public class UmbracoContentGenerator(
         await AllowContentTypeOnParentContentType(parentContentType, contentType);
     }
 
-    private async Task<IContentType> GenerateUmbracoDocumentTypeParent(string childModelName, Guid creatingUserId, GeneratorOptions options)
+    private async Task<IContentType> GenerateUmbracoDocumentTypeParent(
+        string childModelName,
+        Guid creatingUserId,
+        GeneratorOptions options)
     {
         string name = PluraliseOpenReferralContentType(childModelName);
 
@@ -122,7 +128,6 @@ public class UmbracoContentGenerator(
         logger.LogDebug("Generating and creating parent document type '{Name}' for document type '{ChildName}'...", name, childModelName);
     
         string alias = ToAlias(name);
-        string childAlias = ToAlias(childModelName);
         
         ContentType contentType = new(shortStringHelper, -1)
         {
@@ -137,30 +142,40 @@ public class UmbracoContentGenerator(
         logger.LogInformation("Generated and created parent document type '{Name}' for document type '{ChildName}'", name, childModelName);
 
         if (options.GenerateParentContentItem is not null)
-        {
-            IContent? existingParentNode = contentService.GetRootContent().FirstOrDefault(node => node.Name == name);
-            if (existingParentNode is not null)
-            {
-                switch (options.GenerateParentContentItem)
-                {
-                    case GeneratorOptions.GenerateParentContentItemOption.CreateIfNotExists:
-                        logger.LogWarning("Skipping creation of parent content item: item {Name} already exists in the document tree.", name);
-                        break;
-                    
-                    case GeneratorOptions.GenerateParentContentItemOption.DropIfExistsAndCreate:
-                        contentService.Delete(existingParentNode);
-                        logger.LogInformation("Deleted existing parent node for '{Name}' (Guid = {Guid})", name, existingDocumentType!.AsGuid());
-                        break;
-                }
-            }
-
-            IContent parentNode = contentService.CreateAndSave(name, -1, alias);
-            contentService.Publish(parentNode, ["*"]);
-            
-            logger.LogInformation("Created new parent node for '{Name}'", name);
-        }
+            GenerateParentContentItem(options, name, existingDocumentType, alias);
         
         return contentType;
+    }
+
+    private void GenerateParentContentItem(
+        GeneratorOptions options,
+        string name,
+        IContentType? existingDocumentType,
+        string alias)
+    {
+        IContent? existingParentNode = contentService.GetRootContent().FirstOrDefault(node => node.Name == name);
+        if (existingParentNode is not null)
+        {
+            switch (options.GenerateParentContentItem)
+            {
+                case GeneratorOptions.GenerateParentContentItemOption.CreateIfNotExists:
+                    logger.LogWarning("Skipping creation of parent content item: item {Name} already exists in the document tree.", name);
+                    break;
+                    
+                case GeneratorOptions.GenerateParentContentItemOption.DropIfExistsAndCreate:
+                    contentService.Delete(existingParentNode);
+                    logger.LogInformation("Deleted existing parent node for '{Name}' (Guid = {Guid})", name, existingDocumentType!.AsGuid());
+                    break;
+                
+                default:
+                    throw new ArgumentOutOfRangeException($"Option '{options.GenerateParentContentItem}' is not supported.");
+            }
+        }
+
+        IContent parentNode = contentService.CreateAndSave(name, -1, alias);
+        contentService.Publish(parentNode, ["*"]);
+            
+        logger.LogInformation("Created new parent node for '{Name}'", name);
     }
 
     private async Task AllowContentTypeOnParentContentType(
