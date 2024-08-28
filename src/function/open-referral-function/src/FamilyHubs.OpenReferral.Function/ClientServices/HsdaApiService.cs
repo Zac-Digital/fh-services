@@ -55,7 +55,7 @@ public class HsdaApiService(ILogger<HsdaApiService> logger)
 
     private async Task<(HttpStatusCode, string?)> GetServiceById(string serviceId)
     {
-        logger.LogInformation("Fetching service with id {serviceId}", serviceId);
+        logger.LogInformation("Fetching Service with ID {serviceId}", serviceId);
         return await HttpGet("/services/" + serviceId);
     }
 

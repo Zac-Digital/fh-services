@@ -17,7 +17,7 @@ public class ApiReceiver(
     [Function("ApiReceiver")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "POST")] HttpRequestData req)
     {
-        logger.LogInformation("C# HTTP trigger function processed a request.");
+        logger.LogInformation("[ApiReceiver] HTTP Trigger Function Started");
 
         (HttpStatusCode httpStatusCode, List<ServiceJson>? serviceJsonList) = await hsdaApiService.GetServices();
 
