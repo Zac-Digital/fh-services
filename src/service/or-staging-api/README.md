@@ -19,6 +19,20 @@ await GenerateDocumentType(type, aaronUserGuid, dropIfExists: false);
 
 **!!! Dropping and recreating document types will generate a new document type ID for the newly created type, which will unset the document type on any existing Umbraco content items that use it! Be careful when dropping and recreating!**
 
+### Configuration
+
+The following configuration item can be edited in app settings:
+
+```json
+ "UmbracoContentGenerator": {
+    "Enabled": true, <-- Whether to allow the generator to be run or not (DISABLE IN PRODUCTION)
+    "ParentItemIcon": "icon-books color-blue", <-- icon used for auto-generated parent items
+    "ItemIcon": "icon-book color-black", <-- icon used for auto-generated child items
+    "DropIfExists": true, <-- if true, will drop and recreate any existing Umbraco content types (children and parents)
+    "CreatingUserId": "1e70f841-c261-413b-abb2-2d68cdb96094", <-- user ID Umbraco logs when items are created (must be provided, and must be admin)
+    "GenerateParentContentItem": "DropIfExistsAndCreate" <-- tweak how parent items are created (values: CreateIfNotExists, DropIfExistsAndCreate)
+}
+```
 ## 3rd party packages
 
 This project uses the following 3rd party packages:

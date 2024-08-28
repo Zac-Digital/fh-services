@@ -25,17 +25,17 @@ namespace FamilyHubs.OR.Umbraco.Controllers
         {
             logger.LogInformation("Generating Open Referral document types...");
 
-            Guid creatingUserId = new(configuration["UmbracoContentTypeGenerator:CreatingUserId"] 
-                ?? throw new InvalidOperationException("UmbracoContentTypeGenerator:CreatingUserId not set in config."));
+            Guid creatingUserId = new(configuration["UmbracoContentGenerator:CreatingUserId"] 
+                ?? throw new InvalidOperationException("UmbracoContentGenerator:CreatingUserId not set in config."));
 
             UmbracoContentGenerator.GeneratorOptions generatorOptions = new()
             {
-                DropIfExists = configuration["UmbracoContentTypeGenerator:DropIfExists"]?.ToLower() == "true",
-                ItemIcon = configuration["UmbracoContentTypeGenerator:ItemIcon"] ?? "",
-                ParentItemIcon = configuration["UmbracoContentTypeGenerator:ParentItemIcon"] ?? "",
-                GenerateParentContentItem = !string.IsNullOrWhiteSpace(configuration["UmbracoContentTypeGenerator:GenerateParentContentItem"]) ?
+                DropIfExists = configuration["UmbracoContentGenerator:DropIfExists"]?.ToLower() == "true",
+                ItemIcon = configuration["UmbracoContentGenerator:ItemIcon"] ?? "",
+                ParentItemIcon = configuration["UmbracoContentGenerator:ParentItemIcon"] ?? "",
+                GenerateParentContentItem = !string.IsNullOrWhiteSpace(configuration["UmbracoContentGenerator:GenerateParentContentItem"]) ?
                     Enum.Parse<UmbracoContentGenerator.GeneratorOptions.GenerateParentContentItemOption>(
-                    configuration["UmbracoContentTypeGenerator:GenerateParentContentItem"]!
+                    configuration["UmbracoContentGenerator:GenerateParentContentItem"]!
                 ) : null
             };
 
