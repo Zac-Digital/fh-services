@@ -121,9 +121,32 @@
 
         <h2 class="govuk-heading-m">More details</h2>
         <p class="fh-pre-wrap" data-testid="description-value">@Model.LocalOffer.Description</p>
-        <h2 class="govuk-heading-m">Connect a family to this service</h2>
 
-        <dl class="govuk-summary-list">
+        <h2 class="govuk-heading-m">Contact details</h2>
+        
+        <summary-list>
+            <summary-row key="Email" show-empty>
+                <a href="mailto:@Model.Email">
+                    @Model.Email
+                </a>
+            </summary-row>
+            <summary-row key="Phone" show-empty>
+                <a href="tel:@Model.Phone">@Model.Phone</a>
+            </summary-row>
+            <summary-row key="Website" show-empty>
+                @if (!string.IsNullOrEmpty(Model.Website))
+                {
+                    <a href="@Model.Website">
+                        @Model.Website
+                    </a>
+                }
+            </summary-row>
+            <summary-row key="Text message" show-empty>
+                @Model.Text
+            </summary-row>
+        </summary-list>
+
+@*         <dl class="govuk-summary-list">
             <!-- Contact details -->
             <!-- Phone-->
             @if (!string.IsNullOrEmpty(Model.Phone))
@@ -180,7 +203,7 @@
                     </dd>
                 </div>
             }
-        </dl>
+        </dl> *@
 
         @if (Model.ShowConnectionRequestButton)
         {

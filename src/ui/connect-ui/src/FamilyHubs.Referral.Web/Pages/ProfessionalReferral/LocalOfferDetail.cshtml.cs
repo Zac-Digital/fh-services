@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ public class LocalOfferDetailModel : HeaderPageModel
 
     public LocationDto? Location { get; set; }
     public string Phone { get; set; } = default!;
+    public string? Text { get; set; }
     public string Website { get; set; } = default!;
     public string Email { get; set; } = default!;
 
@@ -70,6 +72,7 @@ public class LocalOfferDetailModel : HeaderPageModel
         return showConnectionRequestButton;
     }
 
+    //todo: this
     private void GetContactDetails()
     {
         //If delivery type is In-Person, get phone from service at location -> link contacts -> contact -> phone
@@ -83,6 +86,7 @@ public class LocalOfferDetailModel : HeaderPageModel
                 return;
             var contact = location.Contacts.First();
             Phone = contact.Telephone;
+            Text = contact.TextPhone;
             Website = contact.Url!;
             Email = contact.Email!;
         }
