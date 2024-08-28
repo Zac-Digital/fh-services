@@ -1,10 +1,13 @@
 ﻿@page
+@using FamilyHubs.ServiceDirectory.Shared.Enums
 @using FamilyHubs.SharedKernel.Enums
 @using FamilyHubs.SharedKernel.Razor.Lists
 @using FamilyHubs.SharedKernel.Razor.Summary
 @model LocalOfferDetailModel
 @{
     ViewData["Title"] = Model.LocalOffer.Name;
+
+    var locations = Model.LocalOffer.Locations.OrderBy(l => l.Distance);
 }
 
 @section Back {
@@ -85,6 +88,36 @@
                 }
             </summary-row>
         </summary-list>
+        
+        @if (locations.Any())
+        {
+            int locationNumber = 0;
+            foreach (var location in locations)
+            {
+                <h2 class="govuk-heading-m">Location @(++locationNumber)</h2>
+                <summary-list class="govuk-!-margin-bottom-9">
+
+                    <summary-row key="Address" show-empty>
+                        <govuk-ul items="@location.GetAddress()"></govuk-ul>
+                    </summary-row>
+
+                    <summary-row key="Family hub">
+                        @(location.LocationTypeCategory == LocationTypeCategory.FamilyHub ? "Yes" : "No")
+                    </summary-row>
+                    
+                    @* todo: 'None provided' or just blank? *@
+                    <summary-row key="Location details" show-empty class="fh-pre-wrap">@location.Description.GetDisplay()</summary-row>
+                    
+                    <summary-row key="Days service is available" show-empty>
+                        @* todo *@
+                        @*                         @location.Schedules.FirstOrDefault()?.Times.GetDayNames()) *@
+                    </summary-row>
+                    @*todo: same data, different key to location-for-service page*@
+                    <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@*todo: @location.TimeDescription.GetDisplay() *@</summary-row>
+
+                </summary-list>
+            }
+        }
 
         <h2 class="govuk-heading-m">More details</h2>
         <p class="fh-pre-wrap" data-testid="description-value">@Model.LocalOffer.Description</p>
