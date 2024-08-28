@@ -216,8 +216,6 @@ public class UmbracoContentGenerator(
     
     private async Task<PropertyType> BuildUmbracoPropertyTypeFromPropertyInfo(PropertyInfo propertyInfo)
     {
-        PropertyType umbracoProperty;
-
         string? jsonPropertyName = propertyInfo.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name;
         if (jsonPropertyName is null)
         {
@@ -229,18 +227,38 @@ public class UmbracoContentGenerator(
             return null!;
         }
 
+        PropertyType umbracoProperty = await MapTypeToUmbracoPropertyType(propertyInfo);
+
+        // Use JSON property name to maintain property names between the API and internally in Umbraco
+        umbracoProperty.Name = jsonPropertyName;
+        // Umbraco aliases _should_ be camel case
+        umbracoProperty.Alias = shortStringHelper.CleanString(propertyInfo.Name, CleanStringType.CamelCase);
+        // Default to mandatory if the property is a non-nullable reference type
+        umbracoProperty.Mandatory = propertyInfo.GetCustomAttribute<RequiredAttribute>() is not null;
+        
+        if (string.IsNullOrWhiteSpace(umbracoProperty.Description))
+            umbracoProperty.Description = "Default description.";
+
+        return umbracoProperty;
+    }
+
+    private async Task<PropertyType> MapTypeToUmbracoPropertyType(PropertyInfo propertyInfo)
+    {
+        Type propertyType = ResolvePropertyType(propertyInfo);
+        
+        PropertyType umbracoProperty;
         // Map scalar types to Umbraco property types
-        if (propertyInfo.PropertyType == typeof(string))
+        if (propertyType == typeof(string))
             umbracoProperty = new(shortStringHelper, await umbracoDataTypeLoader.Textarea());
-        else if (propertyInfo.PropertyType == typeof(int))
+        else if (propertyType == typeof(int))
             umbracoProperty = new(shortStringHelper, await umbracoDataTypeLoader.Numeric());
-        else if (propertyInfo.PropertyType == typeof(DateTime))
+        else if (propertyType == typeof(DateTime))
             umbracoProperty = new (shortStringHelper, await umbracoDataTypeLoader.DatePickerWithTime());
         // Map enumerable types to Umbraco content picker property types (e.g. List<Location>)
-        else if (propertyInfo.PropertyType.IsEnumerable() && propertyInfo.PropertyType.IsGenericType)
+        else if (propertyType.IsEnumerable() && propertyType.IsGenericType)
         {
             // Get type of the enumerable
-            Type genericType = propertyInfo.PropertyType.GetGenericArguments()[0];
+            Type genericType = propertyType.GetGenericArguments()[0];
 
             if (!IsOpenReferralType(genericType))
             {
@@ -285,13 +303,13 @@ public class UmbracoContentGenerator(
         else if (IsOpenReferralType(propertyInfo.PropertyType))
         {
             IContentType? umbracoContentType = contentTypeService.GetAll()
-                .FirstOrDefault(ct => ct.Alias == propertyInfo.PropertyType.Name);
+                .FirstOrDefault(ct => ct.Alias == propertyType.Name);
             if (umbracoContentType is null)
             {
                 logger.LogWarning(
                     "Could not determine best content type property for {PropertyName}: No content type found for model '{PropertyTypeName}'.",
                     propertyInfo.Name,
-                    propertyInfo.PropertyType.Name
+                    propertyType.Name
                 );
 
                 umbracoProperty = await BuildDefaultUmbracoPropertyType(propertyInfo);
@@ -312,21 +330,18 @@ public class UmbracoContentGenerator(
             logger.LogWarning(
                 "Could not determine best content type property for {PropertyName}: Property type {PropertyTypeName} is not supported.",
                 propertyInfo.Name,
-                propertyInfo.PropertyType.Name
+                propertyType.Name
             );
         }
 
-        // Use JSON property name to maintain property names between the API and internally in Umbraco
-        umbracoProperty.Name = jsonPropertyName;
-        // Umbraco aliases _should_ be camel case
-        umbracoProperty.Alias = shortStringHelper.CleanString(propertyInfo.Name, CleanStringType.CamelCase);
-        // Default to mandatory if the property is a non-nullable reference type
-        umbracoProperty.Mandatory = propertyInfo.GetCustomAttribute<RequiredAttribute>() is not null;
-        
-        if (string.IsNullOrWhiteSpace(umbracoProperty.Description))
-            umbracoProperty.Description = "Default description.";
-
         return umbracoProperty;
+    }
+
+    private static Type ResolvePropertyType(PropertyInfo propertyInfo)
+    {
+        Type? underlyingType = Nullable.GetUnderlyingType(propertyInfo.PropertyType);
+        Type resolvedPropertyType = underlyingType ?? propertyInfo.PropertyType;
+        return resolvedPropertyType;
     }
 
     private async Task<PropertyType> BuildDefaultUmbracoPropertyType(PropertyInfo propertyInfo)
