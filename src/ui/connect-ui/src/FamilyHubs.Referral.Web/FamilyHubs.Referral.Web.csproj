@@ -11,8 +11,9 @@
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-	  <NoWarn>1701;1702;S1135;S125;NU1901;NU1902;NU1903</NoWarn>
-      <!--only temporarily-->
+	  <NoWarn>1701;1702;S1135;S125</NoWarn>
+	  <NuGetAuditMode>direct</NuGetAuditMode>
+	  <!--only temporarily-->
 	  <WarningsNotAsErrors>S1244</WarningsNotAsErrors>
   </PropertyGroup>
 
