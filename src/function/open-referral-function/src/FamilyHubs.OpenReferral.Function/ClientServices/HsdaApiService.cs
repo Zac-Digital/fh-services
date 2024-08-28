@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace FamilyHubs.OpenReferral.Function.ClientServices;
 
-public class HsdaApiService(ILogger<HsdaApiService> logger)
+public class HsdaApiService(ILogger<HsdaApiService> logger) : IHsdaApiService
 {
     private readonly HttpClient _httpClient = new()
         { BaseAddress = new Uri(Environment.GetEnvironmentVariable("ApiConnection")!) };

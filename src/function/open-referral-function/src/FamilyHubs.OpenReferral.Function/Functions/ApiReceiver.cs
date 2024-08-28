@@ -11,7 +11,7 @@ namespace FamilyHubs.OpenReferral.Function.Functions;
 
 public class ApiReceiver(
     ILogger<ApiReceiver> logger,
-    HsdaApiService hsdaApiService,
+    IHsdaApiService hsdaApiService,
     IFunctionDbContext functionDbContext)
 {
     [Function("ApiReceiver")]

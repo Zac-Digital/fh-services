@@ -12,7 +12,7 @@ IHost host = new HostBuilder()
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
 
-        services.AddSingleton<HsdaApiService>();
+        services.AddSingleton<IHsdaApiService, HsdaApiService>();
 
         services.AddDbContext<IFunctionDbContext, FunctionDbContext>(options =>
         {
