@@ -8,7 +8,6 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 
 namespace FamilyHubs.OpenReferral.UnitTests;
 
@@ -65,7 +64,7 @@ public class WhenUsingTriggerPullServicesWebhook
         _hsdaApiServiceMock.GetServices().Returns((HttpStatusCode.OK, serviceJsonList));
 
         _functionDbContextMock.When(dbContext => dbContext.SaveChangesAsync())
-            .Do(callback => throw new DbUpdateException());
+            .Do(_ => throw new DbUpdateException());
 
         HttpResponseData response = await _triggerPullServicesWebhook.Run(_reqMock);
 
