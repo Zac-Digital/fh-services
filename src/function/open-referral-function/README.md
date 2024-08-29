@@ -3,8 +3,8 @@ This project contains the Azure Functions implementation to our Open Referral wo
 #### Prerequisites
 
 1. In the same directory as `Program.cs`, create a file named `local.settings.json`. There is an example file that can just be copied and renamed.
-2. Get your local connection URL of the Mock HSDA API and put it under the `ConnectionApi` value in `local.settings.json`.
-3. Get your local connection string to the Service Directory database and put it under the `ServiceDirectoryConnection` value in `local.settings.json`.
+2. Get your local connection URL of the Mock HSDA API and put it under the `ConnectionApi` value in `appsettings.json`.
+3. Get your local connection string to the Service Directory database and put it under the `ServiceDirectoryConnection` value in `appsettings.json`.
 
 ---
 

@@ -1,14 +1,14 @@
 using System.Net;
 using FamilyHubs.OpenReferral.Function.Entities;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 
 namespace FamilyHubs.OpenReferral.Function.ClientServices;
 
-public class HsdaApiService(ILogger<HsdaApiService> logger) : IHsdaApiService
+public class HsdaApiService(ILogger<HsdaApiService> logger, IConfiguration config) : IHsdaApiService
 {
-    private readonly HttpClient _httpClient = new()
-        { BaseAddress = new Uri(Environment.GetEnvironmentVariable("ApiConnection")!) };
+    private readonly HttpClient _httpClient = new() { BaseAddress = new Uri(config["ApiConnection"]!) };
 
     public async Task<(HttpStatusCode, List<ServiceJson>?)> GetServices()
     {
