@@ -1,13 +1,10 @@
-using System.Net.Mime;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -22,15 +19,6 @@ public class LocalOfferDetailModel : HeaderPageModel
 
     [BindProperty]
     public string ServiceId { get; set; } = default!;
-
-    [BindProperty]
-    public string Name { get; set; } = default!;
-
-    public LocationDto? Location { get; set; }
-    public string Phone { get; set; } = default!;
-    public string? Text { get; set; }
-    public string Website { get; set; } = default!;
-    public string Email { get; set; } = default!;
 
     public bool ShowConnectionRequestButton { get; set; }
 
@@ -48,10 +36,6 @@ public class LocalOfferDetailModel : HeaderPageModel
         var referer = Request.Headers["Referer"];
         ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
-        Name = LocalOffer.Name;
-        Location = LocalOffer.Locations.FirstOrDefault();
-
-        GetContactDetails();
 
         ShowConnectionRequestButton = await ShouldShowConnectionRequestButton();
 
@@ -70,63 +54,5 @@ public class LocalOfferDetailModel : HeaderPageModel
         }
 
         return showConnectionRequestButton;
-    }
-
-    //todo: this
-    private void GetContactDetails()
-    {
-        //If delivery type is In-Person, get phone from service at location -> link contacts -> contact -> phone
-        if (LocalOffer.ServiceDeliveries.Any(sd => sd.Name == AttendingType.InPerson))
-        {
-            if (LocalOffer.Locations.Count == 0)
-                return;
-            var location = LocalOffer.Locations.FirstOrDefault();
-
-            if (location?.Contacts == null || location.Contacts.Count == 0)
-                return;
-            var contact = location.Contacts.First();
-            Phone = contact.Telephone;
-            Text = contact.TextPhone;
-            Website = contact.Url!;
-            Email = contact.Email!;
-        }
-        else
-        {
-            if (LocalOffer.Contacts == null)
-                return;
-            //if there are more then one contact then bellow code will pick the last record
-            foreach (var contactDto in LocalOffer.Contacts)
-            {
-                Phone = contactDto.Telephone ?? string.Empty;
-                Website = contactDto.Url ?? string.Empty;
-                Email = contactDto.Email ?? string.Empty;
-
-                if (string.IsNullOrEmpty(Website))
-                    continue;
-
-                if (Website.Length > 4 && string.Compare(Website.Substring(0, 4), "http", StringComparison.OrdinalIgnoreCase) == 0)
-                {
-                    if (!IsValidUrl(Website))
-                    {
-                        Website = string.Empty;
-                    }
-                    continue;
-                }
-
-                Website = $"https://{Website}";
-
-                if (!IsValidUrl(Website))
-                {
-                    Website = string.Empty;
-                }
-            }
-        }
-    }
-
-    bool IsValidUrl(string url)
-    {
-        var pattern = @"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-        var rgx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        return rgx.IsMatch(url);
     }
 }

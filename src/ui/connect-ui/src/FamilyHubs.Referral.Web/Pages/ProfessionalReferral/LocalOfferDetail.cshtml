@@ -123,87 +123,37 @@
         <p class="fh-pre-wrap" data-testid="description-value">@Model.LocalOffer.Description</p>
 
         <h2 class="govuk-heading-m">Contact details</h2>
-        
+
+        @{
+            var contacts = Model.LocalOffer.Contacts?.FirstOrDefault();
+        }
+
         <summary-list>
             <summary-row key="Email" show-empty>
-                <a href="mailto:@Model.Email">
-                    @Model.Email
-                </a>
+                @if (!string.IsNullOrEmpty(contacts?.Email))
+                {
+                    <a href="mailto:@contacts.Email">@contacts.Email</a>
+                }
             </summary-row>
             <summary-row key="Phone" show-empty>
-                <a href="tel:@Model.Phone">@Model.Phone</a>
+                @if (!string.IsNullOrEmpty(contacts?.Telephone))
+                {
+                    <a href="tel:@contacts.Telephone">@contacts.Telephone</a>
+                }
             </summary-row>
             <summary-row key="Website" show-empty>
-                @if (!string.IsNullOrEmpty(Model.Website))
+                @if (!string.IsNullOrEmpty(contacts?.Url))
                 {
-                    <a href="@Model.Website">
-                        @Model.Website
-                    </a>
+                    <a href="@contacts.Url">@contacts.Url</a>
                 }
             </summary-row>
             <summary-row key="Text message" show-empty>
-                @Model.Text
+                @if (!string.IsNullOrEmpty(contacts?.TextPhone))
+                {
+                    <a href="tel:@contacts.TextPhone">@contacts.TextPhone</a>
+                }
             </summary-row>
         </summary-list>
-
-@*         <dl class="govuk-summary-list">
-            <!-- Contact details -->
-            <!-- Phone-->
-            @if (!string.IsNullOrEmpty(Model.Phone))
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Phone
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailsphone">
-                        <a href="tel:@Model.Phone">@Model.Phone</a>
-                    </dd>
-                </div>
-            }
-
-            <!--Email-->
-            @if (!string.IsNullOrEmpty(Model.Email))
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Email
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailsemail">
-                        <a href="mailto:@Model.Email">
-                            @Model.Email
-                        </a>
-                    </dd>
-                </div>
-            }
-
-            <!--Address-->
-            @if (Model.Location != null)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Address
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailsaddress">
-                        @Html.Raw(string.Join("<br>", Model.Location.GetAddress()))
-                    </dd>
-                </div>
-            }
-
-            <!--Website-->
-            @if (!string.IsNullOrEmpty(Model.Website))
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Website
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailswebsite">
-                        <a href="@Model.Website">
-                            @Model.Website
-                        </a>
-                    </dd>
-                </div>
-            }
-        </dl> *@
 
         @if (Model.ShowConnectionRequestButton)
         {
