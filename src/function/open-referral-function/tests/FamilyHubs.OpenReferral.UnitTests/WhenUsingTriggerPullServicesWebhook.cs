@@ -12,17 +12,17 @@ using NSubstitute.ExceptionExtensions;
 
 namespace FamilyHubs.OpenReferral.UnitTests;
 
-public class WhenUsingApiReceiver
+public class WhenUsingTriggerPullServicesWebhook
 {
-    private readonly ApiReceiver _apiReceiver;
+    private readonly TriggerPullServicesWebhook _triggerPullServicesWebhook;
 
     private readonly IHsdaApiService _hsdaApiServiceMock;
     private readonly IFunctionDbContext _functionDbContextMock;
     private readonly HttpRequestData _reqMock;
 
-    public WhenUsingApiReceiver()
+    public WhenUsingTriggerPullServicesWebhook()
     {
-        ILogger<ApiReceiver> loggerApiReceiverMock = Substitute.For<ILogger<ApiReceiver>>();
+        ILogger<TriggerPullServicesWebhook> loggerApiReceiverMock = Substitute.For<ILogger<TriggerPullServicesWebhook>>();
 
         _hsdaApiServiceMock = Substitute.For<IHsdaApiService>();
 
@@ -31,7 +31,7 @@ public class WhenUsingApiReceiver
         _reqMock = Substitute.For<HttpRequestData>(Substitute.For<FunctionContext>());
         _reqMock.CreateResponse().Returns(Substitute.For<HttpResponseData>(Substitute.For<FunctionContext>()));
 
-        _apiReceiver = new ApiReceiver(loggerApiReceiverMock, _hsdaApiServiceMock, _functionDbContextMock);
+        _triggerPullServicesWebhook = new TriggerPullServicesWebhook(loggerApiReceiverMock, _hsdaApiServiceMock, _functionDbContextMock);
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public class WhenUsingApiReceiver
 
         _hsdaApiServiceMock.GetServices().Returns((HttpStatusCode.OK, serviceJsonList));
 
-        HttpResponseData response = await _apiReceiver.Run(_reqMock);
+        HttpResponseData response = await _triggerPullServicesWebhook.Run(_reqMock);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
@@ -52,7 +52,7 @@ public class WhenUsingApiReceiver
     {
         _hsdaApiServiceMock.GetServices().Returns((HttpStatusCode.InternalServerError, null));
 
-        HttpResponseData response = await _apiReceiver.Run(_reqMock);
+        HttpResponseData response = await _triggerPullServicesWebhook.Run(_reqMock);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
     }
@@ -67,7 +67,7 @@ public class WhenUsingApiReceiver
         _functionDbContextMock.When(dbContext => dbContext.SaveChangesAsync())
             .Do(callback => throw new DbUpdateException());
 
-        HttpResponseData response = await _apiReceiver.Run(_reqMock);
+        HttpResponseData response = await _triggerPullServicesWebhook.Run(_reqMock);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
     }

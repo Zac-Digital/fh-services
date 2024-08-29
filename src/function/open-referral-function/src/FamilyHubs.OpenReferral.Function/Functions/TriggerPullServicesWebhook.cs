@@ -9,14 +9,12 @@ using Microsoft.Azure.Functions.Worker.Http;
 
 namespace FamilyHubs.OpenReferral.Function.Functions;
 
-// PullServicesWebHook
-// TriggerPullServicesWebHook
-public class ApiReceiver(
-    ILogger<ApiReceiver> logger,
+public class TriggerPullServicesWebhook(
+    ILogger<TriggerPullServicesWebhook> logger,
     IHsdaApiService hsdaApiService,
     IFunctionDbContext functionDbContext)
 {
-    [Function("ApiReceiver")]
+    [Function("TriggerPullServicesWebhook")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "POST")] HttpRequestData req)
     {
         logger.LogInformation("[ApiReceiver] HTTP Trigger Function Started");
