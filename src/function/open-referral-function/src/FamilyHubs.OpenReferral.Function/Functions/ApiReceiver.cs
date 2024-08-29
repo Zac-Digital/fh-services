@@ -9,6 +9,8 @@ using Microsoft.Azure.Functions.Worker.Http;
 
 namespace FamilyHubs.OpenReferral.Function.Functions;
 
+// PullServicesWebHook
+// TriggerPullServicesWebHook
 public class ApiReceiver(
     ILogger<ApiReceiver> logger,
     IHsdaApiService hsdaApiService,
