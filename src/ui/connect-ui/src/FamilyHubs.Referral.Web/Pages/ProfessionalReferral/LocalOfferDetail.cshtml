@@ -1,5 +1,6 @@
 ﻿@page
 @using FamilyHubs.ServiceDirectory.Shared.Enums
+@using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar
 @using FamilyHubs.SharedKernel.Enums
 @using FamilyHubs.SharedKernel.Razor.Lists
 @using FamilyHubs.SharedKernel.Razor.Summary
@@ -87,6 +88,19 @@
                         .Order())
                 }
             </summary-row>
+            
+            @* todo: add comment to ticket, that this section isn't mentioned in ACs *@
+            @if (Model.ServiceSchedule != null)
+@*             !locations.Any()
+                 && Model.LocalOffer.ServiceDeliveries?.Any(sd => sd.Name == AttendingType.InPerson) == true)
+ *@            {
+                <summary-row key="Days service is available" show-empty>
+                    @string.Join(", ", Model.ServiceSchedule?.ByDay?.Split(",")
+                                       ?? Enumerable.Empty<string>())
+                                           .Select(c => Calendar.DayCodeToName[c]);
+                </summary-row>
+                <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@Model.ServiceSchedule.Description</summary-row>
+            }
         </summary-list>
         
         @if (locations.Any())
