@@ -34,39 +34,56 @@ jobs:
                    src/service/report-api/,
                    src/service/service-directory-api/,
                    src/service/mock-hsda-api/,
+                   src/function/open-referral-function/,
                    src/ui/connect-dashboard-ui/,
                    src/ui/connect-ui/,
                    src/ui/find-ui/,
                    src/ui/idam-maintenance-ui/,
                    src/ui/manage-ui/
-                 ]
+        ]
         include:
           - project: src/service/idam-api/
+            publish_project: FamilyHubs.Idam.Api
             job_name: Build - IDAM API
           - project: src/service/notification-api/
+            publish_project: FamilyHubs.Notification.Api
             job_name: Build - Notification API
           - project: src/service/referral-api/
+            publish_project: FamilyHubs.Referral.Api
             job_name: Build - Referral API
           - project: src/service/report-api/
+            publish_project: FamilyHubs.Report.Api
             job_name: Build - Report API
           - project: src/service/service-directory-api/
+            publish_project: FamilyHubs.ServiceDirectory.Api
             job_name: Build - Service Directory API
           - project: src/service/mock-hsda-api/
+            publish_project: FamilyHubs.Mock-Hsda.Api
             job_name: Build - Mock HSDA API
             dotnet_version_override: "8.0.x"
+          - project: src/function/open-referral-function/
+            publish_project: FamilyHubs.OpenReferral.Function
+            job_name: Build - Open Referral Function
+            dotnet_version_override: "8.0.x"
           - project: src/ui/connect-dashboard-ui/
+            publish_project: FamilyHubs.RequestForSupport.Web
             job_name: Build - Connect Dashboard UI
           - project: src/ui/connect-ui/
+            publish_project: FamilyHubs.Referral.Web
             job_name: Build - Connect UI
           - project: src/ui/find-ui/
+            publish_project: FamilyHubs.ServiceDirectory.Web
             job_name: Build - Find UI
           - project: src/ui/idam-maintenance-ui/
+            publish_project: FamilyHubs.Idams.Maintenance.UI
             job_name: Build - IDAM Maintenance UI
           - project: src/ui/manage-ui/
+            publish_project: FamilyHubs.ServiceDirectory.Admin.Web
             job_name: Build - Manage UI
     uses: ./.github/workflows/build-upload-artifact.yml
     with:
       project: ${{ matrix.project }}
+      publish_project: ${{ matrix.publish_project }}
       dotnet_version: ${{ matrix.dotnet_version_override || vars.DOTNET_VERSION }}
 
   deploy-api-services:
@@ -79,7 +96,7 @@ jobs:
                          referral-api,
                          report-api,
                          service-directory-api
-                       ]
+        ]
         include:
           - artifact_name: idam-api
             job_name: Deploy - IDAM API
@@ -150,7 +167,7 @@ jobs:
                          find-ui,
                          idam-maintenance-ui,
                          manage-ui
-                       ]
+        ]
         include:
           - artifact_name: connect-dashboard-ui
             job_name: Deploy - Connect Dashboard UI
@@ -188,5 +205,27 @@ jobs:
       keyvault_prefix: ${{ matrix.keyvault_prefix }}
       project_name: ${{ matrix.project_name }}
       project_type: ui
+      azure_app_name: ${{ matrix.azure_app_name }}
+    secrets: inherit
+
+  deploy-functions:
+    name: ${{ matrix.job_name }}
+    needs: [ deploy-ui-services ]
+    strategy:
+      matrix:
+        artifact_name: [
+          open-referral-function
+        ]
+        include:
+          - artifact_name: open-referral-function
+            job_name: Deploy - Open Referral Function
+            keyvault_prefix: OPEN-REFERRAL-FUNC
+            azure_app_name: fa-fh-open-referral
+
+    uses: ./.github/workflows/deploy-function.yml
+    with:
+      environment: ${{ inputs.environment }}
+      artifact_name: ${{ matrix.artifact_name }}
+      keyvault_prefix: ${{ matrix.keyvault_prefix }}
       azure_app_name: ${{ matrix.azure_app_name }}
     secrets: inherit

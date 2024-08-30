@@ -4,19 +4,18 @@ description: Fetch secrets from Azure KeyVault for an API/UI and update the App 
 outputs:
   publish_profile:
     value: ${{ steps.fetch.outputs.publish_profile }}
+    description: Publish profile to use for the deployment
 
 inputs:
   keyvault_name:
     required: true
-    type: string
+    description: Key vault name without the prefix
   keyvault_prefix:
     required: true
     description: The prefix of the KeyVault Key, e.g., IDAM-API-SECRET-NAME will have the prefix IDAM-API
-    type: string
   files:
     required: true
     description: Comma seperated list of files to update
-    type: string
 
 runs:
   using: composite
@@ -36,7 +35,7 @@ runs:
           Write-Output "::add-mask::$value"
           if ($key -eq "AZURE_WEBAPP_PUBLISH_PROFILE")
           {
-            Write-Output "publish_profile=""$value""" >> $env:GITHUB_OUTPUT
+            Write-Output "publish_profile=$value" >> $env:GITHUB_OUTPUT
           }
           Write-Output "$key=$value" >> $env:GITHUB_OUTPUT
         }
@@ -103,3 +102,6 @@ runs:
         FamilyHubsUi.Analytics.MeasurementId: ${{ steps.fetch.outputs.FAMILYHUBSUI_ANALYTICS_MEASUREMENTID }}
         FamilyHubsUi.Analytics.ClarityId: ""
         ConnectionStrings.HsdaMockResponsesConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_HSDAMOCKRESPONSESCONNECTION }}
+        # Functions
+        ApiConnection: ${{ steps.fetch.outputs.CONNECTIONAPI }}
+        ServiceDirectoryConnection: ${{ steps.fetch.outputs.SERVICEDIRECTORYCONNECTION }}
