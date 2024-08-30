@@ -109,13 +109,17 @@
                     
                     @* todo: any other 'None provided'? *@
                     <summary-row key="Location details" show-empty class="fh-pre-wrap">@location.Description</summary-row>
-                    
+
+                    @{
+                        // todo: serviceatlocation    
+                        var locationSchedule = location.Schedules.FirstOrDefault();
+                    }
+
                     <summary-row key="Days service is available" show-empty>
-                        @* todo *@
-                        @*                         @location.Schedules.FirstOrDefault()?.Times.GetDayNames()) *@
+                        @ByDayToDisplay(locationSchedule?.ByDay)
                     </summary-row>
                     @*todo: same data, different key to location-for-service page*@
-                    <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@*todo: @location.TimeDescription.GetDisplay() *@</summary-row>
+                    <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@locationSchedule?.Description</summary-row>
 
                 </summary-list>
             }
@@ -126,20 +130,14 @@
         @if (Model.ServiceSchedule != null)
         {
             <h2 class="govuk-heading-m">@ToDisplay(Model.ServiceScheduleAttendingTypes)</h2>
-        }
 
-        @*         <summary-list>
-
-        @if (Model.ServiceSchedule != null)
-        {
-            <summary-row key="Days service is available" show-empty>
-                @string.Join(", ", Model.ServiceSchedule?.ByDay?.Split(",")
-                                   ?? Enumerable.Empty<string>())
-                .Select(c => Calendar.DayCodeToName[c]);
-            </summary-row>
-            <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@Model.ServiceSchedule.Description</summary-row>
+            <summary-list>
+                <summary-row key="Days service is available" show-empty>
+                    @ByDayToDisplay(Model.ServiceSchedule?.ByDay)
+                </summary-row>
+                <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@Model.ServiceSchedule.Description</summary-row>
+            </summary-list>
         }
-        </summary-list> *@
 
         <h2 class="govuk-heading-m">More details</h2>
         <p class="fh-pre-wrap" data-testid="description-value">@Model.LocalOffer.Description</p>
@@ -193,6 +191,17 @@
     private static string AgeToString(int age)
     {
         return age == 127 ? "25+" : age.ToString();
+    }
+
+    private static string ByDayToDisplay(string? byDay)
+    {
+        if (byDay == null)
+        {
+            return "";
+        }
+
+        return string.Join(", ", byDay.Split(",")
+            .Select(c => Calendar.DayCodeToName[c]));
     }
 
     private static string ToDisplay(IEnumerable<AttendingType> attendingTypes)
