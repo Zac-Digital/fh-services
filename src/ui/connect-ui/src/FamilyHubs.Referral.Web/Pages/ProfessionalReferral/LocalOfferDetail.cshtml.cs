@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
-using FamilyHubs.SharedKernel.Enums;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
