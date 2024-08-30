@@ -6,6 +6,7 @@ using FamilyHubs.ServiceDirectory.Data.Entities.Staging;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Functions.Worker.Http;
+using Newtonsoft.Json.Linq;
 
 namespace FamilyHubs.OpenReferral.Function.Functions;
 
@@ -19,13 +20,21 @@ public class TriggerPullServicesWebhook(
     {
         logger.LogInformation("[ApiReceiver] HTTP Trigger Function Started");
 
-        (HttpStatusCode httpStatusCode, List<ServiceJson>? serviceJsonList) = await hsdaApiService.GetServices();
+        (HttpStatusCode httpStatusCode, JArray? services) = await hsdaApiService.GetServices();
 
         if (httpStatusCode != HttpStatusCode.OK) return req.CreateResponse(httpStatusCode);
 
+        List<ServiceJson> servicesById = await hsdaApiService.GetServicesById(services!);
+
+        if (servicesById.Count == 0)
+        {
+            logger.LogInformation("Getting the services by ID returned no results!");
+            return req.CreateResponse(HttpStatusCode.NotFound);
+        }
+
         try
         {
-            await UpdateDatabase(serviceJsonList);
+            await UpdateDatabase(servicesById);
         }
         catch (Exception e)
         {
@@ -36,10 +45,8 @@ public class TriggerPullServicesWebhook(
         return req.CreateResponse(HttpStatusCode.OK);
     }
 
-    private async Task UpdateDatabase(List<ServiceJson>? serviceJsonList)
+    private async Task UpdateDatabase(List<ServiceJson> serviceJsonList)
     {
-        ArgumentNullException.ThrowIfNull(serviceJsonList);
-
         logger.LogInformation("Truncating database before inserting services..");
         await functionDbContext.TruncateServicesTempAsync();
 

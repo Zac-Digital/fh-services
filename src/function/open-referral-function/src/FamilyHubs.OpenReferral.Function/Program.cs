@@ -20,7 +20,8 @@ IHost host = new HostBuilder()
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
 
-        services.AddSingleton<IHsdaApiService, HsdaApiService>();
+        services.AddHttpClient<IHsdaApiService, HsdaApiService>(httpClient =>
+            httpClient.BaseAddress = new Uri(config["ApiConnection"]!)).SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
         services.AddDbContext<IFunctionDbContext, FunctionDbContext>(options =>
         {

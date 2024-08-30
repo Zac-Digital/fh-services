@@ -7,6 +7,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 using NSubstitute;
 
 namespace FamilyHubs.OpenReferral.UnitTests;
@@ -36,9 +37,10 @@ public class WhenUsingTriggerPullServicesWebhook
     [Fact]
     public async Task Then_NormalOperation_BeingReturned_ShouldResultIn_200_OK()
     {
-        List<ServiceJson> serviceJsonList = [new ServiceJson { Id = Guid.NewGuid().ToString(), Json = "OK" }];
+        List<ServiceJson> servicesById = [new ServiceJson { Id = Guid.NewGuid().ToString(), Json = "OK" }];
 
-        _hsdaApiServiceMock.GetServices().Returns((HttpStatusCode.OK, serviceJsonList));
+        _hsdaApiServiceMock.GetServices().Returns((HttpStatusCode.OK, []));
+        _hsdaApiServiceMock.GetServicesById(Arg.Any<JArray>()).Returns(servicesById);
 
         HttpResponseData response = await _triggerPullServicesWebhook.Run(_reqMock);
 
@@ -59,9 +61,10 @@ public class WhenUsingTriggerPullServicesWebhook
     [Fact]
     public async Task Then_DatabaseFailingToUpdate_Should_ResultIn_500_InternalServerError()
     {
-        List<ServiceJson> serviceJsonList = [new ServiceJson { Id = Guid.NewGuid().ToString(), Json = "OK" }];
+        List<ServiceJson> servicesById = [new ServiceJson { Id = Guid.NewGuid().ToString(), Json = "OK" }];
 
-        _hsdaApiServiceMock.GetServices().Returns((HttpStatusCode.OK, serviceJsonList));
+        _hsdaApiServiceMock.GetServices().Returns((HttpStatusCode.OK, []));
+        _hsdaApiServiceMock.GetServicesById(Arg.Any<JArray>()).Returns(servicesById);
 
         _functionDbContextMock.When(dbContext => dbContext.SaveChangesAsync())
             .Do(_ => throw new DbUpdateException());
@@ -69,5 +72,18 @@ public class WhenUsingTriggerPullServicesWebhook
         HttpResponseData response = await _triggerPullServicesWebhook.Run(_reqMock);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Then_NoServicesByIdReturned_Should_ResultIn_404_NotFound()
+    {
+        List<ServiceJson> servicesById = [];
+
+        _hsdaApiServiceMock.GetServices().Returns((HttpStatusCode.OK, []));
+        _hsdaApiServiceMock.GetServicesById(Arg.Any<JArray>()).Returns(servicesById);
+
+        HttpResponseData response = await _triggerPullServicesWebhook.Run(_reqMock);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
 }
