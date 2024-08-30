@@ -89,18 +89,6 @@
                 }
             </summary-row>
             
-            @* todo: add comment to ticket, that this section isn't mentioned in ACs *@
-            @if (Model.ServiceSchedule != null)
-@*             !locations.Any()
-                 && Model.LocalOffer.ServiceDeliveries?.Any(sd => sd.Name == AttendingType.InPerson) == true)
- *@            {
-                <summary-row key="Days service is available" show-empty>
-                    @string.Join(", ", Model.ServiceSchedule?.ByDay?.Split(",")
-                                       ?? Enumerable.Empty<string>())
-                                           .Select(c => Calendar.DayCodeToName[c]);
-                </summary-row>
-                <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@Model.ServiceSchedule.Description</summary-row>
-            }
         </summary-list>
         
         @if (locations.Any())
@@ -132,6 +120,20 @@
                 </summary-list>
             }
         }
+
+        @* todo: copy logic from Manage's service details page and show howuse *@
+@*         <summary-list>
+
+        @if (Model.ServiceSchedule != null)
+        {
+            <summary-row key="Days service is available" show-empty>
+                @string.Join(", ", Model.ServiceSchedule?.ByDay?.Split(",")
+                                   ?? Enumerable.Empty<string>())
+                .Select(c => Calendar.DayCodeToName[c]);
+            </summary-row>
+            <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@Model.ServiceSchedule.Description</summary-row>
+        }
+        </summary-list> *@
 
         <h2 class="govuk-heading-m">More details</h2>
         <p class="fh-pre-wrap" data-testid="description-value">@Model.LocalOffer.Description</p>
