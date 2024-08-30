@@ -111,15 +111,15 @@
                     <summary-row key="Location details" show-empty class="fh-pre-wrap">@location.Description</summary-row>
 
                     @{
-                        // todo: serviceatlocation    
-                        var locationSchedule = location.Schedules.FirstOrDefault();
+                        var serviceAtLocationSchedule = Model.LocalOffer.ServiceAtLocations
+                            .FirstOrDefault(s => s.LocationId == location.Id)?.Schedules.FirstOrDefault();
                     }
 
                     <summary-row key="Days service is available" show-empty>
-                        @ByDayToDisplay(locationSchedule?.ByDay)
+                        @ByDayToDisplay(serviceAtLocationSchedule?.ByDay)
                     </summary-row>
                     @*todo: same data, different key to location-for-service page*@
-                    <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@locationSchedule?.Description</summary-row>
+                    <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@serviceAtLocationSchedule?.Description</summary-row>
 
                 </summary-list>
             }
