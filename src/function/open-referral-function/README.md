@@ -15,3 +15,4 @@ This project contains the Azure Functions implementation to our Open Referral wo
 2. Ensure the HSDA Mock API is running locally.
 3. Run the project either through your IDE, or in a terminal inside the same directory as `Program.cs` execute the command `dotnet clean && func host start --pause-on-error --port 7275`.
 4. In the console output you will see a POST URL to `TriggerPullServicesWebhook`. POST to that endpoint as-is in Postman or your favourite API client and you will see logger output in the terminal.
+5. Test
