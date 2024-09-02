@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -69,29 +70,10 @@ public class LocalOfferDetailModel : HeaderPageModel
         return showConnectionRequestButton;
     }
 
-    public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto>? serviceDeliveries)
-    {
-        var result = string.Empty;
-
-        if (serviceDeliveries == null || serviceDeliveries.Count == 0)
-            return result;
-
-        result = string.Join(',', serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name).ToArray());
-
-        return result;
-    }
-
-    //todo: don't show languages if there are none
-    public string GetLanguagesAsString(ICollection<LanguageDto>? languageDtos)
-    {
-        // they should already be sorted by name, but for safety we do it again
-        return string.Join(", ", languageDtos?.Select(d => d.Name).Order() ?? Enumerable.Empty<string>());
-    }
-
     private void GetContactDetails()
     {
         //If delivery type is In-Person, get phone from service at location -> link contacts -> contact -> phone
-        if (GetDeliveryMethodsAsString(LocalOffer.ServiceDeliveries).Contains("In Person"))
+        if (LocalOffer.ServiceDeliveries.Any(sd => sd.Name == AttendingType.InPerson))
         {
             if (LocalOffer.Locations.Count == 0)
                 return;

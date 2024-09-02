@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.Referral.Core.ApiClients;
-using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 using FamilyHubs.ReferralUi.UnitTests.Services;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -144,49 +143,5 @@ public class WhenUsingLocalOfferDetail
         localOfferDetailModel.Phone.Should().Be("01827 65777");
         localOfferDetailModel.Website.Should().Be("https://www.google.com");
         localOfferDetailModel.Email.Should().Be("Contact@email.com");
-    }
-
-    [Fact]
-    public void ThenGetDeliveryMethodsAsString_WithNullCollection()
-    {
-        //Arrange
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockIIdamsClient.Object);
-
-        //Act
-        string result = localOfferDetailModel.GetDeliveryMethodsAsString(default!);
-
-        //Assert
-        result.Should().Be(string.Empty);
-    }
-
-    [Fact]
-    public void ThenGetLanguagesAsString_WithNullCollection()
-    {
-        //Arrange
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockIIdamsClient.Object);
-
-        //Act
-        string result = localOfferDetailModel.GetLanguagesAsString(default!);
-
-        //Assert
-        result.Should().Be(string.Empty);
-    }
-
-    [Fact]
-    public void ThenGetLanguagesAsString_ShouldReturnLanguages()
-    {
-        //Arrange
-        LocalOfferDetailModel localOfferDetailModel = new LocalOfferDetailModel(MockIOrganisationClientService.Object, MockIIdamsClient.Object);
-        List<LanguageDto> languageDtos = new List<LanguageDto>
-        {
-            new() { Id = 1, Name = "English", Code = "en", ServiceId = 1 },
-            new() { Id = 2, Name = "French", Code = "fr", ServiceId = 1 }
-        };
-
-        //Act
-        string result = localOfferDetailModel.GetLanguagesAsString(languageDtos);
-
-        //Assert
-        result.Should().Be("English, French");
     }
 }

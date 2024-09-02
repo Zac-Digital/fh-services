@@ -12,7 +12,8 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 	  <NoWarn>1701;1702;S1135;S125</NoWarn>
-      <!--only temporarily-->
+	  <NuGetAuditMode>direct</NuGetAuditMode>
+	  <!--only temporarily-->
 	  <WarningsNotAsErrors>S1244</WarningsNotAsErrors>
   </PropertyGroup>
 

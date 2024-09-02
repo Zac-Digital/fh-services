@@ -11,6 +11,7 @@
 		<!--<TreatWarningsAsErrors>True</TreatWarningsAsErrors>-->
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+		<NuGetAuditMode>direct</NuGetAuditMode>
 	</PropertyGroup>
 
 	<PropertyGroup>
