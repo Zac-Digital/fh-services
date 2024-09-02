@@ -27,6 +27,7 @@ jobs:
             service/referral-api,
             service/report-api,
             service/mock-hsda-api,
+            function/open-referral-function,
             ui/connect-dashboard-ui,
             ui/connect-ui,
             ui/find-ui,
@@ -51,7 +52,10 @@ jobs:
             job_name: "Test - Report API"
           - working_directory: service/mock-hsda-api
             job_name: "Test - Mock HSDA API"
-            dotnet_version: "8.0.x"  
+            dotnet_version: "8.0.x"
+          - working_directory: function/open-referral-function
+            job_name: "Test - Open Referral Function"
+            dotnet_version: "8.0.x"
           - working_directory: ui/connect-dashboard-ui
             job_name: "Test - Connect Dashboard UI"
           - working_directory: ui/connect-ui
