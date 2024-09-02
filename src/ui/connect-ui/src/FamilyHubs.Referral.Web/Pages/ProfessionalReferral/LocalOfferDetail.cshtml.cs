@@ -5,7 +5,6 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 

@@ -8,7 +8,8 @@
 @{
     ViewData["Title"] = Model.LocalOffer.Name;
 
-    var locations = Model.LocalOffer.Locations.OrderBy(l => l.Distance);
+    var locations = Model.LocalOffer.Locations
+        .OrderBy(l => l.Distance);
 }
 
 @section Back {
@@ -126,7 +127,7 @@
         }
 
         <h2 class="govuk-heading-m">More details</h2>
-        <p class="fh-pre-wrap" data-testid="description-value">@Model.LocalOffer.Description</p>
+        <p class="fh-pre-wrap govuk-!-margin-bottom-9" data-testid="description-value">@Model.LocalOffer.Description</p>
 
         <h2 class="govuk-heading-m">Contact details</h2>
 
@@ -134,7 +135,7 @@
             var contacts = Model.LocalOffer.Contacts?.FirstOrDefault();
         }
 
-        <summary-list>
+        <summary-list class="govuk-!-margin-bottom-9">
             <summary-row key="Email" show-empty>
                 @if (!string.IsNullOrEmpty(contacts?.Email))
                 {
