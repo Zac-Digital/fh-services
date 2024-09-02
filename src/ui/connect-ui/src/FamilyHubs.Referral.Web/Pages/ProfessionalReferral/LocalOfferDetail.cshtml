@@ -1,10 +1,15 @@
 ﻿@page
+@using FamilyHubs.ServiceDirectory.Shared.Enums
+@using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar
 @using FamilyHubs.SharedKernel.Enums
 @using FamilyHubs.SharedKernel.Razor.Lists
 @using FamilyHubs.SharedKernel.Razor.Summary
 @model LocalOfferDetailModel
 @{
     ViewData["Title"] = Model.LocalOffer.Name;
+
+    var locations = Model.LocalOffer.Locations
+        .OrderBy(l => l.Distance);
 }
 
 @section Back {
@@ -24,7 +29,6 @@
 }
 
 <div class="govuk-grid-row">
-    @*todo: proto has heading in full width div, but don't think that's correct!? *@
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l govuk-!-margin-bottom-6" data-testid="service-name">@Model.LocalOffer.Name</h1>
         <p class="govuk-!-margin-bottom-6 fh-pre-wrap" data-testid="service-summary">@Model.LocalOffer.Summary</p>
@@ -84,70 +88,77 @@
                         .Order())
                 }
             </summary-row>
+            
         </summary-list>
+        
+        @if (locations.Any())
+        {
+            int locationNumber = 0;
+            foreach (var location in locations)
+            {
+                <h2 class="govuk-heading-m">Location @(++locationNumber)</h2>
+                <summary-list class="govuk-!-margin-bottom-9">
+
+                    <summary-row key="Address" show-empty>
+                        <govuk-ul items="@location.GetAddress()"></govuk-ul>
+                    </summary-row>
+
+                    <summary-row key="Family hub">
+                        @(location.LocationTypeCategory == LocationTypeCategory.FamilyHub ? "Yes" : "No")
+                    </summary-row>
+                    
+                    <summary-row key="Location details" show-empty class="fh-pre-wrap">@location.Description</summary-row>
+
+                    @{
+                        var serviceAtLocationSchedule = Model.LocalOffer.ServiceAtLocations
+                            .FirstOrDefault(s => s.LocationId == location.Id)?.Schedules.FirstOrDefault();
+                    }
+
+                    <summary-row key="Days service is available" show-empty>
+                        @ByDayToDisplay(serviceAtLocationSchedule?.ByDay)
+                    </summary-row>
+
+                    <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@serviceAtLocationSchedule?.Description</summary-row>
+
+                </summary-list>
+            }
+        }
 
         <h2 class="govuk-heading-m">More details</h2>
-        <p class="fh-pre-wrap" data-testid="description-value">@Model.LocalOffer.Description</p>
-        <h2 class="govuk-heading-m">Connect a family to this service</h2>
+        <p class="fh-pre-wrap govuk-!-margin-bottom-9" data-testid="description-value">@Model.LocalOffer.Description</p>
 
-        <dl class="govuk-summary-list">
-            <!-- Contact details -->
-            <!-- Phone-->
-            @if (!string.IsNullOrEmpty(Model.Phone))
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Phone
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailsphone">
-                        <a href="tel:@Model.Phone">@Model.Phone</a>
-                    </dd>
-                </div>
-            }
+        <h2 class="govuk-heading-m">Contact details</h2>
 
-            <!--Email-->
-            @if (!string.IsNullOrEmpty(Model.Email))
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Email
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailsemail">
-                        <a href="mailto:@Model.Email">
-                            @Model.Email
-                        </a>
-                    </dd>
-                </div>
-            }
+        @{
+            var contacts = Model.LocalOffer.Contacts?.FirstOrDefault();
+        }
 
-            <!--Address-->
-            @if (Model.Location != null)
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Address
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailsaddress">
-                        @Html.Raw(string.Join("<br>", Model.Location.GetAddress()))
-                    </dd>
-                </div>
-            }
-
-            <!--Website-->
-            @if (!string.IsNullOrEmpty(Model.Website))
-            {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">
-                        Website
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="detailswebsite">
-                        <a href="@Model.Website">
-                            @Model.Website
-                        </a>
-                    </dd>
-                </div>
-            }
-        </dl>
+        <summary-list class="govuk-!-margin-bottom-9">
+            <summary-row key="Email" show-empty>
+                @if (!string.IsNullOrEmpty(contacts?.Email))
+                {
+                    <a href="mailto:@contacts.Email">@contacts.Email</a>
+                }
+            </summary-row>
+            <summary-row key="Phone" show-empty>
+                @if (!string.IsNullOrEmpty(contacts?.Telephone))
+                {
+                    <a href="tel:@contacts.Telephone">@contacts.Telephone</a>
+                }
+            </summary-row>
+            <summary-row key="Website" show-empty>
+                @if (!string.IsNullOrEmpty(contacts?.Url))
+                {
+                    <a href="@contacts.Url">@contacts.Url</a>
+                }
+            </summary-row>
+            <summary-row key="Text message" show-empty>
+                @if (!string.IsNullOrEmpty(contacts?.TextPhone))
+                {
+                    <a href="tel:@contacts.TextPhone">@contacts.TextPhone</a>
+                }
+            </summary-row>
+        </summary-list>
 
         @if (Model.ShowConnectionRequestButton)
         {
@@ -165,5 +176,16 @@
     private static string AgeToString(int age)
     {
         return age == 127 ? "25+" : age.ToString();
+    }
+
+    private static string ByDayToDisplay(string? byDay)
+    {
+        if (byDay == null)
+        {
+            return "";
+        }
+
+        return string.Join(", ", byDay.Split(",")
+            .Select(c => Calendar.DayCodeToName[c]));
     }
 }
