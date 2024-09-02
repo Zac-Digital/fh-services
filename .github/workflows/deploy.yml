@@ -210,7 +210,7 @@ jobs:
 
   deploy-functions:
     name: ${{ matrix.job_name }}
-    needs: [ deploy-ui-services ]
+    needs: [ build-projects-upload-artifacts ]
     strategy:
       matrix:
         artifact_name: [
