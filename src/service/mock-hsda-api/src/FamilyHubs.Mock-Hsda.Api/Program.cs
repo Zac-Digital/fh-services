@@ -33,14 +33,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Add configuration
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .Build();
-
 builder.Services.AddDbContext<MockDbContext>(options =>
-    options.UseSqlServer(configuration.GetConnectionString("HsdaMockResponsesConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("HsdaMockResponsesConnection")));
 
 builder.Services.AddTransient<DbMockResponseGenerator>();
 builder.Services.AddTransient<IMockResponseGenerator, HsdaPagingMockResponseGenerator>();
