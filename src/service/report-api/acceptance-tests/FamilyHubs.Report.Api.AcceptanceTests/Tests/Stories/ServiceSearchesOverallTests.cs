@@ -5,7 +5,6 @@ using Xunit;
 
 namespace FamilyHubs.Report.Api.AcceptanceTests.Tests.Stories;
 
-[TestClass]
 public class ServiceSearchesOverallTests
 {
     private readonly SharedSteps _sharedSteps;
@@ -28,8 +27,8 @@ public class ServiceSearchesOverallTests
         HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForPast7days(serviceTypeId, date, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+            .When(s => _steps.SendAValidRequestForPast7days(serviceTypeId, date, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -42,8 +41,8 @@ public class ServiceSearchesOverallTests
         string serviceTypeId, string date, HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.HaveAnInvalidBearerToken())
-            .When(s => _steps.SendAValidRequestForPast7days(serviceTypeId, date, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+            .When(s => _steps.SendAValidRequestForPast7days(serviceTypeId, date, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -54,8 +53,8 @@ public class ServiceSearchesOverallTests
         string role, string date, HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForPast7daysWithoutServiceTypeId(date, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+            .When(s => _steps.SendAValidRequestForPast7daysWithoutServiceTypeId(date, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -67,8 +66,8 @@ public class ServiceSearchesOverallTests
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(
-                s => _steps.SendAValidRequestForPast7daysWithoutDateParameter(serviceTypeId, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+                s => _steps.SendAValidRequestForPast7daysWithoutDateParameter(serviceTypeId, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -85,8 +84,8 @@ public class ServiceSearchesOverallTests
         string serviceTypeId, string date, HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForPast7days(serviceTypeId, date, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+            .When(s => _steps.SendAValidRequestForPast7days(serviceTypeId, date, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -97,8 +96,8 @@ public class ServiceSearchesOverallTests
         string serviceTypeId, string date, HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForPast7days(serviceTypeId, date, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+            .When(s => _steps.SendAValidRequestForPast7days(serviceTypeId, date, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -115,8 +114,8 @@ public class ServiceSearchesOverallTests
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s => _steps.SendAValidRequestForServiceSearches4WeekBreakdown(serviceTypeId, date,
-                _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+                _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -130,8 +129,8 @@ public class ServiceSearchesOverallTests
     {
         this.Given(s => _sharedSteps.HaveAnInvalidBearerToken())
             .When(s => _steps.SendAValidRequestForServiceSearches4WeekBreakdown(serviceTypeId, date,
-                _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+                _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -143,8 +142,8 @@ public class ServiceSearchesOverallTests
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s => _steps.SendAValidRequestForServiceSearches4WeekBreakdownWithoutServiceTypeId(date,
-                _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+                _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -157,8 +156,8 @@ public class ServiceSearchesOverallTests
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s => _steps.SendAValidRequestForServiceSearches4WeekBreakdownWithoutDateParameters(serviceTypeId,
-                _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+                _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -176,8 +175,8 @@ public class ServiceSearchesOverallTests
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s => _steps.SendAValidRequestForServiceSearches4WeekBreakdown(serviceTypeId, date,
-                _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+                _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -189,8 +188,8 @@ public class ServiceSearchesOverallTests
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s => _steps.SendAValidRequestForServiceSearches4WeekBreakdown(serviceTypeId, date,
-                _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+                _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -205,8 +204,8 @@ public class ServiceSearchesOverallTests
     public void Service_Searches_Total_Returns_200(string role, string serviceTypeId, HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForServiceSearchesTotal(serviceTypeId, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+            .When(s => _steps.SendAValidRequestForServiceSearchesTotal(serviceTypeId, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -219,8 +218,8 @@ public class ServiceSearchesOverallTests
         HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.HaveAnInvalidBearerToken())
-            .When(s => _steps.SendAValidRequestForServiceSearchesTotal(serviceTypeId, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+            .When(s => _steps.SendAValidRequestForServiceSearchesTotal(serviceTypeId, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -231,8 +230,8 @@ public class ServiceSearchesOverallTests
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s =>
-                _steps.SendAValidRequestForServiceSearchesTotalWithoutServiceTypeIdParameters(_sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+                _steps.SendAValidRequestForServiceSearchesTotalWithoutServiceTypeIdParameters(_sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -243,8 +242,8 @@ public class ServiceSearchesOverallTests
         HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForServiceSearchesTotal(serviceTypeId, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+            .When(s => _steps.SendAValidRequestForServiceSearchesTotal(serviceTypeId, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -261,8 +260,8 @@ public class ServiceSearchesOverallTests
         HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForServiceSearchesTotal(serviceTypeId, _sharedSteps.bearerToken))
-            .Then(s => _sharedSteps.VerifyStatusCode(_steps.lastResponse, statusCode))
+            .When(s => _steps.SendAValidRequestForServiceSearchesTotal(serviceTypeId, _sharedSteps.BearerToken))
+            .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 

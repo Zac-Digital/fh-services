@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Net.Http;
 
 namespace FamilyHubs.Report.Api.AcceptanceTests.Builders.Http;
 
@@ -7,13 +6,13 @@ namespace FamilyHubs.Report.Api.AcceptanceTests.Builders.Http;
 //This prevents a large number sockets being left open after the tests are run
 public static class HttpClientFactory
 {
-    private static readonly ConcurrentDictionary<string, HttpClient> HttpClientList = new();
+    private static readonly ConcurrentDictionary<string, HttpClient> _httpClientList = new();
 
     public static HttpClient GetHttpClientInstance(string baseUrl)
     {
-        if (!HttpClientList.ContainsKey(baseUrl))
-            HttpClientList.TryAdd(baseUrl, new HttpClient());
+        if (!_httpClientList.ContainsKey(baseUrl))
+            _httpClientList.TryAdd(baseUrl, new HttpClient());
 
-        return HttpClientList[baseUrl];
+        return _httpClientList[baseUrl];
     }
 }
