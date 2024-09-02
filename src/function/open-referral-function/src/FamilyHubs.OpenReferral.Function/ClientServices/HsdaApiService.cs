@@ -1,13 +1,13 @@
 using System.Net;
+using System.Text.Json;
 using FamilyHubs.OpenReferral.Function.Entities;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 
 namespace FamilyHubs.OpenReferral.Function.ClientServices;
 
 public class HsdaApiService(ILogger<HsdaApiService> logger, HttpClient httpClient) : IHsdaApiService
 {
-    public async Task<(HttpStatusCode, JArray?)> GetServices()
+    public async Task<(HttpStatusCode, JsonElement.ArrayEnumerator?)> GetServices()
     {
         (HttpStatusCode httpStatusCode, string? jsonResponse) = await HttpGet("/services");
 
@@ -19,27 +19,26 @@ public class HsdaApiService(ILogger<HsdaApiService> logger, HttpClient httpClien
             return (httpStatusCode, null);
         }
 
-        JArray serviceList = JArray.Parse(JObject.Parse(jsonResponse)["contents"]!.ToString());
+        JsonElement.ArrayEnumerator serviceList =
+            JsonDocument.Parse(jsonResponse).RootElement.GetProperty("contents").EnumerateArray();
 
-        if (serviceList.Count == 0)
+        if (!serviceList.Any())
         {
-            logger.LogInformation("Query was OK, but no services were found");
-            return (HttpStatusCode.NotFound, null);
+            logger.LogWarning("Query was OK, but no services were found");
+            return (HttpStatusCode.NoContent, null);
         }
 
-        logger.LogInformation("Found {serviceCount} service(s)..", serviceList.Count);
+        logger.LogInformation("Found {serviceCount} service(s)", serviceList.Count());
 
         return (HttpStatusCode.OK, serviceList);
     }
 
-    public async Task<List<ServiceJson>> GetServicesById(JArray services)
+    public async Task<(HttpStatusCode, List<ServiceJson>)> GetServicesById(JsonElement.ArrayEnumerator services)
     {
         List<ServiceJson> servicesById = [];
 
-        foreach (JToken service in services)
+        foreach (string serviceId in services.Select(service => service.GetProperty("id").ToString()))
         {
-            string serviceId = service["id"]!.ToString();
-
             (HttpStatusCode httpStatusCode, string? jsonResponse) = await HttpGet("/services/" + serviceId);
 
             if (httpStatusCode != HttpStatusCode.OK)
@@ -50,10 +49,14 @@ public class HsdaApiService(ILogger<HsdaApiService> logger, HttpClient httpClien
                 continue;
             }
 
-            servicesById.Add(new ServiceJson { Id = serviceId, Json = jsonResponse! });
+            servicesById.Add(new ServiceJson (Id: serviceId, Json: jsonResponse!));
         }
 
-        return servicesById;
+        bool gotResults = servicesById.Count > 0;
+
+        if (!gotResults) logger.LogWarning("Getting Services by ID returned no results");
+
+        return (gotResults ? HttpStatusCode.OK : HttpStatusCode.NoContent, servicesById);
     }
 
     private async Task<(HttpStatusCode, string?)> HttpGet(string endpoint)
