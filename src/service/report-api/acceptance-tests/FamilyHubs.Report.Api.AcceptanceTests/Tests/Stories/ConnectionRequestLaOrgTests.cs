@@ -5,17 +5,10 @@ using Xunit;
 
 namespace FamilyHubs.Report.Api.AcceptanceTests.Tests.Stories;
 
-[TestClass]
 public class ConnectionRequestLaOrgTests
 {
-    private readonly SharedSteps _sharedSteps;
-    private readonly ConnectionRequestsLaOrgSteps _steps;
-
-    public ConnectionRequestLaOrgTests()
-    {
-        _steps = new ConnectionRequestsLaOrgSteps();
-        _sharedSteps = new SharedSteps();
-    }
+    private readonly SharedSteps _sharedSteps = new();
+    private readonly ConnectionRequestsLaOrgSteps _steps = new();
 
     #region Total Connection Requests
 
@@ -30,7 +23,7 @@ public class ConnectionRequestLaOrgTests
             string role, long laOrgId, HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForTheTotalConnectionRequests(_sharedSteps.bearerToken, laOrgId))
+            .When(s => _steps.SendAValidRequestForTheTotalConnectionRequests(_sharedSteps.BearerToken, laOrgId))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .Then(s => _steps.VerifySevenDaysConnectionRequestResponseBody(_steps.LastResponse))
             .BDDfy();
@@ -48,7 +41,7 @@ public class ConnectionRequestLaOrgTests
         HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForTheTotalConnectionRequests(_sharedSteps.bearerToken, laOrgId))
+            .When(s => _steps.SendAValidRequestForTheTotalConnectionRequests(_sharedSteps.BearerToken, laOrgId))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
@@ -61,7 +54,7 @@ public class ConnectionRequestLaOrgTests
         HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.HaveAnInvalidBearerToken())
-            .When(s => _steps.SendAValidRequestForTheTotalConnectionRequests(_sharedSteps.bearerToken, laOrgId))
+            .When(s => _steps.SendAValidRequestForTheTotalConnectionRequests(_sharedSteps.BearerToken, laOrgId))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
@@ -81,7 +74,7 @@ public class ConnectionRequestLaOrgTests
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s => _steps.SendAValidRequestForConnectionRequestsInThePast7days(date, laOrgId,
-                _sharedSteps.bearerToken))
+                _sharedSteps.BearerToken))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .And(s => _steps.VerifySevenDaysConnectionRequestResponseBody(_steps.LastResponse))
             .BDDfy();
@@ -98,7 +91,7 @@ public class ConnectionRequestLaOrgTests
     {
         this.Given(s => _sharedSteps.HaveAnInvalidBearerToken())
             .When(s => _steps.SendAValidRequestForConnectionRequestsInThePast7days(date, laOrgId,
-                _sharedSteps.bearerToken))
+                _sharedSteps.BearerToken))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
@@ -115,7 +108,7 @@ public class ConnectionRequestLaOrgTests
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s => _steps.SendAValidRequestForConnectionRequestsInThePast7days(date, laOrgId,
-                _sharedSteps.bearerToken))
+                _sharedSteps.BearerToken))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
@@ -130,7 +123,7 @@ public class ConnectionRequestLaOrgTests
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s =>
                 _steps.SendAValidRequestForConnectionRequestsInThePast7daysWithoutDateParameter(
-                    _sharedSteps.bearerToken, laOrgId))
+                    _sharedSteps.BearerToken, laOrgId))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
@@ -150,7 +143,7 @@ public class ConnectionRequestLaOrgTests
             string role, string date, long laOrgId, HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForConnectionRequestsFourWeekBreakdown(date, _sharedSteps.bearerToken,
+            .When(s => _steps.SendAValidRequestForConnectionRequestsFourWeekBreakdown(date, _sharedSteps.BearerToken,
                 laOrgId))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .And(s => _steps.VerifyTotalsSectionOfTheFourWeekBreakDownResponseBody(_steps.LastResponse))
@@ -167,9 +160,10 @@ public class ConnectionRequestLaOrgTests
             string role, string date, long laOrgId, HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForConnectionRequestsFourWeekBreakdown(date, _sharedSteps.bearerToken,
+            .When(s => _steps.SendAValidRequestForConnectionRequestsFourWeekBreakdown(date, _sharedSteps.BearerToken,
                 laOrgId))
             .Then(s => _steps.VerifyWeeklyReportsSectionOfTheFourWeekBreakDownResponseBody(_steps.LastResponse))
+            .And(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
 
@@ -182,7 +176,7 @@ public class ConnectionRequestLaOrgTests
         HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.HaveAnInvalidBearerToken())
-            .When(s => _steps.SendAValidRequestForConnectionRequestsFourWeekBreakdown(date, _sharedSteps.bearerToken,
+            .When(s => _steps.SendAValidRequestForConnectionRequestsFourWeekBreakdown(date, _sharedSteps.BearerToken,
                 laOrgId))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
@@ -199,7 +193,7 @@ public class ConnectionRequestLaOrgTests
         HttpStatusCode statusCode)
     {
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
-            .When(s => _steps.SendAValidRequestForConnectionRequestsFourWeekBreakdown(date, _sharedSteps.bearerToken,
+            .When(s => _steps.SendAValidRequestForConnectionRequestsFourWeekBreakdown(date, _sharedSteps.BearerToken,
                 laOrgId))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
@@ -216,7 +210,7 @@ public class ConnectionRequestLaOrgTests
         this.Given(s => _sharedSteps.GenerateBearerToken(role))
             .When(s =>
                 _steps.SendAValidRequestForConnectionRequestsFourWeekBreakdownWithAMissingDateParameter(
-                    _sharedSteps.bearerToken, laOrgId))
+                    _sharedSteps.BearerToken, laOrgId))
             .Then(s => _sharedSteps.VerifyStatusCode(_steps.LastResponse, statusCode))
             .BDDfy();
     }
