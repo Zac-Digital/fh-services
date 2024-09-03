@@ -42,13 +42,18 @@ jobs:
     strategy:
       matrix:
         project_name: [
-          report-api
+          report-api,
+          referral-api
         ]
         include:
           - project_name: report-api
             job_name: Test - Report API
             keyvault_prefix: TEST-REPORT-API
             test_project_name: FamilyHubs.Report.Api.AcceptanceTests
+          - project_name: referral-api
+            job_name: Test - Referral API
+            keyvault_prefix: TEST-Referral-API
+            test_project_name: FamilyHubs.Referral.Api.AcceptanceTests  
     uses: ./.github/workflows/run-acceptance-tests.yml
     with:
       environment: ${{ inputs.environment }}
