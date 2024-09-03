@@ -176,3 +176,26 @@ jobs:
       project_type: ui
       azure_app_name: ${{ matrix.azure_app_name }}
     secrets: inherit
+
+  run-api-acceptance-tests:
+    if: inputs.environment == 'Test' || inputs.environment == 'Test2'
+    name: ${{ matrix.job_name }}
+    needs: [ deploy-ui-services ]
+    strategy:
+      matrix:
+        project_name: [
+          report-api
+        ]
+        include:
+          - project_name: report-api
+            job_name: Test - Report API
+            keyvault_prefix: TEST-REPORT-API
+            test_project_name: FamilyHubs.Report.Api.AcceptanceTests
+    uses: ./.github/workflows/run-acceptance-tests.yml
+    with:
+      environment: ${{ inputs.environment }}
+      project_name: ${{ matrix.project_name }}
+      keyvault_prefix: ${{ matrix.keyvault_prefix }}
+      test_project_name: ${{ matrix.test_project_name }}
+      project_type: service
+    secrets: inherit

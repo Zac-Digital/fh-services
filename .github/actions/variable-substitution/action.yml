@@ -17,6 +17,13 @@ inputs:
     required: true
     description: Comma seperated list of files to update
     type: string
+  configure:
+    required: true
+    type: choice
+    options:
+      - 'Applications'
+      - 'Functions'
+      - 'Tests'
 
 runs:
   using: composite
