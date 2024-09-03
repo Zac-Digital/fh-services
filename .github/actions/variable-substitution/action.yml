@@ -109,7 +109,7 @@ runs:
         FamilyHubsUi.Analytics.ContainerId: ${{ steps.fetch.outputs.FAMILYHUBSUI_ANALYTICS_CONTAINERID }}
         FamilyHubsUi.Analytics.MeasurementId: ${{ steps.fetch.outputs.FAMILYHUBSUI_ANALYTICS_MEASUREMENTID }}
         FamilyHubsUi.Analytics.ClarityId: ""
-
+        
     - name: Test Settings Variable Substitution
       if: inputs.configure == 'Tests'
       uses: microsoft/variable-substitution@v1
