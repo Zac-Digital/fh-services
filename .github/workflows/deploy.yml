@@ -52,7 +52,7 @@ jobs:
             test_project_name: FamilyHubs.Report.Api.AcceptanceTests
           - project_name: referral-api
             job_name: Test - Referral API
-            keyvault_prefix: TEST-Referral-API
+            keyvault_prefix: TEST-REFERRAL-API
             test_project_name: FamilyHubs.Referral.Api.AcceptanceTests  
     uses: ./.github/workflows/run-acceptance-tests.yml
     with:
