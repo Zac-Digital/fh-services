@@ -178,7 +178,7 @@ jobs:
     secrets: inherit
 
   run-api-acceptance-tests:
-    if: inputs.environment == 'Test' || inputs.environment == 'Test2'
+    if: startsWith(inputs.environment, 'Test')
     name: ${{ matrix.job_name }}
     needs: [ deploy-ui-services ]
     strategy:
