@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using FamilyHubs.Report.Api.AcceptanceTests.Configuration;
 using System.IdentityModel.Tokens.Jwt;
