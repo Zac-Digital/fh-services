@@ -49,19 +49,9 @@ public class LocalOfferDetailModel : HeaderPageModel
 
     // this only covers scenarios that can be created through Manage, not all possible scenarios from LA ingested data
 
-    //private (List<string>, IEnumerable<string>?) GetServiceSchedule()
-    //private (List<string>, ScheduleDto?) GetServiceSchedule()
     private (List<AttendingType>, ScheduleDto?) GetServiceSchedule()
     {
-        //var serviceScheduleAttendingTypeDescriptions = new List<string>();
         var serviceScheduleAttendingTypes = new List<AttendingType>();
-
-        //var firstServiceSchedule = LocalOffer.Schedules.FirstOrDefault();
-
-        //if (firstServiceSchedule == null)
-        //{
-        //    return (serviceScheduleAttendingTypeDescriptions, null);
-        //}
 
         foreach (var attendingTypeString in LocalOffer.Schedules
                      .Select(s => s.AttendingType))
@@ -71,8 +61,6 @@ public class LocalOfferDetailModel : HeaderPageModel
                 && (attendingType != AttendingType.InPerson
                     || !LocalOffer.Locations.Any()))
             {
-                //string desc = attendingType.ToDescription();
-                //serviceScheduleAttendingTypeDescriptions.Add(desc[0] + desc[1..].ToLower());
                 serviceScheduleAttendingTypes.Add(attendingType);
             }
         }
@@ -83,23 +71,6 @@ public class LocalOfferDetailModel : HeaderPageModel
         }
 
         return (serviceScheduleAttendingTypes, LocalOffer.Schedules.FirstOrDefault());
-
-        //var firstServiceSchedule = LocalOffer.Schedules.FirstOrDefault();
-
-        //return (serviceScheduleAttendingTypeDescriptions,
-        //    firstServiceSchedule!.ByDay?.Split(",")
-        //                       ?? Enumerable.Empty<string>()
-        //        .Select(c => Calendar.DayCodeToName[c]));
-
-        //return firstServiceSchedule;
-
-        //if (LocalOffer.Locations.Any())
-        //    //|| LocalOffer.ServiceDeliveries?.All(sd => sd.Name != AttendingType.InPerson) == true)
-        //{
-        //    return null;
-        //}
-        //return LocalOffer.Schedules
-        //    .FirstOrDefault(s => s.AttendingType == AttendingType.InPerson.ToString());
     }
 
     private async Task<bool> ShouldShowConnectionRequestButton()
