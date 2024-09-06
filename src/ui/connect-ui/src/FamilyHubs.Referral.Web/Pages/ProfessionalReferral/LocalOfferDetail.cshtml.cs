@@ -15,7 +15,7 @@ public class LocalOfferDetailModel : HeaderPageModel
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IIdamsClient _idamsClient;
     public ServiceDto LocalOffer { get; set; } = default!;
-    public List<AttendingType> ServiceScheduleAttendingTypes { get; set; } = default!;
+    public List<AttendingType>? ServiceScheduleAttendingTypes { get; set; }
     public ScheduleDto? ServiceSchedule { get; set; }
 
     public string? ReturnUrl { get; set; }

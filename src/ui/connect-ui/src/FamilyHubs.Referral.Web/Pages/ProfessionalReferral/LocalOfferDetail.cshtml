@@ -125,13 +125,13 @@
             }
         }
 
-        @if (Model.ServiceSchedule != null)
+        @if (Model.ServiceSchedule != null && Model.ServiceScheduleAttendingTypes != null)
         {
             <h2 class="govuk-heading-m">@Model.ServiceScheduleAttendingTypes.ToDisplay()</h2>
 
             <summary-list>
                 <summary-row key="Days service is available" show-empty>
-                    @ByDayToDisplay(Model.ServiceSchedule?.ByDay)
+                    @ByDayToDisplay(Model.ServiceSchedule.ByDay)
                 </summary-row>
                 <summary-row key="Extra availability details" show-empty class="fh-pre-wrap">@Model.ServiceSchedule.Description</summary-row>
             </summary-list>
