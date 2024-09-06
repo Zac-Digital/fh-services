@@ -4,10 +4,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <VersionPrefix>8.12.0</VersionPrefix>
-	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-	  <NoWarn>1701;1702;S1135</NoWarn>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <NoWarn>1701;1702;S1135</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

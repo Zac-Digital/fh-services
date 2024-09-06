@@ -6,7 +6,7 @@ namespace FamilyHubs.Idams.Maintenance.Core.ApiClient;
 
 public interface IServiceDirectoryClient
 {
-    Task<OrganisationWithServicesDto?> GetOrganisationById(long id);
+    Task<OrganisationDetailsDto?> GetOrganisationById(long id);
     Task<List<OrganisationDto>> GetOrganisations(CancellationToken cancellationToken = default);
 }
 
@@ -20,7 +20,7 @@ public class ServiceDirectoryClient : ApiService<ServiceDirectoryClient>, IServi
         _cacheService = cacheService;
     }
 
-    public async Task<OrganisationWithServicesDto?> GetOrganisationById(long id)
+    public async Task<OrganisationDetailsDto?> GetOrganisationById(long id)
     {
         var request = new HttpRequestMessage();
         request.Method = HttpMethod.Get;
@@ -31,7 +31,7 @@ public class ServiceDirectoryClient : ApiService<ServiceDirectoryClient>, IServi
         response.EnsureSuccessStatusCode();
 
         Logger.LogInformation($"{nameof(ServiceDirectoryClient)} Returning Organisation");
-        return await DeserializeResponse<OrganisationWithServicesDto>(response);
+        return await DeserializeResponse<OrganisationDetailsDto>(response);
     }
 
     public async Task<List<OrganisationDto>> GetOrganisations(CancellationToken cancellationToken = default)

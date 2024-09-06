@@ -25,7 +25,6 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="8.11.0" />
     <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="9.3.1" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.22.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
@@ -48,6 +47,7 @@
     <None Include="Pages\Error\500.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\shared\service-directory-shared\src\FamilyHubs.ServiceDirectory.Shared\FamilyHubs.ServiceDirectory.Shared.csproj" />
     <ProjectReference Include="..\FamilyHubs.ServiceDirectory.Admin.Core\FamilyHubs.ServiceDirectory.Admin.Core.csproj" />
   </ItemGroup>
   <ItemGroup>

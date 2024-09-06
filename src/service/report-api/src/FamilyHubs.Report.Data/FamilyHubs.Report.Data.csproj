@@ -7,14 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="8.10.0" />
-		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.4.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.19" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.19">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.19" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\shared\service-directory-shared\src\FamilyHubs.ServiceDirectory.Shared\FamilyHubs.ServiceDirectory.Shared.csproj" />
+      <ProjectReference Include="..\..\..\..\shared\shared-kernel\src\fh-shared-kernel.shared-kernel\FamilyHubs.SharedKernel.csproj" />
     </ItemGroup>
 
 </Project>
