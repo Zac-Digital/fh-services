@@ -17,6 +17,9 @@ public class WhenUsingEmail : BaseProfessionalReferralPage
     [Fact]
     public async Task ThenOnGetEmail()
     {
+        var display = string.Empty;
+        var result = display[0] + display[1..].ToLower();
+
         // Act
         await _emailModel.OnGetAsync("1");
 
