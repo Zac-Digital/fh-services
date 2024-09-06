@@ -5,7 +5,7 @@ namespace FamilyHubs.SharedKernel.UnitTests.Enumerable
 {
     public class EnumerableExtensionsTests
     {
-        private enum TestEnum
+        public enum TestEnum
         {
             [Description("Value One")]
             Value1,
@@ -15,20 +15,24 @@ namespace FamilyHubs.SharedKernel.UnitTests.Enumerable
             Value3
         }
 
-        [Fact]
-        public void ToDisplay_ReturnsExpectedDisplay()
+        public static IEnumerable<object[]> TestCases()
         {
-            // Arrange
-            var enumValues = new List<TestEnum>
-            {
-                TestEnum.Value1,
-                TestEnum.Value2,
-                TestEnum.Value3
-            };
+            yield return new object[] { new List<TestEnum> { }, "" };
+            yield return new object[] { new List<TestEnum> { TestEnum.Value1 }, "Value one" };
+            yield return new object[] { new List<TestEnum> { TestEnum.Value1, TestEnum.Value2 }, "Value one and value two" };
+            yield return new object[] { new List<TestEnum> { TestEnum.Value1, TestEnum.Value2, TestEnum.Value3 }, "Value one, value three and value two" };
+            yield return new object[] { new List<TestEnum> { TestEnum.Value3, TestEnum.Value1, TestEnum.Value2 }, "Value one, value three and value two" };
+        }
+
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public void ToDisplay_ReturnsExpectedDisplay(IEnumerable<TestEnum> enumValues, string expectedDisplay)
+        {
             // Act
             var display = enumValues.ToDisplay();
+
             // Assert
-            Assert.Equal("Value one, value three and value two", display);
+            Assert.Equal(expectedDisplay, display);
         }
     }
 }
