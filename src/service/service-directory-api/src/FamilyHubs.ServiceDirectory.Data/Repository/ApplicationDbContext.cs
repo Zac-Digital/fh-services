@@ -2,9 +2,9 @@
 using FamilyHubs.ServiceDirectory.Data.Entities;
 using FamilyHubs.ServiceDirectory.Data.Entities.ManyToMany;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
-using FamilyHubs.SharedKernel.OpenReferral;
-using Enums = FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.SharedKernel.OpenReferral.Repository;
 using Microsoft.EntityFrameworkCore;
+using Enums = FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Data.Repository
 {
@@ -72,7 +72,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                 .HasOne(e => e.ServiceSearchType)
                 .WithMany(e => e.ServiceSearches)
                 .HasForeignKey(e => e.ServiceSearchTypeId)
-                .IsRequired(true);
+                .IsRequired();
             
             modelBuilder.Entity<ServiceSearch>()
                 .Property(e => e.CorrelationId)
@@ -152,10 +152,9 @@ namespace FamilyHubs.ServiceDirectory.Data.Repository
                         Description = "Connect"
                     }
                 );
-            
-            modelBuilder.Entity<ServicesTemp>()
-                .ToTable("services_temp", "staging")
-                .HasKey(e => e.Id);
+
+            OpenReferralDbContextExtension openReferralDbContextExtension = new();
+            openReferralDbContextExtension.OnModelCreating(modelBuilder);
 
             base.OnModelCreating(modelBuilder);
         }
