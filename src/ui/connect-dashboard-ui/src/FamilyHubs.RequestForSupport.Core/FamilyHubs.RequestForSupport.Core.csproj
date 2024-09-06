@@ -12,12 +12,15 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.15" />
-		<PackageReference Include="FamilyHubs.SharedKernel" Version="2.3.0" />
 		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.23.0.88079">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\shared\referral-shared\src\FamilyHubs.ReferralService.Shared\FamilyHubs.ReferralService.Shared.csproj" />
+	  <ProjectReference Include="..\..\..\..\shared\shared-kernel\src\fh-shared-kernel.shared-kernel\FamilyHubs.SharedKernel.csproj" />
 	</ItemGroup>
 
 </Project>

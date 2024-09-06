@@ -11,7 +11,6 @@
     <ItemGroup>
         <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="9.3.1" />
         <PackageReference Include="EFCoreSecondLevelCacheInterceptor" Version="4.4.1" />
-        <PackageReference Include="FamilyHubs.SharedKernel" Version="2.4.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.17" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.19" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.19">
@@ -28,6 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\..\shared\shared-kernel\src\fh-shared-kernel.shared-kernel\FamilyHubs.SharedKernel.csproj" />
         <ProjectReference Include="..\FamilyHubs.Report.Core\FamilyHubs.Report.Core.csproj" />
         <ProjectReference Include="..\FamilyHubs.Report.Data\FamilyHubs.Report.Data.csproj" />
     </ItemGroup>

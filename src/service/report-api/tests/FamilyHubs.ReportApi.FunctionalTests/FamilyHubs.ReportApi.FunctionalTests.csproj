@@ -10,7 +10,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FamilyHubs.SharedKernel" Version="2.4.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.17" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.19" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
@@ -26,6 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\..\shared\shared-kernel\src\fh-shared-kernel.shared-kernel\FamilyHubs.SharedKernel.csproj" />
       <ProjectReference Include="..\..\src\FamilyHubs.Report.Api\FamilyHubs.Report.Api.csproj" />
       <ProjectReference Include="..\..\src\FamilyHubs.Report.Data\FamilyHubs.Report.Data.csproj" />
     </ItemGroup>

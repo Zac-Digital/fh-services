@@ -21,9 +21,6 @@
     <PackageReference Include="AspNetCore.HealthChecks.OpenIdConnectServer" Version="7.0.0" />
     <PackageReference Include="FamilyHubs.Notification.Api.Client" Version="1.1.1" />
     <PackageReference Include="FamilyHubs.Notification.Api.Contracts" Version="1.0.3" />
-    <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.15" />
-    <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="8.11.0" />
-    <PackageReference Include="FamilyHubs.SharedKernel" Version="2.4.0" />
     <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="9.3.1" />
 	<PackageReference Include="libphonenumber-csharp" Version="8.13.36" />
 	<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="7.0.18" />
@@ -31,6 +28,12 @@
 	    <PrivateAssets>all</PrivateAssets>
 	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\shared\referral-shared\src\FamilyHubs.ReferralService.Shared\FamilyHubs.ReferralService.Shared.csproj" />
+    <ProjectReference Include="..\..\..\..\shared\service-directory-shared\src\FamilyHubs.ServiceDirectory.Shared\FamilyHubs.ServiceDirectory.Shared.csproj" />
+    <ProjectReference Include="..\..\..\..\shared\shared-kernel\src\fh-shared-kernel.shared-kernel\FamilyHubs.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>

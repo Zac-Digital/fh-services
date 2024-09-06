@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\..\shared\service-directory-shared\src\FamilyHubs.ServiceDirectory.Shared\FamilyHubs.ServiceDirectory.Shared.csproj" />
+        <ProjectReference Include="..\..\..\..\shared\shared-kernel\src\fh-shared-kernel.shared-kernel\FamilyHubs.SharedKernel.csproj" />
         <ProjectReference Include="..\FamilyHubs.Report.Data\FamilyHubs.Report.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="8.11.0" />
-        <PackageReference Include="FamilyHubs.SharedKernel" Version="2.4.0" />
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1" />
     </ItemGroup>
 

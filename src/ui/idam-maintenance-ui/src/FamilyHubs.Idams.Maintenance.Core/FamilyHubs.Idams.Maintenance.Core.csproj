@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FamilyHubs.ReferralService.Shared" Version="1.0.15" />
-    <PackageReference Include="FamilyHubs.ServiceDirectory.Shared" Version="2.0.6" />
     <PackageReference Include="FamilyHubs.SharedKernel.Razor" Version="9.1.5" />
     <PackageReference Include="FluentValidation" Version="11.7.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
@@ -16,6 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\shared\referral-shared\src\FamilyHubs.ReferralService.Shared\FamilyHubs.ReferralService.Shared.csproj" />
+    <ProjectReference Include="..\..\..\..\shared\service-directory-shared\src\FamilyHubs.ServiceDirectory.Shared\FamilyHubs.ServiceDirectory.Shared.csproj" />
     <ProjectReference Include="..\FamilyHubs.Idams.Maintenance.Data\FamilyHubs.Idams.Maintenance.Data.csproj" />
   </ItemGroup>
 
