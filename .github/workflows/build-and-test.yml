@@ -6,7 +6,7 @@ concurrency:
 
 on:
   push:
-    branches: ["main", "release-*", "feature/fhb-649-directory-packages-file"]
+    branches: ["main", "release-*"]
   pull_request:
     paths:
       - '.github/workflows/build-and-test.yml'
