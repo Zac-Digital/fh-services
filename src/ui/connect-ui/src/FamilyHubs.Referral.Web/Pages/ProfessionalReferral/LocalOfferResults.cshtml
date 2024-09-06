@@ -1,6 +1,8 @@
 ﻿@page
 @using FamilyHubs.Referral.Core.Helper
 @using FamilyHubs.ServiceDirectory.Shared.ReferenceData
+@using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model LocalOfferResultsModel
 @{
     //todo: if paginated results, should have (page x of n) appended
@@ -93,6 +95,23 @@ else
                         </li>
                     }
                 </ul>
+            }
+
+            <!-- Remove filter - days available -->
+            @if (Model.DaysAvailable?.Count > 0)
+            {
+            <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Days available</h3>
+            <ul class="moj-filter-tags">
+                @foreach (var day in Model.DaysAvailable)
+                {
+                <li>
+                    <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeDaysAvailable" value="@day" data-testid="@day-remove">
+                        <span class="govuk-visually-hidden">Remove this filter</span>
+                        @(Calendar.DayCodeToName[day])
+                    </button>
+                </li>
+                }
+            </ul>
             }
 
             <!-- Remove filter - ServiceDeliverySelection -->
@@ -250,6 +269,33 @@ else
                             Pay to use
                         </label>
                     </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="govuk-form-group fh-filter-group">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                    Days service is available
+                </legend>
+                <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                    @for (var day = 0; day < 7; day++)
+                    {
+                        var dayOfWeek = (DayCode)day;
+
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input"
+                                   id=@($"days-{dayOfWeek}")
+                                   name="DaysAvailable"
+                                   type="checkbox"
+                                   value=@(dayOfWeek)
+                                   @(Model.DaysAvailable?.Any(x => x == dayOfWeek.ToString()) == true ? "checked" : "")
+                                   data-testid=@($"checkbox-days-{dayOfWeek}")>
+                            <label class="govuk-label govuk-checkboxes__label" for=@($"days-{dayOfWeek}")>
+                                @(Calendar.DayCodeToName[dayOfWeek.ToString()])
+                            </label>
+                        </div>
+                    }
                 </div>
             </fieldset>
         </div>

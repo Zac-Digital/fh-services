@@ -126,6 +126,11 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
             urlBuilder.Append($"&canFamilyChooseLocation={filter.CanFamilyChooseLocation.Value}");
         }
 
+        if (filter.DaysAvailable != null)
+        {
+            urlBuilder.Append($"&days={filter.DaysAvailable}");
+        }
+
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
