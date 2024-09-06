@@ -56,7 +56,7 @@ public class LocalOfferDetailModel : HeaderPageModel
         foreach (var attendingTypeString in LocalOffer.Schedules
                      .Select(s => s.AttendingType))
         {
-            if (attendingTypeString != null
+            if (attendingTypeString is not null
                 && Enum.TryParse<AttendingType>(attendingTypeString, out var attendingType)
                 && (attendingType != AttendingType.InPerson
                     || !LocalOffer.Locations.Any()))
