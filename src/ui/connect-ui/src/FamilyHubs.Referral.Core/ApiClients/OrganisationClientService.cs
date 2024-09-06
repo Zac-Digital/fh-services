@@ -150,7 +150,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
                 proximity != null ? $"&proximity={proximity}" : string.Empty)}";
     }
 
-    public void AddAgeToUrl(StringBuilder url, int? givenAge)
+    public static void AddAgeToUrl(StringBuilder url, int? givenAge)
     {
         if (givenAge != null)
         {
@@ -158,7 +158,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         }
     }
 
-    public void AddTextToUrl(StringBuilder url, string? text)
+    public static void AddTextToUrl(StringBuilder url, string? text)
     {
         if (!string.IsNullOrWhiteSpace(text))
         {

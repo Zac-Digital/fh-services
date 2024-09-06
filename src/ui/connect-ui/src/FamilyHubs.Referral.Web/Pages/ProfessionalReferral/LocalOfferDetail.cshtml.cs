@@ -5,6 +5,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -14,6 +15,8 @@ public class LocalOfferDetailModel : HeaderPageModel
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IIdamsClient _idamsClient;
     public ServiceDto LocalOffer { get; set; } = default!;
+    public List<AttendingType>? ServiceScheduleAttendingTypes { get; set; }
+    public ScheduleDto? ServiceSchedule { get; set; }
 
     public string? ReturnUrl { get; set; }
 
@@ -37,9 +40,37 @@ public class LocalOfferDetailModel : HeaderPageModel
         ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
 
+        (ServiceScheduleAttendingTypes, ServiceSchedule) = GetServiceSchedule();
+
         ShowConnectionRequestButton = await ShouldShowConnectionRequestButton();
 
         return Page();
+    }
+
+    // this only covers scenarios that can be created through Manage, not all possible scenarios from LA ingested data
+
+    private (List<AttendingType>, ScheduleDto?) GetServiceSchedule()
+    {
+        var serviceScheduleAttendingTypes = new List<AttendingType>();
+
+        foreach (var attendingTypeString in LocalOffer.Schedules
+                     .Select(s => s.AttendingType))
+        {
+            if (attendingTypeString is not null
+                && Enum.TryParse<AttendingType>(attendingTypeString, out var attendingType)
+                && (attendingType != AttendingType.InPerson
+                    || !LocalOffer.Locations.Any()))
+            {
+                serviceScheduleAttendingTypes.Add(attendingType);
+            }
+        }
+
+        if (!serviceScheduleAttendingTypes.Any())
+        {
+            return (serviceScheduleAttendingTypes, null);
+        }
+
+        return (serviceScheduleAttendingTypes, LocalOffer.Schedules.FirstOrDefault());
     }
 
     private async Task<bool> ShouldShowConnectionRequestButton()

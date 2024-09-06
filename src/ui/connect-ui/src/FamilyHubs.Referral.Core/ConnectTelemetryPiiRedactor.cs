@@ -87,7 +87,7 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
         DebugCheckForUnredactedData(telemetry);
     }
 
-    private void SanitizeProperty(Regex regex, IDictionary<string, string> properties, string key)
+    private static void SanitizeProperty(Regex regex, IDictionary<string, string> properties, string key)
     {
         if (properties.TryGetValue(key, out string? value))
         {
@@ -95,12 +95,12 @@ public class ConnectTelemetryPiiRedactor : ITelemetryInitializer
         }
     }
 
-    private string Sanitize(Regex regex, string value)
+    private static string Sanitize(Regex regex, string value)
     {
         return regex.Replace(value, "REDACTED");
     }
 
-    private Uri Sanitize(Regex regex, Uri uri)
+    private static Uri Sanitize(Regex regex, Uri uri)
     {
         // only create a uri if necessary (might be slower, but should stop memory churn)
         string unredactedUri = uri.ToString();
