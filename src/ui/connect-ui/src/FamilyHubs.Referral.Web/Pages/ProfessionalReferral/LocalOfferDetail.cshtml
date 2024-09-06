@@ -1,4 +1,5 @@
 ﻿@page
+@using FamilyHubs.Referral.Core.Helper
 @using FamilyHubs.ServiceDirectory.Shared.Enums
 @using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar
 @using FamilyHubs.SharedKernel.Enums
@@ -126,7 +127,7 @@
 
         @if (Model.ServiceSchedule != null)
         {
-            <h2 class="govuk-heading-m">@ToDisplay(Model.ServiceScheduleAttendingTypes)</h2>
+            <h2 class="govuk-heading-m">@Model.ServiceScheduleAttendingTypes.ToDisplay()</h2>
 
             <summary-list>
                 <summary-row key="Days service is available" show-empty>
@@ -199,24 +200,5 @@
 
         return string.Join(", ", byDay.Split(",")
             .Select(c => Calendar.DayCodeToName[c]));
-    }
-
-    private static string ToDisplay(IEnumerable<AttendingType> attendingTypes)
-    {
-        var orderedDescriptions = attendingTypes
-            .Select(at => at.ToDescription())
-            .Order()
-            .ToArray();
-
-        string display = orderedDescriptions.Length switch
-        {
-            0 => string.Empty,
-            1 => orderedDescriptions[0],
-            2 => string.Join(" and ", orderedDescriptions),
-            _ => string.Join(", ", orderedDescriptions.Take(orderedDescriptions.Length - 2))
-                 + $", {orderedDescriptions[^2]} and {orderedDescriptions[^1]}"
-        };
-
-        return display[0] + display[1..].ToLower();
     }
 }
