@@ -21,8 +21,7 @@ public static class EnumerableExtensions
         {
             1 => orderedDescriptions[0],
             2 => string.Join(" and ", orderedDescriptions),
-            _ => string.Join(", ", orderedDescriptions.Take(orderedDescriptions.Length - 2))
-                 + $", {orderedDescriptions[^2]} and {orderedDescriptions[^1]}"
+            _ => $"{string.Join(", ", orderedDescriptions.Take(orderedDescriptions.Length - 2))}, {orderedDescriptions[^2]} and {orderedDescriptions[^1]}"
         };
 
         return display.Length > 0 ? char.ToUpper(display[0]) + display[1..].ToLower() : display;
