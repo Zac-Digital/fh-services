@@ -6,7 +6,7 @@ concurrency:
 
 on:
   push:
-    branches: ["main", "release-*", "feature/fhb-365-remove-nuget-packages-for-references"]
+    branches: ["main", "release-*"]
   pull_request:
     paths:
       - '.github/workflows/build-and-test.yml'
