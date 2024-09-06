@@ -69,12 +69,14 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     public const string AllLanguagesValue = "all";
 
-    public static SelectListItem[] StaticLanguageOptions { get; set; }
-    public IEnumerable<SelectListItem> LanguageOptions => StaticLanguageOptions;
+    public static SelectListItem[] LanguageOptions { get; set; }
+//#pragma warning disable S2325
+//    public IEnumerable<SelectListItem> LanguageOptions => StaticLanguageOptions;
+//#pragma warning restore S2325
 
     static LocalOfferResultsModel()
     {
-        StaticLanguageOptions = Languages.FilterCodes
+        LanguageOptions = Languages.FilterCodes
             .Select(c => new SelectListItem(Languages.CodeToName[c], c))
             .OrderBy(kv => kv.Text)
             .Prepend(new SelectListItem("All languages", AllLanguagesValue, true))
@@ -359,14 +361,14 @@ public class LocalOfferResultsModel : HeaderPageModel
             .ToDictionary(k => (int)k, v => v.ToDescription());
     }
 
-    public string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto> serviceDeliveries)
+    public static string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto> serviceDeliveries)
     {
         return serviceDeliveries.Count == 0
             ? string.Empty
             : string.Join(",", serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name.AsString(EnumFormat.Description)));
     }
 
-    public string GetLanguagesAsString(ICollection<LanguageDto> languageDtos)
+    public static string GetLanguagesAsString(ICollection<LanguageDto> languageDtos)
     {
         return languageDtos.Count == 0
             ? string.Empty

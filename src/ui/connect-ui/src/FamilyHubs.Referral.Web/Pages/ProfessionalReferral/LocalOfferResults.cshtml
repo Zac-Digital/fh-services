@@ -321,7 +321,7 @@ else
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
                     <label for="SelectedLanguage">Language</label>
                 </legend>
-                <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="Model.LanguageOptions" class="govuk-select" data-testid="select-language">
+                    <select asp-for="SelectedLanguage" id="SelectedLanguage" asp-items="LocalOfferResultsModel.LanguageOptions" class="govuk-select" data-testid="select-language">
                     <option value="" selected disabled>Select language</option>
                 </select>
             </fieldset>
@@ -380,14 +380,14 @@ else
                         {
                             <dl class="govuk-body-s dtmargins">
                                 <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-                                <dd>@Model.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
+                                <dd>LocalOfferResultsModel.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
                             </dl>
                         }
                         @if (item.Languages.Any(l => !string.IsNullOrWhiteSpace(l.Name)))
                         {
                             <dl class="govuk-body-s dtmargins">
                                 <dt class="govuk-!-font-weight-bold">Language</dt>
-                                <dd>@Model.GetLanguagesAsString(item.Languages)</dd>
+                                <dd>LocalOfferResultsModel.GetLanguagesAsString(item.Languages)</dd>
                             </dl>
                         }
                     </li>

@@ -115,11 +115,10 @@ public class WhenUsingOrganisationClientService
     {
         //Arrange
         string expected = "&givenAge=18";
-        OrganisationClientService organisationClientService = new OrganisationClientService(new HttpClient());
         StringBuilder url = new StringBuilder();
 
         //Act 
-        organisationClientService.AddAgeToUrl(url, 18);
+        OrganisationClientService.AddAgeToUrl(url, 18);
         var result = url.ToString();
 
         //Assert
@@ -131,11 +130,10 @@ public class WhenUsingOrganisationClientService
     {
         //Arrange
         string expected = "&text=Test";
-        OrganisationClientService organisationClientService = new OrganisationClientService(new HttpClient());
         StringBuilder url = new StringBuilder();
 
         //Act 
-        organisationClientService.AddTextToUrl(url,"Test");
+        OrganisationClientService.AddTextToUrl(url,"Test");
         var result = url.ToString();
 
         //Assert
