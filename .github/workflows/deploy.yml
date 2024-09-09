@@ -156,57 +156,60 @@ jobs:
       project_type: service
       azure_app_name: ${{ matrix.azure_app_name }}
     secrets: inherit
+    
+    
+    deploy-ui-services:
+      name: ${{ matrix.job_name }}
+      needs: [ deploy-api-services ]
+      strategy:
+        matrix:
+          artifact_name: [ connect-dashboard-ui,
+                           connect-ui,
+                           find-ui,
+                           idam-maintenance-ui,
+                           manage-ui
+          ]
+          include:
+            - artifact_name: connect-dashboard-ui
+              job_name: Deploy - Connect Dashboard UI
+              keyvault_prefix: CONNECT-DASHBOARD-UI
+              project_name: FamilyHubs.RequestForSupport.Web
+              azure_app_name: as-fh-ref-dash-ui
 
-  deploy-ui-services:
-    name: ${{ matrix.job_name }}
-    needs: [ deploy-api-services ]
-    strategy:
-      matrix:
-        artifact_name: [ connect-dashboard-ui,
-                         connect-ui,
-                         find-ui,
-                         idam-maintenance-ui,
-                         manage-ui
-        ]
-        include:
-          - artifact_name: connect-dashboard-ui
-            job_name: Deploy - Connect Dashboard UI
-            keyvault_prefix: CONNECT-DASHBOARD-UI
-            project_name: FamilyHubs.RequestForSupport.Web
-            azure_app_name: as-fh-ref-dash-ui
+            - artifact_name: connect-ui
+              job_name: Deploy - Connect UI
+              keyvault_prefix: CONNECT-UI
+              project_name: FamilyHubs.Referral.Web
+              azure_app_name: as-fh-referral-ui
 
-          - artifact_name: connect-ui
-            job_name: Deploy - Connect UI
-            keyvault_prefix: CONNECT-UI
-            project_name: FamilyHubs.Referral.Web
-            azure_app_name: as-fh-referral-ui
+            - artifact_name: find-ui
+              job_name: Deploy - Find UI
+              keyvault_prefix: FIND-UI
+              project_name: FamilyHubs.ServiceDirectory.Web
+              azure_app_name: as-fh-sd-ui
 
-          - artifact_name: find-ui
-            job_name: Deploy - Find UI
-            keyvault_prefix: FIND-UI
-            project_name: FamilyHubs.ServiceDirectory.Web
-            azure_app_name: as-fh-sd-ui
+            - artifact_name: idam-maintenance-ui
+              job_name: Deploy - IDAM Maintenance UI
+              keyvault_prefix: IDAM-MAINTENANCE-UI
+              project_name: FamilyHubs.Idams.Maintenance.UI
+              azure_app_name: as-fh-idam-maintenance-ui
 
-          - artifact_name: idam-maintenance-ui
-            job_name: Deploy - IDAM Maintenance UI
-            keyvault_prefix: IDAM-MAINTENANCE-UI
-            project_name: FamilyHubs.Idams.Maintenance.UI
-            azure_app_name: as-fh-idam-maintenance-ui
+            - artifact_name: manage-ui
+              job_name: Deploy - Manage UI
+              keyvault_prefix: MANAGE-UI
+              project_name: FamilyHubs.ServiceDirectory.Admin.Web
+              azure_app_name: as-fh-sd-admin-ui
+      uses: ./.github/workflows/deploy-service.yml
+      with:
+        environment: ${{ inputs.environment }}
+        artifact_name: ${{ matrix.artifact_name }}
+        keyvault_prefix: ${{ matrix.keyvault_prefix }}
+        project_name: ${{ matrix.project_name }}
+        project_type: ui
+        azure_app_name: ${{ matrix.azure_app_name }}
+      secrets: inherit
 
-          - artifact_name: manage-ui
-            job_name: Deploy - Manage UI
-            keyvault_prefix: MANAGE-UI
-            project_name: FamilyHubs.ServiceDirectory.Admin.Web
-            azure_app_name: as-fh-sd-admin-ui
-    uses: ./.github/workflows/deploy-service.yml
-    with:
-      environment: ${{ inputs.environment }}
-      artifact_name: ${{ matrix.artifact_name }}
-      keyvault_prefix: ${{ matrix.keyvault_prefix }}
-      project_name: ${{ matrix.project_name }}
-      project_type: ui
-      azure_app_name: ${{ matrix.azure_app_name }}
-    secrets: inherit
+
 
   deploy-functions:
     name: ${{ matrix.job_name }}
@@ -229,3 +232,37 @@ jobs:
       keyvault_prefix: ${{ matrix.keyvault_prefix }}
       azure_app_name: ${{ matrix.azure_app_name }}
     secrets: inherit
+    
+    
+    run-api-acceptance-tests:
+      if: startsWith(inputs.environment, 'Test')
+      name: ${{ matrix.job_name }}
+      needs: [ deploy-ui-services ]
+      strategy:
+        matrix:
+          project_name: [
+            report-api,
+            referral-api,
+            service-directory-api
+          ]
+          include:
+            - project_name: report-api
+              job_name: Test - Report API
+              keyvault_prefix: TEST-REPORT-API
+              test_project_name: FamilyHubs.Report.Api.AcceptanceTests
+            - project_name: referral-api
+              job_name: Test - Referral API
+              keyvault_prefix: TEST-REFERRAL-API
+              test_project_name: FamilyHubs.Referral.Api.AcceptanceTests
+            - project_name: service-directory-api
+              job_name: Test - Service Directory API
+              keyvault_prefix: TEST-SERVICE-DIRECTORY-API
+              test_project_name: FamilyHubs.ServiceDirectory.Api.AcceptanceTests
+      uses: ./.github/workflows/run-acceptance-tests.yml
+      with:
+        environment: ${{ inputs.environment }}
+        project_name: ${{ matrix.project_name }}
+        keyvault_prefix: ${{ matrix.keyvault_prefix }}
+        test_project_name: ${{ matrix.test_project_name }}
+        project_type: service
+      secrets: inherit
