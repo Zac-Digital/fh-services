@@ -22,6 +22,7 @@
     <PackageReference Include="FamilyHubs.Notification.Api.Client" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Extensions.Hosting" />
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" />

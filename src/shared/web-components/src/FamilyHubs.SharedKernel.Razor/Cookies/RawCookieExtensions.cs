@@ -51,6 +51,6 @@ public static class RawCookieExtensions
             cookieValue.Append($"; SameSite={options.SameSite.ToString().ToLowerInvariant()}");
         }
 
-        response.Headers.Add("Set-Cookie", cookieValue.ToString());
+        response.Headers["Set-Cookie"] = cookieValue.ToString();
     }
 }
