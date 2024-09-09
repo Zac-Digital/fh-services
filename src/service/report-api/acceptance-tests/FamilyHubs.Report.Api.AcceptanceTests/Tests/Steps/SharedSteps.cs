@@ -8,7 +8,7 @@ namespace FamilyHubs.Report.Api.AcceptanceTests.Tests.Steps;
 public class SharedSteps
 {
     private readonly BearerTokenGenerator _bearerTokenGenerator;
-    public string bearerToken { get; private set; }
+    public string BearerToken { get; private set; } = null!;
     public static readonly JsonSerializerOptions JsonOptions = new()
         { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
@@ -21,12 +21,12 @@ public class SharedSteps
 
     public void GenerateBearerToken(string role)
     {
-        bearerToken = _bearerTokenGenerator.CreateBearerToken(role);
+        BearerToken = _bearerTokenGenerator.CreateBearerToken(role);
     }
 
     public void HaveAnInvalidBearerToken()
     {
-        bearerToken =
+        BearerToken =
             "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZb2xlIjoiRGZlQWRtaW4iLCJleHAiOjE4NzY0NzUxMTJ9.n26mqEewIpsNmhVMZKqXRjnrU2LYwFHu00LCphG3V2o";
     }
 
