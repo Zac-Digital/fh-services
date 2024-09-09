@@ -3,7 +3,6 @@ using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Razor.FullPages.Checkboxes;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -87,7 +86,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPa
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
 #pragma warning disable S6605
-        if (!ModelState.IsValid || SelectedValues.IsNullOrEmpty())
+        if (!ModelState.IsValid || IsNullOrEmpty(SelectedValues))
 #pragma warning restore S6605
         {
             return RedirectToSelf(null, ErrorId.ContactDetails_NoContactMethodsSelected);
@@ -101,5 +100,10 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPa
         }
 
         return FirstContactMethodPage(model.ContactMethodsSelected);
+    }
+
+    private static bool IsNullOrEmpty(IEnumerable<string> values)
+    {
+        return !values.Any();
     }
 }
