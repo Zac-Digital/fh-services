@@ -176,18 +176,27 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
         if (request.DaysAvailable is not null)
         {
-            query
-                .Join(FhJoin.Type.Left, "[Schedules] ls", "l.Id = ls.LocationId")
-                .Join(FhJoin.Type.Left, "[Schedules] ss", "s.Id = ss.ServiceId")
-                .And(
-                    new OrCondition(
-                        request.DaysAvailable
-                            .Split(",")
-                            .Where(day => Enum.TryParse(day, out DayCode _))
-                            .Select((day, idx) => new StringCondition($"ls.ByDay LIKE CONCAT('%', @Day{idx}, '%') OR ss.ByDay LIKE CONCAT('%', @Day{idx}, '%')", new FhParameter($"@Day{idx}", day)))
-                            .ToArray<FhQueryCondition>()
+            var validDays = request.DaysAvailable
+                .Split(",")
+                .Where(day => Enum.TryParse(day, out DayCode _))
+                .ToArray();
+            var concatOperator = _useSqlite ? "||" : "+"; // MS SQL refuses to adopt the standard
+
+            if (validDays.Any())
+            {
+                query
+                    .Join(FhJoin.Type.Left, "[Schedules] ls", "l.Id = ls.LocationId")
+                    .Join(FhJoin.Type.Left, "[Schedules] ss", "s.Id = ss.ServiceId")
+                    .And(
+                        new OrCondition(
+                            validDays
+                                .Select((day, idx) => new StringCondition($"ls.ByDay LIKE ('%' {concatOperator} @Day{idx} {concatOperator} '%') OR " +
+                                                                          $"ss.ByDay LIKE ('%' {concatOperator} @Day{idx} {concatOperator} '%')",
+                                    new FhParameter($"@Day{idx}", day)))
+                                .ToArray<FhQueryCondition>()
                         )
-                );
+                    );
+            }
         }
 
         if (request.Longitude is not null && request.Latitude is not null)
