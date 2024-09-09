@@ -6,7 +6,7 @@ concurrency:
 
 on:
   push:
-    branches: ["main", "release-*"]
+    branches: ["main", "release-*", "merge-main-into-dotnet8-release"]
   pull_request:
     paths:
       - '.github/workflows/build-and-test.yml'
