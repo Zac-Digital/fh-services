@@ -8,7 +8,6 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.ServiceDirectory.Shared.ReferenceData;
 using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
-using FamilyHubs.SharedKernel.Enums;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Identity.Models;
 using FamilyHubs.SharedKernel.Razor.Pagination;
@@ -27,7 +26,6 @@ public class LocalOfferResultsModel : HeaderPageModel
     private readonly IOrganisationClientService _organisationClientService;
     private readonly ILogger<LocalOfferResultsModel> _logger;
 
-    public Dictionary<int, string> DictServiceDelivery { get; private set; }
     public List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> NestedCategories { get; set; } = default!;
     public List<TaxonomyDto> Categories { get; set; } = default!;
     public double CurrentLatitude { get; set; }
@@ -135,7 +133,6 @@ public class LocalOfferResultsModel : HeaderPageModel
         IOrganisationClientService organisationClientService,
         ILogger<LocalOfferResultsModel> logger)
     {
-        DictServiceDelivery = new();
         _postcodeLookup = postcodeLookup;
         _organisationClientService = organisationClientService;
         _logger = logger;
@@ -172,14 +169,12 @@ public class LocalOfferResultsModel : HeaderPageModel
         SubcategorySelection = subcategorySelection?.Split(",").ToList();
         CostSelection = costSelection?.Split(",").ToList();
         DaysAvailable = daysAvailable?.Split(",").Where(x => Enum.TryParse(x, out DayCode _)).ToList();
-        ServiceDeliverySelection = serviceDeliverySelection?.Split(",").ToList();
+        ServiceDeliverySelection = serviceDeliverySelection?.Split(",").Where(x => Enum.TryParse(x, out AttendingType _)).ToList();
 
         await GetLocationDetails(Postcode);
 
         //todo: it does this every request!
         await GetCategoriesTreeAsync();
-
-        CreateServiceDeliveryDictionary();
 
         DateTime requestTimestamp = DateTime.UtcNow;
         HttpResponseMessage? response = await SearchServices();
@@ -262,7 +257,7 @@ public class LocalOfferResultsModel : HeaderPageModel
             AllChildrenYoungPeople = allChildrenYoungPeople,
             GivenAge = givenAge,
             Proximity = double.TryParse(SelectedDistance, out var distanceParsed) && distanceParsed > 0.00d ? distanceParsed : null,
-            ServiceDeliveries = ServiceDeliverySelection is not null && ServiceDeliverySelection.Any() ? string.Join(',', ServiceDeliverySelection) : null,
+            ServiceDeliveries = ServiceDeliverySelection?.Any() == true ? string.Join(',', ServiceDeliverySelection) : null,
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
             LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null,
             DaysAvailable = DaysAvailable?.Any() == true ? string.Join(",", DaysAvailable) : null
@@ -360,14 +355,6 @@ public class LocalOfferResultsModel : HeaderPageModel
         }
 
         return routeValues;
-    }
-
-    private void CreateServiceDeliveryDictionary()
-    {
-        DictServiceDelivery = Enum.GetValues(typeof(AttendingType))
-            .Cast<AttendingType>()
-            .Where(d => (int)d != 0)
-            .ToDictionary(k => (int)k, v => v.ToDescription());
     }
 
     public static string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto> serviceDeliveries)

@@ -1,7 +1,9 @@
 ﻿@page
 @using FamilyHubs.Referral.Core.Helper
+@using FamilyHubs.ServiceDirectory.Shared.Enums
 @using FamilyHubs.ServiceDirectory.Shared.ReferenceData
 @using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar
+@using FamilyHubs.SharedKernel.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model LocalOfferResultsModel
 @{
@@ -121,33 +123,15 @@ else
                 <ul class="moj-filter-tags">
                 @foreach (var serviceDeliverySelectionSelected in Model.ServiceDeliverySelection)
                 {
-                    @if (serviceDeliverySelectionSelected == "1")
-                    {
-                        <li>
-                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
-                                <span class="govuk-visually-hidden">Remove this filter</span>
-                                In Person
-                            </button>
-                        </li>
-                    }
-                    @if (serviceDeliverySelectionSelected == "2")
-                    {
-                        <li>
-                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
-                                <span class="govuk-visually-hidden">Remove this filter</span>
-                                Online
-                            </button>
-                        </li>
-                    }
-                    @if (serviceDeliverySelectionSelected == "3")
-                    {
-                        <li>
-                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid="@serviceDeliverySelectionSelected-remove-delivery">
-                                <span class="govuk-visually-hidden">Remove this filter</span>
-                                Telephone
-                            </button>
-                        </li>
-                    }
+                    // Should already be checked
+                    if (!Enum.TryParse(serviceDeliverySelectionSelected, out AttendingType sdEnum)) continue;
+
+                    <li>
+                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeServiceDeliverySelection" value="@serviceDeliverySelectionSelected" data-testid=@($"{(int)sdEnum}-remove-delivery")>
+                            <span class="govuk-visually-hidden">Remove this filter</span>
+                            @sdEnum.ToDescription().ToSentenceCase()
+                        </button>
+                    </li>
                 }
                 </ul>
             }
@@ -342,19 +326,20 @@ else
                     Delivery method
                 </legend>
                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    @foreach (var item in Model.DictServiceDelivery)
+                    @foreach (AttendingType item in Enum.GetValues(typeof(AttendingType)))
                     {
+                        var id = item.ToString().ToLower();
                         <div class="govuk-checkboxes__item">
                             <input class="govuk-checkboxes__input"
                                    role="checkbox"
-                                   id="@item.Value.ToLower().Replace(" ", "")"
+                                   id="@id"
                                    name="ServiceDeliverySelection"
-                                   data-testid=@($"checkbox-{item.Value.ToLower().Replace(" ", "")}")
+                                   data-testid=@($"checkbox-{id}")
                                    type="checkbox"
-                                   value="@item.Key"
-                                   @(Model.ServiceDeliverySelection != null && Model.ServiceDeliverySelection.Any(x => x == item.Key.ToString()) ? "checked" : "")>
-                            <label class="govuk-label govuk-checkboxes__label" for="@item.Value.ToLower().Replace(" ", "")">
-                                @item.Value.ToSentenceCase()
+                                   value="@item.ToString()"
+                                   @(Model.ServiceDeliverySelection?.Any(x => x == item.ToString()) == true ? "checked" : "")>
+                            <label class="govuk-label govuk-checkboxes__label" for="@id">
+                                @item.ToDescription().ToSentenceCase()
                             </label>
                         </div>
                     }
