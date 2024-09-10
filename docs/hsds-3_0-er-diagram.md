@@ -1,3 +1,6 @@
+# HSDS v3.0 entity relationships
+
+```mermaid 
 erDiagram
     Organization {
         string id PK
@@ -290,3 +293,4 @@ erDiagram
     Contact ||--o{ Metadata : has
     Attribute ||--o{ Metadata : has
     TaxonomyTerm ||--o{ Metadata : has
+```
