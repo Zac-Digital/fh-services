@@ -1,5 +1,7 @@
 # HSDS v3.0 entity relationships
 
+Lists and visualises HSDS relationships.
+
 ```mermaid 
 erDiagram
     Organization {
