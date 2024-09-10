@@ -380,14 +380,14 @@ else
                         {
                             <dl class="govuk-body-s dtmargins">
                                 <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-                                <dd>LocalOfferResultsModel.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
+                                <dd>@LocalOfferResultsModel.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
                             </dl>
                         }
                         @if (item.Languages.Any(l => !string.IsNullOrWhiteSpace(l.Name)))
                         {
                             <dl class="govuk-body-s dtmargins">
                                 <dt class="govuk-!-font-weight-bold">Language</dt>
-                                <dd>LocalOfferResultsModel.GetLanguagesAsString(item.Languages)</dd>
+                                <dd>@LocalOfferResultsModel.GetLanguagesAsString(item.Languages)</dd>
                             </dl>
                         }
                     </li>
