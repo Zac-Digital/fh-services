@@ -7,7 +7,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.ServiceDirectory.Shared.ReferenceData;
-using FamilyHubs.SharedKernel.Enums;
+using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Identity.Models;
 using FamilyHubs.SharedKernel.Razor.Pagination;
@@ -26,7 +26,6 @@ public class LocalOfferResultsModel : HeaderPageModel
     private readonly IOrganisationClientService _organisationClientService;
     private readonly ILogger<LocalOfferResultsModel> _logger;
 
-    public Dictionary<int, string> DictServiceDelivery { get; private set; }
     public List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>> NestedCategories { get; set; } = default!;
     public List<TaxonomyDto> Categories { get; set; } = default!;
     public double CurrentLatitude { get; set; }
@@ -90,6 +89,9 @@ public class LocalOfferResultsModel : HeaderPageModel
     public List<string>? CostSelection { get; set; }
 
     [BindProperty]
+    public List<string>? DaysAvailable { get; set; }
+
+    [BindProperty]
     public List<string>? CategorySelection { get; set; }
 
     [BindProperty]
@@ -131,7 +133,6 @@ public class LocalOfferResultsModel : HeaderPageModel
         IOrganisationClientService organisationClientService,
         ILogger<LocalOfferResultsModel> logger)
     {
-        DictServiceDelivery = new();
         _postcodeLookup = postcodeLookup;
         _organisationClientService = organisationClientService;
         _logger = logger;
@@ -140,10 +141,9 @@ public class LocalOfferResultsModel : HeaderPageModel
     }
 
     public async Task<IActionResult> OnGetAsync(
-        string postcode, string? searchText, string? searchAge,
-        string? selectedLanguage, string? subcategorySelection,
-        string? costSelection, string? serviceDeliverySelection,
-        int? pageNum, bool forChildrenAndYoungPeople, Guid? correlationId
+        string postcode, string? searchText, string? searchAge, string? selectedLanguage,
+        string? subcategorySelection, string? costSelection, string? daysAvailable,
+        string? serviceDeliverySelection, int? pageNum, bool forChildrenAndYoungPeople, Guid? correlationId
         )
     {
         Postcode = postcode;
@@ -168,14 +168,13 @@ public class LocalOfferResultsModel : HeaderPageModel
         ForChildrenAndYoungPeople = forChildrenAndYoungPeople;
         SubcategorySelection = subcategorySelection?.Split(",").ToList();
         CostSelection = costSelection?.Split(",").ToList();
-        ServiceDeliverySelection = serviceDeliverySelection?.Split(",").ToList();
+        DaysAvailable = daysAvailable?.Split(",").Where(x => Enum.TryParse(x, out DayCode _)).ToList();
+        ServiceDeliverySelection = serviceDeliverySelection?.Split(",").Where(x => Enum.TryParse(x, out AttendingType _)).ToList();
 
         await GetLocationDetails(Postcode);
 
         //todo: it does this every request!
         await GetCategoriesTreeAsync();
-
-        CreateServiceDeliveryDictionary();
 
         DateTime requestTimestamp = DateTime.UtcNow;
         HttpResponseMessage? response = await SearchServices();
@@ -258,9 +257,10 @@ public class LocalOfferResultsModel : HeaderPageModel
             AllChildrenYoungPeople = allChildrenYoungPeople,
             GivenAge = givenAge,
             Proximity = double.TryParse(SelectedDistance, out var distanceParsed) && distanceParsed > 0.00d ? distanceParsed : null,
-            ServiceDeliveries = ServiceDeliverySelection is not null && ServiceDeliverySelection.Any() ? string.Join(',', ServiceDeliverySelection) : null,
+            ServiceDeliveries = ServiceDeliverySelection?.Any() == true ? string.Join(',', ServiceDeliverySelection) : null,
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
-            LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null
+            LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null,
+            DaysAvailable = DaysAvailable?.Any() == true ? string.Join(",", DaysAvailable) : null
         };
 
         (SearchResults, HttpResponseMessage? response) = await _organisationClientService.GetLocalOffers(localOfferFilter);
@@ -272,14 +272,12 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     public IActionResult OnPostAsync(
         bool removeFilter,
-        string? removeCostSelection, string? removeServiceDeliverySelection,
-        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople,
-        string? removeSearchAge, string? removecategorySelection,
-        string? removesubcategorySelection)
+        string? removeCostSelection, string? removeDaysAvailable, string? removeServiceDeliverySelection, string? removeSelectedLanguage,
+        string? removeForChildrenAndYoungPeople, string? removeSearchAge, string? removecategorySelection, string? removesubcategorySelection)
     {
         var routeValues = ToRouteValuesWithRemovedFilters(
             removeFilter,
-            removeCostSelection, removeServiceDeliverySelection,
+            removeCostSelection, removeDaysAvailable, removeServiceDeliverySelection,
             removeSelectedLanguage, removeForChildrenAndYoungPeople,
             removeSearchAge, removecategorySelection, removesubcategorySelection);
 
@@ -289,10 +287,9 @@ public class LocalOfferResultsModel : HeaderPageModel
         return RedirectToPage("/ProfessionalReferral/LocalOfferResults", routeValues);
     }
 
-    private dynamic ToRouteValuesWithRemovedFilters(bool removeFilter,
-        string? removeCostSelection, string? removeServiceDeliverySelection,
-        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople,
-        string? removeSearchAge, string? removecategorySelection,
+    private dynamic ToRouteValuesWithRemovedFilters(
+        bool removeFilter, string? removeCostSelection, string? removeDaysAvailable, string? removeServiceDeliverySelection,
+        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople, string? removeSearchAge, string? removecategorySelection,
         string? removesubcategorySelection)
     {
         dynamic routeValues = new ExpandoObject();
@@ -325,6 +322,13 @@ public class LocalOfferResultsModel : HeaderPageModel
                     continue;
                 }
 
+                if (removeDaysAvailable != null && keyValuePair.Key is nameof(DaysAvailable))
+                {
+                    routeValuesDictionary[keyValuePair.Key] = string.Join(",", keyValuePair.Value.ToString()
+                        .Split(",").Where(s => s != removeDaysAvailable));
+                    continue;
+                }
+
                 if (removeServiceDeliverySelection != null && keyValuePair.Key is nameof(ServiceDeliverySelection))
                 {
                     routeValuesDictionary[keyValuePair.Key] = string.Join(",", keyValuePair.Value.ToString()
@@ -351,14 +355,6 @@ public class LocalOfferResultsModel : HeaderPageModel
         }
 
         return routeValues;
-    }
-
-    private void CreateServiceDeliveryDictionary()
-    {
-        DictServiceDelivery = Enum.GetValues(typeof(AttendingType))
-            .Cast<AttendingType>()
-            .Where(d => (int)d != 0)
-            .ToDictionary(k => (int)k, v => v.ToDescription());
     }
 
     public static string GetDeliveryMethodsAsString(ICollection<ServiceDeliveryDto> serviceDeliveries)

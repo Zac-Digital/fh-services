@@ -1,4 +1,6 @@
-﻿namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
+﻿using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
+
+namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
 
 public class GetServicesUrlBuilder
 {
@@ -65,6 +67,12 @@ public class GetServicesUrlBuilder
     public GetServicesUrlBuilder WithMaxFamilyHubs(int maxFamilyHubs)
     {
         _urlParameter.Add($"maxFamilyHubs={maxFamilyHubs}");
+        return this;
+    }
+
+    public GetServicesUrlBuilder WithDaysAvailable(params DayCode[] codes)
+    {
+        _urlParameter.Add($"days={string.Join(",", codes)}");
         return this;
     }
 

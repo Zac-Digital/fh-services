@@ -280,7 +280,7 @@ public static class TestDataProvider
                                 new Schedule
                                 {
                                     Description = "Friday 1.30pm - 2.30pm",
-                                    ByDay = "1.30pm - 2.30pm"
+                                    ByDay = "FR,SU"
                                 }
                             },
                             Contacts = new List<Contact>
@@ -638,7 +638,7 @@ public static class TestDataProvider
                         Description = "Schedule",
                         OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ByDay = "byDay",
+                        ByDay = "MO,TU",
                         ByMonthDay = "byMonth",
                         DtStart = "dtStart",
                         Freq = null,
@@ -684,7 +684,7 @@ public static class TestDataProvider
                                     Description = "Schedule",
                                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                                     ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                    ByDay = "byDay",
+                                    ByDay = "WE,TH",
                                     ByMonthDay = "byMonth",
                                     DtStart = "dtStart",
                                     Freq = null,

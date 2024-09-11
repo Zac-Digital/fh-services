@@ -4,6 +4,7 @@ using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using System.Net;
 using System.Text.Json;
+using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
@@ -22,9 +23,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var responseContent = await response.Content.ReadAsStringAsync();
 
-        if (!response.IsSuccessStatusCode)
-            ArgumentException.ThrowIfNullOrEmpty(responseContent);
-
+        response.IsSuccessStatusCode.Should().BeTrue(responseContent);
         response.StatusCode.Should().Be(HttpStatusCode.OK, responseContent);
         long.Parse(responseContent).Should().BeGreaterThan(0);
     }
@@ -333,8 +332,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var responseContent = await response.Content.ReadAsStringAsync();
 
-        if (!response.IsSuccessStatusCode)
-            ArgumentException.ThrowIfNullOrEmpty(responseContent);
+        response.IsSuccessStatusCode.Should().BeTrue(responseContent);
 
         var retVal = JsonSerializer.Deserialize<PaginatedList<ServiceDto>>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
 
@@ -366,6 +364,34 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var responseContent = await response.Content.ReadAsStringAsync();
 
+        response.IsSuccessStatusCode.Should().BeTrue(responseContent);
+
+        var retVal = JsonSerializer.Deserialize<PaginatedList<ServiceDto>>(responseContent, new JsonSerializerOptions(JsonSerializerDefaults.Web));
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        retVal.Should().NotBeNull();
+        retVal?.Items.Count.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task ThenServicesAvailableOnDaysAreReturned()
+    {
+        var getServicesUrlBuilder = new GetServicesUrlBuilder();
+        var url = getServicesUrlBuilder
+            .WithDaysAvailable(DayCode.FR)
+            .WithPage(1, 10)
+            .Build();
+
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
+        };
+
+        using var response = await Client.SendAsync(request);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
         if (!response.IsSuccessStatusCode)
             ArgumentException.ThrowIfNullOrEmpty(responseContent);
 
@@ -373,6 +399,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         retVal.Should().NotBeNull();
-        retVal?.Items.Count.Should().Be(2);
+        retVal?.Items.Count.Should().Be(1);
     }
 }

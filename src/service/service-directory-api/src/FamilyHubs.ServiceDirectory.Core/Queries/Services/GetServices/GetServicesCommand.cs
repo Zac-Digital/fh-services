@@ -7,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +29,8 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
         string? taxonomyIds,
         string? languages,
         bool? canFamilyChooseLocation,
-        bool? isFamilyHub)
+        bool? isFamilyHub,
+        string? days)
     {
         ServiceType = serviceType ?? ServiceType.NotSet;
         Status = status ?? ServiceStatusType.NotSet;
@@ -47,6 +49,7 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
         Languages = languages;
         CanFamilyChooseLocation = canFamilyChooseLocation;
         IsFamilyHub = isFamilyHub;
+        DaysAvailable = days;
     }
 
     public ServiceType ServiceType { get; }
@@ -61,6 +64,7 @@ public class GetServicesCommand : IRequest<PaginatedList<ServiceDto>>
     public int PageSize { get; }
     public string? Text { get; }
     public string? ServiceDeliveries { get; }
+    public string? DaysAvailable { get; }
     public bool? IsPaidFor { get; }
     public string? TaxonomyIds { get; }
     public string? Languages { get; }
@@ -168,6 +172,31 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             ).And(
                 new StringCondition("e.MaximumAge >= @GivenAge", new FhParameter("@GivenAge", request.GivenAge.Value))
             );
+        }
+
+        if (request.DaysAvailable is not null)
+        {
+            var validDays = request.DaysAvailable
+                .Split(",")
+                .Where(day => Enum.TryParse(day, out DayCode _))
+                .ToArray();
+            var concatOperator = _useSqlite ? "||" : "+"; // MS SQL refuses to adopt the standard
+
+            if (validDays.Any())
+            {
+                query
+                    .Join(FhJoin.Type.Left, "[Schedules] ls", "l.Id = ls.LocationId")
+                    .Join(FhJoin.Type.Left, "[Schedules] ss", "s.Id = ss.ServiceId")
+                    .And(
+                        new OrCondition(
+                            validDays
+                                .Select((day, idx) => new StringCondition($"ls.ByDay LIKE ('%' {concatOperator} @Day{idx} {concatOperator} '%') OR " +
+                                                                          $"ss.ByDay LIKE ('%' {concatOperator} @Day{idx} {concatOperator} '%')",
+                                    new FhParameter($"@Day{idx}", day)))
+                                .ToArray<FhQueryCondition>()
+                        )
+                    );
+            }
         }
 
         if (request.Longitude is not null && request.Latitude is not null)
