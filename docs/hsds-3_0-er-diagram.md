@@ -233,6 +233,14 @@ erDiagram
         string updated_by
     }
 
+    MetaTableDescription {
+        string id PK
+        string name
+        string language
+        string character_set
+    }
+
+    
     Organization ||--o{ Service : provides
     Organization ||--o{ Location : has
     Organization ||--o{ Program : runs
@@ -296,4 +304,6 @@ erDiagram
     Contact ||--o{ Metadata : has
     Attribute ||--o{ Metadata : has
     TaxonomyTerm ||--o{ Metadata : has
+    MetaTableDescription ||--o{ Attribute: has
+    MetaTableDescription ||--o{ Metadata: has
 ```
