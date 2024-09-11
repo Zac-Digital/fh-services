@@ -263,10 +263,8 @@ else
                     Days service is available
                 </legend>
                 <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    @for (var day = 0; day < 7; day++)
+                    @foreach (DayCode dayOfWeek in Enum.GetValues(typeof(DayCode)))
                     {
-                        var dayOfWeek = (DayCode)day;
-
                         <div class="govuk-checkboxes__item">
                             <input class="govuk-checkboxes__input"
                                    id=@($"days-{dayOfWeek}")
