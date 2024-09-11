@@ -2,7 +2,7 @@
 
 Lists and visualises HSDS relationships.
 
-```mermaid 
+```mermaid
 erDiagram
     Organization {
         string id PK
@@ -260,6 +260,7 @@ erDiagram
     ServiceAtLocation ||--o{ Contact : has
     ServiceAtLocation ||--o{ Phone : has
     Contact ||--o{ Phone : has
+    Phone ||--o{ Language : has
     TaxonomyTerm ||--o{ Attribute : categorizes
     Organization ||--o{ Attribute : has
     Service ||--o{ Attribute : has
