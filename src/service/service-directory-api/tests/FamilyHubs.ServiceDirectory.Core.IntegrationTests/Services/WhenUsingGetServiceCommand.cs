@@ -18,9 +18,13 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisationDetails();
 
-        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
-            null, null, null, null, 1, 10, null, null, null, null,
-            null, null, null, null);
+        var command = new GetServicesCommandBuilder()
+            .WithServiceType(ServiceType.InformationSharing)
+            .WithServiceStatusType(ServiceStatusType.Active)
+            .WithDistrictCode("XTEST")
+            .WithPage(1, 10)
+            .Build();
+
         var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
 
         //Act
@@ -69,9 +73,13 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisationDetails(TestDataProvider.GetTestCountyCouncilDto2());
 
-        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
-            null, null, null, null, 1, 10, null, null, true, null,
-            null, null, null, null);
+        var command = new GetServicesCommandBuilder()
+            .WithServiceType(ServiceType.InformationSharing)
+            .WithServiceStatusType(ServiceStatusType.Active)
+            .WithDistrictCode("XTEST")
+            .WithPage(1, 10)
+            .Build();
+
         var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
 
         //Act
@@ -88,9 +96,13 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         //Arrange
         await CreateOrganisationDetails(TestOrganisationFreeService);        
 
-        var command = new GetServicesCommand(ServiceType.InformationSharing, ServiceStatusType.Active, "XTEST", null,
-            null, null, null, null, 1, 10, null, null, false, null,
-            null, null, null, null);
+        var command = new GetServicesCommandBuilder()
+            .WithServiceType(ServiceType.InformationSharing)
+            .WithServiceStatusType(ServiceStatusType.Active)
+            .WithDistrictCode("XTEST")
+            .WithPage(1, 10)
+            .Build();
+
         var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
 
         //Act
