@@ -43,8 +43,8 @@ public static class StartupExtensions
 
         // Add services to the container.
         services
-        .AddClientServices(configuration)
-            .AddWebUiServices(configuration);
+            .AddClientServices(configuration)
+            .AddWebUiServices();
 
         services.AddNotificationsApiClient(configuration);
 
@@ -162,7 +162,7 @@ public static class StartupExtensions
         sqlConnection.Close();
     }
 
-    private static void AddWebUiServices(this IServiceCollection services, IConfiguration configuration)
+    private static void AddWebUiServices(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
 
