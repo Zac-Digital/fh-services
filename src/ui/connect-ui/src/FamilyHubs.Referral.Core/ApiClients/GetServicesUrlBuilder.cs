@@ -1,8 +1,9 @@
 ﻿using System.Text;
 using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
 
-namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
+namespace FamilyHubs.Referral.Core.ApiClients;
 
+// TODO: Move to a shared library?
 public class GetServicesUrlBuilder
 {
     private readonly List<string> _urlParameter = new();
