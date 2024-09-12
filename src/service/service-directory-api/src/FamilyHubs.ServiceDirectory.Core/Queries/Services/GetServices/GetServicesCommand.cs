@@ -112,7 +112,8 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             .Join(FhJoin.Type.Left, "[Languages] la", "s.Id = la.ServiceId")
             .Join(FhJoin.Type.Left, "[Eligibilities] e", "s.Id = e.ServiceId")
             .Join(FhJoin.Type.Left, "[CostOptions] co", "s.Id = co.ServiceId")
-            .Join(FhJoin.Type.Left, "[ServiceDeliveries] sd", "s.Id = sd.ServiceId")
+            .Join(FhJoin.Type.Left, "[Schedules] ls", "sl.Id = ls.ServiceAtLocationId")
+            .Join(FhJoin.Type.Left, "[Schedules] ss", "s.Id = ss.ServiceId")
             .GroupBy("s.Id")
             .SetLimit(FhQueryLimit.FromPage(request.PageNumber, request.PageSize))
             .AndWhen(
@@ -153,7 +154,9 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
                 )
             ).AndNotNull(
                 request.ServiceDeliveries,
-                sd => new InCondition("sd.Name", "ServiceDeliveries", sd)
+                sd => new InCondition("ss.AttendingType", "ServiceServiceDeliveries", sd).Or(
+                    new InCondition("ls.AttendingType", "LocationServiceDeliveries", sd)
+                )
             );
 
         // if 'all children and young people' (for children ticked & all ages),
@@ -185,8 +188,6 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             if (validDays.Any())
             {
                 query
-                    .Join(FhJoin.Type.Left, "[Schedules] ls", "l.Id = ls.LocationId")
-                    .Join(FhJoin.Type.Left, "[Schedules] ss", "s.Id = ss.ServiceId")
                     .And(
                         new OrCondition(
                             validDays
