@@ -6,35 +6,31 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPageModel
+public class ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache)
+    : ProfessionalReferralCacheModel(ConnectJourneyPage.ContactDetails, connectionRequestCache), ICheckboxesPageModel
 {
     public string? FullName { get; set; }
 
-    private bool[] SelectedContactMethodMapping { get; init; } = new bool[(int)ConnectContactDetailsJourneyPage.LastContactMethod + 1];
+    private bool[] SelectedContactMethodMapping { get; init; } =
+        new bool[(int)ConnectContactDetailsJourneyPage.LastContactMethod + 1];
 
-    public static readonly Checkbox[] StaticCheckboxes = new Checkbox[]
-    {
+    public static readonly Checkbox[] StaticCheckboxes =
+    [
         new("Email", "Email"),
         new("Telephone", "Telephone"),
         new("Text message", "Textphone"),
         new("Letter", "Letter")
-    };
+    ];
 
     public IEnumerable<ICheckbox> Checkboxes => StaticCheckboxes;
 
-    [BindProperty]
-    public IEnumerable<string> SelectedValues { get; set; } = Enumerable.Empty<string>();
+    [BindProperty] public IEnumerable<string> SelectedValues { get; set; } = [];
 
     public string? DescriptionPartial => null;
 
     public string? Legend { get; private set; }
 
     public string? Hint => "Select all that apply.";
-
-    public ContactDetailsModel(IConnectionRequestDistributedCache connectionRequestCache)
-        : base(ConnectJourneyPage.ContactDetails, connectionRequestCache)
-    {
-    }
 
     protected override void OnGetWithModel(ConnectionRequestModel model)
     {
@@ -50,7 +46,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPa
         {
             contactMethods = model.ContactMethodsSelected;
 
-            List<string> selectedValues = new();
+            List<string> selectedValues = [];
 
             for (int i = 0; i < contactMethods.Length; i++)
             {
@@ -74,10 +70,10 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPa
         // with this, they won't have a back button and will be forced to re-enter contact details.
         if (Flow == JourneyFlow.ChangingContactMethods
             && ((contactMethods[(int)ConnectContactDetailsJourneyPage.Telephone] && model.TelephoneNumber == null)
-            || (contactMethods[(int)ConnectContactDetailsJourneyPage.Textphone] && model.TextphoneNumber == null)
-            || (contactMethods[(int)ConnectContactDetailsJourneyPage.Email] && model.EmailAddress == null)
-            || (contactMethods[(int)ConnectContactDetailsJourneyPage.Letter] &&
-                (model.AddressLine1 == null || model.TownOrCity == null || model.Postcode == null))))
+                || (contactMethods[(int)ConnectContactDetailsJourneyPage.Textphone] && model.TextphoneNumber == null)
+                || (contactMethods[(int)ConnectContactDetailsJourneyPage.Email] && model.EmailAddress == null)
+                || (contactMethods[(int)ConnectContactDetailsJourneyPage.Letter] &&
+                    (model.AddressLine1 == null || model.TownOrCity == null || model.Postcode == null))))
         {
             BackUrl = null;
         }
@@ -85,9 +81,7 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPa
 
     protected override IActionResult OnPostWithModel(ConnectionRequestModel model)
     {
-#pragma warning disable S6605
         if (!ModelState.IsValid || IsNullOrEmpty(SelectedValues))
-#pragma warning restore S6605
         {
             return RedirectToSelf(null, ErrorId.ContactDetails_NoContactMethodsSelected);
         }
@@ -96,7 +90,8 @@ public class ContactDetailsModel : ProfessionalReferralCacheModel, ICheckboxesPa
 
         for (int i = 0; i < StaticCheckboxes.Length; i++)
         {
-            model.ContactMethodsSelected[i] = SelectedValues.Any(selectedValue => selectedValue.Equals(StaticCheckboxes[i].Value));
+            model.ContactMethodsSelected[i] =
+                SelectedValues.Any(selectedValue => selectedValue.Equals(StaticCheckboxes[i].Value));
         }
 
         return FirstContactMethodPage(model.ContactMethodsSelected);
