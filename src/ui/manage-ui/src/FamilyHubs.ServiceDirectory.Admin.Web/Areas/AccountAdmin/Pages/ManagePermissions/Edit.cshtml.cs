@@ -93,7 +93,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages.ManageP
                     return $"{RoleDescription.VcsManager}, {RoleDescription.VcsProfessional}";
             }
 
-            throw new Exception("Role type not Valid");
+            throw new InvalidOperationException("Role type not Valid");
         }
 
         private async Task SetBackButton()
