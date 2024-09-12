@@ -378,7 +378,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     {
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-            .WithDaysAvailable(DayCode.FR)
+            .WithDaysAvailable(DayCode.SU)
             .WithPage(1, 10)
             .Build();
 
