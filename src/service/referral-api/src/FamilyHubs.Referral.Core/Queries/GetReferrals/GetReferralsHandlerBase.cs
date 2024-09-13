@@ -20,7 +20,7 @@ public abstract class GetReferralsHandlerBase
     }
     protected async Task<PaginatedList<ReferralDto>> GetPaginatedList(bool requestIsNull, IQueryable<Data.Entities.Referral> referralList, int pageNumber, int pageSize)
     {
-        int totalRecords = referralList.Count();
+        int totalRecords = await referralList.CountAsync();
         List<ReferralDto> pagelist;
         if (!requestIsNull)
         {

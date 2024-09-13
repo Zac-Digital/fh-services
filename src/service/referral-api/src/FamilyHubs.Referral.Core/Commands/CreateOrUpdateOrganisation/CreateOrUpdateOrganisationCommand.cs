@@ -65,7 +65,7 @@ public class CreateOrUpdateOrganisationCommandHandler :  IRequestHandler<CreateO
 
             var mappedOrganisation = _mapper.Map<Organisation>(request.OrganisationDto);
 
-            Organisation? organisation = _context.Organisations.FirstOrDefault(x => x.Id == request.OrganisationDto.Id);
+            Organisation? organisation = await _context.Organisations.FirstOrDefaultAsync(x => x.Id == request.OrganisationDto.Id, cancellationToken: cancellationToken);
             if (organisation != null)
             {
                 _mapper.Map(request.OrganisationDto, organisation);
