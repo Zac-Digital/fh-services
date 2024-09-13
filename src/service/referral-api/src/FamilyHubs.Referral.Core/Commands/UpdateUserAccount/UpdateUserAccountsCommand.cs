@@ -5,7 +5,6 @@ using FamilyHubs.Referral.Data.Repository;
 using FamilyHubs.ReferralService.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.Referral.Core.Commands.UpdateUserAccount;
 
@@ -21,8 +20,7 @@ public class UpdateUserAccountsCommand : IRequest<bool>, IUpdateUserAccountsComm
 
 public class UpdateUserAccountsCommandHandler(
     ApplicationDbContext context,
-    IMapper mapper,
-    ILogger<UpdateUserAccountsCommandHandler> logger)
+    IMapper mapper)
     : BaseUserAccountHandler(context), IRequestHandler<UpdateUserAccountsCommand, bool>
 {
     public async Task<bool> Handle(UpdateUserAccountsCommand request, CancellationToken cancellationToken)
@@ -67,7 +65,6 @@ public class UpdateUserAccountsCommandHandler(
             entity.EmailAddress = account.EmailAddress;
             entity.PhoneNumber = account.PhoneNumber;
             entity.Team = account.Team;
-
 
             await _context.SaveChangesAsync(cancellationToken);
 

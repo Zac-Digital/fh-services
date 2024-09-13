@@ -223,7 +223,7 @@ public class WhenUsingUserAccounts : DataIntegrationTestBase
         userAccountDto.PhoneNumber = "0161 111 1112";
 
         UpdateUserAccountsCommand command = new UpdateUserAccountsCommand(listUserAccounts);
-        UpdateUserAccountsCommandHandler handler = new UpdateUserAccountsCommandHandler(TestDbContext, Mapper, new Mock<ILogger<UpdateUserAccountsCommandHandler>>().Object);
+        UpdateUserAccountsCommandHandler handler = new UpdateUserAccountsCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
