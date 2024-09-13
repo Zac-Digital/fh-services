@@ -46,10 +46,9 @@ public class CreateReferralCommandHandler : IRequestHandler<CreateReferralComman
             referralResponse = await CreateAndUpdateReferral(entity, cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             await transaction.RollbackAsync(cancellationToken);
-            _logger.LogError(ex, "An error occurred creating referral. {exceptionMessage}", ex.Message);
             throw;
         }
         finally

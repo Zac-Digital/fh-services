@@ -5,7 +5,6 @@ using FamilyHubs.Referral.Data.Repository;
 using FamilyHubs.ReferralService.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.Referral.Core.Commands.CreateUserAccount;
 
@@ -21,8 +20,7 @@ public class CreateUserAccountsCommand : IRequest<bool>, ICreateUserAccountsComm
 
 public class CreateUserAccountsCommandHandler(
     ApplicationDbContext context,
-    IMapper mapper,
-    ILogger<CreateUserAccountsCommandHandler> logger)
+    IMapper mapper)
     : BaseUserAccountHandler(context), IRequestHandler<CreateUserAccountsCommand, bool>
 {
     public async Task<bool> Handle(CreateUserAccountsCommand request, CancellationToken cancellationToken)
@@ -36,10 +34,9 @@ public class CreateUserAccountsCommandHandler(
                 result = await CreateAndUpdateUserAccounts(request, cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await transaction.RollbackAsync(cancellationToken);
-                logger.LogError(ex, "An error occurred creating referral. {exceptionMessage}", ex.Message);
                 throw;
             }
         }

@@ -36,10 +36,9 @@ public class UpdateUserAccountsCommandHandler(
                 result = await UpdateAndUpdateUserAccounts(request, cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await transaction.RollbackAsync(cancellationToken);
-                logger.LogError(ex, "An error occurred creating referral. {ExceptionMessage}", ex.Message);
                 throw;
             }
         }

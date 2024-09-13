@@ -146,7 +146,7 @@ public class WhenUsingUserAccounts : DataIntegrationTestBase
         userAccount.OrganisationUserAccounts = Mapper.Map<List<UserAccountOrganisation>>(userAccountDto.OrganisationUserAccounts);
 
         CreateUserAccountsCommand command = new CreateUserAccountsCommand(listUserAccounts);
-        CreateUserAccountsCommandHandler handler = new CreateUserAccountsCommandHandler(TestDbContext, Mapper, new Mock<ILogger<CreateUserAccountsCommandHandler>>().Object);
+        CreateUserAccountsCommandHandler handler = new CreateUserAccountsCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());
@@ -169,12 +169,11 @@ public class WhenUsingUserAccounts : DataIntegrationTestBase
     public async Task ThenUpdateASingleUserAccount()
     {
 #pragma warning disable CS8602
-        //Assign 
+        // Arrange
 
         UserAccountDto userAccountDto = TestDataProvider.GetUserAccount();
-        
 
-        Data.Entities.UserAccount userAccount = Mapper.Map<UserAccount>(userAccountDto);
+        var userAccount = Mapper.Map<UserAccount>(userAccountDto);
         userAccount.OrganisationUserAccounts = Mapper.Map<List<UserAccountOrganisation>>(userAccountDto.OrganisationUserAccounts);
         TestDbContext.Organisations.Add(userAccount.OrganisationUserAccounts[0].Organisation);
         await TestDbContext.SaveChangesAsync();
@@ -186,7 +185,7 @@ public class WhenUsingUserAccounts : DataIntegrationTestBase
         userAccountDto.PhoneNumber = "0161 111 1112";
 
         UpdateUserAccountCommand command = new UpdateUserAccountCommand(userAccount.Id,userAccountDto);
-        UpdateUserAccountCommandHandler handler = new UpdateUserAccountCommandHandler(TestDbContext, Mapper, new Mock<ILogger<UpdateUserAccountCommandHandler>>().Object);
+        UpdateUserAccountCommandHandler handler = new UpdateUserAccountCommandHandler(TestDbContext, Mapper);
 
         //Act
         var result = await handler.Handle(command, new CancellationToken());

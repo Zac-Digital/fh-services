@@ -23,17 +23,9 @@ public class UpdateUserAccountCommand : IRequest<bool>, IUpdateUserAccountComman
     public UserAccountDto UserAccount { get; }
 }
 
-public class UpdateUserAccountCommandHandler : BaseUserAccountHandler, IRequestHandler<UpdateUserAccountCommand, bool>
+public class UpdateUserAccountCommandHandler(ApplicationDbContext context, IMapper mapper)
+    : BaseUserAccountHandler(context), IRequestHandler<UpdateUserAccountCommand, bool>
 {
-    private readonly IMapper _mapper;
-    private readonly ILogger<UpdateUserAccountCommandHandler> _logger;
-    public UpdateUserAccountCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<UpdateUserAccountCommandHandler> logger)
-        : base(context)
-    {
-        _logger = logger;
-        _mapper = mapper;
-    }
-
     public async Task<bool> Handle(UpdateUserAccountCommand request, CancellationToken cancellationToken)
     {
         bool result;
@@ -45,10 +37,9 @@ public class UpdateUserAccountCommandHandler : BaseUserAccountHandler, IRequestH
                 result = await UpdateAndUpdateUserAccount(request, cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await transaction.RollbackAsync(cancellationToken);
-                _logger.LogError(ex, "An error occurred creating referral. {exceptionMessage}", ex.Message);
                 throw;
             }
         }
@@ -71,10 +62,10 @@ public class UpdateUserAccountCommandHandler : BaseUserAccountHandler, IRequestH
             throw new NotFoundException(nameof(Referral), request.UserAccountId.ToString());
         }
 
-        entity = _mapper.Map<UserAccount>(request.UserAccount);
+        entity = mapper.Map<UserAccount>(request.UserAccount);
         ArgumentNullException.ThrowIfNull(entity);
 
-        entity.OrganisationUserAccounts = _mapper.Map<List<UserAccountOrganisation>>(request.UserAccount.OrganisationUserAccounts);
+        entity.OrganisationUserAccounts = mapper.Map<List<UserAccountOrganisation>>(request.UserAccount.OrganisationUserAccounts);
 
         entity = await AttatchExistingUserAccountRoles(entity, cancellationToken);
         entity = await AttatchExistingService(entity, cancellationToken);
