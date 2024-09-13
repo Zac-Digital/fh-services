@@ -30,8 +30,8 @@ public class ApplicationDbContextInitialiser
 
     private async Task SeedAsync()
     {
-        IReadOnlyCollection<Status> statuses = ReferralSeedData.SeedStatuses();
-        if (!_context.Statuses.Any())
+        var statuses = ReferralSeedData.SeedStatuses();
+        if (!await _context.Statuses.AnyAsync())
         {
             _context.Statuses.AddRange(statuses);
 
@@ -41,7 +41,7 @@ public class ApplicationDbContextInitialiser
         {
             foreach (var seedStatus in statuses)
             {
-                var dbStatus = _context.Statuses.FirstOrDefault(x => x.Name == seedStatus.Name);
+                var dbStatus = await _context.Statuses.FirstOrDefaultAsync(x => x.Name == seedStatus.Name);
                 if (!seedStatus.Equals(dbStatus))
                 { 
                     if (dbStatus == null)
@@ -62,8 +62,8 @@ public class ApplicationDbContextInitialiser
             await _context.SaveChangesAsync();
         }
 
-        IReadOnlyCollection<Role> roles = ReferralSeedData.SeedRoles();
-        if (!_context.Roles.Any())
+        var roles = ReferralSeedData.SeedRoles();
+        if (!await _context.Roles.AnyAsync())
         {
             _context.Roles.AddRange(roles);
 
@@ -73,7 +73,7 @@ public class ApplicationDbContextInitialiser
         {
             foreach (var seedRole in roles)
             {
-                var dbRole = _context.Roles.FirstOrDefault(x => x.Name == seedRole.Name);
+                var dbRole = await _context.Roles.FirstOrDefaultAsync(x => x.Name == seedRole.Name);
                 if (!seedRole.Equals(dbRole))
                 {
                     if (dbRole == null)
@@ -95,13 +95,13 @@ public class ApplicationDbContextInitialiser
         }
         
 
-        if (_context.Database.IsSqlite() && !_context.Referrals.Any())
+        if (_context.Database.IsSqlite() && !await _context.Referrals.AnyAsync())
         {
-            IReadOnlyCollection<Entities.Referral> referrals = ReferralSeedData.SeedReferral();
+            var referrals = ReferralSeedData.SeedReferral();
 
             foreach (Entities.Referral referral in referrals)
             {
-                var status = _context.Statuses.SingleOrDefault(x => x.Name == referral.Status.Name);
+                var status = await _context.Statuses.SingleOrDefaultAsync(x => x.Name == referral.Status.Name);
                 if (status != null)
                 {
                     referral.Status = status;
