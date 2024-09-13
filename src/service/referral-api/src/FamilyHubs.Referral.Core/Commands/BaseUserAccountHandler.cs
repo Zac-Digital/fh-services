@@ -1,6 +1,5 @@
 ﻿using FamilyHubs.Referral.Data.Entities;
 using FamilyHubs.Referral.Data.Repository;
-using Microsoft.IdentityModel.Tokens;
 
 namespace FamilyHubs.Referral.Core.Commands;
 
@@ -12,7 +11,8 @@ public abstract class BaseUserAccountHandler
     {
         _context = context;
     }
-    protected async Task<UserAccount> AttatchExistingUserAccountRoles(UserAccount entity, CancellationToken cancellationToken)
+
+    protected async Task<UserAccount> AttachExistingUserAccountRoles(UserAccount entity, CancellationToken cancellationToken)
     {
         if (entity.UserAccountRoles == null)
         {
@@ -33,7 +33,7 @@ public abstract class BaseUserAccountHandler
         return entity;
     }
 
-    protected async Task<UserAccount> AttatchExistingOrgansiation(UserAccount entity, CancellationToken cancellationToken)
+    protected async Task<UserAccount> AttachExistingOrgansiation(UserAccount entity, CancellationToken cancellationToken)
     {
         if (entity.OrganisationUserAccounts == null)
         {
@@ -61,7 +61,7 @@ public abstract class BaseUserAccountHandler
         return entity;
     }
 
-    protected async Task<UserAccount> AttatchExistingService(UserAccount entity, CancellationToken cancellationToken)
+    protected async Task<UserAccount> AttachExistingService(UserAccount entity, CancellationToken cancellationToken)
     {
         if (entity.ServiceUserAccounts == null)
         {

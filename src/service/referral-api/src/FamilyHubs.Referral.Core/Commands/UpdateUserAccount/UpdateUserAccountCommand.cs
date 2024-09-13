@@ -67,9 +67,9 @@ public class UpdateUserAccountCommandHandler(ApplicationDbContext context, IMapp
 
         entity.OrganisationUserAccounts = mapper.Map<List<UserAccountOrganisation>>(request.UserAccount.OrganisationUserAccounts);
 
-        entity = await AttatchExistingUserAccountRoles(entity, cancellationToken);
-        entity = await AttatchExistingService(entity, cancellationToken);
-        entity = await AttatchExistingOrgansiation(entity, cancellationToken);
+        entity = await AttachExistingUserAccountRoles(entity, cancellationToken);
+        entity = await AttachExistingService(entity, cancellationToken);
+        entity = await AttachExistingOrgansiation(entity, cancellationToken);
 
         entity.Name = request.UserAccount.Name;
         entity.PhoneNumber = request.UserAccount.PhoneNumber; 
