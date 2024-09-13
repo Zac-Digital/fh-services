@@ -1,5 +1,4 @@
-﻿using FamilyHubs.Referral.Data.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.Referral.Data.Repository;
 

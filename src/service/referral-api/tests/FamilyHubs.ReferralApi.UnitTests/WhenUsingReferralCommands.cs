@@ -426,7 +426,7 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest
         testReferral.RecipientDto.TextPhone = testReferral.RecipientDto.TextPhone + " Test";
         testReferral.ReasonForSupport = testReferral.ReasonForSupport + " Test";
         UpdateReferralCommand command = new(setResult.Id, testReferral);
-        UpdateReferralCommandHandler handler = new(mockApplicationDbContext, mapper, new Mock<ILogger<UpdateReferralCommandHandler>>().Object);
+        UpdateReferralCommandHandler handler = new(mockApplicationDbContext, mapper);
 
         //Act
         var result = await handler.Handle(command, new System.Threading.CancellationToken());
