@@ -5,7 +5,6 @@ using FamilyHubs.Referral.Data.Repository;
 using FamilyHubs.SharedKernel.Identity;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.Referral.Core.Commands.SetReferralStatus;
 
@@ -54,7 +53,7 @@ public class SetReferralStatusCommandHandler(ApplicationDbContext context)
         //assumption is VCS Professional will have correct organisation id other users will not
         if (entity.ReferralService.Organisation.Id == request.UserOrganisationId || RoleTypes.DfeAdmin == request.Role) 
         {
-            var updatedStatus = context.Statuses.SingleOrDefault(x => x.Name == request.Status) ?? throw new NotFoundException(nameof(Status), request.Status);
+            var updatedStatus = await context.Statuses.SingleOrDefaultAsync(x => x.Name == request.Status) ?? throw new NotFoundException(nameof(Status), request.Status);
 
             entity.ReasonForDecliningSupport = request.ReasonForDecliningSupport;
             entity.StatusId = updatedStatus.Id;
