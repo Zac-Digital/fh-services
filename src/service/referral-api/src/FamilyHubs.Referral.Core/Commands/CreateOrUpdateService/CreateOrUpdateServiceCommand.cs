@@ -66,7 +66,7 @@ public class CreateOrUpdateServiceCommandHandler : IRequestHandler<CreateOrUpdat
             var mappedService = _mapper.Map<Data.Entities.ReferralService>(request.ReferralServiceDto);
             mappedService = AttachExistingOrganisation(mappedService);
 
-            Data.Entities.ReferralService? service = _context.ReferralServices.Include(x => x.Organisation).FirstOrDefault(x => x.Id == request.ReferralServiceDto.Id);
+            Data.Entities.ReferralService? service = await _context.ReferralServices.Include(x => x.Organisation).FirstOrDefaultAsync(x => x.Id == request.ReferralServiceDto.Id, cancellationToken: cancellationToken);
             if (service != null)
             {
                 _mapper.Map(request.ReferralServiceDto, service);

@@ -77,7 +77,7 @@ public class UpdateReferralCommandHandler(ApplicationDbContext context, IMapper 
     {
         if (entity.UserAccount.Id != request.ReferralDto.ReferralUserAccountDto.Id)
         {
-            var updatedReferrer = context.UserAccounts.SingleOrDefault(x => x.Id == request.ReferralDto.ReferralUserAccountDto.Id);
+            var updatedReferrer = await context.UserAccounts.SingleOrDefaultAsync(x => x.Id == request.ReferralDto.ReferralUserAccountDto.Id, cancellationToken: cancellationToken);
 
             UpdateUserAccountRole(entity);
 
