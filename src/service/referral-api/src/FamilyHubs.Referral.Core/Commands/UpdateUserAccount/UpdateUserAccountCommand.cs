@@ -54,17 +54,8 @@ public class UpdateUserAccountCommandHandler : BaseUserAccountHandler, IRequestH
         }
         else
         {
-            try
-            {
-                result = await UpdateAndUpdateUserAccount(request, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred creating referral. {exceptionMessage}", ex.Message);
-                throw;
-            }
+            result = await UpdateAndUpdateUserAccount(request, cancellationToken);
         }
-
 
         return result;
     }

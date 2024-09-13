@@ -98,11 +98,11 @@ public class WhenUsingGetReferral : DataIntegrationTestBase
     }
 
     [Theory]
-    [InlineData("JoeBlog@email.com", default!, "Email")]
-    [InlineData("078123456", default!, "Telephone")]
-    [InlineData("078123456", default!, "Textphone")]
+    [InlineData("JoeBlog@email.com", default, "Email")]
+    [InlineData("078123456", default, "Telephone")]
+    [InlineData("078123456", default, "Textphone")]
     [InlineData("Joe Blogs", "B30 2TV", "Name")]
-    public async Task ThenGetReferralByRecipient(string value1, string value2, string paraType)
+    public async Task ThenGetReferralByRecipient(string value1, string? value2, string paraType)
     {
         await CreateReferral();
         var referral = TestDataProvider.GetReferralDto();

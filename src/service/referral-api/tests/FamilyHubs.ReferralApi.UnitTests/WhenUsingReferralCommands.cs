@@ -491,7 +491,7 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest
     [InlineData(ReferralOrderBy.Team, false, 1)]
     [InlineData(ReferralOrderBy.ServiceName, true, 1)]
     [InlineData(ReferralOrderBy.ServiceName, false, 1)]
-    public async Task ThenGetReferralsByReferrerId(ReferralOrderBy? referralOrderBy, bool? isAssending, int firstId)
+    public async Task ThenGetReferralsByReferrerId(ReferralOrderBy? referralOrderBy, bool? isAscending, int firstId)
     {
         //Arange
         var myProfile = new AutoMappingProfiles();
@@ -500,11 +500,11 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest
         var mockApplicationDbContext = GetApplicationDbContext();
         await CreateReferrals(mockApplicationDbContext);
 
-        GetReferralsByReferrerByReferrerIdCommand getcommand = new(5, referralOrderBy, isAssending, false, 1, 10);
+        GetReferralsByReferrerByReferrerIdCommand getcommand = new(5, referralOrderBy, isAscending, false, 1, 10);
         GetReferralsByReferrerByReferrerIdCommandHandler gethandler = new(mockApplicationDbContext, mapper);
 
         //Act
-        var result = await gethandler.Handle(getcommand, new System.Threading.CancellationToken());
+        var result = await gethandler.Handle(getcommand, default);
 
         //Assert
         result.Should().NotBeNull();
@@ -526,15 +526,15 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest
     [InlineData(ReferralOrderBy.Team, false, 1)]
     [InlineData(ReferralOrderBy.ServiceName, true, 1)]
     [InlineData(ReferralOrderBy.ServiceName, false, 1)]
-    public async Task ThenGetReferralsByOrganisationId(ReferralOrderBy referralOrderBy, bool isAssending, int firstId)
+    public async Task ThenGetReferralsByOrganisationId(ReferralOrderBy referralOrderBy, bool isAscending, int firstId)
     {
-        //Arange
+        // Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
         var mockApplicationDbContext = GetApplicationDbContext();
         await CreateReferrals(mockApplicationDbContext);
-        GetReferralsByOrganisationIdCommand getcommand = new(1, referralOrderBy, isAssending, null, 1, 10);
+        GetReferralsByOrganisationIdCommand getcommand = new(1, referralOrderBy, isAscending, null, 1, 10);
         GetReferralsByOrganisationIdCommandHandler gethandler = new(mockApplicationDbContext, mapper);
 
         //Act
@@ -618,7 +618,7 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest
         var createReferral = new CreateReferralDto(testReferral, new ConnectionRequestsSentMetricDto(RequestTimestamp));
         CreateReferralCommand command = new(createReferral, FamilyHubsUser);
         CreateReferralCommandHandler handler = new(mockApplicationDbContext, mapper, _serviceDirectoryService.Object, logger.Object);
-        await handler.Handle(command, new System.Threading.CancellationToken());
+        await handler.Handle(command, default);
 
         GetReferralByServiceIdStatusIdRecipientIdReferrerIdCommand getcommand = new(serviceId, statusId, recipientId, referralId, ReferralOrderBy.RecipientName, true, null, 1, 10);
         GetReferralByServiceIdStatusIdRecipientIdReferrerIdCommandHandler gethandler = new(mockApplicationDbContext, mapper);
@@ -717,12 +717,12 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest
         var createReferral = new CreateReferralDto(testReferral, new ConnectionRequestsSentMetricDto(RequestTimestamp));
         CreateReferralCommand createCommand = new(createReferral, FamilyHubsUser);
         CreateReferralCommandHandler createHandler = new(mockApplicationDbContext, mapper, _serviceDirectoryService.Object, logger.Object);
-        var setupresult = await createHandler.Handle(createCommand, new System.Threading.CancellationToken());
+        var setupresult = await createHandler.Handle(createCommand, default);
         SetReferralStatusCommand command = new(role, testReferral.ReferralServiceDto.OrganisationDto.Id, testReferral.Id, "Declined", "Unable to help");
-        SetReferralStatusCommandHandler handler = new(mockApplicationDbContext, new Mock<ILogger<SetReferralStatusCommandHandler>>().Object);
+        SetReferralStatusCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, default);
 
         //Assert
         setupresult.Id.Should().BeGreaterThan(0);
@@ -734,7 +734,7 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest
     [Fact]
     public async Task ThenUpdateStatusOfReferralReturnsForbidden()
     {
-        //Arange
+        // Arrange
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
@@ -742,17 +742,17 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest
         var mockApplicationDbContext = GetApplicationDbContext();
         mockApplicationDbContext.Statuses.AddRange(ReferralSeedData.SeedStatuses());
         mockApplicationDbContext.Roles.AddRange(ReferralSeedData.SeedRoles());
-        mockApplicationDbContext.SaveChanges();
+        await mockApplicationDbContext.SaveChangesAsync();
         var testReferral = GetReferralDto();
         var createReferral = new CreateReferralDto(testReferral, new ConnectionRequestsSentMetricDto(RequestTimestamp));
         CreateReferralCommand createCommand = new(createReferral, FamilyHubsUser);
         CreateReferralCommandHandler createHandler = new(mockApplicationDbContext, mapper, _serviceDirectoryService.Object, logger.Object);
-        var setupresult = await createHandler.Handle(createCommand, new System.Threading.CancellationToken());
+        var setupresult = await createHandler.Handle(createCommand, default);
         SetReferralStatusCommand command = new(RoleTypes.LaProfessional, -1, testReferral.Id, "Declined", "Unable to help");
-        SetReferralStatusCommandHandler handler = new(mockApplicationDbContext, new Mock<ILogger<SetReferralStatusCommandHandler>>().Object);
+        SetReferralStatusCommandHandler handler = new(mockApplicationDbContext);
 
         //Act
-        var result = await handler.Handle(command, new System.Threading.CancellationToken());
+        var result = await handler.Handle(command, default);
 
         //Assert
         setupresult.Id.Should().BeGreaterThan(0);

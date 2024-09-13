@@ -19,17 +19,12 @@ public class UpdateUserAccountsCommand : IRequest<bool>, IUpdateUserAccountsComm
     public List<UserAccountDto> UserAccounts { get; }
 }
 
-public class UpdateUserAccountsCommandHandler : BaseUserAccountHandler, IRequestHandler<UpdateUserAccountsCommand, bool>
+public class UpdateUserAccountsCommandHandler(
+    ApplicationDbContext context,
+    IMapper mapper,
+    ILogger<UpdateUserAccountsCommandHandler> logger)
+    : BaseUserAccountHandler(context), IRequestHandler<UpdateUserAccountsCommand, bool>
 {
-    private readonly IMapper _mapper;
-    private readonly ILogger<UpdateUserAccountsCommandHandler> _logger;
-    public UpdateUserAccountsCommandHandler(ApplicationDbContext context, IMapper mapper, ILogger<UpdateUserAccountsCommandHandler> logger)
-        : base(context)
-    {
-        _logger = logger;
-        _mapper = mapper;
-    }
-
     public async Task<bool> Handle(UpdateUserAccountsCommand request, CancellationToken cancellationToken)
     {
         bool result;
@@ -44,23 +39,14 @@ public class UpdateUserAccountsCommandHandler : BaseUserAccountHandler, IRequest
             catch (Exception ex)
             {
                 await transaction.RollbackAsync(cancellationToken);
-                _logger.LogError(ex, "An error occurred creating referral. {exceptionMessage}", ex.Message);
+                logger.LogError(ex, "An error occurred creating referral. {ExceptionMessage}", ex.Message);
                 throw;
             }
         }
         else
         {
-            try
-            {
-                result = await UpdateAndUpdateUserAccounts(request, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred creating referral. {exceptionMessage}", ex.Message);
-                throw;
-            }
+            result = await UpdateAndUpdateUserAccounts(request, cancellationToken);
         }
-
 
         return result;
     }
@@ -69,10 +55,10 @@ public class UpdateUserAccountsCommandHandler : BaseUserAccountHandler, IRequest
     {
         foreach (var account in request.UserAccounts)
         {
-            UserAccount entity = _mapper.Map<UserAccount>(account);
+            UserAccount entity = mapper.Map<UserAccount>(account);
             ArgumentNullException.ThrowIfNull(entity);
 
-            entity.OrganisationUserAccounts = _mapper.Map<List<UserAccountOrganisation>>(account.OrganisationUserAccounts);
+            entity.OrganisationUserAccounts = mapper.Map<List<UserAccountOrganisation>>(account.OrganisationUserAccounts);
 
             entity = await AttatchExistingUserAccountRoles(entity, cancellationToken);
             entity = await AttatchExistingService(entity, cancellationToken);
