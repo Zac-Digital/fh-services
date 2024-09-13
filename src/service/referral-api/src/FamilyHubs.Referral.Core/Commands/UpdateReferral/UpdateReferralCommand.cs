@@ -7,7 +7,6 @@ using FamilyHubs.Referral.Data.Repository;
 using FamilyHubs.ReferralService.Shared.Dto;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.Referral.Core.Commands.UpdateReferral;
 
@@ -61,7 +60,7 @@ public class UpdateReferralCommandHandler(ApplicationDbContext context, IMapper 
     {
         if (entity.Status.Id != request.ReferralDto.Status.Id)
         {
-            var updatedStatus = context.Statuses.SingleOrDefault(x => x.Name == request.ReferralDto.Status.Name);
+            var updatedStatus = await context.Statuses.SingleOrDefaultAsync(x => x.Name == request.ReferralDto.Status.Name, cancellationToken: cancellationToken);
 
             if (updatedStatus == null)
             {
