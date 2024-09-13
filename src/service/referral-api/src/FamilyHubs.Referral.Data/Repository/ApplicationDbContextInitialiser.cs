@@ -1,5 +1,4 @@
 ﻿using FamilyHubs.Referral.Data.Entities;
-using FamilyHubs.SharedKernel.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -40,20 +39,7 @@ public class ApplicationDbContextInitialiser
         }
     }
 
-    public async Task SeedAsync()
-    {
-        try
-        {
-            await TrySeedAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while seeding the database.");
-            throw;
-        }
-    }
-
-    public async Task TrySeedAsync()
+    private async Task SeedAsync()
     {
         IReadOnlyCollection<Status> statuses = ReferralSeedData.SeedStatuses();
         if (!_context.Statuses.Any())
