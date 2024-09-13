@@ -17,25 +17,17 @@ public class ApplicationDbContextInitialiser
 
     public async Task InitialiseAsync(bool isProduction, bool shouldRestDatabaseOnRestart)
     {
-        try
+        if (!isProduction)
         {
-            if (!isProduction)
-            {
-                if (shouldRestDatabaseOnRestart)
-                    await _context.Database.EnsureDeletedAsync();
+            if (shouldRestDatabaseOnRestart)
+                await _context.Database.EnsureDeletedAsync();
 
-                if (_context.Database.IsSqlServer())
-                    await _context.Database.MigrateAsync();
-                else
-                    await _context.Database.EnsureCreatedAsync();
+            if (_context.Database.IsSqlServer())
+                await _context.Database.MigrateAsync();
+            else
+                await _context.Database.EnsureCreatedAsync();
 
-                await SeedAsync();
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while initialising the database.");
-            throw;
+            await SeedAsync();
         }
     }
 
