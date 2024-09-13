@@ -39,6 +39,7 @@ public abstract class BaseUserAccountHandler
         {
             return entity;
         }
+#pragma warning disable S127
         for(int i = 0; i < entity.OrganisationUserAccounts.Count; i++)
         {
             Organisation? organisation = _context.Organisations.SingleOrDefault(x => x.Id == entity.OrganisationUserAccounts[i].Organisation.Id);
@@ -57,6 +58,7 @@ public abstract class BaseUserAccountHandler
 
             entity.OrganisationUserAccounts[i].Organisation = _context.Organisations.Single(x => x.Id == entity.OrganisationUserAccounts[i].Organisation.Id);
         }
+#pragma warning restore S127
 
         return entity;
     }
