@@ -28,8 +28,6 @@
     <PackageReference Include="Microsoft.Data.SqlClient" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" />
-    <!--<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders.TagHelpers" />-->
     <PackageReference Include="Serilog" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Extensions.Hosting" />
