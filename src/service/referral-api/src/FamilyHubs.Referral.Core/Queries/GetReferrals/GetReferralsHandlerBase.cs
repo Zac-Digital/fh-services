@@ -37,7 +37,7 @@ public abstract class GetReferralsHandlerBase
 
     protected async Task<PaginatedList<UserAccountDto>> GetPaginatedList(bool requestIsNull, IQueryable<UserAccount> userAccounts, int pageNumber, int pageSize)
     {
-        int totalRecords = userAccounts.Count();
+        int totalRecords = await userAccounts.CountAsync();
         List<UserAccountDto> pagelist;
         if (!requestIsNull)
         {
@@ -47,7 +47,7 @@ public abstract class GetReferralsHandlerBase
 
             foreach(UserAccountDto userAccount in pagelist)
             {
-                UserAccount? dbUserAccount = userAccounts.FirstOrDefault(x => x.Id == userAccount.Id);
+                UserAccount? dbUserAccount = await userAccounts.FirstOrDefaultAsync(x => x.Id == userAccount.Id);
                 if (dbUserAccount != null && dbUserAccount.OrganisationUserAccounts != null)
                 {
                     userAccount.OrganisationUserAccounts = new List<UserAccountOrganisationDto>();

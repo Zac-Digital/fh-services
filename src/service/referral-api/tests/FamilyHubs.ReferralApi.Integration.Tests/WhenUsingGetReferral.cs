@@ -133,15 +133,12 @@ public class WhenUsingGetReferral : DataIntegrationTestBase
         //Act
         var result = await handler.Handle(command, new System.Threading.CancellationToken());
 
-
-
         //Assert
         result.Should().NotBeNull();
         result[0].Should().BeEquivalentTo(referral,
             options => options.Excluding(x => x.Created).Excluding(x => x.LastModified).Excluding(x => x.Status.SecondrySortOrder));
         var actualService = TestDbContext.Referrals.SingleOrDefault(s => s.Id == referral.Id);
         actualService.Should().NotBeNull();
-
     }
 
     [Fact]
@@ -157,6 +154,5 @@ public class WhenUsingGetReferral : DataIntegrationTestBase
 
         // Assert
         await act.Should().ThrowAsync<NotFoundException>();
-
     }
 }
