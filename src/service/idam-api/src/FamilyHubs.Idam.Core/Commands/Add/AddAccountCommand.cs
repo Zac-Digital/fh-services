@@ -42,39 +42,31 @@ public class AddAccountCommandHandler : IRequestHandler<AddAccountCommand, strin
 
         if (account is not null)
         {
-            _logger.LogWarning("Account {email} already exists", request.Email);
+            _logger.LogWarning("Account {Email} already exists", request.Email);
             throw new AlreadyExistsException("Account Already exists");
         }
 
-        try
-        {
-            var entity = new Account 
-            { 
-                Name = request.Name, 
-                Email = request.Email.ToLower(), 
-                PhoneNumber = request.PhoneNumber,
-                Status = AccountStatus.Active , 
-                Claims = request.Claims 
-            };
+        var entity = new Account 
+        { 
+            Name = request.Name, 
+            Email = request.Email.ToLower(), 
+            PhoneNumber = request.PhoneNumber,
+            Status = AccountStatus.Active , 
+            Claims = request.Claims 
+        };
 
-            await _dbContext.Accounts.AddAsync(entity, cancellationToken);
+        await _dbContext.Accounts.AddAsync(entity, cancellationToken);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
-            _logger.LogInformation("Account {Id} saved to DB", entity.Id);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        _logger.LogInformation("Account {Id} saved to DB", entity.Id);
 
 #if USE_EVENT_GRID
-            _logger.LogInformation("Account {Id} sending an event grid message", entity.Id);
-            SendEventGridMessageCommand sendEventGridMessageCommand = new(entity);
-            _ = _sender.Send(sendEventGridMessageCommand, cancellationToken);
-            _logger.LogInformation("Account {Id} completed the event grid message", entity.Id);
+        _logger.LogInformation("Account {Id} sending an event grid message", entity.Id);
+        SendEventGridMessageCommand sendEventGridMessageCommand = new(entity);
+        _ = _sender.Send(sendEventGridMessageCommand, cancellationToken);
+        _logger.LogInformation("Account {Id} completed the event grid message", entity.Id);
 #endif
 
-            return entity.Email;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred creating account.");
-            throw;
-        }
+        return entity.Email;
     }
 }
