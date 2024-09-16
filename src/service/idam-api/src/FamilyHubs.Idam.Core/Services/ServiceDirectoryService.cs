@@ -11,6 +11,7 @@ public interface IServiceDirectoryService
     Task<List<OrganisationDto>?> GetOrganisationsByIds(IEnumerable<long> ids);
 }
 
+//todo: we should only have a single client per API shared across the world
 public class ServiceDirectoryService(HttpClient httpClient) : IServiceDirectoryService
 {
     private async Task<List<OrganisationDto>?> GetOrganisationsByUri(string uri)
@@ -23,10 +24,10 @@ public class ServiceDirectoryService(HttpClient httpClient) : IServiceDirectoryS
 
         using var response = await httpClient.SendAsync(request);
 
-        var json = await response.Content.ReadAsStringAsync();
+        string json = await response.Content.ReadAsStringAsync();
         if (string.IsNullOrEmpty(json))
         {
-            throw new Exception("Invalid response from ServiceDirectory Api");
+            throw new InvalidOperationException("Invalid response from ServiceDirectory Api");
         }
 
         return JsonSerializer.Deserialize<List<OrganisationDto>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -52,7 +53,7 @@ public class ServiceDirectoryService(HttpClient httpClient) : IServiceDirectoryS
         var enumerable = ids.ToList();
         if (!enumerable.Any()) return new List<OrganisationDto>();
 
-        var query = string.Join("&ids=", enumerable);
+        string query = string.Join("&ids=", enumerable);
         return await GetOrganisationsByUri($"api/organisations?ids={query}");
     }
 }
