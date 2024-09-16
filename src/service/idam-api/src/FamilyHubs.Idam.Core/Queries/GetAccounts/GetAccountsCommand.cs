@@ -97,13 +97,13 @@ public class GetAccountsCommandHandler(
 
     private async Task<PaginatedList<Account>?> GetUsers(IUserOrganisationsFilter organisations, GetAccountsCommand request)
     {
-        var pageNumber = request.PageNumber.GetValueOrDefault();
-        var pageSize = request.PageSize.GetValueOrDefault();
+        int pageNumber = request.PageNumber.GetValueOrDefault();
+        int pageSize = request.PageSize.GetValueOrDefault();
 
         var accountsQuery = await CreateFilteredQuery(organisations, request);
         accountsQuery = SortQuery(accountsQuery, request);
 
-        var totalCount = accountsQuery.Count();
+        var totalCount = await accountsQuery.CountAsync();
         if(totalCount == 0)
             return null;
 
