@@ -61,4 +61,3 @@ jobs:
           name: ${{ steps.get-name.outputs.artifact_name }}
           path: ${{ env.BUILD_DIRECTORY }}
           if-no-files-found: error
-          retention-days: 14

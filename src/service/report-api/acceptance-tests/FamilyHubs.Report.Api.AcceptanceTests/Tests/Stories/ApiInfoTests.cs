@@ -1,19 +1,14 @@
 using FamilyHubs.Report.Api.AcceptanceTests.Tests.Steps;
 using TestStack.BDDfy;
+using Xunit;
 
 namespace FamilyHubs.Report.Api.AcceptanceTests.Tests.Stories;
 
-[TestClass]
 public class ApiInfoTests
 {
-    private readonly ApiInfoSteps _steps;
+    private readonly ApiInfoSteps _steps = new();
 
-    public ApiInfoTests()
-    {
-        _steps = new ApiInfoSteps();
-    }
-
-    [TestMethod]
+    [Fact]
     public void Api_Info_Returned()
     {
         this.When(s => _steps.CheckTheApiInfo())

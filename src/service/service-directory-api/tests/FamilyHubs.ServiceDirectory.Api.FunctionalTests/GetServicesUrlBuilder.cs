@@ -1,10 +1,11 @@
-﻿using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
+﻿using System.Text;
+using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
 
 public class GetServicesUrlBuilder
 {
-    private readonly List<string> _urlParameter = new List<string>();
+    private readonly List<string> _urlParameter = new();
     public GetServicesUrlBuilder WithServiceType(string serviceType)
     {
         _urlParameter.Add($"serviceType={serviceType}");
@@ -76,21 +77,11 @@ public class GetServicesUrlBuilder
         return this;
     }
 
-    public string Build()
-    {
-        var isFirst = true;
-        var url = string.Empty;
-        foreach(var param in _urlParameter)
+    public string Build() =>
+        _urlParameter.Aggregate(new StringBuilder(), (builder, param) =>
         {
-            if (isFirst)
-            {
-                isFirst = false;
-                url += "?" + param;
-            }          
-            else
-                url += "&" + param;
-        }
-
-        return url;
-    }
+            builder.Append(builder.Length == 0 ? "?" : "&");
+            builder.Append(param);
+            return builder;
+        }).ToString();
 }

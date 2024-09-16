@@ -149,10 +149,21 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
 
     private static string GetPositionUrl(string? serviceType, double? latitude, double? longitude, double? proximity, string status, int pageNumber, int pageSize)
     {
-        return $"api/services-simple?serviceType={serviceType}&status={status}&pageNumber={pageNumber}&pageSize={pageSize}&isFamilyHub=false{(
-                latitude is not null ? $"&latitude={latitude}" : string.Empty)}{(
-                longitude is not null ? $"&longitude={longitude}" : string.Empty)}{(
-                proximity is not null ? $"&proximity={proximity}" : string.Empty)}";
+        var builder = new GetServicesUrlBuilder();
+        if (serviceType is not null)
+        {
+            builder.WithServiceType(serviceType);
+        }
+
+        if (latitude.HasValue && longitude.HasValue && proximity.HasValue)
+        {
+            builder.WithProximity(latitude.Value, longitude.Value, proximity.Value);
+        }
+
+        return "api/service-simple" + builder
+            .WithStatus(status)
+            .WithPage(pageNumber, pageSize)
+            .Build();
     }
 
     public static void AddAgeToUrl(StringBuilder url, int? givenAge)
