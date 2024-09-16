@@ -160,7 +160,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
             builder.WithProximity(latitude.Value, longitude.Value, proximity.Value);
         }
 
-        return "api/service-simple" + builder
+        return "api/services-simple" + builder
             .WithStatus(status)
             .WithPage(pageNumber, pageSize)
             .Build();
