@@ -30,7 +30,7 @@ public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand>
 
         if (entity is null)
         {
-            _logger.LogWarning("Account {accountId} not found", request.AccountId);
+            _logger.LogWarning("Account {AccountId} not found", request.AccountId);
             throw new Ardalis.GuardClauses.NotFoundException(nameof(Account), request.AccountId.ToString());
         }
 
@@ -42,7 +42,7 @@ public class UpdateAccountCommandHandler : IRequestHandler<UpdateAccountCommand>
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("Account {accountId} updated in DB", request.AccountId);
+            _logger.LogInformation("Account {AccountId} updated in DB", request.AccountId);
         }
         catch (Exception ex)
         {
