@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--<TreatWarningsAsErrors>True</TreatWarningsAsErrors>-->
+	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	  <NoWarn>S1135</NoWarn>
   </PropertyGroup>
 
