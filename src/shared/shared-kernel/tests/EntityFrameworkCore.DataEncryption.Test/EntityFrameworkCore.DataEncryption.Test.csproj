@@ -5,6 +5,7 @@
 		<IsPackable>false</IsPackable>
 		<AssemblyName>Microsoft.EntityFrameworkCore.Encryption.Test</AssemblyName>
 		<RootNamespace>Microsoft.EntityFrameworkCore.Encryption.Test</RootNamespace>
+		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
