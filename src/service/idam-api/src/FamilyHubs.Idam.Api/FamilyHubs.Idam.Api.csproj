@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-	  <NoWarn>S1135</NoWarn>
 	  <UserSecretsId>4000f7ea-d46d-459e-9055-a2f2b4b8e08e</UserSecretsId>
   </PropertyGroup>
 
