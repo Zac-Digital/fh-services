@@ -33,7 +33,7 @@ namespace FamilyHubs.Idam.Api.Controllers
         {
             var result = await _mediator.Send(request, cancellationToken);
             HttpContext.Response.StatusCode = (int)HttpStatusCode.Created;
-            HttpContext.Response.Headers.Add("Location", $"Api/Account?email={result}");
+            HttpContext.Response.Headers.Append("Location", $"Api/Account?email={result}");
             return "Account Created";
         }
 
