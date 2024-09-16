@@ -37,9 +37,7 @@ public class AccountClaimsController(IMediator mediator, ILogger<AccountClaimsCo
     [Route("AddClaim")]
     public async Task<long> AddClaims([FromBody] AddClaimCommand request, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(request, cancellationToken);
-            
-        return result;
+        return await mediator.Send(request, cancellationToken);
     }
 
     [HttpPut]
@@ -53,17 +51,13 @@ public class AccountClaimsController(IMediator mediator, ILogger<AccountClaimsCo
     [Route("DeleteClaim")]
     public async Task<bool> DeleteClaims([FromBody] DeleteClaimCommand request, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(request, cancellationToken);
-            
-        return result;
+        return await mediator.Send(request, cancellationToken);
     }
 
     [HttpDelete]
     [Route("DeleteAllClaims")]
     public async Task<bool> DeleteAllClaims([FromBody] DeleteAllClaimsCommand request, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(request, cancellationToken);
-            
-        return result;
+        return await mediator.Send(request, cancellationToken);
     }
 }
