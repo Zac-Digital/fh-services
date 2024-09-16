@@ -114,9 +114,6 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
             return (authorisedOrganisations.Any, authorisedOrganisations);
         }
 
-        //  Filter authorised organisations for requested associated organisations
-        //organisations = authorisedOrganisations.Where(x => x.Id == requestedOrganisationId || x.AssociatedOrganisationId == requestedOrganisationId).ToList();
-
         var organisations = await authorisedOrganisations.Requested(requestedOrganisationId.Value);
         return (organisations.Any, organisations);
     }

@@ -235,13 +235,5 @@ public class IdamsTelemetryPiiRedactor : ITelemetryInitializer
         {
             Debugger.Break();
         }
-
-        //if (value.Contains("email=")
-        //    && !value.Contains("email=REDACTED"))
-        //{
-        //    Debugger.Break();
-        //}
-
-       
     }
 }
