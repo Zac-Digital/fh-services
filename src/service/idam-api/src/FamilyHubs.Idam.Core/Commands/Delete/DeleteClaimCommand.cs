@@ -18,29 +18,20 @@ public class DeleteClaimCommandHandler(ApplicationDbContext dbContext, ILogger<D
 {
     public async Task<bool> Handle(DeleteClaimCommand request, CancellationToken cancellationToken)
     {
-        try
+        var entity = await dbContext.AccountClaims
+            .FirstOrDefaultAsync(r => r.AccountId == request.AccountId && r.Name == request.Name, cancellationToken);
+
+        if (entity is null)
         {
-            var entity = await dbContext.AccountClaims
-                .FirstOrDefaultAsync(r => r.AccountId == request.AccountId && r.Name == request.Name, cancellationToken);
-
-            if (entity is null)
-            {
-                logger.LogWarning("Account claim {Claim} for AccountId:{AccountId} not found", request.Name, request.AccountId);
-                throw new NotFoundException(nameof(AccountClaim), request.AccountId.ToString());
-            }
-
-            dbContext.AccountClaims.Remove(entity);
-
-            await dbContext.SaveChangesAsync(cancellationToken);
-            logger.LogInformation("Account Claim {Claim} removed from DB", request.Name);
-
-            return true;
+            throw new NotFoundException(nameof(AccountClaim), request.AccountId.ToString());
         }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An error occurred deleting Claim for Id: {AccountId}", request.AccountId);
 
-            throw;
-        }
+        logger.LogInformation("Removing account claim {Claim} from DB", request.Name);
+
+        dbContext.AccountClaims.Remove(entity);
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 }
