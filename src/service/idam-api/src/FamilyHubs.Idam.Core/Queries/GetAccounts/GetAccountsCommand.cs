@@ -6,7 +6,6 @@ using FamilyHubs.SharedKernel.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.Idam.Core.Queries.GetAccounts;
 
@@ -36,52 +35,31 @@ public class GetAccountsCommand : IRequest<PaginatedList<Account>?>
     }
 }
 
-public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, PaginatedList<Account>?>
+public class GetAccountsCommandHandler(
+    ApplicationDbContext dbContext,
+    IServiceDirectoryService serviceDirectoryService,
+    IHttpContextAccessor httpContextAccessor)
+    : IRequestHandler<GetAccountsCommand, PaginatedList<Account>?>
 {
-    private readonly ApplicationDbContext _dbContext;
-    private readonly ILogger<GetAccountsCommandHandler> _logger;
-    private readonly IServiceDirectoryService _serviceDirectoryService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private const string OrganisationNameClaim = "OrganisationName";
-    
-
-    public GetAccountsCommandHandler(
-        ApplicationDbContext dbContext, 
-        IServiceDirectoryService serviceDirectoryService, 
-        IHttpContextAccessor httpContextAccessor,
-        ILogger<GetAccountsCommandHandler> logger)
-    {
-        _dbContext = dbContext;
-        _logger = logger;
-        _serviceDirectoryService = serviceDirectoryService;
-        _httpContextAccessor = httpContextAccessor;
-    }
 
     public async Task<PaginatedList<Account>?> Handle(GetAccountsCommand request, CancellationToken cancellationToken)
     {
-        try
-        {
-            var authorisedOrganisations = await GetUserAuthorisedOrganisations();
+        var authorisedOrganisations = await GetUserAuthorisedOrganisations();
 
-            var (success, organisations) = await TryGetRequestedAssociatedOrganisations(request.RequestedOrganisationId, authorisedOrganisations);
-            if(!success)
-            {
-                //  No organisations listed to return users from
-                return null;
-            }
-
-            return await GetUsers(organisations, request);
-        }
-        catch (Exception ex)
+        var (success, organisations) = await TryGetRequestedAssociatedOrganisations(request.RequestedOrganisationId, authorisedOrganisations);
+        if(!success)
         {
-            _logger.LogError(ex, "An error occurred Getting Accounts");
-            throw;
+            //  No organisations listed to return users from
+            return null;
         }
+
+        return await GetUsers(organisations, request);
     }
 
     private async Task<IUserOrganisationsFilter> GetUserAuthorisedOrganisations()
     {
-        var user = _httpContextAccessor.HttpContext?.GetFamilyHubsUser();
+        var user = httpContextAccessor.HttpContext?.GetFamilyHubsUser();
 
         if (!long.TryParse(user?.OrganisationId, out var organisationId))
         {
@@ -90,14 +68,13 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
 
         if (organisationId == -1 && user.Role == RoleTypes.DfeAdmin)
         {
-            return new UserOrganisationsFilterAdmin(_serviceDirectoryService);// DfeAdmins can view users related to all organisations
+            return new UserOrganisationsFilterAdmin(serviceDirectoryService);// DfeAdmins can view users related to all organisations
         }
 
         // Returns only organisations that the current bearer token has access to
         return new UserOrganisationsFilterStandard(
-            await _serviceDirectoryService.GetOrganisationsByAssociatedId(organisationId)
+            await serviceDirectoryService.GetOrganisationsByAssociatedId(organisationId)
         );
-
     }
 
     private static async Task<(bool, IUserOrganisationsFilter)> TryGetRequestedAssociatedOrganisations(long? requestedOrganisationId, IUserOrganisationsFilter authorisedOrganisations)
@@ -152,22 +129,15 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
     private async Task<IQueryable<Account>> CreateFilteredQuery(IUserOrganisationsFilter organisations, GetAccountsCommand request)
     {
         var accountsQuery = await organisations
-            .Filter(_dbContext.Accounts, request.OrganisationName);
+            .Filter(dbContext.Accounts, request.OrganisationName);
             
         accountsQuery = accountsQuery.Where(x => x.Status == Data.Entities.AccountStatus.Active);
 
         if (request.IsLaUser != request.IsVcsUser) // If both values are the same dont filter
         {
-            List<string> roles;
-
-            if(request.IsLaUser)
-            {
-                roles = new List<string> { RoleTypes.LaProfessional, RoleTypes.LaManager, RoleTypes.LaDualRole };
-            }
-            else
-            {
-                roles = new List<string> { RoleTypes.VcsProfessional, RoleTypes.VcsManager, RoleTypes.VcsDualRole };
-            }
+            List<string> roles = request.IsLaUser
+                ? [RoleTypes.LaProfessional, RoleTypes.LaManager, RoleTypes.LaDualRole]
+                : [RoleTypes.VcsProfessional, RoleTypes.VcsManager, RoleTypes.VcsDualRole];
 
             accountsQuery = accountsQuery.Where(acc=>
                 acc.Claims.Any(claim => claim.Name == FamilyHubsClaimTypes.Role && roles.Contains(claim.Value)));
@@ -177,7 +147,7 @@ public class GetAccountsCommandHandler : IRequestHandler<GetAccountsCommand, Pag
         {
             var accounts = FindAccounts(accountsQuery, request).Select(acc => acc.Id);
 
-            accountsQuery = _dbContext.Accounts.Where(x => accounts.Contains(x.Id));
+            accountsQuery = dbContext.Accounts.Where(x => accounts.Contains(x.Id));
         }
 
         return accountsQuery;
