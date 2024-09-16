@@ -39,26 +39,25 @@ public abstract class BaseUserAccountHandler
         {
             return entity;
         }
-#pragma warning disable S127
-        for(int i = 0; i < entity.OrganisationUserAccounts.Count; i++)
+
+        var withIndexes = entity.OrganisationUserAccounts.Select((x, i) => (i, x)).ToList();
+        foreach (var (idx, userAccountOrganisation) in withIndexes)
         {
-            Organisation? organisation = _context.Organisations.SingleOrDefault(x => x.Id == entity.OrganisationUserAccounts[i].Organisation.Id);
+            var organisation = _context.Organisations.SingleOrDefault(x => x.Id == userAccountOrganisation.Organisation.Id);
 
             if (organisation == null)
             {
-                if (string.IsNullOrEmpty(entity.OrganisationUserAccounts[i].Organisation.Name))
+                if (string.IsNullOrEmpty(userAccountOrganisation.Organisation.Name))
                 {
-                    entity.OrganisationUserAccounts.RemoveAt(i);
-                    i--;
+                    entity.OrganisationUserAccounts.RemoveAt(idx);
                     continue;
                 }
-                _context.Organisations.Add(entity.OrganisationUserAccounts[i].Organisation);
+                _context.Organisations.Add(userAccountOrganisation.Organisation);
                 await _context.SaveChangesAsync(cancellationToken);
             }
 
-            entity.OrganisationUserAccounts[i].Organisation = _context.Organisations.Single(x => x.Id == entity.OrganisationUserAccounts[i].Organisation.Id);
+            userAccountOrganisation.Organisation = _context.Organisations.Single(x => x.Id == userAccountOrganisation.Organisation.Id);
         }
-#pragma warning restore S127
 
         return entity;
     }
