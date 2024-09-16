@@ -19,30 +19,21 @@ public class DeleteAllClaimsCommandHandler(
 {
     public async Task<bool> Handle(DeleteAllClaimsCommand request, CancellationToken cancellationToken)
     {
-        try
+        var entities = await dbContext.AccountClaims
+            .Where(r => r.AccountId == request.AccountId)
+            .ToListAsync(cancellationToken);
+
+        if (entities is null or { Count: < 1 })
         {
-            var entities = await dbContext.AccountClaims
-                .Where(r => r.AccountId == request.AccountId)
-                .ToListAsync(cancellationToken);
-
-            if (entities is null or { Count: < 1 })
-            {
-                logger.LogWarning("No Account claims for accountId:{AccountId} found", request.AccountId);
-                throw new NotFoundException(nameof(AccountClaim), request.AccountId.ToString());
-            }
-
-            dbContext.AccountClaims.RemoveRange(entities);
-
-            await dbContext.SaveChangesAsync(cancellationToken);
-            logger.LogInformation("{ClaimsCount} claims deleted for accountId:{AccountId}", entities.Count, request.AccountId);
-
-            return true;
+            throw new NotFoundException(nameof(AccountClaim), request.AccountId.ToString());
         }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An error occurred deleting All Claims for Id: {accountId}", request.AccountId);
 
-            throw;
-        }
+        logger.LogInformation("Deleting {ClaimsCount} claims for accountId:{AccountId}", entities.Count, request.AccountId);
+
+        dbContext.AccountClaims.RemoveRange(entities);
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 }
