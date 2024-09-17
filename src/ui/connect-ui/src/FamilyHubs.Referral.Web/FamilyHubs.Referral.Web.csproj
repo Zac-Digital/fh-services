@@ -11,6 +11,7 @@
 	  <NoWarn>1701;1702;S1135;S125</NoWarn>
       <!--only temporarily-->
 	  <WarningsNotAsErrors>S1244</WarningsNotAsErrors>
+      <NuGetAuditMode>direct</NuGetAuditMode>
   </PropertyGroup>
 
   <ItemGroup>

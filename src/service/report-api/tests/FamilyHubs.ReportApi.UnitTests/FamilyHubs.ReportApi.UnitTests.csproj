@@ -2,7 +2,8 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-    </PropertyGroup>
+	    <NuGetAuditMode>direct</NuGetAuditMode>
+	</PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="coverlet.collector">

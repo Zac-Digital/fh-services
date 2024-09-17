@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-	  <NoWarn>S1135</NoWarn>
+	<NoWarn>S1135</NoWarn>
     <RootNamespace>FamilyHubs.Referral.Api</RootNamespace>
 	<Version>1.0.0</Version>
 	<UserSecretsId>b091cbeb-017f-42b7-bd1e-f43123e62aa4</UserSecretsId>
+	<NuGetAuditMode>direct</NuGetAuditMode>
   </PropertyGroup>
 
   <ItemGroup>

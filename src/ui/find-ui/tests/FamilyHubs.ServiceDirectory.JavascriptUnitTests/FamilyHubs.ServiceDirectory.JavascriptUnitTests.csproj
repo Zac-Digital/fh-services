@@ -4,6 +4,7 @@
 	  <JavaScriptTestFramework>Jest</JavaScriptTestFramework>
 	  <JavaScriptTestRoot>Tests\</JavaScriptTestRoot>
 	  <GenerateProgramFile>false</GenerateProgramFile>
+	  <NuGetAuditMode>direct</NuGetAuditMode>
   </PropertyGroup>
 
   <ItemGroup>

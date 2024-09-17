@@ -8,7 +8,8 @@
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-	</PropertyGroup>
+		<NuGetAuditMode>direct</NuGetAuditMode>
+	  </PropertyGroup>
 
 	<PropertyGroup>
 		<NoWarn>S1135</NoWarn>
