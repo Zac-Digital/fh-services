@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    
-    <ItemGroup>
+
+	<PropertyGroup>
+		<NuGetAuditMode>direct</NuGetAuditMode>
+	</PropertyGroup>
+
+	<ItemGroup>
         <ProjectReference Include="..\..\..\..\shared\service-directory-shared\src\FamilyHubs.ServiceDirectory.Shared\FamilyHubs.ServiceDirectory.Shared.csproj" />
         <ProjectReference Include="..\..\..\..\shared\shared-kernel\src\fh-shared-kernel.shared-kernel\FamilyHubs.SharedKernel.csproj" />
         <ProjectReference Include="..\FamilyHubs.Report.Data\FamilyHubs.Report.Data.csproj" />
