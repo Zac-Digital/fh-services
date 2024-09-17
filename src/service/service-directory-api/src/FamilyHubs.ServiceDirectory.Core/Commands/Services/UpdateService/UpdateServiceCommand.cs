@@ -64,9 +64,9 @@ public class UpdateServiceCommandHandler(ApplicationDbContext context, IMapper m
 
         // ensure that schedules (which can be referenced by location, service and serviceatlocations) are deleted when they're no longer referenced
         // we need to do this, as we can't specify cascade delete on the ServiceAtLocation schedules relationship as it would cause a cyclic reference
-        var schedulesToRemove = await context.Schedules
+        var schedulesToRemove = await _context.Schedules
             .Where(s => s.ServiceId == null && s.LocationId == null && s.ServiceAtLocationId == null)
-            .ToListAsync(cancellationToken: cancellationToken);
+            .ToListAsync(cancellationToken);
 
         context.Schedules.RemoveRange(schedulesToRemove);
         await context.SaveChangesAsync(cancellationToken);

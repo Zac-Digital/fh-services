@@ -13,10 +13,12 @@ namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Services;
 
 public class WhenValidatingServiceCommands
 {
-    public IMapper Mapper { get; }
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private IMapper Mapper { get; }
 
     public WhenValidatingServiceCommands()
     {
+        _httpContextAccessor = new HttpContextAccessor();
         var serviceProvider = CreateNewServiceProvider();
 
         Mapper = serviceProvider.GetRequiredService<IMapper>();
@@ -27,7 +29,7 @@ public class WhenValidatingServiceCommands
         var serviceDirectoryConnection = $"Data Source=sd-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";
 
         //todo: do we need a (mock) _httpContextAccessor?
-        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(null!);
+        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(_httpContextAccessor);
 
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>

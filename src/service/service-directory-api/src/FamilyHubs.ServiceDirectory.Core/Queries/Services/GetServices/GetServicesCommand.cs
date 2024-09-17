@@ -192,7 +192,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
         }
 
         var pArr = query.AllParameters(_useSqlite);
-        var total = await _context.Database.SqlQueryRaw<long>(query.Format(_useSqlite, includeOrderBy: false, includeLimit: false), pArr).CountAsync(cancellationToken: cancellationToken);
+        var total = await _context.Database.SqlQueryRaw<long>(query.Format(_useSqlite, includeOrderBy: false, includeLimit: false), pArr).CountAsync(cancellationToken);
         var ids = _context.Database.SqlQueryRaw<long>(query.Format(_useSqlite), pArr);
 
         var joinQuery = _context.Services
