@@ -3,7 +3,8 @@
   <PropertyGroup>
     <RootNamespace>FamilyHubs.ServiceDirectory.Data</RootNamespace>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <NoWarn>S1135;S125</NoWarn>
+	<NuGetAuditMode>direct</NuGetAuditMode>
+	<NoWarn>S1135;S125</NoWarn>
   </PropertyGroup>
 
 	<ItemGroup>

@@ -10,6 +10,7 @@
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	  <NoWarn>S1135</NoWarn>
+	  <NuGetAuditMode>direct</NuGetAuditMode>
   </PropertyGroup>
 
 	<ItemGroup>

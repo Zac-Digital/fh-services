@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    
-    <ItemGroup>
+
+	<PropertyGroup>
+		<NuGetAuditMode>direct</NuGetAuditMode>
+	</PropertyGroup>
+
+	<ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
             <PrivateAssets>all</PrivateAssets>

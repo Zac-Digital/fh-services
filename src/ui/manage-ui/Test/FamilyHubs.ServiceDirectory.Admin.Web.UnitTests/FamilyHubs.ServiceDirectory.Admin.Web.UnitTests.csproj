@@ -3,6 +3,7 @@
   <PropertyGroup>
 	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	  <IsPackable>false</IsPackable>
+	  <NuGetAuditMode>direct</NuGetAuditMode>
   </PropertyGroup>
 
   <ItemGroup>

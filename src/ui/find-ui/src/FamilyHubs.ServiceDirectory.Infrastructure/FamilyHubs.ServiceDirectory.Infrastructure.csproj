@@ -3,10 +3,8 @@
 	<PropertyGroup>
 		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-	</PropertyGroup>
-
-	<PropertyGroup>
-	  <NoWarn>1701;1702;S1135;S125</NoWarn>
+		<NuGetAuditMode>direct</NuGetAuditMode>
+		<NoWarn>1701;1702;S1135;S125</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
