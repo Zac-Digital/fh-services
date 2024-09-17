@@ -6,7 +6,6 @@ using FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 using FamilyHubs.ServiceDirectory.Data.Interceptors;
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +13,6 @@ namespace FamilyHubs.ServiceDirectory.Core.IntegrationTests.Services;
 
 public class WhenValidatingServiceCommands
 {
-    protected IHttpContextAccessor _httpContextAccessor;
     public IMapper Mapper { get; }
 
     public WhenValidatingServiceCommands()
@@ -29,7 +27,7 @@ public class WhenValidatingServiceCommands
         var serviceDirectoryConnection = $"Data Source=sd-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";
 
         //todo: do we need a (mock) _httpContextAccessor?
-        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(_httpContextAccessor);
+        var auditableEntitySaveChangesInterceptor = new AuditableEntitySaveChangesInterceptor(null!);
 
         return new ServiceCollection().AddEntityFrameworkSqlite()
             .AddDbContext<ApplicationDbContext>(dbContextOptionsBuilder =>
