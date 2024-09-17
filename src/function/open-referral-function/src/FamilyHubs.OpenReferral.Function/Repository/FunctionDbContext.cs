@@ -1,23 +1,26 @@
-using FamilyHubs.SharedKernel.OpenReferral;
+using FamilyHubs.SharedKernel.OpenReferral.Entities;
+using FamilyHubs.SharedKernel.OpenReferral.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.OpenReferral.Function.Repository;
 
 public class FunctionDbContext(DbContextOptions<FunctionDbContext> options) : DbContext(options), IFunctionDbContext
 {
-    public DbSet<ServicesTemp> ServicesTemp { get; init; } = null!;
+    private DbSet<Service> ServicesDbSet { get; init; } = null!;
+    public IQueryable<Service> Services() => ServicesDbSet.AsSplitQuery();
 
-    public void AddServiceTemp(ServicesTemp serviceTemp) => ServicesTemp.Add(serviceTemp);
+    public void AddService(Service service) => ServicesDbSet.Add(service);
 
-    public Task TruncateServicesTempAsync() => Database.ExecuteSqlRawAsync("TRUNCATE TABLE [staging].[services_temp]");
+    public void DeleteService(Service service) =>
+        ChangeTracker.TrackGraph(service, node => node.Entry.State = EntityState.Deleted);
+
+    public Task<List<T>> ToListAsync<T>(IQueryable<T> queryable) => queryable.ToListAsync();
 
     public Task<int> SaveChangesAsync() => base.SaveChangesAsync();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<ServicesTemp>()
-            .ToTable("services_temp", "staging")
-            .HasKey(e => e.Id);
+        OpenReferralDbContextExtension.OnModelCreating(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
     }

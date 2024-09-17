@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240913161543_UpdateDedsSchemaWithMappingsRelationshipsNavigations")]
+    partial class UpdateDedsSchemaWithMappingsRelationshipsNavigations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,7 +38,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("AttributesId");
 
-                    b.ToTable("AccessibilityAttributes", "dedsmeta");
+                    b.ToTable("AccessibilityAttribute", "dedsmeta");
                 });
 
             modelBuilder.Entity("AccessibilityMetadata", b =>
@@ -65,7 +68,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("AttributesId");
 
-                    b.ToTable("AddressAttributes", "dedsmeta");
+                    b.ToTable("AddressAttribute", "dedsmeta");
                 });
 
             modelBuilder.Entity("AddressMetadata", b =>
@@ -95,7 +98,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ContactId");
 
-                    b.ToTable("ContactAttributes", "dedsmeta");
+                    b.ToTable("AttributeContact", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeCostOption", b =>
@@ -110,7 +113,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("CostOptionId");
 
-                    b.ToTable("CostOptionAttributes", "dedsmeta");
+                    b.ToTable("AttributeCostOption", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeFunding", b =>
@@ -125,7 +128,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("FundingId");
 
-                    b.ToTable("FundingAttributes", "dedsmeta");
+                    b.ToTable("AttributeFunding", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeLanguage", b =>
@@ -140,7 +143,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("LanguageId");
 
-                    b.ToTable("LanguageAttributes", "dedsmeta");
+                    b.ToTable("AttributeLanguage", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeLocation", b =>
@@ -155,7 +158,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("LocationAttributes", "dedsmeta");
+                    b.ToTable("AttributeLocation", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeMetaTableDescription", b =>
@@ -170,7 +173,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("MetaTableDescriptionId");
 
-                    b.ToTable("MetaTableDescriptionAttributes", "dedsmeta");
+                    b.ToTable("AttributeMetaTableDescription", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeMetadata", b =>
@@ -200,7 +203,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("OrganizationAttributes", "dedsmeta");
+                    b.ToTable("AttributeOrganization", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeOrganizationIdentifier", b =>
@@ -215,7 +218,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("OrganizationIdentifierId");
 
-                    b.ToTable("OrganizationIdentifierAttributes", "dedsmeta");
+                    b.ToTable("AttributeOrganizationIdentifier", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributePhone", b =>
@@ -230,7 +233,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("PhoneId");
 
-                    b.ToTable("PhoneAttributes", "dedsmeta");
+                    b.ToTable("AttributePhone", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeProgram", b =>
@@ -245,7 +248,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ProgramId");
 
-                    b.ToTable("ProgramAttributes", "dedsmeta");
+                    b.ToTable("AttributeProgram", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeRequiredDocument", b =>
@@ -260,7 +263,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("RequiredDocumentId");
 
-                    b.ToTable("RequiredDocumentAttributes", "dedsmeta");
+                    b.ToTable("AttributeRequiredDocument", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeSchedule", b =>
@@ -275,7 +278,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("ScheduleAttributes", "dedsmeta");
+                    b.ToTable("AttributeSchedule", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeService", b =>
@@ -290,7 +293,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceAttributes", "dedsmeta");
+                    b.ToTable("AttributeService", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeServiceArea", b =>
@@ -305,7 +308,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceAreaId");
 
-                    b.ToTable("ServiceAreaAttributes", "dedsmeta");
+                    b.ToTable("AttributeServiceArea", "dedsmeta");
                 });
 
             modelBuilder.Entity("AttributeServiceAtLocation", b =>
@@ -320,7 +323,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceAtLocationId");
 
-                    b.ToTable("ServiceAtLocationAttributes", "dedsmeta");
+                    b.ToTable("AttributeServiceAtLocation", "dedsmeta");
                 });
 
             modelBuilder.Entity("ContactMetadata", b =>
@@ -1328,7 +1331,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Accessibilities", "deds");
+                    b.ToTable("Accessibility", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "accessibility");
                 });
@@ -1403,7 +1406,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Addresses", "deds");
+                    b.ToTable("Address", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "addresses");
                 });
@@ -1449,7 +1452,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsUnique()
                         .HasFilter("[TaxonomyTermId] IS NOT NULL");
 
-                    b.ToTable("Attributes", "deds");
+                    b.ToTable("Attribute", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "attributes");
                 });
@@ -1508,7 +1511,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Contacts", "deds");
+                    b.ToTable("Contact", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "contacts");
                 });
@@ -1557,7 +1560,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("CostOptions", "deds");
+                    b.ToTable("CostOption", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "cost_options");
                 });
@@ -1590,7 +1593,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Fundings", "deds");
+                    b.ToTable("Funding", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "funding");
                 });
@@ -1638,7 +1641,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Languages", "deds");
+                    b.ToTable("Language", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "languages");
                 });
@@ -1711,7 +1714,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("Locations", "deds");
+                    b.ToTable("Location", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "location");
                 });
@@ -1745,7 +1748,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
-                    b.ToTable("MetaTableDescriptions", "deds");
+                    b.ToTable("MetaTableDescription", "deds");
                 });
 
             modelBuilder.Entity("FamilyHubs.SharedKernel.OpenReferral.Entities.Metadata", b =>
@@ -1873,7 +1876,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
-                    b.ToTable("Organizations", "deds");
+                    b.ToTable("Organization", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "organization");
                 });
@@ -1912,7 +1915,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("OrganizationIdentifiers", "deds");
+                    b.ToTable("OrganizationIdentifier", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "organization_identifiers");
                 });
@@ -1975,7 +1978,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Phones", "deds");
+                    b.ToTable("Phone", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "phones");
                 });
@@ -2013,7 +2016,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("Programs", "deds");
+                    b.ToTable("Program", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "program");
                 });
@@ -2046,7 +2049,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("RequiredDocuments", "deds");
+                    b.ToTable("RequiredDocument", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "required_documents");
                 });
@@ -2165,7 +2168,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("Schedules", "deds");
+                    b.ToTable("Schedule", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "schedules");
                 });
@@ -2274,7 +2277,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ProgramId");
 
-                    b.ToTable("Services", "deds");
+                    b.ToTable("Service", "deds");
                 });
 
             modelBuilder.Entity("FamilyHubs.SharedKernel.OpenReferral.Entities.ServiceArea", b =>
@@ -2320,7 +2323,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceAreas", "deds");
+                    b.ToTable("ServiceArea", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "service_areas");
                 });
@@ -2353,7 +2356,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceAtLocations", "deds");
+                    b.ToTable("ServiceAtLocation", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "service_at_locations");
                 });
@@ -2393,7 +2396,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
-                    b.ToTable("Taxonomies", "deds");
+                    b.ToTable("Taxonomy", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "taxonomy_detail");
                 });
@@ -2460,7 +2463,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .IsUnique()
                         .HasFilter("[TaxonomyId] IS NOT NULL");
 
-                    b.ToTable("TaxonomyTerms", "deds");
+                    b.ToTable("TaxonomyTerm", "deds");
 
                     b.HasAnnotation("Relational:JsonPropertyName", "taxonomy_term");
                 });
@@ -2537,7 +2540,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("OrganizationMetadata", "dedsmeta");
+                    b.ToTable("MetadataOrganization", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataOrganizationIdentifier", b =>
@@ -2552,7 +2555,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("OrganizationIdentifierId");
 
-                    b.ToTable("OrganizationIdentifierMetadata", "dedsmeta");
+                    b.ToTable("MetadataOrganizationIdentifier", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataPhone", b =>
@@ -2567,7 +2570,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("PhoneId");
 
-                    b.ToTable("PhoneMetadata", "dedsmeta");
+                    b.ToTable("MetadataPhone", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataProgram", b =>
@@ -2582,7 +2585,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ProgramId");
 
-                    b.ToTable("ProgramMetadata", "dedsmeta");
+                    b.ToTable("MetadataProgram", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataRequiredDocument", b =>
@@ -2597,7 +2600,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("RequiredDocumentId");
 
-                    b.ToTable("RequiredDocumentMetadata", "dedsmeta");
+                    b.ToTable("MetadataRequiredDocument", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataSchedule", b =>
@@ -2612,7 +2615,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("ScheduleMetadata", "dedsmeta");
+                    b.ToTable("MetadataSchedule", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataService", b =>
@@ -2627,7 +2630,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceId");
 
-                    b.ToTable("ServiceMetadata", "dedsmeta");
+                    b.ToTable("MetadataService", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataServiceArea", b =>
@@ -2642,7 +2645,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceAreaId");
 
-                    b.ToTable("ServiceAreaMetadata", "dedsmeta");
+                    b.ToTable("MetadataServiceArea", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataServiceAtLocation", b =>
@@ -2657,7 +2660,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("ServiceAtLocationId");
 
-                    b.ToTable("ServiceAtLocationMetadata", "dedsmeta");
+                    b.ToTable("MetadataServiceAtLocation", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataTaxonomy", b =>
@@ -2672,7 +2675,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("TaxonomyId");
 
-                    b.ToTable("TaxonomyMetadata", "dedsmeta");
+                    b.ToTable("MetadataTaxonomy", "dedsmeta");
                 });
 
             modelBuilder.Entity("MetadataTaxonomyTerm", b =>
@@ -2687,7 +2690,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasIndex("TaxonomyTermId");
 
-                    b.ToTable("TaxonomyTermMetadata", "dedsmeta");
+                    b.ToTable("MetadataTaxonomyTerm", "dedsmeta");
                 });
 
             modelBuilder.Entity("ServiceTaxonomies", b =>

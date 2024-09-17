@@ -1,9 +1,8 @@
 using System.Net;
 using System.Text.Json;
 using FamilyHubs.OpenReferral.Function.ClientServices;
-using FamilyHubs.OpenReferral.Function.Entities;
 using FamilyHubs.OpenReferral.Function.Repository;
-using FamilyHubs.SharedKernel.OpenReferral;
+using FamilyHubs.SharedKernel.OpenReferral.Entities;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -23,11 +22,12 @@ public class TriggerPullServicesWebhook(
         (HttpStatusCode HttpStatusCode, JsonElement.ArrayEnumerator? Result) services = await hsdaApiService.GetServices();
         if (services.HttpStatusCode != HttpStatusCode.OK) return req.CreateResponse(services.HttpStatusCode);
 
-        (HttpStatusCode HttpStatusCode, List<ServiceJson> Result) servicesById = await hsdaApiService.GetServicesById(services.Result!.Value);
+        (HttpStatusCode HttpStatusCode, List<Service> Result) servicesById = await hsdaApiService.GetServicesById(services.Result!.Value);
         if (servicesById.HttpStatusCode != HttpStatusCode.OK) return req.CreateResponse(servicesById.HttpStatusCode);
 
         try
         {
+            await ClearDatabase();
             await UpdateDatabase(servicesById.Result);
         }
         catch (Exception e)
@@ -39,20 +39,31 @@ public class TriggerPullServicesWebhook(
         return req.CreateResponse(HttpStatusCode.OK);
     }
 
-    private async Task UpdateDatabase(List<ServiceJson> serviceJsonList)
+    /*
+     * As clearing the Db is a temporary measure until we implement checking for existing IDs, I think this is OK even
+     * if it's the slower way of doing it.
+     */
+    private async Task ClearDatabase()
     {
-        logger.LogInformation("Truncating database before inserting services");
-        await functionDbContext.TruncateServicesTempAsync();
+        logger.LogInformation("Removing all services from the database");
+        List<Service> serviceListFromDb = await functionDbContext.ToListAsync(functionDbContext.Services());
 
-        foreach (ServiceJson serviceJson in serviceJsonList)
+        foreach (Service service in serviceListFromDb)
         {
-            logger.LogInformation("Adding service with ID {serviceId} to the database", serviceJson.Id);
-            functionDbContext.AddServiceTemp(new ServicesTemp
-            {
-                Id = Guid.Parse(serviceJson.Id),
-                Json = serviceJson.Json,
-                LastModified = DateTime.UtcNow
-            });
+            logger.LogInformation("Removing service from the database, Internal ID = {iId} | Open Referral ID = {oId}",
+                service.Id, service.OrId);
+            functionDbContext.DeleteService(service);
+        }
+
+        await functionDbContext.SaveChangesAsync();
+    }
+
+    private async Task UpdateDatabase(List<Service> serviceListFromApi)
+    {
+        foreach (Service service in serviceListFromApi)
+        {
+            logger.LogInformation("Adding service with ID {serviceId} to the database", service.OrId);
+            functionDbContext.AddService(service);
         }
 
         logger.LogInformation("Saving changes to the database");

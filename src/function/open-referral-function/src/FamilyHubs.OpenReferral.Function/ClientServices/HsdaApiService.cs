@@ -1,6 +1,6 @@
 using System.Net;
 using System.Text.Json;
-using FamilyHubs.OpenReferral.Function.Entities;
+using FamilyHubs.SharedKernel.OpenReferral.Entities;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.OpenReferral.Function.ClientServices;
@@ -33,9 +33,9 @@ public class HsdaApiService(ILogger<HsdaApiService> logger, HttpClient httpClien
         return (HttpStatusCode.OK, serviceList);
     }
 
-    public async Task<(HttpStatusCode, List<ServiceJson>)> GetServicesById(JsonElement.ArrayEnumerator services)
+    public async Task<(HttpStatusCode, List<Service>)> GetServicesById(JsonElement.ArrayEnumerator services)
     {
-        List<ServiceJson> servicesById = [];
+        List<Service> servicesById = [];
 
         foreach (string serviceId in services.Select(service => service.GetProperty("id").ToString()))
         {
@@ -49,7 +49,26 @@ public class HsdaApiService(ILogger<HsdaApiService> logger, HttpClient httpClien
                 continue;
             }
 
-            servicesById.Add(new ServiceJson (Id: serviceId, Json: jsonResponse!));
+            try
+            {
+                Service? service = JsonSerializer.Deserialize<Service>(jsonResponse!);
+
+                if (service is null)
+                {
+                    logger.LogWarning(
+                        "After attempting to deserialise the incoming JSON, the Service is null | JSON = {jsonResponse}",
+                        jsonResponse);
+                    continue;
+                }
+
+                servicesById.Add(service);
+            }
+            catch (Exception e)
+            {
+                logger.LogWarning(e,
+                    "Incoming JSON cannot be deserialised into a type of Service | JSON = {jsonResponse}",
+                    jsonResponse);
+            }
         }
 
         bool gotResults = servicesById.Count > 0;
