@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!--<TreatWarningsAsErrors>True</TreatWarningsAsErrors>-->
 	  <NoWarn>S1135</NoWarn>
+	  <NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -22,7 +23,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="SQLite" />
+		<PackageReference Include="Microsoft.Data.Sqlite" />
 	</ItemGroup>
 
   <ItemGroup>

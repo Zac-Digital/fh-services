@@ -4,6 +4,8 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<AssemblyName>EntityFrameworkCore.DataEncryption</AssemblyName>
 		<RootNamespace>Microsoft.EntityFrameworkCore.DataEncryption</RootNamespace>
+		<Nullable>disable</Nullable>
+		<NoWarn>S1168</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

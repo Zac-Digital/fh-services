@@ -30,10 +30,10 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.ViewModel
 
             if(StringValues.IsNullOrEmpty(path))
             {
-                throw new Exception("Request does not contain a path");
+                throw new InvalidOperationException("Request does not contain a path");
             }
 
-            BackButtonPath = path.ToString().Substring(path.ToString().IndexOf(host) + host.Length);
+            BackButtonPath = path.ToString()[(path.ToString().IndexOf(host) + host.Length)..];
         }
 
         private string GetHost()

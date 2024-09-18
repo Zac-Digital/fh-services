@@ -2,6 +2,8 @@
 
   <PropertyGroup>
 	<UserSecretsId>6f28d0d4-b9b3-47da-b394-8e1d17172c5c</UserSecretsId>
+	<NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

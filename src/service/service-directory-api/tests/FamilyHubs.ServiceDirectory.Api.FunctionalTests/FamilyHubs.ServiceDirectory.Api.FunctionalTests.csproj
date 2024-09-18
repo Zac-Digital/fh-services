@@ -2,15 +2,16 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
-
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
+	<NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Ardalis.HttpClientTestExtensions" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" />
+    <PackageReference Include="Microsoft.Data.Sqlite" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="mod_spatialite" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

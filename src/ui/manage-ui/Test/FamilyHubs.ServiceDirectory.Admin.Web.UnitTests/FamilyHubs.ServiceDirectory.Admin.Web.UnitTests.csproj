@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <IsPackable>false</IsPackable>
+	  <IsPackable>false</IsPackable>
+	  <NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoFixture" />
+    <PackageReference Include="AutoFixture"/>
     <PackageReference Include="BCrypt.Net-Next" />
     <PackageReference Include="Microsoft.NET.Test.Sdk"/>
     <PackageReference Include="xunit" />

@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
-
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
+	<NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

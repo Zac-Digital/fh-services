@@ -8,8 +8,9 @@
 	  <RepositoryUrl>https://github.com/DFE-Digital/fh-notification-api</RepositoryUrl>
 	  <PackageTags>govuk dfe family-hub notification client</PackageTags>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	  <NoWarn>S1135</NoWarn>
+	  <NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
 	<ItemGroup>

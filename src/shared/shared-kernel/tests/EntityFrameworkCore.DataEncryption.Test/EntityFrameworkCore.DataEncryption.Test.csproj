@@ -5,6 +5,7 @@
 		<IsPackable>false</IsPackable>
 		<AssemblyName>Microsoft.EntityFrameworkCore.Encryption.Test</AssemblyName>
 		<RootNamespace>Microsoft.EntityFrameworkCore.Encryption.Test</RootNamespace>
+		<Nullable>disable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,6 +26,5 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
-		<DotNetCliToolReference Include="dotnet-xunit" />
 	</ItemGroup>
 </Project>
