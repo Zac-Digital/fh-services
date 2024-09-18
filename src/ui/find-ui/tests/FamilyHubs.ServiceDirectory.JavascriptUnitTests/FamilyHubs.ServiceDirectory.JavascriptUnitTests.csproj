@@ -5,6 +5,7 @@
 	  <JavaScriptTestRoot>Tests\</JavaScriptTestRoot>
 	  <GenerateProgramFile>false</GenerateProgramFile>
 	  <NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

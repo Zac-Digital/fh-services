@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	<NoWarn>S1135</NoWarn>
     <RootNamespace>FamilyHubs.Referral.Api</RootNamespace>
 	<Version>1.0.0</Version>
 	<UserSecretsId>b091cbeb-017f-42b7-bd1e-f43123e62aa4</UserSecretsId>
 	<NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	  <NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	  <!--S6966 suggests using AnyAsync() instead of Any(), but AnyAsync() work at run time for IQueryable<T>'s returned from AutoMapper's ProjectTo<T>() -->
 	  <NoWarn>S1135, S6966</NoWarn>
   </PropertyGroup>

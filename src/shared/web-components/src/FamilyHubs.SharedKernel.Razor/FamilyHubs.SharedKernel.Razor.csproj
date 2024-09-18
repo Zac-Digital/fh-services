@@ -9,9 +9,9 @@
 	<RepositoryUrl>https://github.com/DFE-Digital/fh-shared-kernel</RepositoryUrl>
 	<PackageTags>govuk frontend design-system dfe family-hub</PackageTags>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <NoWarn>S1135,S125</NoWarn>
 	<NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

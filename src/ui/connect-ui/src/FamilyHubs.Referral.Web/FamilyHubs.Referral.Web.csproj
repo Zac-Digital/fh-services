@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 	  <NoWarn>1701;1702;S1135;S125</NoWarn>
       <!--only temporarily-->
 	  <WarningsNotAsErrors>S1244</WarningsNotAsErrors>
       <NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,10 +5,10 @@
   </PropertyGroup>
 	
 	  <PropertyGroup>
-		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 		<NuGetAuditMode>direct</NuGetAuditMode>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 	  </PropertyGroup>
 
 	<PropertyGroup>
@@ -35,7 +35,7 @@
     <None Include="Pages\Error\500.cshtml" />
   </ItemGroup>
 	<PropertyGroup>
-		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+		    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 	</PropertyGroup>
