@@ -4,13 +4,9 @@
     <UserSecretsId>2406474f-95c2-4623-924b-dd2be59b3348</UserSecretsId>
 	<NuGetAuditMode>direct</NuGetAuditMode>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
-
-	<PropertyGroup>
-		    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-	</PropertyGroup>
 
 	<PropertyGroup>
 		<NoWarn>S101;S125;S1135</NoWarn>
