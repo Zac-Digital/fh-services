@@ -84,7 +84,6 @@ variable "sql_server_pwd" {
 variable "sql_server_reporting_user" {
   type = string
   description = "The reporting sql server SA username."
-  sensitive = true
 }
 
 variable "sql_server_reporting_pwd" {
