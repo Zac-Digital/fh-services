@@ -75,9 +75,9 @@ jobs:
           VARS_FILE=$(echo "${{ inputs.environment }}.tfvars" | tr '[:upper:]' '[:lower:]')
           terraform plan \
             -var-file=$VARS_FILE \
-            -var='sql_server_user=familyhubssqlserverdev' \
+            -var='sql_server_user=${{ secrets.TERRAFORM_APP_SQL_SERVER_USER }}' \
             -var='sql_server_pwd=${{ secrets.TERRAFORM_APP_SQL_SERVER_PWD }}' \
-            -var='sql_server_reporting_user=familyhubssqlserverdev' \
+            -var='sql_server_reporting_user=${{ secrets.TERRAFORM_REPORT_SQL_SERVER_USER }}' \
             -var='sql_server_reporting_pwd=${{ secrets.TERRAFORM_REPORT_SQL_SERVER_PWD }}' \
             -var='certificate_password=${{ secrets.TERRAFORM_SSL_CERTIFICATE_PWD }}' \
             -var='ssl_cert_path_sd_ui=${{ secrets.TERRAFORM_SSL_FIND_PFX }}' \
