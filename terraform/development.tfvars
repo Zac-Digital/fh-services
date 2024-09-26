@@ -45,4 +45,4 @@ private_endpoint_ip_address = {
 autoscale_rule_default_capacity = "1"
 autoscale_rule_minimum_capacity = "1"
 
-pvt_endp_report_stg_api_ip_address  = "10.0.0.109"
+pvt_endp_report_stg_api_ip_address = "10.0.0.109"
