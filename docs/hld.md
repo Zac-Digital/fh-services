@@ -192,7 +192,7 @@ Services run as app services within an app service plan on Azure.
 - Alerting via Log Analytics in Azure Monitor
 - Microsoft Clarify for screen recordings, use behaviour tracking, and life performance metrics
 
-## Data Storage, Retention, and Cleanse(??)
+## Data Storage & Retention
 
 - PII data retained for 7 years, then anonymized
 - Service directory data retained indefinitely
