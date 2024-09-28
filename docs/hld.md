@@ -33,37 +33,33 @@ The following diagram provides a high-level overview of the Family Hubs architec
 
 graph LR
     %%{init:{'flowchart':{'nodeSpacing': 50, 'rankSpacing': 100 }}}%%
-    %% User Styles
-    style PublicUsers fill:#ffcccb,stroke:#333,stroke-width:2px
+
+    style PublicUsers fill:#FFF1E6,stroke:#333
+    style ProfessionalUsers fill:#FFF1E6,stroke:#333
+    style AdministrativeUsers fill:#FFF1E6,stroke:#333
+    style FamilyHubsDev fill:#FFF1E6,stroke:#333
+
     PublicUsers[Public Users] -->|Use| Find[Find]
-
-    style ProfessionalUsers fill:#ffcccb,stroke:#333,stroke-width:2px
     ProfessionalUsers[Professional Users] -->|Authenticate using| GovOneLogin[Gov One Login] -->|Use| Connect[Connect]
-    ProfessionalUsers[Professional Users] -->|Authenticate using| GovOneLogin[Gov One Login] -->|Use| ConnectDashboard[Connect Dashboard]
-
-    style AdministrativeUsers fill:#ffcccb,stroke:#333,stroke-width:2px
-    AdministrativeUsers[Administrative Users] -->|Authenticate using| GovOneLogin -->|Use| Manage[Manage]
-
-    style FamilyHubsDev fill:#ffcccb,stroke:#333,stroke-width:2px
+    ProfessionalUsers[Professional Users] -->|Authenticate using| GovOneLogin -->|Use| ConnectDashboard[Connect Dashboard]
+    AdministrativeUsers[Administrative Users] -->|Authenticate using| GovOneLogin -->|Use| Manage[Manage]    
     FamilyHubsDev[Family Hubs Developers] -->|Use| IdAMMaintenanceUI[IdAM Maintenance UI]
 
-    %% Service Styles
-    style Find fill:#90ee90,stroke:#333,stroke-width:2px
-    style Connect fill:#90ee90,stroke:#333,stroke-width:2px
-    style ConnectDashboard fill:#90ee90,stroke:#333,stroke-width:2px
-    style Manage fill:#90ee90,stroke:#333,stroke-width:2px
-    style IdAMMaintenanceUI fill:#90ee90,stroke:#333,stroke-width:2px
-    style NotificationAPI fill:#90ee90,stroke:#333,stroke-width:2px
+    style Find fill:#F0EFEB,stroke:#333
+    style Connect fill:#F0EFEB,stroke:#333
+    style ConnectDashboard fill:#F0EFEB,stroke:#333
+    style Manage fill:#F0EFEB,stroke:#333
+    style IdAMMaintenanceUI fill:#F0EFEB,stroke:#333
 
     subgraph Azure
-        style Azure fill:#e0f7fa,stroke:#333,stroke-width:2px,stroke-dasharray: 5, 5,margin:102px
+        style Azure fill:#e0f7fa,stroke:#333,stroke-dasharray: 5, 5,margin:102px
         
         subgraph App_Services[App Services]
-            style ServiceDirectoryAPI fill:#add8e6,stroke:#333,stroke-width:2px
-            style IdAMAPI fill:#add8e6,stroke:#333,stroke-width:2px
-            style ReferralAPI fill:#add8e6,stroke:#333,stroke-width:2px
-            style ReportAPI fill:#add8e6,stroke:#333,stroke-width:2px
-            style NotificationAPI fill:#add8e6,stroke:#333,stroke-width:2px
+            style ServiceDirectoryAPI fill:#DFE7FD,stroke:#333
+            style IdAMAPI fill:#DFE7FD,stroke:#333
+            style ReferralAPI fill:#DFE7FD,stroke:#333
+            style ReportAPI fill:#DFE7FD,stroke:#333
+            style NotificationAPI fill:#DFE7FD,stroke:#333
             
             Find -->|Connects to| ServiceDirectoryAPI[Service Directory API]
 
@@ -84,27 +80,49 @@ graph LR
 
             IdAMMaintenanceUI -->|Connects to| ServiceDirectoryAPI
             IdAMMaintenanceUI -->|Connects to| IdAMAPI
+            
+            ReferralAPI -->|Calls| ServiceDirectoryAPI
+            IdAMAPI --> |Calls| ServiceDirectoryAPI
         end
 
         subgraph Databases
-            style ServiceDirectoryDB fill:#d3d3d3,stroke:#333,stroke-width:2px
-            style IdAMDB fill:#d3d3d3,stroke:#333,stroke-width:2px
-            style ReferralDB fill:#d3d3d3,stroke:#333,stroke-width:2px
-            style ReportDB fill:#d3d3d3,stroke:#333,stroke-width:2px
-            style NotificationDB fill:#d3d3d3,stroke:#333,stroke-width:2px
-            
+            style ServiceDirectoryDB fill:#E2ECE9,stroke:#333 
+            style IdAMDB fill:#E2ECE9,stroke:#333 
+            style ReferralDB fill:#E2ECE9,stroke:#333 
+            style ReportDB fill:#E2ECE9,stroke:#333 
+            style NotificationDB fill:#E2ECE9,stroke:#333 
+            style ReportStagingDB fill:#E2ECE9,stroke:#333 
+
             ServiceDirectoryAPI -->|Stores data in| ServiceDirectoryDB[s181p01-service-directory-db]
             IdAMAPI -->|Stores data in| IdAMDB[s181p01-idam-db]
             ReferralAPI -->|Stores data in| ReferralDB[s181p01-referral-db]
             ReportAPI -->|Stores data in| ReportDB[s181p01-report-db]
             NotificationAPI -->|Stores data in| NotificationDB[s181p01-notification-db]
+            ReportStagingDB[s181p01-report-staging-db]
+        end
+
+        subgraph Functions[Azure Functions]
+            style FuncOpenReferral fill:#FAD2E1,stroke:#333 
+
+            FuncOpenReferral[s181d01-fa-fh-open-referral] --> |Stores data in| ServiceDirectoryDB
+        end
+
+        subgraph DataFactory[Azure Data Factory]
+            style DataFDefault fill:#BEE1E6,stroke:#333 
+
+            DataFDefault[s181p01-dataf-default]
+            DataFDefault --> |Copies data from| ServiceDirectoryDB
+            DataFDefault --> |Copies data from| ReferralDB
+            DataFDefault --> |Copies data to| ReportStagingDB
         end
     end
 
-    %% External Service
-    style GovOneLogin fill:#ffeb3b,stroke:#333,stroke-width:2px,stroke-dasharray: 5, 5
+    style GovOneLogin fill:#FBF8CC,stroke:#333,stroke-dasharray: 5, 5
     GovOneLogin[Gov One Login] -->|Authenticates| Connect
     GovOneLogin -->|Authenticates| Manage
+
+    style LA fill:#cdf7ff,stroke:#333,stroke-dasharray: 5, 5
+    LA[Local Authority] --> |Gets data pulled by| FuncOpenReferral
 ```
 ## Service Information
 
