@@ -372,19 +372,18 @@ else
             <ul class="search-results" role="list">
                 @foreach (var item in Model.SearchResults.Items)
                 {
+                    var eligibility = item.Eligibilities.FirstOrDefault();
+
                     <li role="listitem" tab-index="0">
-                        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                        <h2 class="govuk-heading-s govuk-!-margin-bottom-3">
                             <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id" data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
                         </h2>
-                        <p class="govuk-caption-m">
-                            @string.Join(", ", item.Locations.FirstOrDefault()?.GetAddress() ?? Enumerable.Empty<string>())
-                        </p>
                         @if(item.Taxonomies.Any())
                         {
-                            <dl class="govuk-body-s dtmargins">
+                            <dl class="govuk-body-s">
                                 <dt class="govuk-!-font-weight-bold">Category</dt>
                                 <dd>
-                                    <ul class="govuk-list govuk-list--bullet govuk-body-s">
+                                    <ul class="govuk-list govuk-body-s">
                                         @foreach (var serviceTaxonomy in item.Taxonomies)
                                         {
                                             <li>@serviceTaxonomy.Name</li>
@@ -393,32 +392,38 @@ else
                                 </dd>
                             </dl>
                         }
-                        <dl class="govuk-body-s dtmargins">
-                            <dt class="govuk-!-font-weight-bold">Cost</dt>
-                            @if (item.CostOptions.Count > 0)
-                            {
-                                <dd>Yes, it costs money to use. @item.CostOptions.FirstOrDefault()?.AmountDescription</dd>
-                            }
-                            else
-                            {
-                                <dd>Free</dd>
-                            }
-                        </dl>
+                        @if (eligibility != null) {
+                            <dl class="govuk-body-s">
+                                <dt class="govuk-!-font-weight-bold">Age range</dt>
+                                <dd>@(AgeToString(eligibility.MinimumAge)) to @(AgeToString(eligibility.MaximumAge)) years old</dd>
+                            </dl>
+                        }
+                        @if (item.Locations.Any())
+                        {
+                            <dl class="govuk-body-s">
+                                <dt class="govuk-!-font-weight-bold">Where</dt>
+                                <dd class="fh-pre-wrap">@(LocalOfferResultsModel.GetAddressAsString(item))</dd>
+                            </dl>
+                        }
 
                         @if (item.ServiceDeliveries.Count > 0)
                         {
-                            <dl class="govuk-body-s dtmargins">
+                            <dl class="govuk-body-s">
                                 <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-                                <dd>@LocalOfferResultsModel.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
+                                <dd class="fh-pre-wrap">@LocalOfferResultsModel.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
                             </dl>
                         }
-                        @if (item.Languages.Any(l => !string.IsNullOrWhiteSpace(l.Name)))
-                        {
-                            <dl class="govuk-body-s dtmargins">
-                                <dt class="govuk-!-font-weight-bold">Language</dt>
-                                <dd>@LocalOfferResultsModel.GetLanguagesAsString(item.Languages)</dd>
-                            </dl>
-                        }
+                        <dl class="govuk-body-s">
+                            <dt class="govuk-!-font-weight-bold">Cost</dt>
+                            @if (item.CostOptions.Count > 0)
+                            {
+                            <dd>Yes, there is a cost for this service. @item.CostOptions.FirstOrDefault()?.AmountDescription</dd>
+                            }
+                            else
+                            {
+                            <dd>Free</dd>
+                            }
+                        </dl>
                     </li>
                 }
             </ul>
@@ -428,3 +433,11 @@ else
     </div>
 }
 </form>
+
+@functions {
+    // todo: move to sd shared
+    private static string AgeToString(int age)
+    {
+        return age == 127 ? "25+" : age.ToString();
+    }
+}
