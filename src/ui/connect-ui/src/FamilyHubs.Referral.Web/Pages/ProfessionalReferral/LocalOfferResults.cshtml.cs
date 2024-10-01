@@ -362,13 +362,13 @@ public class LocalOfferResultsModel : HeaderPageModel
     {
         return serviceDeliveries.Count == 0
             ? string.Empty
-            : string.Join("\n", serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name.AsString(EnumFormat.Description)));
+            : string.Join(Environment.NewLine, serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name.AsString(EnumFormat.Description)));
     }
 
     public static string GetAddressAsString(ServiceDto serviceDto)
     {
         return serviceDto.Locations.Count == 1
-            ? string.Join("\n", serviceDto.Locations.First().GetAddress())
+            ? string.Join(Environment.NewLine, serviceDto.Locations.First().GetAddress())
             : $"Available at {serviceDto.Locations.Count} locations";
     }
 
@@ -376,7 +376,7 @@ public class LocalOfferResultsModel : HeaderPageModel
     {
         return languageDtos.Count == 0
             ? string.Empty
-            : string.Join("\n", languageDtos.Select(serviceDelivery => serviceDelivery.Name));
+            : string.Join(Environment.NewLine, languageDtos.Select(serviceDelivery => serviceDelivery.Name));
     }
 
     private async Task GetLocationDetails(string postCode)
