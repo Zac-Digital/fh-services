@@ -3,6 +3,7 @@ using EnumsNET;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.ServiceDirectory.Shared.Display;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
@@ -360,14 +361,21 @@ public class LocalOfferResultsModel : HeaderPageModel
     {
         return serviceDeliveries.Count == 0
             ? string.Empty
-            : string.Join(",", serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name.AsString(EnumFormat.Description)));
+            : string.Join(Environment.NewLine, serviceDeliveries.Select(serviceDelivery => serviceDelivery.Name.AsString(EnumFormat.Description)));
+    }
+
+    public static string GetAddressAsString(ServiceDto serviceDto)
+    {
+        return serviceDto.Locations.Count == 1
+            ? string.Join(Environment.NewLine, serviceDto.Locations.First().GetAddress())
+            : $"Available at {serviceDto.Locations.Count} locations";
     }
 
     public static string GetLanguagesAsString(ICollection<LanguageDto> languageDtos)
     {
         return languageDtos.Count == 0
             ? string.Empty
-            : string.Join(",", languageDtos.Select(serviceDelivery => serviceDelivery.Name));
+            : string.Join(Environment.NewLine, languageDtos.Select(serviceDelivery => serviceDelivery.Name));
     }
 
     private async Task GetLocationDetails(string postCode)
