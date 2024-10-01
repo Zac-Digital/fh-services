@@ -508,7 +508,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
         };
 
         request.Headers.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_tokenLaManager)}");
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_tokenLaManager!)}");
 
         using var response = await Client.SendAsync(request);
 

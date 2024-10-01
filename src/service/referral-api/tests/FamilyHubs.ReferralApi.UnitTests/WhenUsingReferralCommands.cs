@@ -543,12 +543,11 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest
         var myProfile = new AutoMappingProfiles();
         var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
         IMapper mapper = new Mapper(configuration);
-        var logger = new Mock<ILogger<CreateReferralCommandHandler>>();
         var mockApplicationDbContext = GetApplicationDbContext();
         var testReferral = GetReferralDto();
         var createReferral = new CreateReferralDto(testReferral, new ConnectionRequestsSentMetricDto(RequestTimestamp));
         CreateReferralCommand command = new(createReferral, FamilyHubsUser);
-        CreateReferralCommandHandler handler = new(mockApplicationDbContext, mapper, _serviceDirectoryService.Object, logger.Object);
+        CreateReferralCommandHandler handler = new(mockApplicationDbContext, mapper, _serviceDirectoryService.Object);
         var response = await handler.Handle(command, new CancellationToken());
 
         GetReferralCountByServiceIdCommand getCommand = new(response.Id);
