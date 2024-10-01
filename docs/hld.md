@@ -35,11 +35,11 @@ graph LR
     style AdministrativeUsers fill:#FFF1E6,stroke:#333
     style FamilyHubsDev fill:#FFF1E6,stroke:#333
 
-    PublicUsers[Public Users] -->|Use| Find[Find]
-    ProfessionalUsers[Professional Users] -->|Authenticate using| GovOneLogin[Gov One Login] -->|Use| Connect[Connect]
-    ProfessionalUsers[Professional Users] -->|Authenticate using| GovOneLogin -->|Use| ConnectDashboard[Connect Dashboard]
-    AdministrativeUsers[Administrative Users] -->|Authenticate using| GovOneLogin -->|Use| Manage[Manage]    
-    FamilyHubsDev[Family Hubs Developers] -->|Use| IdAMMaintenanceUI[IdAM Maintenance]
+    PublicUsers[Public Users] -->|Use| Find[Find UI]
+    ProfessionalUsers[Professional Users] -->|Authenticate using| GovOneLogin[Gov One Login] -->|Use| Connect[Connect UI]
+    ProfessionalUsers[Professional Users] -->|Authenticate using| GovOneLogin -->|Use| ConnectDashboard[Connect Dashboard UI]
+    AdministrativeUsers[Administrative Users] -->|Authenticate using| GovOneLogin -->|Use| Manage[Manage UI]    
+    FamilyHubsDev[Family Hubs Developers] -->|Use| IdAMMaintenanceUI[IdAM Maintenance UI]
 
     style Find fill:#F0EFEB,stroke:#333
     style Connect fill:#F0EFEB,stroke:#333
