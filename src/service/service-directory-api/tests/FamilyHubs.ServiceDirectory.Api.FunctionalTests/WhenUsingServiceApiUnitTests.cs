@@ -385,7 +385,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
         };
 
         using var response = await Client.SendAsync(request);
