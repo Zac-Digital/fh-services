@@ -49,7 +49,7 @@ public class WhenUsingLocalOfferResultsPage
 
         // Act
         var searchResults = await _pageModel.OnGetAsync(
-            postCode,
+            postCode!,
             "",
             "",
             "",
