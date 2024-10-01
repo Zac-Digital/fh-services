@@ -1,9 +1,5 @@
 # Family Hubs High Level Design Document
 
-## Table of Contents
-
-TODO
-
 ## Glossary
 
 - FH - Family hubs
@@ -43,7 +39,7 @@ graph LR
     ProfessionalUsers[Professional Users] -->|Authenticate using| GovOneLogin[Gov One Login] -->|Use| Connect[Connect]
     ProfessionalUsers[Professional Users] -->|Authenticate using| GovOneLogin -->|Use| ConnectDashboard[Connect Dashboard]
     AdministrativeUsers[Administrative Users] -->|Authenticate using| GovOneLogin -->|Use| Manage[Manage]    
-    FamilyHubsDev[Family Hubs Developers] -->|Use| IdAMMaintenanceUI[IdAM Maintenance UI]
+    FamilyHubsDev[Family Hubs Developers] -->|Use| IdAMMaintenanceUI[IdAM Maintenance]
 
     style Find fill:#F0EFEB,stroke:#333
     style Connect fill:#F0EFEB,stroke:#333
@@ -122,7 +118,7 @@ graph LR
     GovOneLogin -->|Authenticates| Manage
 
     style LA fill:#cdf7ff,stroke:#333,stroke-dasharray: 5, 5
-    LA[Local Authority] --> |Gets data pulled by| FuncOpenReferral
+    LA[Local Authority] --> |Data ingested by| FuncOpenReferral
 ```
 ## Service Information
 
