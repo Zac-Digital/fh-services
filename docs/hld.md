@@ -144,17 +144,16 @@ Family Hubs consists of the following services:
 
 #### APIs
 
-- Service Directory API
-- Referral API
-- IdAM Service
-- Notification API
-- Report API
+- **Service Directory**: stores a host of Family Hubs data (services, organisations, locations, languages, etc.) and related CRUD endpoints
+- **Referral**: stores connection requests, and offers connection request-related CRUD endpoints
+- **IdAM**: stores user accounts and other user-related data, and offers auth-related endpoints
+- **Notification**: offers endpoints to interact with GOV.UK Notify for email notifications
+- **Report**: stores KPI and reporting data, and offers endpoints to retrieve it
 
 
 #### Functions
-- TODO
 
-## Technical Details
+- **Open Referral Pull Services Webhook**: used to pull service data from local authorities into the Data Exchange Data Store
 
 ### Hosting and Environments
 
