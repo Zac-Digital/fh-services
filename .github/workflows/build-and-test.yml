@@ -52,10 +52,8 @@ jobs:
             job_name: "Test - Report API"
           - working_directory: service/mock-hsda-api
             job_name: "Test - Mock HSDA API"
-            dotnet_version: "8.0.x"
           - working_directory: function/open-referral-function
             job_name: "Test - Open Referral Function"
-            dotnet_version: "8.0.x"
           - working_directory: ui/connect-dashboard-ui
             job_name: "Test - Connect Dashboard UI"
           - working_directory: ui/connect-ui
@@ -77,5 +75,5 @@ jobs:
     uses: ./.github/workflows/build-and-test-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}
-      dotnet_version: ${{ matrix.dotnet_version || vars.DOTNET_VERSION }}
+      dotnet_version: ${{ vars.DOTNET_VERSION_V8 }}
       runs_on: ${{ matrix.runs_on_windows && 'windows-2022' || 'ubuntu-22.04' }}
