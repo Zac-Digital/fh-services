@@ -1,11 +1,13 @@
 ﻿@page
 @using FamilyHubs.Referral.Core.Helper
+@using FamilyHubs.Referral.Web.Pages.ProfessionalReferral
+@using FamilyHubs.ServiceDirectory.Shared.Display
 @using FamilyHubs.ServiceDirectory.Shared.Enums
 @using FamilyHubs.ServiceDirectory.Shared.ReferenceData
 @using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar
 @using FamilyHubs.SharedKernel.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
-@model LocalOfferResultsModel
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.LocalOfferResultsModel
 @{
     //todo: if paginated results, should have (page x of n) appended
     //todo: if no results, should be "No results found"
@@ -395,7 +397,7 @@ else
                         @if (eligibility != null) {
                             <dl class="govuk-body-s">
                                 <dt class="govuk-!-font-weight-bold">Age range</dt>
-                                <dd>@(AgeToString(eligibility.MinimumAge)) to @(AgeToString(eligibility.MaximumAge)) years old</dd>
+                                <dd>@(AgeDisplayExtensions.AgeToString(eligibility.MinimumAge)) to @(AgeDisplayExtensions.AgeToString(eligibility.MaximumAge)) years old</dd>
                             </dl>
                         }
                         @if (item.Locations.Any())
@@ -433,11 +435,3 @@ else
     </div>
 }
 </form>
-
-@functions {
-    // todo: move to sd shared
-    private static string AgeToString(int age)
-    {
-        return age == 127 ? "25+" : age.ToString();
-    }
-}

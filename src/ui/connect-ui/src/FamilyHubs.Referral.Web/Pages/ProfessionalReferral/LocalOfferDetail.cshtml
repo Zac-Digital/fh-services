@@ -1,11 +1,10 @@
 ﻿@page
 @using FamilyHubs.Referral.Core.Helper
 @using FamilyHubs.ServiceDirectory.Shared.Enums
-@using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar
 @using FamilyHubs.SharedKernel.Enums
 @using FamilyHubs.SharedKernel.Razor.Lists
 @using FamilyHubs.SharedKernel.Razor.Summary
-@model LocalOfferDetailModel
+@model FamilyHubs.Referral.Web.Pages.ProfessionalReferral.LocalOfferDetailModel
 @{
     ViewData["Title"] = Model.LocalOffer.Name;
 
@@ -54,7 +53,7 @@
                     }
                     else
                     {
-                        <text>Yes, @AgeToString(eligibility.MinimumAge) to @AgeToString(eligibility.MaximumAge) years old</text>
+                        <text>Yes, @AgeDisplayExtensions.AgeToString(eligibility.MinimumAge) to @AgeDisplayExtensions.AgeToString(eligibility.MaximumAge) years old</text>
                     }
                 }
             </summary-row>
@@ -186,19 +185,5 @@
 </div>
 
 @functions {
-    private static string AgeToString(int age)
-    {
-        return age == 127 ? "25+" : age.ToString();
-    }
-
-    private static string ByDayToDisplay(string? byDay)
-    {
-        if (byDay == null)
-        {
-            return "";
-        }
-
-        return string.Join(", ", byDay.Split(",")
-            .Select(c => Calendar.DayCodeToName[c]));
-    }
+    private static string ByDayToDisplay(string? byDay) => (byDay?.Split(",")).GetDayNames();
 }
