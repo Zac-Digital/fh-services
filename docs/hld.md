@@ -140,7 +140,7 @@ Family Hubs consists of the following services:
 - **Connect:** allows LAs to connect families with services through connection requests
 - **Connect Dashboard:** allows LA and VS users to send/receive connection requests. Is built to be visually indistinguishable from the main Connect side, appearing as just another section of Connect.
 - **Manage:** allows LA and VCS users to manage their data, view metrics, and other administrative tasks
-- **IdAM Maintenance UI:** TODO
+- **IdAM Maintenance:** allows members of the Family Hubs team to add new DfE Admin, LA and VCS users
 
 #### APIs
 
