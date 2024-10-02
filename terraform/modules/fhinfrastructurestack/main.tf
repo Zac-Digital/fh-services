@@ -4513,7 +4513,7 @@ resource "azurerm_monitor_metric_alert" "failedalt-03" {
 }
 
 # Create Defender Protection for App Services
-#resource "azurerm_security_center_subscription_pricing" "app_services" {
-#tier = "${var.defender_app_services_tier}"
-#resource_type = "AppServices"
-#}
+resource "azurerm_security_center_subscription_pricing" "app_services" {
+  tier = var.defender_app_services_tier
+  resource_type = "AppServices"
+}
