@@ -2185,18 +2185,6 @@ resource "azurerm_key_vault" "kv2" {
   tags = local.tags
 }
 
-
-resource "azurerm_key_vault_certificate" "kv2c1" {
-  name         = "${var.prefix}-${local.key_vault_admin_ui_cert_name}"
-  key_vault_id = azurerm_key_vault.kv2.id
-  depends_on   = [ azurerm_key_vault.kv2 ]
-  tags = local.tags
-  certificate {
-    contents = var.ssl_cert_path_sd_admin_ui
-    password = var.certificate_password
-  }
-}
-
 resource "azurerm_key_vault" "kv3" {
   depends_on = [ local.resource_group_name]
   name                        = "${var.prefix}-kv-fh-referral"
@@ -2656,17 +2644,6 @@ resource "azurerm_key_vault" "kv4" {
   tags = local.tags
 }
 
-resource "azurerm_key_vault_certificate" "kv4c1" {
-  name         = "${var.prefix}-${local.key_vault_service_directory_ui_cert_name}"
-  key_vault_id = azurerm_key_vault.kv4.id
-  depends_on   = [ azurerm_key_vault.kv4 ]
-  tags = local.tags
-  certificate {
-    contents = var.ssl_cert_path_sd_ui
-    password = var.certificate_password
-  }
-}
-
 resource "azurerm_key_vault" "kv5" {
   depends_on = [ local.resource_group_name]
   name                        = "${var.prefix}-kv-fh-idam"
@@ -2786,59 +2763,6 @@ resource "azurerm_key_vault" "kv5" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.idam_data_encryption_enterprise_object_id
     certificate_permissions = [
             "Create",
             "Delete",
@@ -3093,59 +3017,6 @@ resource "azurerm_key_vault" "kv6" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.notification_data_encryption_enterprise_object_id
     certificate_permissions = [
             "Create",
             "Delete",

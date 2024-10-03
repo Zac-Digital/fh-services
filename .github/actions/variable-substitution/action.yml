@@ -58,15 +58,8 @@ runs:
         APPINSIGHTS_CONNECTION_STRING: ${{ steps.fetch.outputs.APPINSIGHTS_CONNECTION_STRING }}
         APPINSIGHTS_INSTRUMENTATIONKEY: ${{ steps.fetch.outputs.APPINSIGHTS_INSTRUMENTATIONKEY }}
         ConnectionStrings.IdamConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_IDAMCONNECTION }}
-        Crypto.clientId: ${{ steps.fetch.outputs.CRYPTO_CLIENTID }}
-        Crypto.clientSecret: ${{ steps.fetch.outputs.CRYPTO_CLIENTSECRET }}
         Crypto.DbEncryptionIVKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEY }}
-        Crypto.DbEncryptionIVKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
         Crypto.DbEncryptionKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEY }}
-        Crypto.DbEncryptionKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-        Crypto.KeyVaultIdentifier: ${{ steps.fetch.outputs.CRYPTO_KEYVAULTIDENTIFIER }}
-        Crypto.tenantId: ${{ steps.fetch.outputs.CRYPTO_TENANTID }}
-        Crypto.UseKeyVault: ${{ steps.fetch.outputs.CRYPTO_USEKEYVAULT }}
         GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
         ServiceDirectoryApiBaseUrl: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPIBASEURL }}
         ConnectionStrings.ServiceDirectoryConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_SERVICEDIRECTORYCONNECTION }}

@@ -51,7 +51,6 @@ public static class StartupExtensions
     public static void RegisterApplicationComponents(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IKeyProvider, KeyProvider>();
-        services.AddSingleton<ICrypto, Crypto>();
 
         var serviceDirectoryApiBaseUrl = configuration["ServiceDirectoryApiBaseUrl"];
         if (string.IsNullOrWhiteSpace(serviceDirectoryApiBaseUrl))
