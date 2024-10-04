@@ -400,13 +400,16 @@ else
                                 <dd>@(AgeDisplayExtensions.AgeToString(eligibility.MinimumAge)) to @(AgeDisplayExtensions.AgeToString(eligibility.MaximumAge)) years old</dd>
                             </dl>
                         }
-                        @if (item.Locations.Any())
-                        {
-                            <dl class="govuk-body-s">
-                                <dt class="govuk-!-font-weight-bold">Where</dt>
-                                <dd class="fh-pre-wrap">@(LocalOfferResultsModel.GetAddressAsString(item))</dd>
-                            </dl>
-                        }
+
+                        <dl class="govuk-body-s">
+                            <dt class="govuk-!-font-weight-bold">Where</dt>
+                            <dd class="fh-pre-wrap">
+                                @if (item.Locations.Any())
+                                {
+                                    @(LocalOfferResultsModel.GetAddressAsString(item))
+                                }
+                            </dd>
+                        </dl>
 
                         @if (item.ServiceDeliveries.Count > 0)
                         {
