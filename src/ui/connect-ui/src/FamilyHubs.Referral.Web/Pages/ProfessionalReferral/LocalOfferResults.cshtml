@@ -403,12 +403,7 @@ else
 
                         <dl class="govuk-body-s">
                             <dt class="govuk-!-font-weight-bold">Where</dt>
-                            <dd class="fh-pre-wrap">
-                                @if (item.Locations.Any())
-                                {
-                                    @(LocalOfferResultsModel.GetAddressAsString(item))
-                                }
-                            </dd>
+                            <dd class="fh-pre-wrap">@if (item.Locations.Any()) { @(LocalOfferResultsModel.GetAddressAsString(item)) }</dd>
                         </dl>
 
                         @if (item.ServiceDeliveries.Count > 0)
