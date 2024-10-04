@@ -1981,9 +1981,55 @@ resource "azurerm_key_vault" "kv1" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = ["Create", "Update", "Delete", "Get", "List"]
-    key_permissions = ["Create", "Update", "Delete", "Backup", "Get", "List"]
-    secret_permissions = ["Delete", "Backup", "Get", "List"]
+    certificate_permissions = [
+      "Create",
+      "Delete",
+      "DeleteIssuers",
+      "Get",
+      "GetIssuers",
+      "Import",
+      "List",
+      "ListIssuers",
+      "ManageContacts",
+      "ManageIssuers",
+      "SetIssuers",
+      "Update",
+      "Purge",
+    ]
+
+    key_permissions = [
+      "Backup",
+      "Create",
+      "Decrypt",
+      "Delete",
+      "Encrypt",
+      "Get",
+      "Import",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Sign",
+      "UnwrapKey",
+      "Update",
+      "Verify",
+      "WrapKey",
+      "Release",
+      "Rotate",
+      "GetRotationPolicy",
+      "SetRotationPolicy",
+    ]
+
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set",
+    ]
   }
   tags = local.tags
 }
@@ -2160,9 +2206,55 @@ resource "azurerm_key_vault" "kv2" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = ["Create", "Update", "Delete", "Get", "List"]
-    key_permissions = ["Create", "Update", "Delete", "Backup", "Get", "List"]
-    secret_permissions = ["Delete", "Backup", "Get", "List"]
+    certificate_permissions = [
+      "Create",
+      "Delete",
+      "DeleteIssuers",
+      "Get",
+      "GetIssuers",
+      "Import",
+      "List",
+      "ListIssuers",
+      "ManageContacts",
+      "ManageIssuers",
+      "SetIssuers",
+      "Update",
+      "Purge",
+    ]
+
+    key_permissions = [
+      "Backup",
+      "Create",
+      "Decrypt",
+      "Delete",
+      "Encrypt",
+      "Get",
+      "Import",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Sign",
+      "UnwrapKey",
+      "Update",
+      "Verify",
+      "WrapKey",
+      "Release",
+      "Rotate",
+      "GetRotationPolicy",
+      "SetRotationPolicy",
+    ]
+
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set",
+    ]
   }
   tags = local.tags
 }
@@ -2392,9 +2484,55 @@ resource "azurerm_key_vault" "kv3" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = ["Create", "Update", "Delete", "Get", "List"]
-    key_permissions = ["Create", "Update", "Delete", "Backup", "Get", "List", "GetRotationPolicy"]
-    secret_permissions = ["Delete", "Backup", "Get", "List"]
+    certificate_permissions = [
+      "Create",
+      "Delete",
+      "DeleteIssuers",
+      "Get",
+      "GetIssuers",
+      "Import",
+      "List",
+      "ListIssuers",
+      "ManageContacts",
+      "ManageIssuers",
+      "SetIssuers",
+      "Update",
+      "Purge",
+    ]
+
+    key_permissions = [
+      "Backup",
+      "Create",
+      "Decrypt",
+      "Delete",
+      "Encrypt",
+      "Get",
+      "Import",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Sign",
+      "UnwrapKey",
+      "Update",
+      "Verify",
+      "WrapKey",
+      "Release",
+      "Rotate",
+      "GetRotationPolicy",
+      "SetRotationPolicy",
+    ]
+
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set",
+    ]
   }
   tags = local.tags
 }
@@ -2600,9 +2738,55 @@ resource "azurerm_key_vault" "kv4" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = ["Create", "Update", "Delete", "Get", "List"]
-    key_permissions = ["Create", "Update", "Delete", "Backup", "Get", "List"]
-    secret_permissions = ["Delete", "Backup", "Get", "List"]
+    certificate_permissions = [
+      "Create",
+      "Delete",
+      "DeleteIssuers",
+      "Get",
+      "GetIssuers",
+      "Import",
+      "List",
+      "ListIssuers",
+      "ManageContacts",
+      "ManageIssuers",
+      "SetIssuers",
+      "Update",
+      "Purge",
+    ]
+
+    key_permissions = [
+      "Backup",
+      "Create",
+      "Decrypt",
+      "Delete",
+      "Encrypt",
+      "Get",
+      "Import",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Sign",
+      "UnwrapKey",
+      "Update",
+      "Verify",
+      "WrapKey",
+      "Release",
+      "Rotate",
+      "GetRotationPolicy",
+      "SetRotationPolicy",
+    ]
+
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set",
+    ]
   }
   tags = local.tags
 }
@@ -2845,9 +3029,55 @@ resource "azurerm_key_vault" "kv5" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = ["Create", "Update", "Delete", "Get", "List"]
-    key_permissions = ["Create", "Update", "Delete", "Backup", "Get", "List"]
-    secret_permissions = ["Delete", "Backup", "Get", "List"]
+    certificate_permissions = [
+      "Create",
+      "Delete",
+      "DeleteIssuers",
+      "Get",
+      "GetIssuers",
+      "Import",
+      "List",
+      "ListIssuers",
+      "ManageContacts",
+      "ManageIssuers",
+      "SetIssuers",
+      "Update",
+      "Purge",
+    ]
+
+    key_permissions = [
+      "Backup",
+      "Create",
+      "Decrypt",
+      "Delete",
+      "Encrypt",
+      "Get",
+      "Import",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Sign",
+      "UnwrapKey",
+      "Update",
+      "Verify",
+      "WrapKey",
+      "Release",
+      "Rotate",
+      "GetRotationPolicy",
+      "SetRotationPolicy",
+    ]
+
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set",
+    ]
   }
   tags = local.tags
 }
@@ -3024,9 +3254,55 @@ resource "azurerm_key_vault" "kv6" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = ["Create", "Update", "Delete", "Get", "List"]
-    key_permissions = ["Create", "Update", "Delete", "Backup", "Get", "List"]
-    secret_permissions = ["Delete", "Backup", "Get", "List"]
+    certificate_permissions = [
+      "Create",
+      "Delete",
+      "DeleteIssuers",
+      "Get",
+      "GetIssuers",
+      "Import",
+      "List",
+      "ListIssuers",
+      "ManageContacts",
+      "ManageIssuers",
+      "SetIssuers",
+      "Update",
+      "Purge",
+    ]
+
+    key_permissions = [
+      "Backup",
+      "Create",
+      "Decrypt",
+      "Delete",
+      "Encrypt",
+      "Get",
+      "Import",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Sign",
+      "UnwrapKey",
+      "Update",
+      "Verify",
+      "WrapKey",
+      "Release",
+      "Rotate",
+      "GetRotationPolicy",
+      "SetRotationPolicy",
+    ]
+
+    secret_permissions = [
+      "Backup",
+      "Delete",
+      "Get",
+      "List",
+      "Purge",
+      "Recover",
+      "Restore",
+      "Set",
+    ]
   }
   tags = local.tags
 }
