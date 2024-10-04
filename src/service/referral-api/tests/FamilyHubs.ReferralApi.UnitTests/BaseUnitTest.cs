@@ -1,12 +1,23 @@
-﻿using FamilyHubs.ReferralService.Shared.Dto;
+using AutoMapper;
+using FamilyHubs.Referral.Core;
+using FamilyHubs.ReferralService.Shared.Dto;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 
-namespace FamilyHubs.Referral.Integration.Tests;
+namespace FamilyHubs.Referral.UnitTests;
 
-public static class TestDataProvider
+public abstract class BaseUnitTest<T>
 {
-    private const long UserId = 1337L;
+    protected readonly IMapper Mapper;
+    protected readonly ILogger<T> Logger;
 
-    public static ReferralDto GetReferralDto()
+    protected BaseUnitTest()
+    {
+        Mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new AutoMappingProfiles())));
+        Logger = Substitute.For<ILogger<T>>();
+    }
+
+    protected static ReferralDto GetReferralDto()
     {
         return new ReferralDto
         {
@@ -28,12 +39,25 @@ public static class TestDataProvider
             },
             ReferralUserAccountDto = new UserAccountDto
             {
-                Id = UserId,
+                Id = 2,
                 EmailAddress = "Bob.Referrer@email.com",
                 Name = "Bob Referrer",
-                PhoneNumber = "011 222 5555",
-                Team = "Social Work team North",
-                UserAccountRoles = new List<UserAccountRoleDto>(),
+                PhoneNumber = "1234567890",
+                Team = "Team",
+                UserAccountRoles = new List<UserAccountRoleDto>
+                {
+                    new()
+                    {
+                        UserAccount = new UserAccountDto
+                        {
+                            EmailAddress = "Bob.Referrer@email.com",
+                        },
+                        Role = new RoleDto
+                        {
+                            Name = "VcsProfessional"
+                        }
+                    }
+                },
                 ServiceUserAccounts = new List<UserAccountServiceDto>(),
                 OrganisationUserAccounts = new List<UserAccountOrganisationDto>(),
             },
@@ -41,8 +65,7 @@ public static class TestDataProvider
             {
                 Id = 1,
                 Name = "New",
-                SortOrder = 0,
-                SecondrySortOrder = 1
+                SortOrder = 0
             },
             ReferralServiceDto = new ReferralServiceDto
             {
@@ -58,42 +81,6 @@ public static class TestDataProvider
                     Description = "Organisation Description",
                 }
             }
-
         };
-    }
-
-    public static UserAccountDto GetUserAccount()
-    {
-        UserAccountDto userAccountDto = new UserAccountDto
-        {
-            Id = 2,
-            EmailAddress = "FirstUser@email.com",
-            Name = "First User",
-            PhoneNumber = "0161 111 1111",
-            Team = "Test Team"
-        };
-
-        userAccountDto.OrganisationUserAccounts = new List<UserAccountOrganisationDto>
-        {
-            new()
-            {
-                UserAccount = new UserAccountDto
-                {
-                    Id = 2,
-                    EmailAddress = "FirstUser@email.com",
-                    Name = "First User",
-                    PhoneNumber = "0161 111 1111",
-                    Team = "Test Team"
-                },
-                Organisation = new OrganisationDto
-                {
-                    Id = 2,
-                    Name = "Organisation",
-                    Description = "Organisation Description",
-                }
-            }
-        };
-
-        return userAccountDto;
     }
 }
