@@ -24,10 +24,7 @@ public static class HealthCheck
 
         //todo: do we want to health check each instance of e.g. sql server connection, in case are different?
 
-        TokenCredential keyVaultCredentials = new ClientSecretCredential(
-            config.GetValue<string>("DataProtection:TenantId"),
-            config.GetValue<string>("DataProtection:ClientId"),
-            config.GetValue<string>("DataProtection:ClientSecret"));
+        TokenCredential keyVaultCredentials = new ManagedIdentityCredential();
 
         var oneLoginUrl = config.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
 

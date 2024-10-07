@@ -24,10 +24,7 @@ public static class HealthCheck
 
         //todo: null handling. use config exception?
 
-        TokenCredential keyVaultCredentials = new ClientSecretCredential(
-            config.GetValue<string>("DataProtection:TenantId"),
-            config.GetValue<string>("DataProtection:ClientId"),
-            config.GetValue<string>("DataProtection:ClientSecret"));
+        TokenCredential keyVaultCredentials = new ManagedIdentityCredential();
 
         var oneLoginUrl = config.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
 
