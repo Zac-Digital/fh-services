@@ -37,12 +37,6 @@ locals {
   appgw_ssl_cert_sd_ui_name = "sd-ui-${lower(var.environment)}-cert"
   appgw_ssl_cert_referral_ui_name = "referral-ui-${lower(var.environment)}-cert"
   
-  # Key vault
-  
-  key_vault_admin_ui_cert_name = "sd-admin-ui-${lower(var.environment)}-cert"
-  key_vault_referral_ui_cert_name = "referral-ui-${lower(var.environment)}-cert"
-  key_vault_service_directory_ui_cert_name = "sd-ui-${lower(var.environment)}-cert"
-  
   # Storage configuration
   
   account_kind = "StorageV2"
@@ -2430,56 +2424,21 @@ resource "azurerm_key_vault" "kv3" {
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.referral_data_encryption_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    object_id = azurerm_windows_web_app.fh_referral_dashboard_ui.identity.0.principal_id
+    key_permissions = [
+      "Get",
+      "List",
+      "UnwrapKey"
+    ]
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_referral_ui.identity.0.principal_id
+    key_permissions = [
+      "Get",
+      "List",
+      "UnwrapKey"
+    ]
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -2553,17 +2512,6 @@ resource "azurerm_key_vault_key" "kv3k1" {
     "verify",
     "wrapKey",
   ]
-}
-
-resource "azurerm_key_vault_certificate" "kv3c1" {
-  name         = "${var.prefix}-${local.key_vault_referral_ui_cert_name}"
-  key_vault_id = azurerm_key_vault.kv3.id
-  depends_on   = [ azurerm_key_vault.kv3 ]
-  tags = local.tags
-  certificate {
-    contents = var.ssl_cert_path_referral_ui
-    password = var.certificate_password
-  }
 }
 
 resource "azurerm_key_vault" "kv4" {

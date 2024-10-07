@@ -15,7 +15,6 @@ appgw_errorpage_path_sd_ui = "modules/fhinfrastructurestack/errorpages/sd_ui/dev
 service_principals = {
   reader_usr_group_object_id = "2c713f1b-2c2a-413c-879f-3b48a121bc19"
   delivery_team_user_group_object_id = "17c0fa92-3b66-4819-a08a-212778ddf7af"
-  referral_data_encryption_enterprise_object_id = "56492bce-a6b7-44d7-b220-b795d444d9e1"
   ado_enterprise_object_id = "30ed78a4-bd73-4ead-8f41-cb0bd17d4214"
   github_enterprise_object_id = "d134b2d5-cc70-4f68-8f7f-bf99890b49a1"
 }

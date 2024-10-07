@@ -75,10 +75,7 @@ runs:
         Idams.Endpoint: ${{ steps.fetch.outputs.IDAMS_ENDPOINT }}
         FamilyHubsUi.Urls.GovUkLoginAccountPage: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_GOVUKLOGINACCOUNTPAGE }}
         FamilyHubsUi.Urls.DashboardWeb: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_DASHBOARDWEB }}
-        DataProtection.TenantId: ${{ steps.fetch.outputs.DATAPROTECTION_TENANTID }}
         DataProtection.KeyIdentifier: ${{ steps.fetch.outputs.DATAPROTECTION_KEYIDENTIFIER }}
-        DataProtection.ClientSecret: ${{ steps.fetch.outputs.DATAPROTECTION_CLIENTSECRET }}
-        DataProtection.ClientId: ${{ steps.fetch.outputs.DATAPROTECTION_CLIENTID }}
         ConnectionStrings.SharedKernelConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_SHAREDKERNELCONNECTION }}
         ServiceDirectoryAPI.Endpoint: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPI_ENDPOINT }}
         SqlServerCache.Connection: ${{ steps.fetch.outputs.SQLSERVERCACHE_CONNECTION }}
