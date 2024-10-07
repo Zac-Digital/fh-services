@@ -24,28 +24,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
         _auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
 
-        byte[]? byteencryptionKey;
-        byte[]? byteencryptionIV;
-
-        string? encryptionKey = keyProvider.GetDbEncryptionKey().Result;
-        if (!string.IsNullOrEmpty(encryptionKey))
-        {
-            byteencryptionKey = ConvertStringToByteArray(encryptionKey);
-        }
-        else
-        {
-            throw new ArgumentException("EncryptionKey is missing");
-        }
-        string? encryptionIV = keyProvider.GetDbEncryptionIVKey().Result;
-        if (!string.IsNullOrEmpty(encryptionIV))
-        {
-            byteencryptionIV = ConvertStringToByteArray(encryptionIV);
-        }
-        else
-        {
-            throw new ArgumentException("EncryptionIV is missing");
-        }
-        _provider = new AesProvider(byteencryptionKey, byteencryptionIV);
+        var byteEncryptionKey = ConvertStringToByteArray(keyProvider.GetDbEncryptionKey());
+        var byteEncryptionIv = ConvertStringToByteArray(keyProvider.GetDbEncryptionIvKey());
+        _provider = new AesProvider(byteEncryptionKey, byteEncryptionIv);
 
     }
 
