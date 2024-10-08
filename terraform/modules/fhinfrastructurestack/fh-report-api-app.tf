@@ -29,50 +29,26 @@ resource "azurerm_windows_web_app" "fh_report_api" {
   identity {
     type                                        = "SystemAssigned"
   }
-    site_config {
+  site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     application_stack {
-    current_stack                               = "${var.current_stack}"
-    dotnet_version                              = "${var.dotnet_version_general}"
-  }
-  ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  ip_restriction {
-      name                                      = "Harsha Reddy Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "31.53.249.6/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Harsha Reddy Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "31.53.249.6/32"
-  }
+      current_stack                               = "${var.current_stack}"
+      dotnet_version                              = "${var.dotnet_version_general}"
+    }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
