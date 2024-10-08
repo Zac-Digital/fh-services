@@ -33,7 +33,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     {
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithEligibility(0, 99)
@@ -56,9 +55,9 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var item = retVal?.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
 
-        ArgumentNullException.ThrowIfNull(item);
+        item.Should().NotBeNull();
 
-        var updatedItem = item with {Name = "Updated Service Name", Description = "Updated Service Description"};
+        var updatedItem = item! with {Name = "Updated Service Name", Description = "Updated Service Description"};
 
         var updateRequest = CreatePutRequest($"api/services/{item.Id}", updatedItem, RoleTypes.DfeAdmin);
 
