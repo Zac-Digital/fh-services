@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\FamilyHubs.ServiceDirectory.Admin.Web\FamilyHubs.ServiceDirectory.Admin.Web.csproj" />
+    <ProjectReference Include="..\..\src\FamilyHubs.ServiceDirectory.Admin.Core\FamilyHubs.ServiceDirectory.Admin.Core.csproj" />
   </ItemGroup>
 
 </Project>
