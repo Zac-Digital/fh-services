@@ -202,18 +202,22 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
         if (request.Longitude is not null && request.Latitude is not null)
         {
+            var distanceSql = _useSqlite ?
+                $"Distance(l.GeoPoint, GeomFromText('POINT ({request.Longitude.Value} {request.Latitude.Value})', {GeoPoint.WGS84}))" :
+                $"l.GeoPoint.STDistance(geography::Point({request.Latitude.Value}, {request.Longitude.Value}, {GeoPoint.WGS84}))";
+
             if (request.Meters is not null)
             {
                 query.And(
                     new StringCondition(
-                        $"l.GeoPoint.STDistance(geography::Point({request.Latitude.Value}, {request.Longitude.Value}, {GeoPoint.WGS84})) < @MaxDistance",
+                        $"{distanceSql} < @MaxDistance",
                         new FhParameter("@MaxDistance", request.Meters.Value)
                     )
                 );
             }
 
             query
-                .AddFields($"MIN(l.GeoPoint.STDistance(geography::Point({request.Latitude.Value}, {request.Longitude.Value}, {GeoPoint.WGS84}))) dist")
+                .AddFields($"MIN({distanceSql}) dist")
                 .AddOrderBy("dist");
         }
         else

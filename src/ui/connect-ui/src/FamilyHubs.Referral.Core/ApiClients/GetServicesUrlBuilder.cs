@@ -30,9 +30,9 @@ public class GetServicesUrlBuilder
         return this;
     }
 
-    public GetServicesUrlBuilder WithProximity(double latitude, double longtitude, double proximity)
+    public GetServicesUrlBuilder WithProximity(double latitude, double longitude, double proximity)
     {
-        _urlParameter.Add($"latitude={latitude}&longtitude={longtitude}&proximity={proximity}");
+        _urlParameter.Add($"latitude={latitude}&longitude={longitude}&proximity={proximity}");
         return this;
     }
 
