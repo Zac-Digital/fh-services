@@ -9,6 +9,9 @@ on:
       project_directory:
         required: true
         type: string
+      artifact:
+        required: true
+        type: string
       runs_on:
         required: true
         type: string
@@ -47,7 +50,7 @@ jobs:
       - name: Run Stryker
         shell: bash
         working-directory: src/${{ inputs.working_directory }}/${{ inputs.project_directory }}
-        run: dotnet stryker --reporter "markdown"
+        run: dotnet stryker --reporter "markdown" --reporter "html"
 
       - name: Title markdown
         run: echo '### Stryker Results 🚀' >> $GITHUB_STEP_SUMMARY
@@ -55,3 +58,9 @@ jobs:
       - name: Adding markdown
         run: cat ${{ inputs.project_directory }}/StrykerOutput/**/**/*.md >> $GITHUB_STEP_SUMMARY
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: stryker-${{ inputs.artifact }}
+          path: src/${{ inputs.working_directory }}/${{ inputs.project_directory }}/StrykerOutput/**/**/*.html
+          if-no-files-found: error

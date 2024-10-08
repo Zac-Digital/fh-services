@@ -37,40 +37,62 @@ jobs:
           - project_directory: src/FamilyHubs.Idam.Api
             working_directory: service/idam-api
             job_name: "Stryker - Idam API - Api"
+            artifact: idam-api
           - project_directory: src/FamilyHubs.Idam.Core
             working_directory: service/idam-api
             job_name: "Stryker - Idam API - Core"
+            artifact: idam-core
           - project_directory: shared/FamilyHubs.Notification.Api.Contracts
             working_directory: service/notification-api
             job_name: "Stryker - Notification API - Api Contracts"
+            artifact: notification-contracts
           - project_directory: src/FamilyHubs.Notification.Api
             working_directory: service/notification-api
             job_name: "Stryker - Notification API - Api"
+            artifact: notification-api
           - project_directory: src/FamilyHubs.Notification.Core
             working_directory: service/notification-api
             job_name: "Stryker - Notification API - Core"
+            artifact: notification-core
           - project_directory: src/FamilyHubs.Report.Api
             working_directory: service/report-api
             job_name: "Stryker - Report API - Api"
+            artifact: report-api
           - project_directory: src/FamilyHubs.Report.Core
             working_directory: service/report-api
             job_name: "Stryker - Report API - Core"
+            artifact: report-core
           - project_directory: src/FamilyHubs.Referral.Api
             working_directory: service/referral-api
             job_name: "Stryker - Referral API - Api"
+            artifact: referral-api
           - project_directory: src/FamilyHubs.Referral.Core
             working_directory: service/referral-api
             job_name: "Stryker - Referral API - Core"
+            artifact: referral-core
           - project_directory: src/FamilyHubs.ServiceDirectory.Api
             working_directory: service/service-directory-api
             job_name: "Stryker - Service Directory API - Api"
             runs_on_windows: true
+            artifact: sd-api
           - project_directory: src/FamilyHubs.ServiceDirectory.Core
             working_directory: service/service-directory-api
             job_name: "Stryker - Service Directory API - Core"
             runs_on_windows: true
+            artifact: sd-core
     uses: ./.github/workflows/stryker-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}
       project_directory: ${{ matrix.project_directory }}
       runs_on: ${{ matrix.runs_on_windows && 'windows-2022' || 'ubuntu-22.04' }}
+      artifact: ${{ matrix.artifact }}
+  artifact:
+    runs-on: ubuntu-latest
+    needs: stryker
+    steps:
+    - name: "Merge artifacts"
+      uses: actions/upload-artifact/merge@v4
+      with:
+        separate-directories: true
+        delete-merged: true
+        pattern: stryker-*
