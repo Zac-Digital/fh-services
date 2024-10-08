@@ -40,7 +40,12 @@ jobs:
             find-web,
             find-core,
             manage-web,
-            manage-core
+            manage-core,
+
+            referral-shared,
+            sd-shared,
+            shared-kernel,
+            web-components
           ]
         include:
           - project_directory: src/FamilyHubs.Idam.Api
@@ -89,6 +94,7 @@ jobs:
             job_name: "Stryker - Service Directory API - Core"
             runs_on_windows: true
             artifact: sd-core
+
           - project_directory: src/FamilyHubs.RequestForSupport.Web
             working_directory: ui/connect-dashboard-ui
             job_name: "Stryker - Connect Dashboard UI - Web"
@@ -121,6 +127,23 @@ jobs:
             working_directory: ui/manage-ui
             job_name: "Stryker - Manage UI - Core"
             artifact: manage-core
+
+          - project_directory: src/FamilyHubs.ReferralService.Shared
+            working_directory: shared/referral-shared
+            job_name: "Stryker - Referral Shared"
+            artifact: referral-shared
+          - project_directory: src/FamilyHubs.ServiceDirectory.Shared
+            working_directory: shared/service-directory-shared
+            job_name: "Stryker - Service Directory Shared"
+            artifact: sd-shared
+          - project_directory: src/fh-shared-kernel.shared-kernel
+            working_directory: shared/shared-kernel
+            job_name: "Stryker - Shared Kernel"
+            artifact: shared-kernel
+          - project_directory: src/FamilyHubs.SharedKernel.Razor
+            working_directory: shared/web-components
+            job_name: "Stryker - Shared Kernel Razor"
+            artifact: web-components
     uses: ./.github/workflows/stryker-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}
@@ -129,6 +152,7 @@ jobs:
       artifact: ${{ matrix.artifact }}
   artifact:
     runs-on: ubuntu-latest
+    if: always()
     needs: stryker
     steps:
     - name: "Merge artifacts"

@@ -1,0 +1,9 @@
+{
+    "stryker-config": {
+        "solution": "../../../../SuperSolution.sln",
+        "project": "FamilyHubs.ServiceDirectory.Shared.csproj",
+        "test-projects": [
+            "../../tests/FamilyHubs.ServiceDirectory.Shared.UnitTests/FamilyHubs.ServiceDirectory.Shared.UnitTests.csproj"
+        ]
+    }
+}
