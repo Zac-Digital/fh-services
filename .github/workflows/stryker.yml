@@ -19,19 +19,28 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        project_directory:
+        artifact:
           [
-            src/FamilyHubs.Idam.Api,
-            src/FamilyHubs.Idam.Core,
-            shared/FamilyHubs.Notification.Api.Contracts,
-            src/FamilyHubs.Notification.Api,
-            src/FamilyHubs.Notification.Core,
-            src/FamilyHubs.Referral.Api,
-            src/FamilyHubs.Referral.Core,
-            src/FamilyHubs.Report.Api,
-            src/FamilyHubs.Report.Core,
-            src/FamilyHubs.ServiceDirectory.Api,
-            src/FamilyHubs.ServiceDirectory.Core,
+            idam-api,
+            idam-core,
+            notification-contracts,
+            notification-api,
+            notification-core,
+            referral-api,
+            referral-core,
+            report-api,
+            report-core,
+            sd-api,
+            sd-core,
+
+            connect-dashboard-web,
+            connect-dashboard-core,
+            connect-web,
+            connect-core,
+            find-web,
+            find-core,
+            manage-web,
+            manage-core
           ]
         include:
           - project_directory: src/FamilyHubs.Idam.Api
@@ -80,6 +89,38 @@ jobs:
             job_name: "Stryker - Service Directory API - Core"
             runs_on_windows: true
             artifact: sd-core
+          - project_directory: src/FamilyHubs.RequestForSupport.Web
+            working_directory: ui/connect-dashboard-ui
+            job_name: "Stryker - Connect Dashboard UI - Web"
+            artifact: connect-dashboard-web
+          - project_directory: src/FamilyHubs.RequestForSupport.Core
+            working_directory: ui/connect-dashboard-ui
+            job_name: "Stryker - Connect Dashboard UI - Core"
+            artifact: connect-dashboard-core
+          - project_directory: src/FamilyHubs.Referral.Web
+            working_directory: ui/connect-ui
+            job_name: "Stryker - Connect UI - Web"
+            artifact: connect-web
+          - project_directory: src/FamilyHubs.Referral.Core
+            working_directory: ui/connect-ui
+            job_name: "Stryker - Connect UI - Core"
+            artifact: connect-core
+          - project_directory: src/FamilyHubs.ServiceDirectory.Web
+            working_directory: ui/find-ui
+            job_name: "Stryker - Find UI - Web"
+            artifact: find-web
+          - project_directory: src/FamilyHubs.ServiceDirectory.Core
+            working_directory: ui/find-ui
+            job_name: "Stryker - Find UI - Core"
+            artifact: find-core
+          - project_directory: src/FamilyHubs.ServiceDirectory.Admin.Web
+            working_directory: ui/manage-ui
+            job_name: "Stryker - Manage UI - Web"
+            artifact: manage-web
+          - project_directory: src/FamilyHubs.ServiceDirectory.Admin.Core
+            working_directory: ui/manage-ui
+            job_name: "Stryker - Manage UI - Core"
+            artifact: manage-core
     uses: ./.github/workflows/stryker-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}
