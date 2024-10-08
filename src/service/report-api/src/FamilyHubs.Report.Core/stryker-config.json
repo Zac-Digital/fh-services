@@ -1,0 +1,10 @@
+{
+    "stryker-config": {
+        "solution": "../../../../SuperSolution.sln",
+        "project": "FamilyHubs.Report.Core.csproj",
+        "test-projects": [
+            "../../tests/FamilyHubs.ReportApi.FunctionalTests/FamilyHubs.ReportApi.FunctionalTests.csproj",
+            "../../tests/FamilyHubs.ReportApi.UnitTests/FamilyHubs.ReportApi.UnitTests.csproj"
+        ]
+    }
+}

@@ -14,7 +14,7 @@ on:
       - 'src/**'
 
 jobs:
-  build_and_test:
+  stryker:
     name: ${{ matrix.job_name }}
     strategy:
       fail-fast: false
@@ -23,6 +23,8 @@ jobs:
           [
             src/FamilyHubs.ServiceDirectory.Api,
             src/FamilyHubs.ServiceDirectory.Core,
+            src/FamilyHubs.Report.Api,
+            src/FamilyHubs.Report.Core,
           ]
         include:
           - project_directory: src/FamilyHubs.ServiceDirectory.Api
@@ -33,6 +35,12 @@ jobs:
             working_directory: service/service-directory-api
             job_name: "Stryker - Service Directory API - Core"
             runs_on_windows: true
+          - project_directory: src/FamilyHubs.Report.Api
+            working_directory: service/report-api
+            job_name: "Stryker - Report API - Api"
+          - project_directory: src/FamilyHubs.Report.Core
+            working_directory: service/report-api
+            job_name: "Stryker - Report API - Core"
     uses: ./.github/workflows/stryker-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}

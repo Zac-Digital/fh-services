@@ -25,6 +25,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\shared\shared-kernel\src\fh-shared-kernel.shared-kernel\FamilyHubs.SharedKernel.csproj" />
       <ProjectReference Include="..\..\src\FamilyHubs.Report.Api\FamilyHubs.Report.Api.csproj" />
+      <ProjectReference Include="..\..\src\FamilyHubs.Report.Core\FamilyHubs.Report.Core.csproj" />
       <ProjectReference Include="..\..\src\FamilyHubs.Report.Data\FamilyHubs.Report.Data.csproj" />
     </ItemGroup>
 
