@@ -32,6 +32,10 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
+      - name: Setup Stryker.NET
+        shell: bash
+        run: dotnet tool install -g dotnet-stryker
+
       - name: Package Cache
         uses: actions/cache@v4
         with:
@@ -49,9 +53,8 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run Stryker
-        uses: stryker-mutator/github-action@v0.0.1
-        with:
-          testProject: ${{ inputs.project_directory }}/*.csproj
+        shell: bash
+        run: dotnet stryker -f ${{ inputs.project_directory }}/stryker-config.json -O ${{ inputs.project_directory}}/StrykerOutput
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
