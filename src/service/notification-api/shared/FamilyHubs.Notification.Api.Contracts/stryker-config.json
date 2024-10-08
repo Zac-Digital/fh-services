@@ -1,0 +1,9 @@
+{
+    "stryker-config": {
+        "solution": "../../../../SuperSolution.sln",
+        "project": "FamilyHubs.Notification.Api.Contracts.csproj",
+        "test-projects": [
+            "../../tests/FamilyHubs.Notification.Api.Contracts.Tests/FamilyHubs.Notification.Api.Contracts.Tests.csproj"
+        ]
+    }
+}

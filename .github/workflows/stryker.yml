@@ -21,12 +21,46 @@ jobs:
       matrix:
         project_directory:
           [
-            src/FamilyHubs.ServiceDirectory.Api,
-            src/FamilyHubs.ServiceDirectory.Core,
+            src/FamilyHubs.Idam.Api,
+            src/FamilyHubs.Idam.Core,
+            shared/FamilyHubs.Notification.Api.Contracts,
+            src/FamilyHubs.Notification.Api,
+            src/FamilyHubs.Notification.Core,
+            src/FamilyHubs.Referral.Api,
+            src/FamilyHubs.Referral.Core,
             src/FamilyHubs.Report.Api,
             src/FamilyHubs.Report.Core,
+            src/FamilyHubs.ServiceDirectory.Api,
+            src/FamilyHubs.ServiceDirectory.Core,
           ]
         include:
+          - project_directory: src/FamilyHubs.Idam.Api
+            working_directory: service/idam-api
+            job_name: "Stryker - Idam API - Api"
+          - project_directory: src/FamilyHubs.Idam.Core
+            working_directory: service/idam-api
+            job_name: "Stryker - Idam API - Core"
+          - project_directory: shared/FamilyHubs.Notification.Api.Contracts
+            working_directory: service/notification-api
+            job_name: "Stryker - Notification API - Api Contracts"
+          - project_directory: src/FamilyHubs.Notification.Api
+            working_directory: service/notification-api
+            job_name: "Stryker - Notification API - Api"
+          - project_directory: src/FamilyHubs.Notification.Core
+            working_directory: service/notification-api
+            job_name: "Stryker - Notification API - Core"
+          - project_directory: src/FamilyHubs.Report.Api
+            working_directory: service/report-api
+            job_name: "Stryker - Report API - Api"
+          - project_directory: src/FamilyHubs.Report.Core
+            working_directory: service/report-api
+            job_name: "Stryker - Report API - Core"
+          - project_directory: src/FamilyHubs.Referral.Api
+            working_directory: service/referral-api
+            job_name: "Stryker - Referral API - Api"
+          - project_directory: src/FamilyHubs.Referral.Core
+            working_directory: service/referral-api
+            job_name: "Stryker - Referral API - Core"
           - project_directory: src/FamilyHubs.ServiceDirectory.Api
             working_directory: service/service-directory-api
             job_name: "Stryker - Service Directory API - Api"
@@ -35,12 +69,6 @@ jobs:
             working_directory: service/service-directory-api
             job_name: "Stryker - Service Directory API - Core"
             runs_on_windows: true
-          - project_directory: src/FamilyHubs.Report.Api
-            working_directory: service/report-api
-            job_name: "Stryker - Report API - Api"
-          - project_directory: src/FamilyHubs.Report.Core
-            working_directory: service/report-api
-            job_name: "Stryker - Report API - Core"
     uses: ./.github/workflows/stryker-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}

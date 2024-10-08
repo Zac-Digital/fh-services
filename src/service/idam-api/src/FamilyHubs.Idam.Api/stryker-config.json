@@ -1,0 +1,10 @@
+{
+    "stryker-config": {
+        "solution": "../../../../SuperSolution.sln",
+        "project": "FamilyHubs.Idam.Api.csproj",
+        "test-projects": [
+            "../../tests/FamilyHubs.Idam.Api.FunctionalTests/FamilyHubs.Idam.Api.FunctionalTests.csproj",
+            "../../tests/FamilyHubs.Idam.Core.IntegrationTests/FamilyHubs.Idam.Core.IntegrationTests.csproj"
+        ]
+    }
+}

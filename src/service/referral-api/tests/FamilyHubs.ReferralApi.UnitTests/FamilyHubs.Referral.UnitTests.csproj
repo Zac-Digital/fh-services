@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\FamilyHubs.Referral.Api\FamilyHubs.Referral.Api.csproj" />
+    <ProjectReference Include="..\..\src\FamilyHubs.Referral.Core\FamilyHubs.Referral.Core.csproj" />
   </ItemGroup>
 
 </Project>

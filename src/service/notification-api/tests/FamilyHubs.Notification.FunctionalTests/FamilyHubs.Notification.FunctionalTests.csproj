@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\FamilyHubs.Notification.Api\FamilyHubs.Notification.Api.csproj" />
+    <ProjectReference Include="..\..\src\FamilyHubs.Notification.Core\FamilyHubs.Notification.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,11 @@
+{
+    "stryker-config": {
+        "solution": "../../../../SuperSolution.sln",
+        "project": "FamilyHubs.Notification.Core.csproj",
+        "test-projects": [
+            "../../tests/FamilyHubs.Notification.FunctionalTests/FamilyHubs.Notification.FunctionalTests.csproj",
+            "../../tests/FamilyHubs.Notification.IntegrationTests/FamilyHubs.Notification.IntegrationTests.csproj",
+            "../../tests/FamilyHubs.Notification.UnitTests/FamilyHubs.Notification.UnitTests.csproj"
+        ]
+    }
+}

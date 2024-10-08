@@ -49,11 +49,8 @@ jobs:
         working-directory: src/${{ inputs.working_directory }}/${{ inputs.project_directory }}
         run: dotnet stryker --reporter "markdown"
 
-      - name: Check markdown
-        run: cat ${{ inputs.project_directory }}/StrykerOutput/**/**/*.md
-
-      - name: Test markdown
-        run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
+      - name: Title markdown
+        run: echo '### Stryker Results 🚀' >> $GITHUB_STEP_SUMMARY
 
       - name: Adding markdown
         run: cat ${{ inputs.project_directory }}/StrykerOutput/**/**/*.md >> $GITHUB_STEP_SUMMARY
