@@ -1,0 +1,61 @@
+name: Stryker Template
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: true
+        type: string
+      project_directory:
+        required: true
+        type: string
+      runs_on:
+        required: true
+        type: string
+
+jobs:
+  build_and_test:
+    name: Build Project & Run Stryker
+    runs-on: ${{ inputs.runs_on }}
+    defaults:
+      run:
+        working-directory: src/${{ inputs.working_directory }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup .NET ${{ inputs.dotnet_version }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet_version }}
+
+      - name: Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore Project
+        shell: bash
+        run: dotnet restore
+
+      - name: Build Project
+        shell: bash
+        run: dotnet build --no-restore
+
+      - name: Run Stryker
+        uses: stryker-mutator/github-action@v0.0.1
+        with:
+          testProject: ${{ inputs.project_directory }}/*.csproj
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report
+          path: ${{ inputs.project_directory }}/StrykerOutput/**/**/*.html
+          if-no-files-found: error

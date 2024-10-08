@@ -1,0 +1,40 @@
+name: Build & Test
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: ["main", "release-*", "FHB-729"]
+  pull_request:
+    paths:
+      - '.github/workflows/stryker.yml'
+      - '.github/workflows/stryker-template.yml'
+      - 'src/**'
+
+jobs:
+  build_and_test:
+    name: ${{ matrix.job_name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        project_directory:
+          [
+            src/FamilyHubs.ServiceDirectory.Api,
+            src/FamilyHubs.ServiceDirectory.Core,
+          ]
+        include:
+          - project_directory: src/FamilyHubs.ServiceDirectory.Api
+            working_directory: service/service-directory-api
+            job_name: "Stryker - Service Directory API - Api"
+            runs_on_windows: true
+          - project_directory: src/FamilyHubs.ServiceDirectory.Core
+            working_directory: service/service-directory-core
+            job_name: "Stryker - Service Directory API - Core"
+            runs_on_windows: true
+    uses: ./.github/workflows/stryker-template.yml
+    with:
+      working_directory: ${{ matrix.working_directory }}
+      project_directory: ${{ matrix.project_directory }}
+      runs_on: ${{ matrix.runs_on_windows && 'windows-2022' || 'ubuntu-22.04' }}
