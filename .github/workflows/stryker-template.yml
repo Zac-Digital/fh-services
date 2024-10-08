@@ -54,7 +54,8 @@ jobs:
 
       - name: Run Stryker
         shell: bash
-        run: dotnet stryker -f ${{ inputs.project_directory }}/stryker-config.json -O ${{ inputs.project_directory}}/StrykerOutput
+        working-directory: src/${{ inputs.working_directory }}/${{ inputs.project_directory }}
+        run: dotnet stryker
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

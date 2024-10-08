@@ -1,4 +1,4 @@
-name: Build & Test
+name: Stryker
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
@@ -30,7 +30,7 @@ jobs:
             job_name: "Stryker - Service Directory API - Api"
             runs_on_windows: true
           - project_directory: src/FamilyHubs.ServiceDirectory.Core
-            working_directory: service/service-directory-core
+            working_directory: service/service-directory-api
             job_name: "Stryker - Service Directory API - Core"
             runs_on_windows: true
     uses: ./.github/workflows/stryker-template.yml
