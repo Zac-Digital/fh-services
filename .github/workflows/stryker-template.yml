@@ -47,11 +47,7 @@ jobs:
       - name: Run Stryker
         shell: bash
         working-directory: src/${{ inputs.working_directory }}/${{ inputs.project_directory }}
-        run: dotnet stryker
+        run: dotnet stryker --reporter "markdown"
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: html-report
-          path: src/${{ inputs.working_directory }}/${{ inputs.project_directory }}/StrykerOutput/**/**/*.html
-          if-no-files-found: error
+      - name: Adding markdown
+        run: cat ${{ inputs.project_directory }}/StrykerOutput/**/**/*.md >> $GITHUB_STEP_SUMMARY
