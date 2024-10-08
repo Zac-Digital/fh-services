@@ -1,0 +1,13 @@
+{
+  "name": "e2e-framework",
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "teardown": "node scripts/teardown.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "sequelize": "^6.37.4",
+    "tedious": "^18.6.1"
+  }
+}
