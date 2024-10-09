@@ -1,12 +1,13 @@
-import { closeConnections } from "../connections.js";
-import { testId } from "../ids.js";
-import { Services } from "../models/service-directory-models.js";
+import { closeConnections, referralDb } from "../connections.js";
+import { testId, testPrefix } from "../helpers.js";
+import { Organisations, Services } from "../models/service-directory-models.js";
 
 try {
     await setup();
-    await closeConnections();
 } catch (error) {
     console.error('Unable to run setup:', error);
+} finally {
+    await closeConnections();
 }
 
 /**
@@ -15,18 +16,27 @@ try {
 async function setup() {
     console.log("Executing setup...");
 
+    const orgOne = await Organisations.create({
+        Id: testId(1),
+        OrganisationType: "LA",
+        Name: testPrefix("Aaron's test organisation"),
+        Description: testPrefix("test desc"),
+        AdminAreaCode: "E08000031",
+        Created: new Date()
+    });
+
     await Services.create({
         Id: testId(1),
         ServiceType: "FamilyExperience",
-        Name: "Aaron's test service",
-        Description: "Aaron's test description",
+        Name: testPrefix("Aaron's test service"),
+        Description: testPrefix("Aaron's test description"),
         CanFamilyChooseDeliveryLocation: false,
         Status: "Active",
         DeliverableType: "NotSet",
         Created: new Date(),
         CreatedBy: 2,
-        OrganisationId: 1,
-        Summary: "asdf"
+        OrganisationId: orgOne.Id,
+        Summary: testPrefix("asdf")
     });
 
     console.log("Successfully executed setup...");
