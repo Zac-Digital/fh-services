@@ -1,4 +1,5 @@
 import { closeConnections } from "../connections.js";
+import { testId } from "../ids.js";
 import { Services } from "../models/service-directory-models.js";
 
 try {
@@ -12,12 +13,10 @@ try {
  * Runs the test data setup scripts.
  */
 async function setup() {
-    const BASE_ID = 1_000_000; // TODO: centralise base ID calculation
-
     console.log("Executing setup...");
 
     await Services.create({
-        Id: BASE_ID + 1,
+        Id: testId(1),
         ServiceType: "FamilyExperience",
         Name: "Aaron's test service",
         Description: "Aaron's test description",

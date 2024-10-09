@@ -1,7 +1,6 @@
 import { DataTypes } from "sequelize";
 import { serviceDirectoryDb } from "../connections.js";
 
-
 // Model for Events
 export const Events = serviceDirectoryDb.define(
     'Events',

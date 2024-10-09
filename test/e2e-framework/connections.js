@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import 'dotenv/config'
+import '@dotenvx/dotenvx';
 
 export const serviceDirectoryDb = buildSequelizeConnection(
     process.env.DB_SD_HOST, process.env.DB_SD_NAME, process.env.DB_SD_USER,process.env.DB_SD_PASSWORD);

@@ -1,4 +1,5 @@
 import { closeConnections } from "../connections.js";
+import { testId } from "../ids.js";
 import { Services } from "../models/service-directory-models.js";
 
 try {
@@ -12,9 +13,9 @@ try {
  * Runs the test data setup scripts.
  */
 async function teardown() {
-    const BASE_ID = 1_000_000; // TODO: centralise base ID calculation
-
     console.log("Executing teardown...");
-    await Services.destroy({ where: { id: BASE_ID + 1 } });
+
+    await Services.destroy({ where: { id: testId(1) } });
+    
     console.log("Successfully executed teardown.");
 }

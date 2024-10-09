@@ -4,13 +4,13 @@ The Family Hubs E2E Test Framework is a collection of scripts that testers can a
 
 ## Scripts
 
-`$ npm run setup`
+`$ npm run setup:dev`
 
-Creates test data necessary for E2E tests to run.
+(For local/development use) Creates test data necessary for E2E tests to run.
 
-`$ npm run teardown`
+`$ npm run teardown:dev`
 
-Removes test data necessary for E2E tests to run.
+(For local/development use) Removes test data necessary for E2E tests to run.
 
 ## Models
 
@@ -18,10 +18,16 @@ Models are in-code definitions of what a database table looks like. Each table w
 
 More information on what models are and how they work can be found here: https://sequelize.org/docs/v6/core-concepts/model-basics/
 
+## Environment variables
+
+Environment variables are used to configure the setup and teardown scripts. When using locally, the environment variables in the `.env.local` file will be used. When running in a CI/CD pipeline, environment variables will have to be passed in to ensure the scripts are run against the correct environment.
+
+See `.env.local` for a list of supported environment variables.
+
 ## Packages
 
 The following packages are used:
 
-- dotenv: to support `.env` files for local development and testing
+- @dotenvx/dotenvx: to support `.env` files for local development and testing
 - sequelize: an ORM for interacting with databases through a JS API
 - tedious: a SQL Server DB driver used by sequelize
