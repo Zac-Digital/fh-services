@@ -1,7 +1,7 @@
 import { Op } from "sequelize";
 import { closeConnections } from "../connections.js";
-import { AccessibilityForDisabilities, Contacts, CostOptions, Eligibilities, Fundings, Languages, Locations, Organisations as SDOrganisations, Schedules, ServiceAreas, ServiceAtLocations, ServiceDeliveries, Services, ServiceSearches, ServiceSearchResults, ServiceTaxonomies, Taxonomies } from "../models/service-directory-models.js";
-import { ConnectCache, ConnectionRequestsSentMetric, DataProtectionKeys, Organisations as ReferralOrganisations, Recipients, Referrals, ReferralServices, Roles, Statuses, UserAccountOrganisations, UserAccountRoles, UserAccounts, UserAccountServices } from "../models/referral-models.js";
+import * as ServiceDirectory from "../models/service-directory-models.js";
+import * as Referral from "../models/referral-models.js";
 
 const baseId = parseInt(process.env.IDS_START_FROM);
 
@@ -29,22 +29,22 @@ async function teardownServiceDirectoryData(baseId) {
     console.log("Tearing down service directory data...");
 
     await teardownModels([
-        ServiceSearchResults,
-        ServiceSearches,
-        AccessibilityForDisabilities,
-        Contacts,
-        CostOptions,
-        Eligibilities,
-        Fundings,
-        Languages,
-        ServiceAreas,
-        ServiceAtLocations,
-        Schedules,
-        ServiceDeliveries,
-        Services,
-        Locations,
-        SDOrganisations,
-        Taxonomies
+        ServiceDirectory.ServiceSearchResults,
+        ServiceDirectory.ServiceSearches,
+        ServiceDirectory.AccessibilityForDisabilities,
+        ServiceDirectory.Contacts,
+        ServiceDirectory.CostOptions,
+        ServiceDirectory.Eligibilities,
+        ServiceDirectory.Fundings,
+        ServiceDirectory.Languages,
+        ServiceDirectory.ServiceAreas,
+        ServiceDirectory.ServiceAtLocations,
+        ServiceDirectory.Schedules,
+        ServiceDirectory.ServiceDeliveries,
+        ServiceDirectory.Services,
+        ServiceDirectory.Locations,
+        ServiceDirectory.Organisations,
+        ServiceDirectory.Taxonomies
     ]);
 
     // Manually delete anything that can't doesn't have an Id field
@@ -63,19 +63,19 @@ async function teardownReferralData(baseId) {
     console.log("Tearing down referral data...");
 
     await teardownModels([
-        ConnectCache,
-        Roles,
-        Statuses,
-        DataProtectionKeys,
-        ReferralServices,
-        ReferralOrganisations,
-        Recipients,
-        UserAccounts,
-        UserAccountRoles,
-        UserAccountOrganisations,
-        UserAccountServices,
-        Referrals,
-        ConnectionRequestsSentMetric
+        Referral.ConnectCache,
+        Referral.Roles,
+        Referral.Statuses,
+        Referral.DataProtectionKeys,
+        Referral.ReferralServices,
+        Referral.Organisations,
+        Referral.Recipients,
+        Referral.UserAccounts,
+        Referral.UserAccountRoles,
+        Referral.UserAccountOrganisations,
+        Referral.UserAccountServices,
+        Referral.Referrals,
+        Referral.ConnectionRequestsSentMetric
     ]);
 }
 

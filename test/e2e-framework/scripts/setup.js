@@ -1,6 +1,7 @@
 import { closeConnections, referralDb } from "../connections.js";
 import { testId, testPrefix } from "../helpers.js";
-import { Organisations, Services } from "../models/service-directory-models.js";
+import * as ServiceDirectory from "../models/service-directory-models.js";
+import * as Referral from "../models/referral-models.js";
 
 try {
     await setup();
@@ -16,7 +17,7 @@ try {
 async function setup() {
     console.log("Executing setup...");
 
-    const orgOne = await Organisations.create({
+    const orgOne = await ServiceDirectory.Organisations.create({
         Id: testId(1),
         OrganisationType: "LA",
         Name: testPrefix("Aaron's test organisation"),
@@ -25,7 +26,7 @@ async function setup() {
         Created: new Date()
     });
 
-    await Services.create({
+    await ServiceDirectory.Services.create({
         Id: testId(1),
         ServiceType: "FamilyExperience",
         Name: testPrefix("Aaron's test service"),
