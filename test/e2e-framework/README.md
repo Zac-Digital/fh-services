@@ -12,6 +12,12 @@ Creates test data necessary for E2E tests to run.
 
 Removes test data necessary for E2E tests to run.
 
+## Models
+
+Models are in-code definitions of what a database table looks like. Each table we want to insert test data into/read from must have a model. Models are defined in JS files under the `models/` dir.
+
+More information on what models are and how they work can be found here: https://sequelize.org/docs/v6/core-concepts/model-basics/
+
 ## Packages
 
 The following packages are used:
