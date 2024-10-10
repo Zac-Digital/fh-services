@@ -14,7 +14,7 @@ try {
  * Runs the test data setup scripts.
  */
 async function setup () {
-  console.log('Executing setup...')
+    console.log('Executing setup...')
 
   const orgOne = await ServiceDirectory.Organisations.create({
     Id: testId(1),
