@@ -3465,6 +3465,12 @@ resource "azurerm_mssql_server_vulnerability_assessment" "sqlserver_db_vulnerabi
   }
 }
 
+resource "azurerm_user_assigned_identity" "example" {
+  location = var.location
+  name = "test-umi"
+  resource_group_name = local.resource_group_name
+}
+
 # SQL Server Instance
 resource "azurerm_mssql_server" "sqlserver" {
     name = "${var.prefix}-as-fh-sql-server"
@@ -3475,6 +3481,10 @@ resource "azurerm_mssql_server" "sqlserver" {
     administrator_login = var.sql_server_user
     administrator_login_password = var.sql_server_pwd
 
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.example.id]
+  }
     tags = local.tags
 }
 
