@@ -1,3 +1,5 @@
+using AutoMapper;
+using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Core.ClientServices;
 using FamilyHubs.Referral.Core.Commands.CreateReferral;
 using FamilyHubs.Referral.Core.Commands.SetReferralStatus;
@@ -531,7 +533,7 @@ public class WhenUsingReferralCommands : BaseCreateDbUnitTest<CreateReferralComm
         var testReferral = GetReferralDto();
         var createReferral = new CreateReferralDto(testReferral, new ConnectionRequestsSentMetricDto(RequestTimestamp));
         CreateReferralCommand command = new(createReferral, FamilyHubsUser);
-        CreateReferralCommandHandler handler = new(mockApplicationDbContext, mapper, _serviceDirectoryService.Object);
+        CreateReferralCommandHandler handler = new(mockApplicationDbContext, mapper, _serviceDirectoryService);
         var response = await handler.Handle(command, new CancellationToken());
 
         GetReferralCountByServiceIdCommand getCommand = new(response.Id);
