@@ -461,6 +461,10 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.example.id]
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -3469,6 +3473,10 @@ resource "azurerm_user_assigned_identity" "example" {
   location = var.location
   name = "test-umi"
   resource_group_name = local.resource_group_name
+}
+
+resource "azurerm_role_assignment" "example" {
+  scope = data.
 }
 
 # SQL Server Instance

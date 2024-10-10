@@ -88,7 +88,7 @@ public static class StartupExtensions
         //DO not remove, This will prevent Application from starting if wrong type of connection string is provided
         var connection = (useSqlite == true)
             ? new SqliteConnectionStringBuilder(connectionString).ToString()
-            : new SqlConnectionStringBuilder(connectionString).ToString();
+            : new SqlConnectionStringBuilder("Server=tcp:s181d01-as-fh-sql-server.database.windows.net,1433; Authentication=Active Directory Default; Database=s181d01-fh-service-directory-db;").ToString();
 
         // Register Entity Framework
         services.AddDbContext<ApplicationDbContext>(options =>
