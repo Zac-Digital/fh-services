@@ -15,27 +15,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using Moq;
+using NSubstitute;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Web.Pages.ProfessionalReferral;
 
 public class WhenUsingLocalOfferResultsPage
 {
     private readonly LocalOfferResultsModel _pageModel;
-    private readonly Mock<IPostcodeLookup> _mockPostcodeLookup;
-    private readonly Mock<IOrganisationClientService> _mockIOrganisationClientService;
+    private readonly IPostcodeLookup _mockPostcodeLookup;
+    private readonly IOrganisationClientService _mockIOrganisationClientService;
 
     public WhenUsingLocalOfferResultsPage()
     {
-        _mockPostcodeLookup = new Mock<IPostcodeLookup>();
-        _mockIOrganisationClientService = new Mock<IOrganisationClientService>();
+        _mockPostcodeLookup = Substitute.For<IPostcodeLookup>();
+        _mockIOrganisationClientService = Substitute.For<IOrganisationClientService>();
 
-        _mockIOrganisationClientService.Setup(x => x.GetCategories())
-            .ReturnsAsync(new List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>());
+        _mockIOrganisationClientService.GetCategories()
+            .Returns(new List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>());
 
-        var mockLogger = new Mock<ILogger<LocalOfferResultsModel>>();
+        var mockLogger = Substitute.For<ILogger<LocalOfferResultsModel>>();
 
-        _pageModel = new LocalOfferResultsModel(_mockPostcodeLookup.Object, _mockIOrganisationClientService.Object, mockLogger.Object);
+        _pageModel = new LocalOfferResultsModel(_mockPostcodeLookup, _mockIOrganisationClientService, mockLogger);
     }
 
     [Theory]
@@ -44,8 +44,8 @@ public class WhenUsingLocalOfferResultsPage
     public async Task ThenOnGetAsync_WhenSearchPostCodeIsNullOrEmpty_ThenNoResultsShouldBeReturned(string? postCode)
     {
         var postcodesIoResponse = (PostcodeError.NoPostcode, (PostcodeInfo) null!);
-        _mockPostcodeLookup.Setup(x => x.Get(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(postcodesIoResponse);
-        _mockIOrganisationClientService.Setup(x => x.GetLocalOffers(It.IsAny<LocalOfferFilter>())).ReturnsAsync((new PaginatedList<ServiceDto>(), null));
+        _mockPostcodeLookup.Get(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(postcodesIoResponse);
+        _mockIOrganisationClientService.GetLocalOffers(Arg.Any<LocalOfferFilter>()).Returns((new PaginatedList<ServiceDto>(), null));
 
         // Act
         var searchResults = await _pageModel.OnGetAsync(
@@ -117,9 +117,9 @@ public class WhenUsingLocalOfferResultsPage
         }";
 
         var postcodesIoResponse = (PostcodeError.None, (JsonSerializer.Deserialize<PostcodesIoResponse>(json) ?? new PostcodesIoResponse()).PostcodeInfo);
-        _mockPostcodeLookup.Setup(x => x.Get(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(postcodesIoResponse);
-        _mockIOrganisationClientService.Setup(x => x.GetCategories()).ReturnsAsync(GetTaxonomies());
-        _mockIOrganisationClientService.Setup(x => x.GetLocalOffers(It.IsAny<LocalOfferFilter>())).ReturnsAsync((new PaginatedList<ServiceDto>(), null));
+        _mockPostcodeLookup.Get(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(postcodesIoResponse);
+        _mockIOrganisationClientService.GetCategories().Returns(GetTaxonomies());
+        _mockIOrganisationClientService.GetLocalOffers(Arg.Any<LocalOfferFilter>()).Returns((new PaginatedList<ServiceDto>(), null));
         // Act
         var searchResults = await _pageModel.OnGetAsync(
             "BS2 0SP",
@@ -212,8 +212,8 @@ public class WhenUsingLocalOfferResultsPage
         _pageModel.PageContext.HttpContext = httpContext;
 
         var postcodesIoResponse = (PostcodeError.None, (JsonSerializer.Deserialize<PostcodesIoResponse>(json) ?? new PostcodesIoResponse()).PostcodeInfo);
-        _mockPostcodeLookup.Setup(x => x.Get(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(postcodesIoResponse);
-        _mockIOrganisationClientService.Setup(x => x.GetCategories()).ReturnsAsync(GetTaxonomies());
+        _mockPostcodeLookup.Get(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(postcodesIoResponse);
+        _mockIOrganisationClientService.GetCategories().Returns(GetTaxonomies());
 
         // Act
         var searchResults = _pageModel.OnPostAsync(
@@ -312,8 +312,8 @@ public class WhenUsingLocalOfferResultsPage
         _pageModel.PageContext.HttpContext = httpContext;
 
         var postcodesIoResponse = (PostcodeError.None, (JsonSerializer.Deserialize<PostcodesIoResponse>(json) ?? new PostcodesIoResponse()).PostcodeInfo);
-        _mockPostcodeLookup.Setup(x => x.Get(It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(postcodesIoResponse);
-        _mockIOrganisationClientService.Setup(x => x.GetCategories()).ReturnsAsync(GetTaxonomies());
+        _mockPostcodeLookup.Get(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(postcodesIoResponse);
+        _mockIOrganisationClientService.GetCategories().Returns(GetTaxonomies());
         _pageModel.ModelState.AddModelError("Error", "Has Error");
 
         // Act
@@ -365,7 +365,9 @@ public class WhenUsingLocalOfferResultsPage
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be("Physical Address\n30 Street Name | District\nCity\nCounty\nBS1 2XU");
+        result.Should().Be(
+            $"Physical Address{Environment.NewLine}30 Street Name | District{Environment.NewLine}" +
+            $"City{Environment.NewLine}County{Environment.NewLine}BS1 2XU");
     }
     
     [Fact]
@@ -421,7 +423,7 @@ public class WhenUsingLocalOfferResultsPage
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be("Online\nTelephone\nIn Person");
+        result.Should().Be($"Online{Environment.NewLine}Telephone{Environment.NewLine}In Person");
     }
 
     [Fact]
@@ -454,7 +456,7 @@ public class WhenUsingLocalOfferResultsPage
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be("English\nFrench\nGerman");
+        result.Should().Be($"English{Environment.NewLine}French{Environment.NewLine}German");
     }
 
     [Fact]
