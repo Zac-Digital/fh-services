@@ -365,7 +365,9 @@ public class WhenUsingLocalOfferResultsPage
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be("Physical Address\r\n30 Street Name | District\r\nCity\r\nCounty\r\nBS1 2XU");
+        result.Should().Be(
+            $"Physical Address{Environment.NewLine}30 Street Name | District{Environment.NewLine}" +
+            $"City{Environment.NewLine}County{Environment.NewLine}BS1 2XU");
     }
     
     [Fact]
@@ -421,7 +423,7 @@ public class WhenUsingLocalOfferResultsPage
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be("Online\r\nTelephone\r\nIn Person");
+        result.Should().Be($"Online{Environment.NewLine}Telephone{Environment.NewLine}In Person");
     }
 
     [Fact]
@@ -454,7 +456,7 @@ public class WhenUsingLocalOfferResultsPage
 
         //Assert
         result.Should().NotBeNull();
-        result.Should().Be("English\r\nFrench\r\nGerman");
+        result.Should().Be($"English{Environment.NewLine}French{Environment.NewLine}German");
     }
 
     [Fact]
