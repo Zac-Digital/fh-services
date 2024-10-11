@@ -3476,8 +3476,10 @@ resource "azurerm_user_assigned_identity" "example" {
 }
 
 resource "azurerm_role_assignment" "example" {
-  scope = data.
-}
+  scope = data.azurerm_client_config.current.subscription_id
+  principal_id = azurerm_windows_web_app.fh_sd_api.identity.0.principal_id
+  role_definition_name = "Contributor"
+
 
 # SQL Server Instance
 resource "azurerm_mssql_server" "sqlserver" {
@@ -3489,10 +3491,10 @@ resource "azurerm_mssql_server" "sqlserver" {
     administrator_login = var.sql_server_user
     administrator_login_password = var.sql_server_pwd
 
-  identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.example.id]
-  }
+  #identity {
+  #  type         = "UserAssigned"
+  #  identity_ids = [azurerm_user_assigned_identity.example.id]
+  #}
     tags = local.tags
 }
 
