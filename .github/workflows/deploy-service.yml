@@ -49,10 +49,10 @@ jobs:
         with:
           dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
 
-      - name: Install Entity Framework
-        if: ${{ inputs.data_project_name != '' && inputs.database_context != ''}}
-        shell: bash
-        run: dotnet tool install --global dotnet-ef
+      #- name: Install Entity Framework
+      #  if: ${{ inputs.data_project_name != '' && inputs.database_context != ''}}
+      #  shell: bash
+      #  run: dotnet tool install --global dotnet-ef
 
       - name: Download Artifact
         uses: actions/download-artifact@v4
@@ -86,13 +86,13 @@ jobs:
           publish-profile: ${{ steps.substitution.outputs.publish_profile }}
           package: ./out
 
-      - name: Apply Database Migration
-        if: ${{ inputs.data_project_name != '' && inputs.database_context != ''}}
-        uses: ./.github/actions/database-migration
-        with:
-          db_context: ${{ inputs.database_context }}
-          data_project_path: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.data_project_name }}
-          startup_project_path: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}
-          azure_resource_group: ${{ env.RESOURCE_GROUP }}
-          azure_sql_server_resource_name: ${{ env.SQL_SERVER }}
-          az_firewall_rule_name: ${{ inputs.artifact_name }}
+      #- name: Apply Database Migration
+      #  if: ${{ inputs.data_project_name != '' && inputs.database_context != ''}}
+      #  uses: ./.github/actions/database-migration
+      #  with:
+      #    db_context: ${{ inputs.database_context }}
+      #    data_project_path: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.data_project_name }}
+      #    startup_project_path: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.artifact_name }}/src/${{ inputs.project_name }}
+      #    azure_resource_group: ${{ env.RESOURCE_GROUP }}
+      #    azure_sql_server_resource_name: ${{ env.SQL_SERVER }}
+      #    az_firewall_rule_name: ${{ inputs.artifact_name }}
