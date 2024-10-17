@@ -1047,6 +1047,13 @@ resource "azurerm_web_application_firewall_policy" "ref_ui_appgwwafp" {
           enabled = false
         }
       }
+      rule_group_override {
+        rule_group_name = "REQUEST-931-APPLICATION-ATTACK-RFI"
+        rule {
+          id = "931130"
+          enabled = false
+        }
+      }
     }
   }
   policy_settings {
@@ -1130,6 +1137,13 @@ resource "azurerm_web_application_firewall_policy" "sd_admin_ui_appgwwafp" {
         rule_group_name = "REQUEST-920-PROTOCOL-ENFORCEMENT"
         rule {
           id = "920300"
+          enabled = false
+        }
+      }
+      rule_group_override {
+        rule_group_name = "REQUEST-931-APPLICATION-ATTACK-RFI"
+        rule {
+          id = "931130"
           enabled = false
         }
       }
@@ -1217,6 +1231,13 @@ resource "azurerm_web_application_firewall_policy" "sd_ui_appgwwafp" {
         rule_group_name = "REQUEST-920-PROTOCOL-ENFORCEMENT"
         rule {
           id = "920300"
+          enabled = false
+        }
+      }
+      rule_group_override {
+        rule_group_name = "REQUEST-931-APPLICATION-ATTACK-RFI"
+        rule {
+          id = "931130"
           enabled = false
         }
       }
