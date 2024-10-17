@@ -14,9 +14,6 @@ appgw_errorpage_path_sd_ui = "modules/fhinfrastructurestack/errorpages/sd_ui/tes
 service_principals = {
   reader_usr_group_object_id = "2c713f1b-2c2a-413c-879f-3b48a121bc19"
   delivery_team_user_group_object_id = "17c0fa92-3b66-4819-a08a-212778ddf7af"
-  referral_data_encryption_enterprise_object_id = "714f623e-de74-4153-ae78-561850e50e17"
-  idam_data_encryption_enterprise_object_id = "b8d7dc33-9ded-4110-84cb-079930ab3bf4"
-  notification_data_encryption_enterprise_object_id = "7be1a36e-b7b3-4bec-bbac-6ffbede611c4"
   ado_enterprise_object_id = "1b550fb9-2030-42c4-999f-fadb0295f33b"
   github_enterprise_object_id = "7a1655ff-56f3-4dec-952f-e3e846080bc2"
 }

@@ -37,12 +37,6 @@ locals {
   appgw_ssl_cert_sd_ui_name = "sd-ui-${lower(var.environment)}-cert"
   appgw_ssl_cert_referral_ui_name = "referral-ui-${lower(var.environment)}-cert"
   
-  # Key vault
-  
-  key_vault_admin_ui_cert_name = "sd-admin-ui-${lower(var.environment)}-cert"
-  key_vault_referral_ui_cert_name = "referral-ui-${lower(var.environment)}-cert"
-  key_vault_service_directory_ui_cert_name = "sd-ui-${lower(var.environment)}-cert"
-  
   # Storage configuration
   
   account_kind = "StorageV2"
@@ -178,69 +172,21 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
     health_check_path                           = "/api/health"
     vnet_route_all_enabled                      = "true"
     application_stack {
-    current_stack                               = var.current_stack
-    dotnet_version                              = var.dotnet_version_general
-  }
-  ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Phil Davies Local Machine"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "80.6.221.243/32"
-  }
-  ip_restriction {
-      name                                      = "Witek Poreda Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "82.8.72.98/32"
-  }
-  ip_restriction {
-      name                                      = "James Wyman Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "176.251.234.12/32"
-  }
-  ip_restriction {
-      name                                      = "Joseph Jeethu Local Machine"
-      action                                    = "Allow"
-      priority                                  = "5"
-      ip_address                                = "81.154.111.153/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Phil Davies Local Machine"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "80.6.221.243/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Witek Poreda Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "82.8.72.98/32"
-  }
-  scm_ip_restriction {
-      name                                      = "James Wyman Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "176.251.234.12/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Joseph Jeethu Local Machine"
-      action                                    = "Allow"
-      priority                                  = "5"
-      ip_address                                = "81.154.111.153/32"
-  }
+      current_stack                               = var.current_stack
+      dotnet_version                              = var.dotnet_version_general
+    }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
@@ -283,62 +229,26 @@ resource "azurerm_windows_web_app" "fh_referral_api" {
   identity {
     type                                        = "SystemAssigned"
   }
-    site_config {
+  site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     application_stack {
-    current_stack                               = var.current_stack
-    dotnet_version                              = var.dotnet_version_general
+      current_stack                               = var.current_stack
+      dotnet_version                              = var.dotnet_version_general
     }
-  ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  ip_restriction {
-      name                                      = "Tina Gohil Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "86.153.222.221/32"
-  }
-  ip_restriction {
-      name                                      = "Harsha Reddy Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "31.53.249.6/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Tina Gohil Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "86.153.222.221/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Harsha Reddy Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "31.53.249.6/32"
-  }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
@@ -387,33 +297,21 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
     health_check_path                           = "/api/health"
     vnet_route_all_enabled                      = "true"
     application_stack {
-    current_stack                               = var.current_stack
-    dotnet_version                              = var.dotnet_version_general
+      current_stack                               = var.current_stack
+      dotnet_version                              = var.dotnet_version_general
     }
-  ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Postcode.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.64.163.50/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Postcode.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.64.163.50/32"
-  }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
@@ -466,57 +364,21 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     application_stack {
-    current_stack                               = var.current_stack
-    dotnet_version                              = var.dotnet_version_general
+      current_stack                               = var.current_stack
+      dotnet_version                              = var.dotnet_version_general
     }
-  ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  ip_restriction {
-      name                                      = "Tina Gohil Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "86.153.222.221/32"
-  }
-  ip_restriction {
-      name                                      = "Harsha Reddy Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "31.53.249.6/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Tina Gohil Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "86.153.222.221/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Harsha Reddy Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "31.53.249.6/32"
-  }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
@@ -562,33 +424,21 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
     health_check_path                           = "/api/health"
     vnet_route_all_enabled                      = "true"
     application_stack {
-    current_stack                               = var.current_stack
-    dotnet_version                              = "v7.0"
+      current_stack                               = var.current_stack
+      dotnet_version                              = "v7.0"
     }
-  ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Postcode.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.64.163.50/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Postcode.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.64.163.50/32"
-  }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
@@ -637,33 +487,21 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
     health_check_path                           = "/api/health"
     vnet_route_all_enabled                      = "true"
     application_stack {
-    current_stack                               = var.current_stack
-    dotnet_version                              = var.dotnet_version_general
+      current_stack                               = var.current_stack
+      dotnet_version                              = var.dotnet_version_general
     }
-  ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Postcode.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.64.163.50/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Postcode.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.64.163.50/32"
-  }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
@@ -706,38 +544,26 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
   identity {
     type                                        = "SystemAssigned"
   }
-    site_config {
+  site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     application_stack {
-    current_stack                               = var.current_stack
-    dotnet_version                              = var.dotnet_version_general
+      current_stack                               = var.current_stack
+      dotnet_version                              = var.dotnet_version_general
     }
     ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Postcode.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.64.163.50/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Postcode.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.64.163.50/32"
-  }
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
@@ -777,62 +603,26 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
-    site_config {
+  site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     application_stack {
-    current_stack                               = var.current_stack
-    dotnet_version                              = var.dotnet_version_general
+      current_stack                               = var.current_stack
+      dotnet_version                              = var.dotnet_version_general
     }
-   ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  ip_restriction {
-      name                                      = "Tina Gohil Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "86.153.222.221/32"
-  }
-  ip_restriction {
-      name                                      = "Harsha Reddy Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "31.53.249.6/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Tina Gohil Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "86.153.222.221/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Harsha Reddy Local Machine"
-      action                                    = "Allow"
-      priority                                  = "4"
-      ip_address                                = "31.53.249.6/32"
-  }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
@@ -872,50 +662,26 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
-    site_config {
+  site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     application_stack {
-    current_stack                               = var.current_stack
-    dotnet_version                              = var.dotnet_version_general
+      current_stack                               = var.current_stack
+      dotnet_version                              = var.dotnet_version_general
     }
-   ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  ip_restriction {
-      name                                      = "Tina Gohil Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "86.153.222.221/32"
-  }
-  scm_ip_restriction {
-      name                                      = "ADO Access"
-      action                                    = "Allow"
-      priority                                  = "1"
-      service_tag                               = "AzureCloud"
-  }
-  scm_ip_restriction {
-      name                                      = "Swagger.io Access"
-      action                                    = "Allow"
-      priority                                  = "2"
-      ip_address                                = "3.134.212.167/32"
-  }
-  scm_ip_restriction {
-      name                                      = "Tina Gohil Local Machine"
-      action                                    = "Allow"
-      priority                                  = "3"
-      ip_address                                = "86.153.222.221/32"
-  }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
   }
   tags = local.tags
   lifecycle {
@@ -2259,18 +2025,6 @@ resource "azurerm_key_vault" "kv2" {
   tags = local.tags
 }
 
-
-resource "azurerm_key_vault_certificate" "kv2c1" {
-  name         = "${var.prefix}-${local.key_vault_admin_ui_cert_name}"
-  key_vault_id = azurerm_key_vault.kv2.id
-  depends_on   = [ azurerm_key_vault.kv2 ]
-  tags = local.tags
-  certificate {
-    contents = var.ssl_cert_path_sd_admin_ui
-    password = var.certificate_password
-  }
-}
-
 resource "azurerm_key_vault" "kv3" {
   depends_on = [ local.resource_group_name]
   name                        = "${var.prefix}-kv-fh-referral"
@@ -2442,56 +2196,21 @@ resource "azurerm_key_vault" "kv3" {
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.referral_data_encryption_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    object_id = azurerm_windows_web_app.fh_referral_dashboard_ui.identity.0.principal_id
+    key_permissions = [
+      "Get",
+      "List",
+      "UnwrapKey"
+    ]
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_referral_ui.identity.0.principal_id
+    key_permissions = [
+      "Get",
+      "List",
+      "UnwrapKey"
+    ]
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -2565,17 +2284,6 @@ resource "azurerm_key_vault_key" "kv3k1" {
     "verify",
     "wrapKey",
   ]
-}
-
-resource "azurerm_key_vault_certificate" "kv3c1" {
-  name         = "${var.prefix}-${local.key_vault_referral_ui_cert_name}"
-  key_vault_id = azurerm_key_vault.kv3.id
-  depends_on   = [ azurerm_key_vault.kv3 ]
-  tags = local.tags
-  certificate {
-    contents = var.ssl_cert_path_referral_ui
-    password = var.certificate_password
-  }
 }
 
 resource "azurerm_key_vault" "kv4" {
@@ -2803,17 +2511,6 @@ resource "azurerm_key_vault" "kv4" {
   tags = local.tags
 }
 
-resource "azurerm_key_vault_certificate" "kv4c1" {
-  name         = "${var.prefix}-${local.key_vault_service_directory_ui_cert_name}"
-  key_vault_id = azurerm_key_vault.kv4.id
-  depends_on   = [ azurerm_key_vault.kv4 ]
-  tags = local.tags
-  certificate {
-    contents = var.ssl_cert_path_sd_ui
-    password = var.certificate_password
-  }
-}
-
 resource "azurerm_key_vault" "kv5" {
   depends_on = [ local.resource_group_name]
   name                        = "${var.prefix}-kv-fh-idam"
@@ -2933,59 +2630,6 @@ resource "azurerm_key_vault" "kv5" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.idam_data_encryption_enterprise_object_id
     certificate_permissions = [
             "Create",
             "Delete",
@@ -3277,59 +2921,6 @@ resource "azurerm_key_vault" "kv6" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.notification_data_encryption_enterprise_object_id
     certificate_permissions = [
             "Create",
             "Delete",

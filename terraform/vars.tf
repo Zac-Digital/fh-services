@@ -201,9 +201,6 @@ variable "service_principals" {
   type = object({
     reader_usr_group_object_id = string # s181-growingupwell-Reader USR
     delivery_team_user_group_object_id = string # s181-growingupwell-Delivery Team USR
-    referral_data_encryption_enterprise_object_id = string # s181d01-referral-data-encryption-v2 (Contributor)
-    idam_data_encryption_enterprise_object_id = string # s181d01-idam-data-encryption (Contributor)
-    notification_data_encryption_enterprise_object_id = string # s181d01-notification-data-encryption (Contributor)
     ado_enterprise_object_id = string # Allows ADO to deploy resources
     github_enterprise_object_id = string # Allows GitHub to deploy into the resource group
   })

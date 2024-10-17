@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Azure.Core;
 using Azure.Identity;
 using FamilyHubs.SharedKernel.Razor.Health;
 
@@ -13,41 +12,63 @@ public static class HealthCheck
         this IServiceCollection services,
         IConfiguration config)
     {
-        var keyVaultKey = config.GetValue<string>("DataProtection:KeyIdentifier");
-        int keysIndex = keyVaultKey!.IndexOf("/keys/");
-        string keyVaultUrl = keyVaultKey[..keysIndex];
-        string keyName = keyVaultKey[(keysIndex + 6)..];
+        // Handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
+        services.AddFamilyHubsHealthChecks(config)
+            .AddIdentityServerHealthCheck(config)
+            .AddKeyVaultHealthCheck(config)
+            .AddNotificationApiHealthCheck(config);
+        
+        return services;
+    }
 
-        //todo: dataprotectionoptions is internal and clashes with a MS class
-        // add extension to IHealthChecksBuilder to add health checks for keyvault (and sql) for dataprotection. single call to add DataProtection health checks, with overridable tag defaulting to DataProtection
-        // add extension to common clients etc. that way centralise where config comes from and config exceptions
+    private static IHealthChecksBuilder AddIdentityServerHealthCheck(
+        this IHealthChecksBuilder healthChecksBuilder, 
+        IConfiguration configuration)
+    {
+        var oneLoginUrl = configuration.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
+        healthChecksBuilder.AddIdentityServer(
+            new Uri(oneLoginUrl!),
+            name: "One Login",
+            failureStatus: HealthStatus.Degraded,
+            tags: [FhHealthChecksBuilder.UrlType.ExternalApi.ToString()]);
 
-        //todo: do we want to health check each instance of e.g. sql server connection, in case are different?
+        return healthChecksBuilder;
+    }
+    
+    private static IHealthChecksBuilder AddKeyVaultHealthCheck(
+        this IHealthChecksBuilder healthChecksBuilder, 
+        IConfiguration configuration)
+    {
+        var keyVaultKey = configuration.GetValue<string>("DataProtection:KeyIdentifier");
 
-        TokenCredential keyVaultCredentials = new ClientSecretCredential(
-            config.GetValue<string>("DataProtection:TenantId"),
-            config.GetValue<string>("DataProtection:ClientId"),
-            config.GetValue<string>("DataProtection:ClientSecret"));
+        if (!string.IsNullOrWhiteSpace(keyVaultKey))
+        {
+            var keysIndex = keyVaultKey.IndexOf("/keys/", StringComparison.OrdinalIgnoreCase);
+            var keyVaultUrl = keyVaultKey[..keysIndex];
+            var keyName = keyVaultKey[(keysIndex + 6)..];
 
-        var oneLoginUrl = config.GetValue<string>("GovUkOidcConfiguration:Oidc:BaseUrl");
+            healthChecksBuilder.AddAzureKeyVault(
+                new Uri(keyVaultUrl),
+                new ManagedIdentityCredential(),
+                s => s.AddKey(keyName), name: "Azure Key Vault",
+                failureStatus: HealthStatus.Degraded,
+                tags: ["Infrastructure"]);
+        }
+        
+        return healthChecksBuilder;
+    }
 
-        // we handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
-        var healthCheckBuilder = services.AddFamilyHubsHealthChecks(config)
-            .AddIdentityServer(new Uri(oneLoginUrl!), name: "One Login", failureStatus: HealthStatus.Degraded, tags: new[] { "ExternalAPI" })
-            //todo: tag as AKV, name as Data Protection Key?
-            .AddAzureKeyVault(new Uri(keyVaultUrl), keyVaultCredentials, s => s.AddKey(keyName), name:"Azure Key Vault", failureStatus: HealthStatus.Degraded, tags: new[] { "Infrastructure" });
-
-        //todo: add helper to notification client
-        var notificationApiUrl = config.GetValue<string>("Notification:Endpoint");
+    private static void AddNotificationApiHealthCheck(
+        this IHealthChecksBuilder healthChecksBuilder,
+        IConfiguration configuration)
+    {
+        var notificationApiUrl = configuration.GetValue<string>("Notification:Endpoint");
+        
         if (!string.IsNullOrEmpty(notificationApiUrl))
         {
-            // special case as Url contains path
-            //todo: change notifications client to use host and append path
             notificationApiUrl = notificationApiUrl.Replace("/api/notify", "/api/info");
-            healthCheckBuilder.AddUrlGroup(new Uri(notificationApiUrl), "Notification API", HealthStatus.Degraded,
-                new[] { FhHealthChecksBuilder.UrlType.InternalApi.ToString() });
+            healthChecksBuilder.AddUrlGroup(new Uri(notificationApiUrl), "Notification API", HealthStatus.Degraded,
+                [FhHealthChecksBuilder.UrlType.InternalApi.ToString()]);
         }
-
-        return services;
     }
 }

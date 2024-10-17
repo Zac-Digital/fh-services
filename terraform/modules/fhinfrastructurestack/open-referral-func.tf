@@ -37,6 +37,18 @@ resource "azurerm_windows_function_app" "open_referral_function_app" {
       dotnet_version = var.dotnet_version_general
       use_dotnet_isolated_runtime = true
     }
+    ip_restriction {
+      name       = "AllowAppAccess"
+      priority   = 1
+      action     = "Allow"
+      ip_address = var.vnetint_address_space[0]
+    }
+    ip_restriction {
+      name       = "DenyPublicAccess"
+      priority   = 200
+      action     = "Deny"
+      ip_address = "0.0.0.0/0"
+    }
     cors {
       allowed_origins = ["https://portal.azure.com"]
     }
