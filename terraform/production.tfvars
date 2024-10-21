@@ -18,9 +18,6 @@ appgw_errorpage_path_sd_ui = "modules/fhinfrastructurestack/errorpages/sd_ui/pro
 service_principals = {
   reader_usr_group_object_id = "2c713f1b-2c2a-413c-879f-3b48a121bc19"
   delivery_team_user_group_object_id = "17c0fa92-3b66-4819-a08a-212778ddf7af"
-  referral_data_encryption_enterprise_object_id = "c9891365-0810-4f13-9863-3eaf1aa89e2e"
-  idam_data_encryption_enterprise_object_id = "4b806ccd-6c46-4aaf-acdb-963e93045002"
-  notification_data_encryption_enterprise_object_id = "105aff23-e9cf-446f-99d8-105bb914dc57"
   ado_enterprise_object_id = "3c30b876-66b4-4aa9-848b-e4657f0c6973"
   github_enterprise_object_id = "3fbf6a57-8437-47c6-b340-736cbca576c0"
 }

@@ -1,5 +1,5 @@
 name: Environment Provisioning
-run-name: Provisioning Environment for ${{ inputs.environment }}
+run-name: Provisioning Environment for ${{ inputs.environment }} (${{ inputs.action }})
 
 on:
   workflow_dispatch:
