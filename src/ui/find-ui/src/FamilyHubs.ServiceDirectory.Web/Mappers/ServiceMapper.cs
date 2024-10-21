@@ -5,7 +5,6 @@ using FamilyHubs.ServiceDirectory.Shared.Display;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Extensions;
-using ServiceType = FamilyHubs.ServiceDirectory.Web.Models.ServiceType;
 
 namespace FamilyHubs.ServiceDirectory.Web.Mappers;
 
@@ -19,7 +18,7 @@ public static class ServiceMapper
 
     private static Service ToViewModel(ServiceDto service)
     {
-        Debug.Assert(service.ServiceType == Shared.Enums.ServiceType.FamilyExperience);
+        Debug.Assert(service.ServiceType == ServiceType.FamilyExperience); // TODO: FHB-805 What is this doing here???
 
         var location = service.Locations.First();
         var eligibility = service.Eligibilities.FirstOrDefault();
@@ -28,7 +27,6 @@ public static class ServiceMapper
         var contact = service.GetContact();
 
         return new Service(
-            IsFamilyHub(location) ? ServiceType.FamilyHub : ServiceType.Service,
             name,
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
@@ -47,10 +45,10 @@ public static class ServiceMapper
         return eligibility == null ? null : $"{AgeToString(eligibility.MinimumAge)} to {AgeToString(eligibility.MaximumAge)}";
     }
 
-    private static bool IsFamilyHub(LocationDto location)
-    {
-        return location.LocationTypeCategory == LocationTypeCategory.FamilyHub;
-    }
+    // private static bool IsFamilyHub(LocationDto location) // TODO : FHB-805 Will be useful later... .... ..
+    // {
+    //     return location.LocationTypeCategory == LocationTypeCategory.FamilyHub;
+    // }
 
     private static string? GetWebsiteUrl(string? url)
     {
