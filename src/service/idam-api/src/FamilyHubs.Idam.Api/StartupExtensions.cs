@@ -43,7 +43,6 @@ public static class StartupExtensions
     public static void RegisterApplicationComponents(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IKeyProvider, KeyProvider>();
-        services.AddSingleton<ICrypto, Crypto>();
         services.RegisterAppDbContext(configuration);
 
         var serviceDirectoryApiBaseUrl = configuration["ServiceDirectoryApiBaseUrl"];

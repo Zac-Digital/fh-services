@@ -5,10 +5,7 @@ using FamilyHubs.Idams.Maintenance.Core.Services;
 using FamilyHubs.Idams.Maintenance.Data.Interceptors;
 using FamilyHubs.Idams.Maintenance.Data.Repository;
 using FamilyHubs.Idams.Maintenance.UI.Middleware;
-using FamilyHubs.SharedKernel.DataProtection;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
-using FamilyHubs.SharedKernel.GovLogin.Configuration;
-using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Extensions;
 using FamilyHubs.SharedKernel.Security;
 using FluentValidation;
@@ -57,20 +54,9 @@ public static class StartupExtensions
         services.AddSingleton((serviceProvider) =>
         {
             IKeyProvider keyProvider = serviceProvider.GetRequiredService<IKeyProvider>();
-
-            string? encryptionKey = keyProvider.GetDbEncryptionKey().Result;
-            if (string.IsNullOrEmpty(encryptionKey))
-                throw new ArgumentException("EncryptionKey is missing");
-
-            byte[]? byteEncryptionKey = ApplicationDbContext.ConvertStringToByteArray(encryptionKey);
-
-            string? encryptionIV = keyProvider.GetDbEncryptionIVKey().Result;
-            if (string.IsNullOrEmpty(encryptionIV))
-                throw new ArgumentException("EncryptionIV is missing");
-
-            byte[]? byteEncryptionIV = ApplicationDbContext.ConvertStringToByteArray(encryptionIV);
-
-            return new AesProvider(byteEncryptionKey, byteEncryptionIV);
+            var byteEncryptionKey = ApplicationDbContext.ConvertStringToByteArray(keyProvider.GetDbEncryptionKey());
+            var byteEncryptionIv = ApplicationDbContext.ConvertStringToByteArray(keyProvider.GetDbEncryptionIvKey());
+            return new AesProvider(byteEncryptionKey, byteEncryptionIv);
         });
 
         services.AddClientServices(configuration);
@@ -114,7 +100,6 @@ public static class StartupExtensions
     public static void RegisterApplicationComponents(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IKeyProvider, KeyProvider>();
-        services.AddSingleton<ICrypto, Crypto>();
         services.RegisterAppDbContext(configuration);
         services.RegisterMediator();
     }
