@@ -10,10 +10,8 @@ public static class LocationMapper
         return locations.Select(ToModel);
     }
 
-    public static Location ToModel(LocationDto locationDto)
+    private static Location ToModel(LocationDto locationDto)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(locationDto.Name);
-
         return new Location(
             Name: locationDto.Name,
             Address:
