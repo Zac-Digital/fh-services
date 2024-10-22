@@ -110,11 +110,6 @@ else {
                 }
                 else
                 {
-                    @* foreach (var service in Model.Services) *@
-                    @* { *@
-                    @*     <partial name="_Service" model='service'/> *@
-                    @* } *@
-
                     foreach (ServiceDetail serviceDetail in Model.ServiceDetailList)
                     {
                         @await Html.PartialAsync(serviceDetail.ServiceDetailType == ServiceDetailType.Service ? "_service" : "_location", serviceDetail)

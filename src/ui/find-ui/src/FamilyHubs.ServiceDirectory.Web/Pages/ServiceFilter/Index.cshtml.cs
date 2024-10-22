@@ -269,7 +269,10 @@ public class ServiceFilterModel : PageModel
 
             Pagination = new LargeSetPagination(serviceDtoListPaginated.List.TotalPages + locationDtoListPaginated.TotalPages, CurrentPage);
 
-            ServiceDetailList = ServiceDetailList.Concat(serviceList).Concat(locationList);
+            ServiceDetailList = ServiceDetailList
+                .Concat(serviceList)
+                .Concat(locationList)
+                .OrderBy(x => x.Distance);
 
             // (PaginatedList<ServiceDto> paginatedServices, Pagination, HttpResponseMessage? response)
             //     = await GetServicesAndPagination(adminArea, latitude, longitude);
