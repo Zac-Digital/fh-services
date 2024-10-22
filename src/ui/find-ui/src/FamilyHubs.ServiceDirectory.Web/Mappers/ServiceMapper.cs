@@ -11,12 +11,12 @@ namespace FamilyHubs.ServiceDirectory.Web.Mappers;
 //todo: use extension methods?
 public static class ServiceMapper
 {
-    public static IEnumerable<Service> ToViewModel(IEnumerable<ServiceDto> services)
+    public static IEnumerable<Service> ToModel(IEnumerable<ServiceDto> services)
     {
-        return services.Select(ToViewModel);
+        return services.Select(ToModel);
     }
 
-    private static Service ToViewModel(ServiceDto service)
+    private static Service ToModel(ServiceDto service)
     {
         Debug.Assert(service.ServiceType == ServiceType.FamilyExperience); // TODO: FHB-805 What is this doing here???
 
@@ -71,11 +71,11 @@ public static class ServiceMapper
     {
         const string free = "Free";
 
-        if (!service.CostOptions.Any())
+        if (service.CostOptions.Count == 0)
         {
-            return new[] { free };
+            return [free];
         }
-        return new[] { "Yes, it costs money to use. " + service.CostOptions.First().AmountDescription };
+        return ["Yes, it costs money to use. " + service.CostOptions.First().AmountDescription];
     }
 
     private static string AgeToString(int age)

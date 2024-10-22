@@ -11,8 +11,6 @@ using FamilyHubs.SharedKernel.HealthCheck;
 using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using System.Net.Http.Json;
-using FamilyHubs.ServiceDirectory.Shared;
-using FamilyHubs.ServiceDirectory.Shared.Dto.BaseDto;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
@@ -24,6 +22,8 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
     private static string? _endpoint;
     internal const string HttpClientName = "servicedirectory";
     private static readonly string GetServicesBaseUri = "api/services-simple?serviceType=FamilyExperience";
+
+    private static readonly JsonSerializerOptions JsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
 
     public ServiceDirectoryClient(IHttpClientFactory httpClientFactory, IMemoryCache memoryCache)
     {
@@ -90,7 +90,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
         var taxonomies = await JsonSerializer.DeserializeAsync<PaginatedList<TaxonomyDto>>(
             await response.Content.ReadAsStreamAsync(cancellationToken),
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+            JsonSerializerOptions,
             cancellationToken);
 
         if (taxonomies is null)
@@ -138,7 +138,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
         var services = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(
             await response.Content.ReadAsStreamAsync(cancellationToken),
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+            JsonSerializerOptions,
             cancellationToken);
 
         if (services is null)
@@ -200,7 +200,7 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
         var organisation = await JsonSerializer.DeserializeAsync<OrganisationDto>(
             await response.Content.ReadAsStreamAsync(cancellationToken),
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
+            JsonSerializerOptions,
             cancellationToken);
 
         if (organisation is null)
@@ -217,12 +217,12 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
     internal static string GetEndpoint(IConfiguration configuration)
     {
-        const string EndpointConfigKey = "ServiceDirectoryAPI:Endpoint";
+        const string endpointConfigKey = "ServiceDirectoryAPI:Endpoint";
 
         // as long as the config isn't changed, the worst that can happen is we fetch more than once
         return _endpoint ??= ConfigurationException.ThrowIfNotUrl(
-            EndpointConfigKey,
-            configuration[EndpointConfigKey],
+            endpointConfigKey,
+            configuration[endpointConfigKey],
             "The service directory URL");
     }
 
@@ -265,5 +265,24 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
         await httpClient.PostAsJsonAsync("/api/metrics/service-search", serviceSearch);
 
+    }
+
+    public async Task<PaginatedList<LocationDto>> GetLocations(bool isFamilyHub, CancellationToken cancellationToken = default)
+    {
+        HttpClient httpClient = _httpClientFactory.CreateClient(HttpClientName);
+
+        HttpResponseMessage response = await httpClient.GetAsync($"api/locations?isFamilyHub={isFamilyHub}", cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new ServiceDirectoryClientException(response, await response.Content.ReadAsStringAsync(cancellationToken));
+        }
+
+        PaginatedList<LocationDto> locationDtoList = await JsonSerializer.DeserializeAsync<PaginatedList<LocationDto>>(
+            await response.Content.ReadAsStreamAsync(cancellationToken),
+            JsonSerializerOptions,
+            cancellationToken) ?? throw new ServiceDirectoryClientException(response, "List of locations is null");
+
+        return locationDtoList;
     }
 }
