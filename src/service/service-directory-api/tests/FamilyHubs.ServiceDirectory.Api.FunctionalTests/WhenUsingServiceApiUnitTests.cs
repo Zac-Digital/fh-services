@@ -4,7 +4,6 @@ using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using System.Net;
 using System.Text.Json;
-using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
@@ -114,11 +113,9 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         retVal.Should().NotBeNull();
         var item = retVal?.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
+        item.Should().NotBeNull();
         retVal!.Items.Count.Should().Be(ActiveServiceCount);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        
-        var item = retVal!.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
-        item.Should().NotBeNull();
     }
 
     [Fact]
@@ -146,7 +143,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Should().NotBeNull();
         retVal!.Items.Count.Should().Be(ActiveServiceCount);
 
-        var item = retVal!.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
+        var item = retVal.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
         item.Should().NotBeNull();
     }
 
@@ -174,7 +171,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Should().NotBeNull();
         retVal!.Items.Count.Should().Be(ActiveServiceCount);
 
-        var item = retVal!.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
+        var item = retVal.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
         item.Should().NotBeNull();
     }
 
@@ -202,7 +199,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Should().NotBeNull();
         retVal!.Items.Count.Should().Be(ActiveServiceCount);
 
-        var item = retVal!.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
+        var item = retVal.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
         item.Should().NotBeNull();
     }
 
@@ -230,7 +227,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Should().NotBeNull();
         retVal!.Items.Count.Should().Be(1);
 
-        var item = retVal!.Items.Find(x => x.Name == "Aid for Children with Tracheostomies");
+        var item = retVal.Items.Find(x => x.Name == "Aid for Children with Tracheostomies");
         item.Should().NotBeNull();
     }
 
@@ -258,7 +255,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         retVal.Should().NotBeNull();
         retVal!.Items.Count.Should().Be(ActiveServiceCount);
 
-        var item = retVal!.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
+        var item = retVal.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
         item.Should().NotBeNull();
     }
 
