@@ -4,6 +4,7 @@ using FamilyHubs.SharedKernel.Identity;
 using FluentAssertions;
 using System.Net;
 using System.Text.Json;
+using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
@@ -24,9 +25,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var responseContent = await response.Content.ReadAsStringAsync();
 
-        if (!response.IsSuccessStatusCode)
-            ArgumentException.ThrowIfNullOrEmpty(responseContent);
-
+        response.IsSuccessStatusCode.Should().BeTrue(responseContent);
         response.StatusCode.Should().Be(HttpStatusCode.OK, responseContent);
         long.Parse(responseContent).Should().BeGreaterThan(0);
     }
@@ -36,7 +35,6 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     {
         var getServicesUrlBuilder = new GetServicesUrlBuilder();
         var url = getServicesUrlBuilder
-                    
                     .WithServiceType("InformationSharing")
                     .WithStatus("Active")
                     .WithEligibility(0, 99)
@@ -59,9 +57,9 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         var item = retVal!.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
 
-        ArgumentNullException.ThrowIfNull(item);
+        item.Should().NotBeNull();
 
-        var updatedItem = item with {Name = "Updated Service Name", Description = "Updated Service Description"};
+        var updatedItem = item! with {Name = "Updated Service Name", Description = "Updated Service Description"};
 
         var updateRequest = CreatePutRequest($"api/services/{item.Id}", updatedItem, RoleTypes.DfeAdmin);
 
@@ -115,8 +113,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         retVal.Should().NotBeNull();
+        var item = retVal?.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
         retVal!.Items.Count.Should().Be(ActiveServiceCount);
-
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        
         var item = retVal!.Items.Find(x => x.Name == "Test Service - Free - 10 to 15 yrs");
         item.Should().NotBeNull();
     }
@@ -169,7 +169,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         using var response = await Client!.SendAsync(request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-
+        
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         retVal.Should().NotBeNull();
         retVal!.Items.Count.Should().Be(ActiveServiceCount);
