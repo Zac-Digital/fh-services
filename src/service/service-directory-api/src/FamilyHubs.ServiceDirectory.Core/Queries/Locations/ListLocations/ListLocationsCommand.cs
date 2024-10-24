@@ -67,6 +67,8 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
+        locations.ForEach(location => location.Distance = GetDistanceInMeters(request.Latitude, request.Longitude, location.Latitude, location.Longitude));
+
         int totalCount = await GetTotalCount(request, cancellationToken);
 
         return new PaginatedList<LocationDto>(locations, totalCount, request.PageNumber, request.PageSize);
@@ -134,4 +136,7 @@ public class ListLocationCommandHandler : IRequestHandler<ListLocationsCommand, 
 
         return locationsQuery.OrderBy(location => location.GeoPoint.Distance(userLocation));
     }
+
+    private static double GetDistanceInMeters(double? fromLatitude, double? fromLongitude, double? toLatitude,
+        double? toLongitude) => HelperUtility.GetDistance(fromLatitude, fromLongitude, toLatitude, toLongitude);
 }

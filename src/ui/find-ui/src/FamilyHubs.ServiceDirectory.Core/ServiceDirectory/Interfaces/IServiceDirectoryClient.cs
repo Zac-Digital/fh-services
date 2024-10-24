@@ -37,5 +37,5 @@ public interface IServiceDirectoryClient
         Guid correlationId
     );
 
-    Task<PaginatedList<LocationDto>> GetLocations(bool isFamilyHub, double? latitude, double? longitude, CancellationToken cancellationToken = default);
+    Task<PaginatedList<LocationDto>> GetLocations(bool isFamilyHub, int? pageNumber, int? pageSize, double? latitude, double? longitude, CancellationToken cancellationToken = default);
 }

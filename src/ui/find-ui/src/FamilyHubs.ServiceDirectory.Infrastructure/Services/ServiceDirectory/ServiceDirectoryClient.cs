@@ -268,13 +268,15 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
     }
 
-    public async Task<PaginatedList<LocationDto>> GetLocations(bool isFamilyHub, double? latitude, double? longitude, CancellationToken cancellationToken = default)
+    public async Task<PaginatedList<LocationDto>> GetLocations(bool isFamilyHub, int? pageNumber, int? pageSize, double? latitude, double? longitude, CancellationToken cancellationToken = default)
     {
         HttpClient httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
         Dictionary<string, string?> queryParameters = new()
         {
-            { "isFamilyHub", $"{isFamilyHub}" }
+            { "isFamilyHub", $"{isFamilyHub}" },
+            { "pageNumber", $"{pageNumber}" },
+            { "pageSize", $"{pageSize}" }
         };
 
         if (latitude is not null && longitude is not null)

@@ -260,7 +260,7 @@ public class ServiceFilterModel : PageModel
             }
 
             (PaginatedList<ServiceDto> List, HttpResponseMessage? Response) serviceDtoListPaginated = await GetPaginatedServiceList(servicesParams);
-            PaginatedList<LocationDto> locationDtoListPaginated = await GetPaginatedLocationList();
+            PaginatedList<LocationDto> locationDtoListPaginated = await GetPaginatedLocationList(CurrentPage, PageSize);
 
             TotalResults = serviceDtoListPaginated.List.TotalCount + locationDtoListPaginated.TotalCount;
 
@@ -316,7 +316,7 @@ public class ServiceFilterModel : PageModel
         GetPaginatedServiceList(ServicesParams servicesParams) => await _serviceDirectoryClient.GetServices(servicesParams);
 
     private async Task<PaginatedList<LocationDto>>
-        GetPaginatedLocationList() => await _serviceDirectoryClient.GetLocations(true, Latitude, Longitude);
+        GetPaginatedLocationList(int? pageNumber, int? pageSize) => await _serviceDirectoryClient.GetLocations(true, pageNumber, pageSize, Latitude, Longitude);
 
     // private async Task<( // TODO: FHB-805 Remove all this after
     //     PaginatedList<ServiceDto> services,
