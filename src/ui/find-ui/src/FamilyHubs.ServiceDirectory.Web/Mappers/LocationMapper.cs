@@ -1,3 +1,4 @@
+using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Web.Models;
 
@@ -24,6 +25,6 @@ public static class LocationMapper
                 locationDto.Country
             ],
             MoreDetails: locationDto.Description,
-            Distance: locationDto.Distance);
+            Distance: locationDto.Distance is not null ? DistanceConverter.MetersToMiles(locationDto.Distance.Value) : null);
     }
 }

@@ -11,6 +11,7 @@ using FamilyHubs.SharedKernel.HealthCheck;
 using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 
@@ -267,11 +268,24 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
 
     }
 
-    public async Task<PaginatedList<LocationDto>> GetLocations(bool isFamilyHub, CancellationToken cancellationToken = default)
+    public async Task<PaginatedList<LocationDto>> GetLocations(bool isFamilyHub, double? latitude, double? longitude, CancellationToken cancellationToken = default)
     {
         HttpClient httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
-        HttpResponseMessage response = await httpClient.GetAsync($"api/locations?isFamilyHub={isFamilyHub}", cancellationToken);
+        Dictionary<string, string?> queryParameters = new()
+        {
+            { "isFamilyHub", $"{isFamilyHub}" }
+        };
+
+        if (latitude is not null && longitude is not null)
+        {
+            queryParameters.Add("latitude", $"{latitude}");
+            queryParameters.Add("longitude", $"{longitude}");
+        }
+
+        string locationUrl = new(QueryHelpers.AddQueryString("api/locations", queryParameters));
+
+        HttpResponseMessage response = await httpClient.GetAsync(locationUrl, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {

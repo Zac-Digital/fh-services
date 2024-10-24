@@ -276,7 +276,7 @@ public class ServiceFilterModel : PageModel
 
             // (PaginatedList<ServiceDto> paginatedServices, Pagination, HttpResponseMessage? response)
             //     = await GetServicesAndPagination(adminArea, latitude, longitude);
-            // UpdateServicesPagination(paginatedServices);
+            // UpdateServicesPagination(paginatedServices); // TODO: FHB-805 Remove all this after
 
             DateTime? responseTimestamp = serviceDtoListPaginated.Response is not null ? DateTime.UtcNow : null;
 
@@ -316,9 +316,9 @@ public class ServiceFilterModel : PageModel
         GetPaginatedServiceList(ServicesParams servicesParams) => await _serviceDirectoryClient.GetServices(servicesParams);
 
     private async Task<PaginatedList<LocationDto>>
-        GetPaginatedLocationList() => await _serviceDirectoryClient.GetLocations(true);
+        GetPaginatedLocationList() => await _serviceDirectoryClient.GetLocations(true, Latitude, Longitude);
 
-    // private async Task<(
+    // private async Task<( // TODO: FHB-805 Remove all this after
     //     PaginatedList<ServiceDto> services,
     //     IPagination pagination,
     //     HttpResponseMessage? response
