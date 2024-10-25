@@ -3,7 +3,6 @@
 unset stop
 
 _term() {
-    echo "Caught SIGTERM signal!"
     stop=1
 }
 
