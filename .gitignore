@@ -27,8 +27,10 @@ x86/
 build/
 bld/
 [Bb]in/
-[Oo]bj/
 [Oo]ut/
 msbuild.log
 msbuild.err
 msbuild.wrn
+msbuild.wrn
+
+local/db/sql 
