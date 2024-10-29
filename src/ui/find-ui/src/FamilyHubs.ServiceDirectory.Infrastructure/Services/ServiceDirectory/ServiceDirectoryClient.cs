@@ -277,6 +277,5 @@ public class ServiceDirectoryClient : IServiceDirectoryClient, IHealthCheckUrlGr
         };
 
         await httpClient.PostAsJsonAsync("/api/metrics/service-search", serviceSearch);
-
     }
 }

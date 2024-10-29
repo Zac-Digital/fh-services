@@ -80,7 +80,7 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public async Task<IActionResult> OnPost(string? postcode, string? adminArea)
+    public async Task<IActionResult> OnPost(string? postcode, string? adminArea, [FromForm] IFormCollection form)
     {
         dynamic routeValues;
 
@@ -96,10 +96,10 @@ public class ServiceFilterModel : PageModel
         }
         else
         {
-            var remove = GetRemove(Request.Form);
+            var remove = GetRemove(form);
 
             // remove key/values we don't want to keep
-            var filteredForm = Request.Form
+            var filteredForm = form
                 .Where(kvp => KeepParam(kvp.Key, remove.Key))
                 .ToList();
 
