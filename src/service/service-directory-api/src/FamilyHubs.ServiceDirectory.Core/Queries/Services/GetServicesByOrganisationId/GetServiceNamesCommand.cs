@@ -79,7 +79,7 @@ public class GetServiceNamesCommandHandler : IRequestHandler<GetServiceNamesComm
     private async Task<int> GetServicesCount(GetServiceNamesCommand request, CancellationToken cancellationToken)
     {
         var serviceCountQuery = _context.Services
-            .Where(s => s.Status != ServiceStatusType.Deleted);
+            .Where(s => s.Status != ServiceStatusType.Defunct);
 
         if (request.OrganisationId != null)
         {
