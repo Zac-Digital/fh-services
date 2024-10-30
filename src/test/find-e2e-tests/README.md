@@ -1,6 +1,6 @@
 # E2E Testing
 
-Here are have written End to End tests for the three services in Family Hubs: Find, Connect, Manage.
+Here are written End to End tests for the three services in Family Hubs: Find, Connect, Manage.
 This is a Serenity/JS with Playwright Framework using a screenplay pattern. 
 # Prerequisites
 
