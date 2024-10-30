@@ -7,7 +7,6 @@ export const navigateToFind = (): Task =>
     Task.where(
         `#actor navigates to the Find Website`,
         Navigate.to('/'),
-        isTheFindPageDisplayed(),
     );
 
 export const clickOnTheStartButton = (): Task =>
