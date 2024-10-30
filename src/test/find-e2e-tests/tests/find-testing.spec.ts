@@ -1,6 +1,6 @@
 import { describe, it } from '@serenity-js/playwright-test';
 
-import { navigateToFind, clickOnTheStartButton, enterPostcode, clickOnPostcodeSearchButton } from './serenity-tools';
+import { navigateToFind, clickOnTheStartButton, enterPostcode, clickOnPostcodeSearchButton } from './serenity-tools/find-index';
 
 describe('Find Tests', () => {
 

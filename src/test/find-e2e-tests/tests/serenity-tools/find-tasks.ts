@@ -1,7 +1,7 @@
 import { Answerable, Task } from '@serenity-js/core';
 import { Navigate, Click, Enter } from '@serenity-js/web';
-import { startButton, postcodeSearchBox, postcodeSearchButton } from './pageObjects';
-import { isTheFindPageDisplayed } from './questions';
+import { startButton, postcodeSearchBox, postcodeSearchButton } from './find-page-objects';
+import { isTheFindPageDisplayed } from './find-questions';
 
 export const navigateToFind = (): Task =>
     Task.where(
