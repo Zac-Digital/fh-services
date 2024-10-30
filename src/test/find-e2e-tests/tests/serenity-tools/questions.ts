@@ -1,17 +1,10 @@
-import { By, PageElement,} from '@serenity-js/web';
+import { Page } from '@serenity-js/web';
+import { Ensure, equals } from '@serenity-js/assertions';
 
-export const isstartButtonVisible = () =>
-    PageElement
-        .located(By.css("a[role='button']"))
-        .describedAs('start Now Button');
+//This is for illustrative purposes and will be removed when appropriate questions can be created. 
 
-export const canAPostcodeBeEntered = () =>
-     PageElement
-        .located(By.id("postcode"))
-        .describedAs('the Postcode searchbox');
-
-        
-export const isPostcodeSearchButtonVisible = () =>
-     PageElement
-        .located(By.css("button[class='govuk-button']"))
-        .describedAs('the search button');
+export const isTheFindPageDisplayed = () =>
+    Ensure.that(
+        Page.current().title().describedAs('Find Page Title'),
+        equals('Find support for your family - Find support for your family - GOV.UK'),
+    )  

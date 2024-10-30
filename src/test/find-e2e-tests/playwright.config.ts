@@ -1,15 +1,17 @@
 import { defineConfig, devices } from '@playwright/test';
 import type { SerenityOptions } from '@serenity-js/playwright-test';
-import { baseURL } from './env-config';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 
 export default defineConfig<SerenityOptions>({
     testDir: './tests',
-    /* Maximum time one test can run for. */
+    /* Maximum time one test can run for, measured in milliseconds. */
     timeout: 30_000,
     expect: {
         /**
-         * Maximum time expect() should wait for the condition to be met.
+         * The maximum time, in milliseconds, that expect() should wait for a condition to be met.
          * For example in `await expect(locator).toHaveText();`
          */
         timeout: 5000,
@@ -20,30 +22,30 @@ export default defineConfig<SerenityOptions>({
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
-    /* Opt out of parallel tests on CI. */
+    /* Specifies the number of tests that can run in parallel. If undefined, it defaults to the maximum available workers */
     workers: process.env.CI ? 1 : undefined,
-    /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+    /* Specifies the reporter to use. For more information, see https://playwright.dev/docs/test-reporters */
     reporter: [
         ['line'],
         ['html', { open: 'never' }],
         ['@serenity-js/playwright-test', {
             crew: [
                 '@serenity-js/console-reporter',
-                [ '@serenity-js/serenity-bdd', {
+                ['@serenity-js/serenity-bdd', {
                     specDirectory: './tests',
                     reporter: {
                         includeAbilityDetails: true,
                     },
-                } ],
+                }],
                 ['@serenity-js/core:ArtifactArchiver', { outputDirectory: 'target/site/serenity' }],
-                // '@serenity-js/core:StreamReporter',  // use for debugging
+                // '@serenity-js/core:StreamReporter',  // uncomment to enable debugging output
             ],
         }],
     ],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
-        /* Base URL to use in actions like `await page.goto('/')`. */
-        baseURL, // Using the imported baseURL here
+        /* Base URL via the environment variable to use in actions like `await page.goto('/')`. */
+        baseURL: process.env.BASE_URL,
 
         /* Set headless: false to see the browser window */
         headless: true,
@@ -83,17 +85,17 @@ export default defineConfig<SerenityOptions>({
 
         /* Test against mobile viewports. */
         {
-          name: 'Mobile Chrome',
-          use: {
-            ...devices['Pixel 5'],
-          },
+            name: 'Mobile Chrome',
+            use: {
+                ...devices['Pixel 5'],
+            },
         },
         {
-          name: 'Mobile Safari',
-          use: {
-            ...devices['iPhone 12'],
-          },
-         },
+            name: 'Mobile Safari',
+            use: {
+                ...devices['iPhone 12'],
+            },
+        },
 
         /* Test against branded browsers. */
         // {
@@ -111,5 +113,5 @@ export default defineConfig<SerenityOptions>({
     ],
 
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-    // outputDir: 'test-results/',
+    outputDir: 'test-results/',
 });
