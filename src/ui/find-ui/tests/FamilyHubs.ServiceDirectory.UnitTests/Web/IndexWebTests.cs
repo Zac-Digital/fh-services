@@ -66,60 +66,7 @@ public class IndexWebTests : BaseWebTest
         _serviceDirectoryClient.GetTaxonomies(Arg.Any<CancellationToken>())
             .Returns(new PaginatedList<TaxonomyDto>(TestData.TaxonomyDtos, 1, 1, 10));
         _serviceDirectoryClient.GetServices(Arg.Any<ServicesParams>()).Returns(
-            (new PaginatedList<ServiceDto>([
-                new ServiceDto
-                {
-                    Id = 1,
-                    Name = "ExampleService2",
-                    ServiceType = ServiceType.FamilyExperience,
-                    Eligibilities = new List<EligibilityDto>
-                    {
-                        new()
-                        {
-                            MinimumAge = 18,
-                            MaximumAge = 65
-                        }
-                    },
-                    Locations = new List<LocationDto>
-                    {
-                        new()
-                        {
-                            LocationTypeCategory = LocationTypeCategory.NotSet,
-                            Latitude = 51,
-                            Longitude = -1,
-                            Address1 = "ExampleAddress2",
-                            City = "ExampleCity2",
-                            PostCode = "ExamplePostCode2",
-                            StateProvince = "ExampleStateProvince2",
-                            Country = "ExampleCountry2",
-                            LocationType = LocationType.Virtual
-                        }
-                    },
-                    ServiceDeliveries = new List<ServiceDeliveryDto>
-                    {
-                        new()
-                        {
-                            Name = AttendingType.InPerson
-                        }
-                    },
-                    Contacts = new List<ContactDto>
-                    {
-                        new()
-                        {
-                            Email = "email@example.com",
-                            Telephone = "01234567890",
-                            Url = "example.com"
-                        }
-                    },
-                    CostOptions = new List<CostOptionDto>
-                    {
-                        new()
-                        {
-                            AmountDescription = "Information."
-                        }
-                    }
-                }
-            ], 25, 2, 10), null)
+            (new PaginatedList<ServiceDto>(TestData.ExampleServices, 25, 2, 10), null)
         );
         
         // Act
@@ -127,6 +74,6 @@ public class IndexWebTests : BaseWebTest
 
         // Assert
         var serviceEntries = page.QuerySelectorAll("[data-testid=\"service-entry\"]");
-        Assert.Equal(1, serviceEntries.Length);
+        Assert.Equal(2, serviceEntries.Length);
     }
 }
