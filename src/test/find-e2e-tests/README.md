@@ -12,7 +12,7 @@ This is a Serenity/JS with Playwright Framework using a screenplay pattern.
 
 # How to run the tests locally (against the test environment)
 
-To run tests:`npm test`
+To run tests: `npm test`
 To view the test report: `npm run test:report`
 
 # Helpful Links

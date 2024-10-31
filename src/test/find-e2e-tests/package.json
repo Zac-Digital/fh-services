@@ -8,7 +8,7 @@
     "test:report": "npx playwright show-report"
   },
   "keywords": [],
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@playwright/test": "^1.48.1",
     "@serenity-js/assertions": "^3.29.4",
