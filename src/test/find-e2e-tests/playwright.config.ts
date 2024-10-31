@@ -22,8 +22,6 @@ export default defineConfig<SerenityOptions>({
     forbidOnly: !!process.env.CI,
     /* Retry on CI only */
     retries: process.env.CI ? 2 : 0,
-    /* Specifies the number of tests that can run in parallel. If undefined, it defaults to the maximum available workers */
-    workers: process.env.CI ? 1 : undefined,
     /* Specifies the reporter to use. For more information, see https://playwright.dev/docs/test-reporters */
     reporter: [
         ['line'],
