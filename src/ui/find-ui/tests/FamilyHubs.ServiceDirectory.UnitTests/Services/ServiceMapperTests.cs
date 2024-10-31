@@ -8,111 +8,6 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Services;
 
 public class ServiceMapperTests
 {
-    public static readonly List<ServiceDto> ExampleServices = [
-        new()
-        {
-            Id = 1,
-            Name = "ExampleService",
-            ServiceType = Shared.Enums.ServiceType.FamilyExperience,
-            Distance = 10_000d,
-            Eligibilities = new List<EligibilityDto>
-            {
-                new()
-                {
-                    MinimumAge = 18,
-                    MaximumAge = 65
-                }
-            },
-            Locations = new List<LocationDto>
-            {
-                new()
-                {
-                    LocationTypeCategory = LocationTypeCategory.NotSet,
-                    Latitude = 51,
-                    Longitude = -1,
-                    Address1 = "ExampleAddress",
-                    City = "ExampleCity",
-                    PostCode = "ExamplePostCode",
-                    StateProvince = "ExampleStateProvince",
-                    Country = "ExampleCountry",
-                    LocationType = LocationType.Physical
-                }
-            },
-            ServiceDeliveries = new List<ServiceDeliveryDto>
-            {
-                new()
-                {
-                    Name = AttendingType.InPerson
-                }
-            },
-            Contacts = new List<ContactDto>
-            {
-                new()
-                {
-                    Email = "email@example.com",
-                    Telephone = "01234567890",
-                    Url = "example.com"
-                }
-            },
-            Taxonomies = new List<TaxonomyDto>
-            {
-                new()
-                {
-                    Id = 3,
-                    ParentId = 2,
-                    Name = "C"
-                },
-                new()
-                {
-                    Id = 2,
-                    ParentId = 2,
-                    Name = "B"
-                },
-                new()
-                {
-                    Id = 4,
-                    ParentId = 1,
-                    Name = "A"
-                }
-            }
-        },
-        new()
-        {
-            Id = 1,
-            Name = "ExampleService2",
-            ServiceType = Shared.Enums.ServiceType.FamilyExperience,
-            Locations = new List<LocationDto>
-            {
-                new()
-                {
-                    LocationTypeCategory = LocationTypeCategory.FamilyHub,
-                    Latitude = 51,
-                    Longitude = -1,
-                    Address1 = "ExampleAddress2",
-                    City = "ExampleCity2",
-                    PostCode = "ExamplePostCode2",
-                    StateProvince = "ExampleStateProvince2",
-                    Country = "ExampleCountry2",
-                    LocationType = LocationType.Virtual
-                }
-            },
-            ServiceDeliveries = new List<ServiceDeliveryDto>
-            {
-                new()
-                {
-                    Name = AttendingType.InPerson
-                }
-            },
-            CostOptions = new List<CostOptionDto>
-            {
-                new()
-                {
-                    AmountDescription = "Information."
-                }
-            }
-        }
-    ];
-    
     [Fact]
     private void ToViewModel()
     {
@@ -148,7 +43,7 @@ public class ServiceMapperTests
             )
         };
 
-        var result = ServiceMapper.ToViewModel(ExampleServices);
+        var result = ServiceMapper.ToViewModel(TestData.ExampleServices);
         Assert.Equal(expected, result);
     }
 }

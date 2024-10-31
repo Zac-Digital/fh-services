@@ -3,7 +3,6 @@ using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Models;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using NSubstitute;
 
@@ -17,7 +16,7 @@ public class ServiceDirectoryClientServices
     public async Task GetServicesUsesApi()
     {
         var serviceList = new PaginatedList<ServiceDto>(
-            ServiceMapperTests.ExampleServices,
+            TestData.ExampleServices,
             2, 1, 10
         );
 

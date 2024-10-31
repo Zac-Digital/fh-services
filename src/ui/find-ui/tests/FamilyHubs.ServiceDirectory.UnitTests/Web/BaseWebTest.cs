@@ -11,7 +11,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace FamilyHubs.ServiceDirectory.UnitTests.Web;
 
-public abstract class BaseUiTest : IDisposable
+public abstract class BaseWebTest : IDisposable
 {
     private readonly HttpClient _client;
     private readonly WebApplicationFactory<Program> _factory;
@@ -36,7 +36,7 @@ public abstract class BaseUiTest : IDisposable
         }
     }
 
-    protected BaseUiTest()
+    protected BaseWebTest()
     {
         _factory = new MyWebApplicationFactory();
         _client = _factory.WithWebHostBuilder(builder =>

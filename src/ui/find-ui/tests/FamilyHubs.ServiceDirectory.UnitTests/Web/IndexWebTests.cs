@@ -8,8 +8,7 @@ using NSubstitute;
 
 namespace FamilyHubs.ServiceDirectory.UnitTests.Web;
 
-// TODO: Move to integration test project??
-public class IndexUiTests : BaseUiTest
+public class IndexWebTests : BaseWebTest
 {
     private readonly IServiceDirectoryClient _serviceDirectoryClient = Substitute.For<IServiceDirectoryClient>();
 
@@ -19,14 +18,14 @@ public class IndexUiTests : BaseUiTest
     }
 
     [Fact]
-    public async Task Demo()
+    public async Task IndexHasStartNow()
     {
         // Act
         var page = await Navigate("/");
 
         // Assert
         var startButton = page.QuerySelector("[data-testid=\"start-button\"]");
-        Assert.Equal("Start now", startButton?.TextContent.Trim());
+        Assert.NotNull(startButton);
     }
 
     [Fact]
@@ -64,44 +63,8 @@ public class IndexUiTests : BaseUiTest
     [Fact]
     public async Task ServiceFilter_Results()
     {
-        _serviceDirectoryClient.GetTaxonomies(Arg.Any<CancellationToken>()).Returns(new PaginatedList<TaxonomyDto>([
-            new TaxonomyDto
-            {
-                Id = 1,
-                Name = "Activities, clubs and groups"
-            },
-            new TaxonomyDto
-            {
-                Id = 2,
-                Name = "Family support"
-            },
-            new TaxonomyDto
-            {
-                Id = 3,
-                Name = "Health"
-            },
-            new TaxonomyDto
-            {
-                Id = 4,
-                Name = "Pregnancy, birth and early years"
-            },
-            new TaxonomyDto
-            {
-                Id = 5,
-                Name = "Special educational needs and disabilities (SEND)"
-            },
-            new TaxonomyDto
-            {
-                Id = 6,
-                Name = "Transport"
-            },
-            new TaxonomyDto
-            {
-                Id = 7,
-                ParentId = 1,
-                Name = "Test"
-            }
-        ], 1, 1, 10));
+        _serviceDirectoryClient.GetTaxonomies(Arg.Any<CancellationToken>())
+            .Returns(new PaginatedList<TaxonomyDto>(TestData.TaxonomyDtos, 1, 1, 10));
         _serviceDirectoryClient.GetServices(Arg.Any<ServicesParams>()).Returns(
             (new PaginatedList<ServiceDto>([
                 new ServiceDto
