@@ -3,7 +3,6 @@ using System.Diagnostics;
 using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Shared.Display;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.ServiceDirectory.Shared.Extensions;
 using FamilyHubs.SharedKernel.Enums;
 
 namespace FamilyHubs.ServiceDirectory.Web.Mappers;
@@ -20,43 +19,35 @@ public static class ServiceMapper
     {
         Debug.Assert(service.ServiceType == Shared.Enums.ServiceType.FamilyExperience);
 
-        var location = service.Locations.First();
         var eligibility = service.Eligibilities.FirstOrDefault();
-        var serviceDeliveries = service.ServiceDeliveries;
 
         var name = service.Name;
-        var contact = service.GetContact();
 
         return new Service(
+            service.Id,
             name,
             service.Distance != null ? DistanceConverter.MetersToMiles(service.Distance.Value) : null,
             GetCost(service),
-            location.GetAddress(),
-            service.GetServiceAvailability(),
+            GetLocations(service.Locations),
             GetCategories(service),
-            serviceDeliveries.Select(d => d.Name.ToDescription()),
-            GetAgeRange(eligibility),
-            contact?.Telephone,
-            contact?.Email,
-            name,
-            GetWebsiteUrl(contact?.Url));
+            GetDeliveryMethods(service.ServiceDeliveries),
+            GetAgeRange(eligibility));
     }
+
+    private static IEnumerable<string> GetLocations(ICollection<LocationDto> locationDtoList)
+        => locationDtoList.Count switch
+        {
+            0 => [],
+            1 => locationDtoList.First().GetAddress(),
+            _ => [$"Available at {locationDtoList.Count} locations"]
+        };
+
+    private static IEnumerable<string> GetDeliveryMethods(ICollection<ServiceDeliveryDto> serviceDeliveries)
+        => serviceDeliveries.Select(x => x.Name.ToDescription()).Order();
 
     private static string? GetAgeRange(EligibilityDto? eligibility)
     {
         return eligibility == null ? null : $"{AgeDisplayExtensions.AgeToString(eligibility.MinimumAge)} to {AgeDisplayExtensions.AgeToString(eligibility.MaximumAge)}";
-    }
-
-    private static string? GetWebsiteUrl(string? url)
-    {
-        if (string.IsNullOrWhiteSpace(url))
-            return default;
-
-        if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
-            return url;
-
-        // assume http! (UriBuilder interprets a single string as a host and insists on adding a '/' on the end, which doesn't work if the url contains query params)
-        return $"http://{url}";
     }
 
     private static IEnumerable<string> GetCategories(ServiceDto service)
