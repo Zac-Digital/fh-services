@@ -3,6 +3,7 @@ using FamilyHubs.Notification.Data.Repository;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,8 +13,10 @@ namespace FamilyHubs.Notification.FunctionalTests;
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly string _referralConnection;
-    public CustomWebApplicationFactory()
+    private readonly Action<IConfigurationBuilder> _conf;
+    public CustomWebApplicationFactory(Action<IConfigurationBuilder> conf)
     {
+        _conf = conf;
         _referralConnection = $"Data Source=sd-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";
     }
 
@@ -25,8 +28,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     /// <returns></returns>
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        var host = builder.Build();
-        host.Start();
+        builder.ConfigureHostConfiguration(_conf);
+
+        var host = base.CreateHost(builder);
 
         // Get service provider.
         var serviceProvider = host.Services;

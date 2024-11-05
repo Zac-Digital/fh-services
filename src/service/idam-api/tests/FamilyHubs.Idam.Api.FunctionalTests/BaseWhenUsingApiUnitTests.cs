@@ -1,51 +1,33 @@
 ﻿using FamilyHubs.Idam.Data.Repository;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace FamilyHubs.Idam.Api.FunctionalTests;
-
-#pragma warning disable S3881
 
 public abstract class BaseWhenUsingApiUnitTests : IDisposable
 {
     protected readonly HttpClient? Client;
-    protected readonly CustomWebApplicationFactory? _webAppFactory;
-    private readonly bool _initSuccessful;
+    private readonly CustomWebApplicationFactory? _webAppFactory;
 
     protected BaseWhenUsingApiUnitTests()
     {
-        try
-        {
-            _initSuccessful = true;
-            if (!IsRunningLocally())
-            {
-                _initSuccessful = false;
-                return;
-            }
+        _webAppFactory = new CustomWebApplicationFactory(ConfigSetup);
 
-            _initSuccessful = false;
+        _webAppFactory.SetupTestData();
 
-            _webAppFactory = new CustomWebApplicationFactory();
-            
-
-            _webAppFactory.SetupTestData();
-
-            Client = _webAppFactory.CreateDefaultClient();
-            Client.BaseAddress = new Uri("https://localhost:7030/api/");
-
-            _initSuccessful = true;
-
-            
-
-            
-        }
-        catch
-        {
-            _initSuccessful = false;
-        }
+        Client = _webAppFactory.CreateDefaultClient();
+        Client.BaseAddress = new Uri("https://localhost:7030/api/");
     }
+
+    private static void ConfigSetup(IConfigurationBuilder builder) =>
+        builder.AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            { "GovUkOidcConfiguration:BearerTokenSigningKey", "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+            { "Crypto:DbEncryptionKey", "188,7,221,249,250,101,147,86,47,246,21,252,145,56,161,150,195,184,64,43,55,0,196,200,98,220,95,186,225,8,224,75" },
+            { "Crypto:DbEncryptionIVKey", "34,26,215,81,137,34,109,107,236,206,253,62,115,38,65,112" }
+        });
 
     public void Dispose()
     {
@@ -68,44 +50,28 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
        
     }
 
-    /// <summary>
-    /// Creates HttpRequestMessage
-    /// </summary>
-    /// <param name="role">If left blank request will not have bearer Token</param>
-    public HttpRequestMessage CreatePostRequest(string path, object content, string role = "")
+    protected HttpRequestMessage CreatePostRequest(string path, object content, string role = "")
     {
         var request = CreateHttpRequestMessage(HttpMethod.Post, path, role);
         request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
         return request;
     }
 
-    /// <summary>
-    /// Creates HttpRequestMessage
-    /// </summary>
-    /// <param name="role">If left blank request will not have bearer Token</param>
-    public HttpRequestMessage CreatePutRequest(string path, object content, string role = "")
+    protected HttpRequestMessage CreatePutRequest(string path, object content, string role = "")
     {
         var request = CreateHttpRequestMessage(HttpMethod.Put, path, role);
         request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
         return request;
     }
 
-    /// <summary>
-    /// Creates HttpRequestMessage
-    /// </summary>
-    /// <param name="role">If left blank request will not have bearer Token</param>
-    public HttpRequestMessage CreateDeleteRequest(string path, object content, string role = "")
+    protected HttpRequestMessage CreateDeleteRequest(string path, object content, string role = "")
     {
         var request = CreateHttpRequestMessage(HttpMethod.Delete, path, role);
         request.Content = new StringContent(JsonConvert.SerializeObject(content), Encoding.UTF8, "application/json");
         return request;
     }
 
-    /// <summary>
-    /// Creates HttpRequestMessage
-    /// </summary>
-    /// <param name="role">If left blank request will not have bearer Token</param>
-    public HttpRequestMessage CreateGetRequest(string path, string role = "")
+    protected HttpRequestMessage CreateGetRequest(string path, string role = "")
     {
         var request = CreateHttpRequestMessage(HttpMethod.Get, path, role);
         return request;
@@ -126,38 +92,4 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
 
         return request;
     }
-
-    
-    protected bool IsRunningLocally()
-    {
-        var configuration = new ConfigurationBuilder()
-            .AddUserSecrets<Program>()
-            .Build();
-
-        if (!_initSuccessful || configuration == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            string localMachineName = configuration["LocalSettings:MachineName"] ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(localMachineName))
-            {
-                return Environment.MachineName.Equals(localMachineName, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-        catch
-        {
-            return false;
-        }
-
-        // Fallback to a default check if User Secrets file or machine name is not specified
-        // For example, you can add additional checks or default behavior here
-        return false;
-    }
-
 }
-
-#pragma warning restore S3881
