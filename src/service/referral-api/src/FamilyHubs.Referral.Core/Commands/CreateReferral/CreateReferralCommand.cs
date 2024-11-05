@@ -36,9 +36,8 @@ public class CreateReferralCommandHandler(
             referralResponse = await CreateAndUpdateReferral(entity, cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Console.WriteLine(e);
             await transaction.RollbackAsync(cancellationToken);
             throw;
         }

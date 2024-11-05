@@ -69,7 +69,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             });
         });
 
-        builder.UseEnvironment("FunctionalTests");
+        builder.UseEnvironment("Development");
     }
 
     public void SetupTestDatabaseAndSeedData()
