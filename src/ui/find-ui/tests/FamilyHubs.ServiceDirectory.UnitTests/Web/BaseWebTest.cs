@@ -13,7 +13,7 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Web;
 
 public abstract class BaseWebTest : IDisposable
 {
-    protected readonly string BaseUrl = "https://localhost";
+    protected const string BaseUrl = "https://localhost";
     private readonly HttpClient _client;
     private readonly WebApplicationFactory<Program> _factory;
 
@@ -55,11 +55,6 @@ public abstract class BaseWebTest : IDisposable
     protected virtual void Configure(IServiceCollection services)
     {
         
-    }
-
-    protected async Task Login(StubUser user)
-    {
-        await _client.GetAsync($"account/stub/roleSelected?user={user.Email}&redirect=%2f");
     }
 
     protected async Task<IHtmlDocument> Navigate(string uri, Action<HttpResponseMessage>? responseValidation = null)
@@ -112,18 +107,5 @@ public abstract class BaseWebTest : IDisposable
         _factory.Dispose();
 
         GC.SuppressFinalize(this);
-    }
-
-    protected class StubUser
-    {
-        public string Email { get; }
-
-        private StubUser(string email)
-        {
-            Email = email;
-        }
-
-        public static readonly StubUser DfeAdmin = new("dfeAdmin.user@stub.com");
-        public static readonly StubUser LaAdmin = new("laOrgOne.LaAdmin@stub.com");
     }
 }

@@ -6,6 +6,7 @@ using NSubstitute;
 
 namespace FamilyHubs.ServiceDirectory.UnitTests.Web;
 
+[Collection("WebTests")]
 public class ServiceDetailWebTests : BaseWebTest
 {
     private readonly IServiceDirectoryClient _serviceDirectoryClient = Substitute.For<IServiceDirectoryClient>();
