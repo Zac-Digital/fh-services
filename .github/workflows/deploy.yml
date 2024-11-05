@@ -88,7 +88,7 @@ jobs:
       dotnet_version: ${{ matrix.dotnet_version_override || vars.DOTNET_VERSION }}
 
   teardown-database-objects:
-    #if: startsWith(inputs.environment, 'Test')
+    if: startsWith(inputs.environment, 'Test')
     needs: [build-projects-upload-artifacts]
     strategy:
       matrix:
@@ -107,7 +107,7 @@ jobs:
     
   deploy-api-services:
     name: ${{ matrix.job_name }}
-    needs: [ build-projects-upload-artifacts ]
+    needs: [ teardown-database-objects ]
     strategy:
       matrix:
         artifact_name: [ idam-api,
@@ -227,28 +227,9 @@ jobs:
       azure_app_name: ${{ matrix.azure_app_name }}
     secrets: inherit
 
-  seed-databases:
-    #if: startsWith(inputs.environment, 'Test')
-    needs: [ deploy-ui-services ]
-    strategy:
-      matrix:
-        databases: [ idam-database ]
-        include:
-          - database: idam-database
-            title: Seed the IDAM database
-            keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
-            sql_file_path: ./test/seed-scripts/idam-data.sql
-    uses: ./.github/workflows/run-sql-script.yml
-    with:
-      environment: ${{ inputs.environment }}
-      title: ${{ matrix.title }}
-      keyvault_secret_name: ${{ matrix.keyvault_secret_name }}
-      sql_file_path: ${{ matrix.sql_file_path }}
-    secrets: inherit
-    
   deploy-functions:
     name: ${{ matrix.job_name }}
-    needs: [ build-projects-upload-artifacts ]
+    needs: [ teardown-database-objects ]
     strategy:
       matrix:
         artifact_name: [
@@ -267,12 +248,30 @@ jobs:
       keyvault_prefix: ${{ matrix.keyvault_prefix }}
       azure_app_name: ${{ matrix.azure_app_name }}
     secrets: inherit
-    
+  
+  seed-databases:
+    if: startsWith(inputs.environment, 'Test')
+    needs: [ deploy-ui-services ]
+    strategy:
+      matrix:
+        databases: [ idam-database ]
+        include:
+          - database: idam-database
+            title: Seed the IDAM database
+            keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
+            sql_file_path: ./test/seed-scripts/idam-data.sql
+    uses: ./.github/workflows/run-sql-script.yml
+    with:
+      environment: ${{ inputs.environment }}
+      title: ${{ matrix.title }}
+      keyvault_secret_name: ${{ matrix.keyvault_secret_name }}
+      sql_file_path: ${{ matrix.sql_file_path }}
+    secrets: inherit
     
   run-api-acceptance-tests:
     if: startsWith(inputs.environment, 'Test')
     name: ${{ matrix.job_name }}
-    needs: [ deploy-ui-services ]
+    needs: [ seed-databases ]
     strategy:
       matrix:
         project_name: [
