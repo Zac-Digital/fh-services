@@ -88,8 +88,9 @@ jobs:
       dotnet_version: ${{ matrix.dotnet_version_override || vars.DOTNET_VERSION }}
 
   teardown-database-objects:
+    name: ${{ matrix.title }}
     if: startsWith(inputs.environment, 'Test')
-    needs: [build-projects-upload-artifacts]
+    needs: [ build-projects-upload-artifacts ]
     strategy:
       matrix:
         databases: [ idam-database ]
@@ -107,7 +108,7 @@ jobs:
     
   deploy-api-services:
     name: ${{ matrix.job_name }}
-    needs: [ teardown-database-objects ]
+    needs: [ teardown-database-objects, build-projects-upload-artifacts ]
     strategy:
       matrix:
         artifact_name: [ idam-api,
@@ -250,6 +251,7 @@ jobs:
     secrets: inherit
   
   seed-databases:
+    name: ${{ matrix.title }}
     if: startsWith(inputs.environment, 'Test')
     needs: [ deploy-ui-services ]
     strategy:
