@@ -89,7 +89,6 @@ jobs:
 
   teardown-database-objects:
     name: ${{ matrix.title }}
-    if: startsWith(inputs.environment, 'Test')
     needs: [ build-projects-upload-artifacts ]
     strategy:
       matrix:
@@ -108,8 +107,7 @@ jobs:
     
   deploy-api-services:
     name: ${{ matrix.job_name }}
-    if: ${{ always() }}
-    needs: [ teardown-database-objects, build-projects-upload-artifacts ]
+    needs: [ teardown-database-objects ]
     strategy:
       matrix:
         artifact_name: [ idam-api,
@@ -231,7 +229,6 @@ jobs:
 
   deploy-functions:
     name: ${{ matrix.job_name }}
-    if: ${{ always() }}
     needs: [ teardown-database-objects ]
     strategy:
       matrix:
@@ -254,8 +251,7 @@ jobs:
   
   seed-databases:
     name: ${{ matrix.title }}
-    if: startsWith(inputs.environment, 'Test')
-    needs: [ deploy-ui-services ]
+    needs: [ deploy-api-services, deploy-ui-services, deploy-functions ]
     strategy:
       matrix:
         databases: [ idam-database ]
