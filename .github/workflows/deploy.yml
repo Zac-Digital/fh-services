@@ -108,6 +108,7 @@ jobs:
     
   deploy-api-services:
     name: ${{ matrix.job_name }}
+    if: ${{ always() }}
     needs: [ teardown-database-objects, build-projects-upload-artifacts ]
     strategy:
       matrix:
@@ -230,6 +231,7 @@ jobs:
 
   deploy-functions:
     name: ${{ matrix.job_name }}
+    if: ${{ always() }}
     needs: [ teardown-database-objects ]
     strategy:
       matrix:
