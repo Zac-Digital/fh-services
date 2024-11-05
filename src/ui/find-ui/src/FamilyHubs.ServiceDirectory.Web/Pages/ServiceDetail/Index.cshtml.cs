@@ -26,12 +26,8 @@ public class Index : PageModel
     private async Task<ServiceDto> GetService(long serviceId) =>
         await _serviceDirectoryClient.GetServiceById(serviceId);
 
-    private static string GetAttendingTypes(IEnumerable<AttendingType> attendingTypes) => attendingTypes.Aggregate(
-        new StringBuilder(), (builder, attendingType) => attendingType switch
-        {
-            AttendingType.InPerson => builder.Append(attendingType.ToDescription()),
-            _ => builder.Append(", " + attendingType.ToDescription())
-        }).ToString();
+    private static string GetAttendingTypes(IEnumerable<AttendingType> attendingTypes) =>
+        string.Join(", ", attendingTypes.Select(attendingType => attendingType.ToDescription()));
 
     private static string GetOnlineTelephoneHeader(string attendingTypes)
     {

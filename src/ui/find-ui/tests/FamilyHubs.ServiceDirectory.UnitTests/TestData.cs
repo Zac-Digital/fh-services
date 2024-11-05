@@ -90,7 +90,8 @@ public static class TestData
         {
             Id = 1,
             Name = "ExampleService",
-            ServiceType = Shared.Enums.ServiceType.FamilyExperience,
+            Description = "ServiceDescription",
+            ServiceType = ServiceType.FamilyExperience,
             Distance = 10_000d,
             Eligibilities = new List<EligibilityDto>
             {
@@ -100,10 +101,28 @@ public static class TestData
                     MaximumAge = 65
                 }
             },
+            ServiceAtLocations = new List<ServiceAtLocationDto>
+            {
+                new()
+                {
+                    Id = 1,
+                    LocationId = 1,
+                    Schedules = new List<ScheduleDto>
+                    {
+                        new()
+                        {
+                            ByDay = "TU,TH",
+                            AttendingType =  "Online",
+                            Description = "ServiceAtLocationsScheduleDescription"
+                        }
+                    }
+                }
+            },
             Locations = new List<LocationDto>
             {
                 new()
                 {
+                    Id = 1,
                     LocationTypeCategory = LocationTypeCategory.NotSet,
                     Latitude = 51,
                     Longitude = -1,
@@ -112,14 +131,31 @@ public static class TestData
                     PostCode = "ExamplePostCode",
                     StateProvince = "ExampleStateProvince",
                     Country = "ExampleCountry",
-                    LocationType = LocationType.Physical
+                    LocationType = LocationType.Physical,
+                    AccessibilityForDisabilities = new List<AccessibilityForDisabilitiesDto>
+                    {
+                        new()
+                        {
+                            Accessibility = "Test Accessibility"
+                        }
+                    },
+                    Description = "LocationDescription",
+                    Schedules = new List<ScheduleDto>
+                    {
+                        new()
+                        {
+                            ByDay = "MO,FR",
+                            AttendingType =  "Online",
+                            Description = "LocationScheduleDescription"
+                        }
+                    }
                 }
             },
             ServiceDeliveries = new List<ServiceDeliveryDto>
             {
                 new()
                 {
-                    Name = AttendingType.InPerson
+                    Name = AttendingType.Telephone
                 }
             },
             Contacts = new List<ContactDto>
@@ -128,7 +164,16 @@ public static class TestData
                 {
                     Email = "email@example.com",
                     Telephone = "01234567890",
-                    Url = "example.com"
+                    Url = "example.com",
+                    TextPhone = "02233445566"
+                }
+            },
+            Languages = new List<LanguageDto>
+            {
+                new()
+                {
+                    Name = "English",
+                    Code = "EN"
                 }
             },
             Taxonomies = new List<TaxonomyDto>
@@ -151,13 +196,23 @@ public static class TestData
                     ParentId = 1,
                     Name = "A"
                 }
+            },
+            Schedules = new List<ScheduleDto>
+            {
+                new()
+                {
+                    ServiceId = 1,
+                    ByDay = "SA,SU",
+                    AttendingType =  "Telephone",
+                    Description = "ServiceScheduleDescription"
+                }
             }
         },
         new()
         {
-            Id = 1,
+            Id = 2,
             Name = "ExampleService2",
-            ServiceType = Shared.Enums.ServiceType.FamilyExperience,
+            ServiceType = ServiceType.FamilyExperience,
             Locations = new List<LocationDto>
             {
                 new()
@@ -171,6 +226,18 @@ public static class TestData
                     StateProvince = "ExampleStateProvince2",
                     Country = "ExampleCountry2",
                     LocationType = LocationType.Virtual
+                },
+                new()
+                {
+                    LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                    Latitude = 51,
+                    Longitude = -1,
+                    Address1 = "ExampleAddress3",
+                    City = "ExampleCity3",
+                    PostCode = "ExamplePostCode3",
+                    StateProvince = "ExampleStateProvince3",
+                    Country = "ExampleCountry3",
+                    LocationType = LocationType.Physical
                 }
             },
             ServiceDeliveries = new List<ServiceDeliveryDto>

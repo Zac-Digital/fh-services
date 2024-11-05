@@ -22,10 +22,10 @@ namespace FamilyHubs.ServiceDirectory.Web.Models
             return ServiceId == other.ServiceId &&
                    Name == other.Name &&
                    Nullable.Equals(Distance, other.Distance) &&
-                   Cost.Equals(other.Cost) &&
-                   Where.Equals(other.Where) &&
-                   Categories.Equals(other.Categories) &&
-                   DeliveryMethods.Equals(other.DeliveryMethods) &&
+                   Cost.SequenceEqual(other.Cost) &&
+                   Where.SequenceEqual(other.Where) &&
+                   Categories.SequenceEqual(other.Categories) &&
+                   DeliveryMethods.SequenceEqual(other.DeliveryMethods) &&
                    AgeRange == other.AgeRange;
         }
 

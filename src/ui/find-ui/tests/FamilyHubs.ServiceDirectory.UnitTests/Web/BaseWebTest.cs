@@ -13,6 +13,7 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Web;
 
 public abstract class BaseWebTest : IDisposable
 {
+    protected readonly string BaseUrl = "https://localhost";
     private readonly HttpClient _client;
     private readonly WebApplicationFactory<Program> _factory;
 
@@ -45,7 +46,7 @@ public abstract class BaseWebTest : IDisposable
             }
         ).CreateClient(
             new WebApplicationFactoryClientOptions {
-                BaseAddress = new Uri("https://localhost"),
+                BaseAddress = new Uri(BaseUrl),
                 HandleCookies = true
             }
         );
