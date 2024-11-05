@@ -1,0 +1,41 @@
+name: Runs SQL Scripts
+description: Runs SQL script specified by the path provided against the database
+
+inputs:
+  keyvault_secret_name:
+    required: true
+    description: Name of the secret containing the database connection string
+  sql_file_path:
+    required: true
+    description: Path to the SQL file
+
+runs:
+  using: composite
+
+  steps:
+    - name: Run SQL Script in PowerShell
+      shell: pwsh
+      run: |-
+        $ConnectionString = az keyvault secret show --name ${{ inputs.keyvault_secret_name }} --vault-name ${{ env.KEYVAULT_NAME }} --query value --output tsv
+        
+        $Logs = @()
+        $SqlFile = Get-ChildItem -Path ${{ inputs.sql_file_path }} -File -Filter *.sql
+
+        try {
+          Invoke-Sqlcmd -ConnectionString $ConnectionString -InputFile $SqlFile -ErrorAction 'Stop'
+          $LogMessage = ($SqlFile.Name + " Executed Successfully.")
+        }
+        catch {
+          $LogMessage = "Error executing $($SqlFile.Name): $_"
+          throw
+        }
+        
+        $Row = [PSCustomObject]@{
+          "File" = $SqlFile.Name
+          "Date" = (Get-Date -UFormat "%d-%m-%Y")
+          "Log" = $LogMessage
+        }
+        
+        $Logs += $Row  
+
+        Write-Output ($Logs | Format-Table -AutoSize -Wrap | Out-String)

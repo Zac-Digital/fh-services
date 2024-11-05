@@ -87,6 +87,24 @@ jobs:
       publish_project: ${{ matrix.publish_project }}
       dotnet_version: ${{ matrix.dotnet_version_override || vars.DOTNET_VERSION }}
 
+  teardown-database-objects:
+    #if: startsWith(inputs.environment, 'Test')
+    needs: [build-projects-upload-artifacts]
+    strategy:
+      matrix:
+        databases: [ idam-database ]
+        include:
+          - database: idam-database
+            title: Teardown IDAM database schema and data
+            keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
+    uses: ./.github/workflows/run-sql-script.yml
+    with:
+      environment: ${{ inputs.environment }}
+      title: ${{ matrix.title }}
+      keyvault_secret_name: ${{ matrix.keyvault_secret_name }}
+      sql_file_path: ./test/teardown-scripts/teardown-database-objects.sql
+    secrets: inherit
+    
   deploy-api-services:
     name: ${{ matrix.job_name }}
     needs: [ build-projects-upload-artifacts ]
@@ -158,7 +176,6 @@ jobs:
       azure_app_name: ${{ matrix.azure_app_name }}
     secrets: inherit
     
-    
   deploy-ui-services:
     name: ${{ matrix.job_name }}
     needs: [ deploy-api-services ]
@@ -210,8 +227,25 @@ jobs:
       azure_app_name: ${{ matrix.azure_app_name }}
     secrets: inherit
 
-
-
+  seed-databases:
+    #if: startsWith(inputs.environment, 'Test')
+    needs: [ deploy-ui-services ]
+    strategy:
+      matrix:
+        databases: [ idam-database ]
+        include:
+          - database: idam-database
+            title: Seed the IDAM database
+            keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
+            sql_file_path: ./test/seed-scripts/idam-data.sql
+    uses: ./.github/workflows/run-sql-script.yml
+    with:
+      environment: ${{ inputs.environment }}
+      title: ${{ matrix.title }}
+      keyvault_secret_name: ${{ matrix.keyvault_secret_name }}
+      sql_file_path: ${{ matrix.sql_file_path }}
+    secrets: inherit
+    
   deploy-functions:
     name: ${{ matrix.job_name }}
     needs: [ build-projects-upload-artifacts ]
