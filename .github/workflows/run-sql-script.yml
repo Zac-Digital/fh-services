@@ -8,7 +8,7 @@ on:
         required: true
         type: string
         description: Environment to apply database SQL script to
-      database:
+      database_name:
         required: true
         type: string
         description: The database being updated  
@@ -28,11 +28,9 @@ on:
 jobs:
   run-script-against-database:
     #if: startsWith(inputs.environment, 'Test')
-    name: Runs the SQL script against the ${{ inputs.database }}
+    name: Runs the SQL script against the ${{ inputs.database_name }}
     runs-on: windows-2022
     environment: ${{ inputs.environment }}
-    env:
-      KEYVAULT_NAME: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-general
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -49,5 +47,6 @@ jobs:
       - name: Run SQL Script PowerShell
         uses: ./.github/actions/run-sql-script
         with:
+          keyvault_name: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-general
           keyvault_secret_name: ${{ inputs.keyvault_secret_name }}
           sql_file_path: ${{ inputs.sql_file_path }}
