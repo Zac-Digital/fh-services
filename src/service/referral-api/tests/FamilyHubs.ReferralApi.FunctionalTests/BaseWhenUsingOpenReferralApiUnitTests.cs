@@ -1,121 +1,109 @@
-﻿using FamilyHubs.Referral.Api;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using FamilyHubs.Referral.Data.Repository;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.SharedKernel.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace FamilyHubs.Referral.FunctionalTests;
 
-#pragma warning disable S3881
 public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
 {
-    protected HttpClient? Client;
-    protected readonly CustomWebApplicationFactory? _webAppFactory;
-    private bool _disposed;
-    protected readonly JwtSecurityToken? _token;
-    protected readonly JwtSecurityToken? _tokenLaManager;
-    protected readonly JwtSecurityToken? _token_forOrganisation1;
-    protected readonly JwtSecurityToken? _vcstoken;
-    protected readonly JwtSecurityToken? _forbiddentoken;
-    private readonly IConfiguration? _configuration;
-    private readonly bool _initSuccessful;
+    protected readonly HttpClient Client;
+    protected readonly CustomWebApplicationFactory? WebAppFactory;
+    protected readonly ServiceDirectoryFactory? ServiceDirectoryFactory;
+    protected readonly JwtSecurityToken? Token;
+    protected readonly JwtSecurityToken? TokenLaManager;
+    protected readonly JwtSecurityToken? TokenForOrganisation1;
+    protected readonly JwtSecurityToken? Vcstoken;
+    protected readonly JwtSecurityToken? Forbiddentoken;
 
     protected BaseWhenUsingOpenReferralApiUnitTests()
     {
-        _disposed = false;
-
-        try
-        {
-         var configuration = new ConfigurationBuilder()
-        .AddUserSecrets<Program>()
-        .Build();
-
-        _configuration = configuration;
+        var confBuilder = new ConfigurationBuilder();
+        ConfigSetup(confBuilder);
+        var conf = confBuilder.Build();    
 
         var jti = Guid.NewGuid().ToString();
-        var key = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(configuration["GovUkOidcConfiguration:BearerTokenSigningKey"]!));
+        var key = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(conf["GovUkOidcConfiguration:BearerTokenSigningKey"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-        _token = new JwtSecurityToken(
+        Token = new JwtSecurityToken(
             claims: new List<Claim>
-                {
-        new Claim("sub", configuration["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
-        new Claim("jti", jti),
-        new Claim(ClaimTypes.Role, RoleTypes.LaProfessional),
-        new Claim(FamilyHubsClaimTypes.OrganisationId, "1")
-
-                },
+            {
+                new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
+                new("jti", jti),
+                new(ClaimTypes.Role, RoleTypes.LaProfessional),
+                new(FamilyHubsClaimTypes.OrganisationId, "1"),
+                new(FamilyHubsClaimTypes.AccountId, "1")
+            },
             signingCredentials: creds,
-        expires: DateTime.UtcNow.AddMinutes(5)
-            );
+            expires: DateTime.UtcNow.AddMinutes(5)
+        );
 
-            _tokenLaManager = new JwtSecurityToken(
-                claims: new List<Claim>()
-                {
-                    new Claim("sub", configuration["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
-                    new Claim("jti", jti),
-                    new Claim(ClaimTypes.Role, RoleTypes.LaManager),
-                    new Claim(FamilyHubsClaimTypes.OrganisationId, "1")
-                },
-                signingCredentials: creds,
-                expires: DateTime.UtcNow.AddMinutes(5)
-                );
-
-        _token_forOrganisation1 = new JwtSecurityToken(
+        TokenLaManager = new JwtSecurityToken(
             claims: new List<Claim>
-                {
-        new Claim("sub", configuration["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
-        new Claim("jti", jti),
-        new Claim("AccountId", "5"),
-        new Claim(ClaimTypes.Role, RoleTypes.LaProfessional),
-        new Claim(FamilyHubsClaimTypes.OrganisationId, "1")
-
-                },
+            {
+                new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
+                new("jti", jti),
+                new(ClaimTypes.Role, RoleTypes.LaManager),
+                new(FamilyHubsClaimTypes.OrganisationId, "1"),
+                new(FamilyHubsClaimTypes.AccountId, "1")
+            },
             signingCredentials: creds,
-        expires: DateTime.UtcNow.AddMinutes(5)
-            );
+            expires: DateTime.UtcNow.AddMinutes(5)
+        );
 
-            _vcstoken = new JwtSecurityToken(
+        TokenForOrganisation1 = new JwtSecurityToken(
             claims: new List<Claim>
-                {
-        new Claim("sub", configuration["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
-        new Claim("jti", jti),
-        new Claim(ClaimTypes.Role, RoleTypes.VcsProfessional),
-        new Claim(FamilyHubsClaimTypes.OrganisationId, "1")
-
-                },
+            {
+                new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
+                new("jti", jti),
+                new("AccountId", "5"),
+                new(ClaimTypes.Role, RoleTypes.LaProfessional),
+                new(FamilyHubsClaimTypes.OrganisationId, "1"),
+                new(FamilyHubsClaimTypes.AccountId, "1")
+            },
             signingCredentials: creds,
-        expires: DateTime.UtcNow.AddMinutes(5)
-            );
+            expires: DateTime.UtcNow.AddMinutes(5)
+        );
 
-        _forbiddentoken = new JwtSecurityToken(
+        Vcstoken = new JwtSecurityToken(
             claims: new List<Claim>
-                {
-        new Claim("sub", configuration["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
-        new Claim("jti", jti),
-        new Claim(ClaimTypes.Role, RoleTypes.VcsProfessional),
-        new Claim(FamilyHubsClaimTypes.OrganisationId, "-1")
-
-                },
+            {
+                new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
+                new("jti", jti),
+                new(ClaimTypes.Role, RoleTypes.VcsProfessional),
+                new(FamilyHubsClaimTypes.OrganisationId, "1"),
+                new(FamilyHubsClaimTypes.AccountId, "1")
+            },
             signingCredentials: creds,
-        expires: DateTime.UtcNow.AddMinutes(5)
-            );
+            expires: DateTime.UtcNow.AddMinutes(5)
+        );
 
-            _webAppFactory = new CustomWebApplicationFactory();
-            _webAppFactory.SetupTestDatabaseAndSeedData();
+        Forbiddentoken = new JwtSecurityToken(
+            claims: new List<Claim>
+            {
+                new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
+                new("jti", jti),
+                new(ClaimTypes.Role, RoleTypes.VcsProfessional),
+                new(FamilyHubsClaimTypes.OrganisationId, "-1"),
+                new(FamilyHubsClaimTypes.AccountId, "-1")
+            },
+            signingCredentials: creds,
+            expires: DateTime.UtcNow.AddMinutes(5)
+        );
 
-            Client = _webAppFactory.CreateDefaultClient();
-            Client.BaseAddress = new Uri("https://localhost:7192/");
+        ServiceDirectoryFactory = new ServiceDirectoryFactory();
+        ServiceDirectoryFactory.SetupTestDatabaseAndSeedData();
+        var sdClient = ServiceDirectoryFactory.CreateDefaultClient();
 
-            _initSuccessful = true;
-        }
-        catch
-        {
-            _initSuccessful = false;
-        }
+        WebAppFactory = new CustomWebApplicationFactory(ConfigSetup, sdClient);
+        WebAppFactory.SetupTestDatabaseAndSeedData();
+
+        Client = WebAppFactory.CreateDefaultClient();
+        Client.BaseAddress = new Uri("https://localhost:7192/");
     }
 
     public static UserAccountDto GetUserAccount()
@@ -146,69 +134,30 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
         return userAccountDto;
     }
 
+    private static void ConfigSetup(IConfigurationBuilder builder) =>
+        builder.AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            { "GovUkOidcConfiguration:BearerTokenSigningKey", "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+            { "Crypto:DbEncryptionKey", "188,7,221,249,250,101,147,86,47,246,21,252,145,56,161,150,195,184,64,43,55,0,196,200,98,220,95,186,225,8,224,75" },
+            { "Crypto:DbEncryptionIVKey", "34,26,215,81,137,34,109,107,236,206,253,62,115,38,65,112" }
+        });
+
     protected virtual void Dispose(bool disposing)
     {
-        // Cleanup
-        if (!_disposed &&  disposing)
+        if (WebAppFactory != null)
         {
-            Dispose();
-        }
-        _disposed = true;
-    }
-
-    public void Dispose()
-    {
-        if (!_initSuccessful)
-        {
-            return;
-        }
-
-        if (_webAppFactory != null)
-        {
-            using var scope = _webAppFactory.Services.CreateScope();
+            using var scope = WebAppFactory.Services.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             context.Database.EnsureDeleted();
         }
 
-        if (Client != null)
-        {
-            Client.Dispose();
-        }
+        Client.Dispose();
+        WebAppFactory?.Dispose();
+    }
 
-        if (_webAppFactory != null)
-        {
-            _webAppFactory.Dispose();
-        }
-
+    public void Dispose()
+    {
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
-
-    protected bool IsRunningLocally()
-    {
-
-        if (!_initSuccessful || _configuration == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            string localMachineName = _configuration["LocalSettings:MachineName"] ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(localMachineName))
-            {
-                return Environment.MachineName.Equals(localMachineName, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-        catch
-        {
-            return false;
-        }
-
-        // Fallback to a default check if User Secrets file or machine name is not specified
-        // For example, you can add additional checks or default behavior here
-        return false;
-    }
 }
-
-#pragma warning restore S3881

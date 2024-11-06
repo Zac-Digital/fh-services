@@ -4,27 +4,21 @@ using System.IdentityModel.Tokens.Jwt;
 //Only run locally
 namespace FamilyHubs.Notification.FunctionalTests;
 
+[Collection("Sequential")]
 public class WhenUsingGeneralEndPoints : BaseWhenUsingOpenReferralApiUnitTests
 {
     [Fact]
     public async Task ThenGetInfo()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
-        string expectedStart = "Version: 1.0.0, Last Updated:";
+        const string expectedStart = "Version: 1.0.0";
 
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/info"),
+            RequestUri = new Uri($"{Client.BaseAddress}api/info"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -32,7 +26,7 @@ public class WhenUsingGeneralEndPoints : BaseWhenUsingOpenReferralApiUnitTests
 
         var stringResult = await response.Content.ReadAsStringAsync();
 
-        var teststring = stringResult.Substring(1, expectedStart.Length + 1);
+        var teststring = stringResult.Substring(0, expectedStart.Length);
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         ArgumentNullException.ThrowIfNull(stringResult);
