@@ -42,8 +42,5 @@ public class ApplicationDbContextInitialiser
 
         if (!await _context.Organisations.AnyAsync())
             await organisationSeedData.SeedOrganisations();
-
-        if (!await _context.Services.AnyAsync())
-            await organisationSeedData.SeedServices();
     }
 }

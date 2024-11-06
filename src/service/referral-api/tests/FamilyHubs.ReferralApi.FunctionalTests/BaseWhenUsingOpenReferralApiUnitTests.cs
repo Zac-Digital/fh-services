@@ -98,6 +98,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
         );
 
         ServiceDirectoryFactory = new ServiceDirectoryFactory();
+        ServiceDirectoryFactory.SetupTestDatabaseAndSeedData();
         var sdClient = ServiceDirectoryFactory.CreateDefaultClient();
 
         WebAppFactory = new CustomWebApplicationFactory(ConfigSetup, sdClient);

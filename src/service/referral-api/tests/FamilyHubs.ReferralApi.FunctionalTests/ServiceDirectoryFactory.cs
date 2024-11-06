@@ -1,10 +1,13 @@
 using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Api;
+using FamilyHubs.ServiceDirectory.Data.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using FamilyHubs.ServiceDirectory.Shared.Enums;
 
 namespace FamilyHubs.Referral.FunctionalTests;
 
@@ -50,5 +53,59 @@ public class ServiceDirectoryFactory : WebApplicationFactory<Program>
         });
 
         builder.UseEnvironment("Development");
+    }
+
+    public void SetupTestDatabaseAndSeedData()
+    {
+        using var scope = Services.CreateScope();
+
+        var scopedServices = scope.ServiceProvider;
+        var logger = scopedServices.GetRequiredService<ILogger<ServiceDirectoryFactory>>();
+
+        try
+        {
+            var context = scopedServices.GetRequiredService<ApplicationDbContext>();
+
+            if (!context.Services.Any())
+                SeedServices(context);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred seeding the database with test messages. Error: {exceptionMessage}", ex.Message);
+        }
+    }
+
+    private void SeedServices(ApplicationDbContext context)
+    {
+        var services = new List<Service>
+        {
+            new()
+            {
+                Id = 1,
+                ServiceType =           ServiceType.InformationSharing,
+                Name =                  "Elop Mentoring",
+                Description =           "Elop Mentoring",
+                OrganisationId =        1
+            },
+            new()
+            {
+                Id = 2,
+                ServiceType =           ServiceType.InformationSharing,
+                Name =                  "Collingwood Youth Centre",
+                Description =           "Collingwood Youth Centre",
+                OrganisationId =        2
+            },
+            new()
+            {
+                Id = 3,
+                ServiceType =           ServiceType.InformationSharing,
+                Name =                  "Newark Youth London",
+                Description =           "Newark Youth London",
+                OrganisationId =        3
+            }
+        };
+
+        context.Services.AddRange(services);
+        context.SaveChanges();
     }
 }

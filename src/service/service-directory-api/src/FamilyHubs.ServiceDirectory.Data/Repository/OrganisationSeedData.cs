@@ -192,39 +192,5 @@ public class OrganisationSeedData
         _dbContext.Organisations.AddRange(organisations);
         await _dbContext.SaveChangesAsync();
     }
-    
-    public async Task SeedServices()
-    {
-        var services = new List<Service>
-        {
-            new()
-            {
-                Id = 1,
-                ServiceType =           Shared.Enums.ServiceType.InformationSharing,
-                Name =                  "Elop Mentoring",
-                Description =           "Elop Mentoring",
-                OrganisationId =        1
-            },
-            new()
-            {
-                Id = 2,
-                ServiceType =           Shared.Enums.ServiceType.InformationSharing,
-                Name =                  "Collingwood Youth Centre",
-                Description =           "Collingwood Youth Centre",
-                OrganisationId =        2
-            },
-            new()
-            {
-                Id = 3,
-                ServiceType =           Shared.Enums.ServiceType.InformationSharing,
-                Name =                  "Newark Youth London",
-                Description =           "Newark Youth London",
-                OrganisationId =        3
-            }
-        };
-
-        _dbContext.Services.AddRange(services);
-        await _dbContext.SaveChangesAsync();
-    }
 }
 #pragma warning restore S1075

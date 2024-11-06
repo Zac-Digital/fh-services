@@ -40,6 +40,7 @@
   </Choose>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\shared\service-directory-shared\src\FamilyHubs.ServiceDirectory.Shared\FamilyHubs.ServiceDirectory.Shared.csproj" />
     <ProjectReference Include="..\..\..\service-directory-api\src\FamilyHubs.ServiceDirectory.Api\FamilyHubs.ServiceDirectory.Api.csproj" />
     <ProjectReference Include="..\..\src\FamilyHubs.Referral.Api\FamilyHubs.Referral.Api.csproj" />
   </ItemGroup>
