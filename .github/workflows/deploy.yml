@@ -301,31 +301,31 @@ jobs:
             title: Seed the IDAM database
             keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
             sql_file_path: ./test/seed-scripts/idam-data.sql
-          - databases: notification-database
-            name: Notification
-            title: Seed the Notification database
-            keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
-            sql_file_path: ./test/seed-scripts/notification-data.sql
+          #- databases: notification-database
+          #  name: Notification
+          #  title: Seed the Notification database
+          #  keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
+          #  sql_file_path: ./test/seed-scripts/notification-data.sql
           #- databases: open-referral-mock-database
           #  name: Open Referral Mock
           #  title: Seed the Open Referral Mock database
           #  keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION
           #  sql_file_path: ./test/seed-scripts/open-referral-mock-data.sql
-          - databases: referral-database
-            name: Referral
-            title: Seed the Referral database
-            keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION
-            sql_file_path: ./test/seed-scripts/referral-data.sql
-          - databases: report-database
-            name: Report
-            title: Seed the Report database
-            keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION
-            sql_file_path: ./test/seed-scripts/report-data.sql
-          - databases: service-directory-database
-            name: Service Directory
-            title: Seed the Service Directory database
-            keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
-            sql_file_path: ./test/seed-scripts/service-directory-data.sql
+          #- databases: referral-database
+          #  name: Referral
+          #  title: Seed the Referral database
+          #  keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION
+          #  sql_file_path: ./test/seed-scripts/referral-data.sql
+          #- databases: report-database
+          #  name: Report
+          #  title: Seed the Report database
+          #  keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION
+          #  sql_file_path: ./test/seed-scripts/report-data.sql
+          #- databases: service-directory-database
+          #  name: Service Directory
+          #  title: Seed the Service Directory database
+          #  keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
+          #  sql_file_path: ./test/seed-scripts/service-directory-data.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
