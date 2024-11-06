@@ -31,6 +31,10 @@ jobs:
     name: Runs the SQL script against the ${{ inputs.database_name }}
     runs-on: windows-2022
     environment: ${{ inputs.environment }}
+    env:
+      KEYVAULT_NAME: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-general
+      RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_PREFIX }}-familyhubs
+      SQL_SERVER: ${{ vars.AZURE_RESOURCE_PREFIX }}-as-fh-sql-server
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -44,9 +48,32 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Get Workflow Runner IP
+        id: runner-ip
+        uses: ./.github/actions/get-runner-ip-address
+
+      - name: Add Azure Firewall Rule
+        uses: ./.github/actions/azure-firewall-ip
+        with:
+          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+          action: "Add"
+          az_resource_group: ${{ env.RESOURCE_GROUP }}
+          az_sql_server_name: ${{ env.SQL_SERVER }}
+          az_firewall_rule_name: ${{ inputs.database_name }}
+          
       - name: Run SQL Script PowerShell
         uses: ./.github/actions/run-sql-script
         with:
-          keyvault_name: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-general
+          keyvault_name: ${{ env.KEYVAULT_NAME }}
           keyvault_secret_name: ${{ inputs.keyvault_secret_name }}
           sql_file_path: ${{ inputs.sql_file_path }}
+        
+      - name: Remove Azure Firewall Rule
+        if: always()
+        uses: ./.github/actions/azure-firewall-ip
+        with:
+          ip_address: ${{ steps.runner-ip.outputs.ip_address }}
+          action: "Remove"
+          az_resource_group: ${{ env.RESOURCE_GROUP }}
+          az_sql_server_name: ${{ env.SQL_SERVER }}
+          az_firewall_rule_name: ${{ inputs.database_name }}    
