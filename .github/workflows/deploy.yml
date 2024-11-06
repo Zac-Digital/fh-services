@@ -289,11 +289,11 @@ jobs:
       matrix:
         databases: [ 
           idam-database, 
-          notification-database, 
+          #notification-database, 
           #open-referral-mock-database, 
-          referral-database, 
-          report-database, 
-          service-directory-database 
+          #referral-database, 
+          #report-database, 
+          #service-directory-database 
         ]
         include:
           - databases: idam-database
