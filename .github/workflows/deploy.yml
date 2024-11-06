@@ -92,11 +92,33 @@ jobs:
     needs: [ build-projects-upload-artifacts ]
     strategy:
       matrix:
-        databases: [ idam-database ]
+        databases: [
+          idam-database,
+          notification-database,
+          open-referral-mock-database,
+          referral-database,
+          report-database,
+          service-directory-database
+        ]
         include:
           - database: idam-database
             title: Teardown IDAM database schema and data
             keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
+          - database: notification-database
+            title: Teardown Notification database schema and data
+            keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION  
+          - database: open-referral-mock-database
+            title: Teardown Open Referral Mock database schema and data
+            keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION  
+          - database: referral-database
+            title: Teardown Referral database schema and data
+            keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION  
+          - database: report-database
+            title: Teardown Report database schema and data
+            keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION  
+          - database: service-directory-database
+            title: Teardown Service Directory database schema and data
+            keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION  
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
@@ -254,12 +276,39 @@ jobs:
     needs: [ deploy-api-services, deploy-ui-services, deploy-functions ]
     strategy:
       matrix:
-        databases: [ idam-database ]
+        databases: [ 
+          idam-database, 
+          notification-database, 
+          open-referral-mock-database, 
+          referral-database, 
+          report-database, 
+          service-directory-database 
+        ]
         include:
           - database: idam-database
             title: Seed the IDAM database
             keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
             sql_file_path: ./test/seed-scripts/idam-data.sql
+          - database: notification-database
+            title: Seed the Notification database
+            keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
+            sql_file_path: ./test/seed-scripts/notification-data.sql
+          - database: open-referral-mock-database
+            title: Seed the Open Referral Mock database
+            keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION
+            sql_file_path: ./test/seed-scripts/open-referral-mock-data.sql
+          - database: referral-database
+            title: Seed the Referral database
+            keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION
+            sql_file_path: ./test/seed-scripts/referral-data.sql
+          - database: report-database
+            title: Seed the Report database
+            keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION
+            sql_file_path: ./test/seed-scripts/report-data.sql
+          - database: service-directory-database
+            title: Seed the Service Directory database
+            keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
+            sql_file_path: ./test/seed-scripts/service-directory-data.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
