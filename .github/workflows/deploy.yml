@@ -30,11 +30,11 @@ jobs:
       fail-fast: true
       matrix:
         project: [ #src/service/idam-api/,
-                   src/service/notification-api/,
+                   #src/service/notification-api/,
                    #src/service/referral-api/,
                    #src/service/report-api/,
                    #src/service/service-directory-api/,
-                   #src/service/mock-hsda-api/,
+                   src/service/mock-hsda-api/,
                    #src/function/open-referral-function/,
                    #src/ui/connect-dashboard-ui/,
                    #src/ui/connect-ui/,
@@ -46,9 +46,9 @@ jobs:
           #- project: src/service/idam-api/
           #  publish_project: FamilyHubs.Idam.Api
           #  job_name: Build - IDAM API
-          - project: src/service/notification-api/
-            publish_project: FamilyHubs.Notification.Api
-            job_name: Build - Notification API
+          #- project: src/service/notification-api/
+          #  publish_project: FamilyHubs.Notification.Api
+          #  job_name: Build - Notification API
           #- project: src/service/referral-api/
           #  publish_project: FamilyHubs.Referral.Api
           #  job_name: Build - Referral API
@@ -58,10 +58,10 @@ jobs:
           #- project: src/service/service-directory-api/
           #  publish_project: FamilyHubs.ServiceDirectory.Api
           #  job_name: Build - Service Directory API
-          #- project: src/service/mock-hsda-api/
-          #  publish_project: FamilyHubs.Mock-Hsda.Api
-          #  job_name: Build - Mock HSDA API
-          #  dotnet_version_override: "8.0.x"
+          - project: src/service/mock-hsda-api/
+            publish_project: FamilyHubs.Mock-Hsda.Api
+            job_name: Build - Mock HSDA API
+            dotnet_version_override: "8.0.x"
           #- project: src/function/open-referral-function/
           #  publish_project: FamilyHubs.OpenReferral.Function
           #  job_name: Build - Open Referral Function
@@ -96,8 +96,8 @@ jobs:
       matrix:
         databases: [
           #idam-database,
-          notification-database,
-          #open-referral-mock-database,
+          #notification-database,
+          open-referral-mock-database,
           #referral-database,
           #report-database,
           #service-directory-database
@@ -107,14 +107,14 @@ jobs:
           #  name: IDAM
           #  title: Teardown IDAM database schema and data
           #  keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
-          - databases: notification-database
-            name: Notification
-            title: Teardown Notification database schema and data
-            keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION  
-          #- databases: open-referral-mock-database
-          #  name: Open Referral Mock
-          #  title: Teardown Open Referral Mock database schema and data
-          #  keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION  
+          #- databases: notification-database
+          #  name: Notification
+          #  title: Teardown Notification database schema and data
+          #  keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION  
+          - databases: open-referral-mock-database
+            name: Open Referral Mock
+            title: Teardown Open Referral Mock database schema and data
+            keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION  
           #- databases: referral-database
           #  name: Referral
           #  title: Teardown Referral database schema and data
@@ -142,10 +142,11 @@ jobs:
     strategy:
       matrix:
         artifact_name: [ #idam-api,
-                         notification-api,
+                         #notification-api,
                          #referral-api,
                          #report-api,
-                         #service-directory-api
+                         #service-directory-api,
+                         mock-hsda-api
         ]
         include:
           #- artifact_name: idam-api
@@ -155,13 +156,13 @@ jobs:
           #  data_project_name: FamilyHubs.Idam.Data
           #  database_context: ApplicationDbContext
           #  azure_app_name: as-fh-idam-api
-          - artifact_name: notification-api
-            job_name: Deploy - Notification API
-            keyvault_prefix: NOTIFICATIONS-API
-            project_name: FamilyHubs.Notification.Api
-            data_project_name: FamilyHubs.Notification.Data
-            database_context: ApplicationDbContext
-            azure_app_name: as-fh-notification-api
+          #- artifact_name: notification-api
+          #  job_name: Deploy - Notification API
+          #  keyvault_prefix: NOTIFICATIONS-API
+          #  project_name: FamilyHubs.Notification.Api
+          #  data_project_name: FamilyHubs.Notification.Data
+          #  database_context: ApplicationDbContext
+          #  azure_app_name: as-fh-notification-api
           #- artifact_name: referral-api
           #  job_name: Deploy - Referral API
           #  keyvault_prefix: REFERRAL-API
@@ -183,13 +184,13 @@ jobs:
           #  data_project_name: FamilyHubs.ServiceDirectory.Data
           #  database_context: ApplicationDbContext
           #  azure_app_name: as-fh-sd-api
-          #- artifact_name: mock-hsda-api
-          #  job_name: Deploy - Mock HSDA API
-          #  keyvault_prefix: MOCK-HSDA-API
-          #  project_name: FamilyHubs.Mock-Hsda.Api
-          #  data_project_name: FamilyHubs.Mock-Hsda.Api
-          #  database_context: MockDbContext
-          #  azure_app_name: as-fh-open-referral-mock-api
+          - artifact_name: mock-hsda-api
+            job_name: Deploy - Mock HSDA API
+            keyvault_prefix: MOCK-HSDA-API
+            project_name: FamilyHubs.Mock-Hsda.Api
+            data_project_name: FamilyHubs.Mock-Hsda.Api
+            database_context: MockDbContext
+            azure_app_name: as-fh-open-referral-mock-api
     uses: ./.github/workflows/deploy-service.yml
     with:
       environment: ${{ inputs.environment }}
@@ -284,8 +285,8 @@ jobs:
       matrix:
         databases: [ 
           #idam-database, 
-          notification-database, 
-          #open-referral-mock-database, 
+          #notification-database, 
+          open-referral-mock-database, 
           #referral-database, 
           #report-database, 
           #service-directory-database 
@@ -296,16 +297,16 @@ jobs:
           #  title: Seed the IDAM database
           #  keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
           #  sql_file_path: ./test/seed-scripts/idam-data.sql
-          - databases: notification-database
-            name: Notification
-            title: Seed the Notification database
-            keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
-            sql_file_path: ./test/seed-scripts/notification-data.sql
-          #- databases: open-referral-mock-database
-          #  name: Open Referral Mock
-          #  title: Seed the Open Referral Mock database
-          #  keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION
-          #  sql_file_path: ./test/seed-scripts/open-referral-mock-data.sql
+          #- databases: notification-database
+          #  name: Notification
+          #  title: Seed the Notification database
+          #  keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
+          #  sql_file_path: ./test/seed-scripts/notification-data.sql
+          - databases: open-referral-mock-database
+            name: Open Referral Mock
+            title: Seed the Open Referral Mock database
+            keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION
+            sql_file_path: ./test/seed-scripts/open-referral-mock-data.sql
           #- databases: referral-database
           #  name: Referral
           #  title: Seed the Referral database
