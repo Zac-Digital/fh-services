@@ -19,7 +19,7 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
         var request = CreateGetRequest($"{Controller}/GetAccountClaimsByEmail?email={TestDataProvider.AccountEmail}");
 
         //  Act
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
 
         //  Assert
@@ -62,7 +62,7 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
         var request = CreatePostRequest($"{Controller}/AddClaim", requestContent, RoleTypes.DfeAdmin);
 
         //  Act
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
 
         //  Assert
@@ -86,7 +86,7 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
         var request = CreatePutRequest($"{Controller}/UpdateClaim", requestContent,RoleTypes.DfeAdmin);
 
         //  Act
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
 
         //  Assert
@@ -109,7 +109,7 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
         var request = CreateDeleteRequest($"{Controller}/DeleteClaim", requestContent, RoleTypes.DfeAdmin);
 
         //  Act
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
 
         //  Assert
@@ -128,7 +128,7 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
         var request = CreateDeleteRequest($"{Controller}/DeleteAllClaims", requestContent, RoleTypes.DfeAdmin);
 
         //  Act
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
 
         //  Assert

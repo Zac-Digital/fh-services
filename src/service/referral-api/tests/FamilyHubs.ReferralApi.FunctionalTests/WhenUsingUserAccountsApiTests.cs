@@ -18,11 +18,11 @@ public class WhenUsingUserAccountsApiTests : BaseWhenUsingOpenReferralApiUnitTes
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(Client!.BaseAddress + "api/useraccount"),
+            RequestUri = new Uri(Client.BaseAddress + "api/useraccount"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(_token));
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -43,11 +43,11 @@ public class WhenUsingUserAccountsApiTests : BaseWhenUsingOpenReferralApiUnitTes
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(Client!.BaseAddress + "api/useraccounts"),
+            RequestUri = new Uri(Client.BaseAddress + "api/useraccounts"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(_token));
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -68,11 +68,11 @@ public class WhenUsingUserAccountsApiTests : BaseWhenUsingOpenReferralApiUnitTes
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(Client!.BaseAddress + "api/useraccount"),
+            RequestUri = new Uri(Client.BaseAddress + "api/useraccount"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(userAccount), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(_token));
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -97,7 +97,7 @@ public class WhenUsingUserAccountsApiTests : BaseWhenUsingOpenReferralApiUnitTes
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(userAccount), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(_token));
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var updateresponse = await Client.SendAsync(request);
 
@@ -120,11 +120,11 @@ public class WhenUsingUserAccountsApiTests : BaseWhenUsingOpenReferralApiUnitTes
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(Client!.BaseAddress + "api/useraccounts"),
+            RequestUri = new Uri(Client.BaseAddress + "api/useraccounts"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(_token));
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -148,7 +148,7 @@ public class WhenUsingUserAccountsApiTests : BaseWhenUsingOpenReferralApiUnitTes
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(_token));
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var updateresponse = await Client.SendAsync(request);
 
@@ -171,11 +171,11 @@ public class WhenUsingUserAccountsApiTests : BaseWhenUsingOpenReferralApiUnitTes
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(Client!.BaseAddress + "api/useraccounts"),
+            RequestUri = new Uri(Client.BaseAddress + "api/useraccounts"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(_token));
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -199,7 +199,7 @@ public class WhenUsingUserAccountsApiTests : BaseWhenUsingOpenReferralApiUnitTes
             RequestUri = new Uri(Client.BaseAddress + $"api/useraccountsByOrganisationId/{organisationId}"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(_token));
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var getresponse = await Client.SendAsync(request);
 

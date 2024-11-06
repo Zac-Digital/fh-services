@@ -13,7 +13,7 @@ namespace FamilyHubs.Notification.FunctionalTests;
 
 public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
 {
-    protected readonly HttpClient? Client;
+    protected readonly HttpClient Client;
     private readonly CustomWebApplicationFactory? _webAppFactory;
     protected readonly JwtSecurityToken? Token;
     protected readonly string? EmailRecipient;
@@ -72,7 +72,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         context.Database.EnsureDeleted();
 
-        Client?.Dispose();
+        Client.Dispose();
         _webAppFactory?.Dispose();
     }
 

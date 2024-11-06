@@ -1,26 +1,24 @@
-﻿using FamilyHubs.Referral.Data.Repository;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using FamilyHubs.Referral.Data.Repository;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.SharedKernel.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using FamilyHubs.Referral.Core.ClientServices;
-using Microsoft.AspNetCore.TestHost;
 
 namespace FamilyHubs.Referral.FunctionalTests;
 
 public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
 {
-    protected readonly HttpClient? Client;
+    protected readonly HttpClient Client;
     protected readonly CustomWebApplicationFactory? WebAppFactory;
     protected readonly ServiceDirectoryFactory? ServiceDirectoryFactory;
-    protected readonly JwtSecurityToken? _token;
-    protected readonly JwtSecurityToken? _tokenLaManager;
-    protected readonly JwtSecurityToken? _token_forOrganisation1;
-    protected readonly JwtSecurityToken? _vcstoken;
-    protected readonly JwtSecurityToken? _forbiddentoken;
+    protected readonly JwtSecurityToken? Token;
+    protected readonly JwtSecurityToken? TokenLaManager;
+    protected readonly JwtSecurityToken? TokenForOrganisation1;
+    protected readonly JwtSecurityToken? Vcstoken;
+    protected readonly JwtSecurityToken? Forbiddentoken;
 
     protected BaseWhenUsingOpenReferralApiUnitTests()
     {
@@ -31,7 +29,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
         var jti = Guid.NewGuid().ToString();
         var key = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(conf["GovUkOidcConfiguration:BearerTokenSigningKey"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-        _token = new JwtSecurityToken(
+        Token = new JwtSecurityToken(
             claims: new List<Claim>
             {
                 new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
@@ -44,7 +42,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
             expires: DateTime.UtcNow.AddMinutes(5)
         );
 
-        _tokenLaManager = new JwtSecurityToken(
+        TokenLaManager = new JwtSecurityToken(
             claims: new List<Claim>
             {
                 new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
@@ -57,7 +55,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
             expires: DateTime.UtcNow.AddMinutes(5)
         );
 
-        _token_forOrganisation1 = new JwtSecurityToken(
+        TokenForOrganisation1 = new JwtSecurityToken(
             claims: new List<Claim>
             {
                 new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
@@ -71,7 +69,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
             expires: DateTime.UtcNow.AddMinutes(5)
         );
 
-        _vcstoken = new JwtSecurityToken(
+        Vcstoken = new JwtSecurityToken(
             claims: new List<Claim>
             {
                 new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
@@ -84,7 +82,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
             expires: DateTime.UtcNow.AddMinutes(5)
         );
 
-        _forbiddentoken = new JwtSecurityToken(
+        Forbiddentoken = new JwtSecurityToken(
             claims: new List<Claim>
             {
                 new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
@@ -153,7 +151,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
             context.Database.EnsureDeleted();
         }
 
-        Client?.Dispose();
+        Client.Dispose();
         WebAppFactory?.Dispose();
     }
 

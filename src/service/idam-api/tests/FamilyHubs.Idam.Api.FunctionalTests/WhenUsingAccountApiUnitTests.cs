@@ -28,7 +28,7 @@ public class WhenUsingAccountApiUnitTests : BaseWhenUsingApiUnitTests
         var request = CreatePostRequest(Controller, requestContent, bearerRole);
 
         //  Act
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
 
         //  Assert
@@ -52,7 +52,7 @@ public class WhenUsingAccountApiUnitTests : BaseWhenUsingApiUnitTests
         var request = CreatePostRequest(Controller, requestContent, RoleTypes.DfeAdmin);
 
         //  Act
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
 
         //  Assert
@@ -71,7 +71,7 @@ public class WhenUsingAccountApiUnitTests : BaseWhenUsingApiUnitTests
         var request = CreateGetRequest($"{Controller}?email={TestDataProvider.AccountEmail}", RoleTypes.DfeAdmin);
 
         //  Act
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         var responseContent = await response.Content.ReadAsStringAsync();
 
         //  Assert

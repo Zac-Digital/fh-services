@@ -20,7 +20,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var request = CreatePostRequest("api/services", service, RoleTypes.DfeAdmin);
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
 
         var responseContent = await response.Content.ReadAsStringAsync();
 
@@ -44,10 +44,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
 
@@ -62,7 +62,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
 
         var updateRequest = CreatePutRequest($"api/services/{item.Id}", updatedItem, RoleTypes.DfeAdmin);
 
-        using var updateResponse = await Client!.SendAsync(updateRequest);
+        using var updateResponse = await Client.SendAsync(updateRequest);
 
         updateResponse.EnsureSuccessStatusCode();
 
@@ -77,7 +77,7 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
     {
         var request = CreateDeleteRequest("api/services/1", string.Empty, RoleTypes.DfeAdmin);
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
 
@@ -102,10 +102,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -133,10 +133,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -161,10 +161,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -189,10 +189,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -217,10 +217,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -245,10 +245,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ServiceDto>>(await response.Content.ReadAsStreamAsync(), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -265,10 +265,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + "api/services-simple/1"),
+            RequestUri = new Uri(Client.BaseAddress + "api/services-simple/1"),
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
 
@@ -286,10 +286,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + "api/services/1"),
+            RequestUri = new Uri(Client.BaseAddress + "api/services/1"),
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
 
         response.EnsureSuccessStatusCode();
 
@@ -317,10 +317,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var retVal = JsonSerializer.Deserialize<PaginatedList<ServiceDto>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions(JsonSerializerDefaults.Web));
@@ -344,10 +344,10 @@ public class WhenUsingServiceApiUnitTests : BaseWhenUsingApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/services-simple{url}")
+            RequestUri = new Uri(Client.BaseAddress + $"api/services-simple{url}")
         };
 
-        using var response = await Client!.SendAsync(request);
+        using var response = await Client.SendAsync(request);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var retVal = JsonSerializer.Deserialize<PaginatedList<ServiceDto>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions(JsonSerializerDefaults.Web));

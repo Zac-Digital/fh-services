@@ -1,14 +1,14 @@
-﻿using FamilyHubs.Idam.Data.Repository;
+﻿using System.Text;
+using FamilyHubs.Idam.Data.Repository;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System.Text;
-using Microsoft.Extensions.Configuration;
 
 namespace FamilyHubs.Idam.Api.FunctionalTests;
 
 public abstract class BaseWhenUsingApiUnitTests : IDisposable
 {
-    protected readonly HttpClient? Client;
+    protected readonly HttpClient Client;
     private readonly CustomWebApplicationFactory? _webAppFactory;
 
     protected BaseWhenUsingApiUnitTests()
@@ -82,7 +82,7 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
         var request = new HttpRequestMessage
         {
             Method = verb,
-            RequestUri = new Uri($"{Client!.BaseAddress}{path}"),
+            RequestUri = new Uri($"{Client.BaseAddress}{path}"),
         };
 
         if (!string.IsNullOrEmpty(role))

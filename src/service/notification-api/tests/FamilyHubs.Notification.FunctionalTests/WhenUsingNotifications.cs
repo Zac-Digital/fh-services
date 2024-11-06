@@ -67,7 +67,7 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri(Client!.BaseAddress + "api/notify"),
+            RequestUri = new Uri(Client.BaseAddress + "api/notify"),
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
@@ -94,7 +94,7 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/notify"),
+            RequestUri = new Uri(Client.BaseAddress + $"api/notify"),
         };
 
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Token)}");
@@ -121,7 +121,7 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/notify/1"),
+            RequestUri = new Uri(Client.BaseAddress + $"api/notify/1"),
         };
 
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Token)}");

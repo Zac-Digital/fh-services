@@ -15,7 +15,7 @@ public class WhenUsingGeneralEndPoints : BaseWhenUsingOpenReferralApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri($"{Client!.BaseAddress}api/info"),
+            RequestUri = new Uri($"{Client.BaseAddress}api/info"),
         };
 
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
