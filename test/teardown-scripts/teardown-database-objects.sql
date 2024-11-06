@@ -1,9 +1,5 @@
-begin transaction
+BEGIN TRANSACTION
 
-
-
-
-    /*
 -- Drop all foreign key constraints
 DECLARE @sql NVARCHAR(MAX) = N'';
 SELECT @sql += 'ALTER TABLE ' + QUOTENAME(s.name) + '.' + QUOTENAME(t.name) + ' DROP CONSTRAINT ' + QUOTENAME(f.name) + ';'
@@ -40,6 +36,5 @@ FROM sys.objects AS f
 INNER JOIN sys.schemas AS s ON f.schema_id = s.schema_id
 WHERE f.type IN ('FN', 'IF', 'TF');
 EXEC sp_executesql @sql;
-     */
 
-rollback transaction
+ROLLBACK TRANSACTION
