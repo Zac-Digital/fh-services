@@ -4,7 +4,7 @@
 
 @* todo: use summary list tag helpers *@
 
-<div class="app-service">
+<div class="app-service" data-testid="service-entry">
     <div class="govuk-summary-list__row">
         <div class="govuk-summary-list__key">
             <h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-3"><a asp-page="/ServiceDetail/Index" asp-route-serviceId="@Model.ServiceId" asp-route-fromUrl="@HttpUtility.UrlDecode(Context.Request.GetEncodedPathAndQuery())">@Model.Name</a> <span class="govuk-!-font-weight-regular"> (@Model.Distance?.ToString("0.0") miles)</span></h3>

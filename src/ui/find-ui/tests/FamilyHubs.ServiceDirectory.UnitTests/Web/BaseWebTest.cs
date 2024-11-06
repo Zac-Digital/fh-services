@@ -2,18 +2,18 @@ using System.Net.Http.Headers;
 using AngleSharp;
 using AngleSharp.Html.Dom;
 using AngleSharp.Io;
+using FamilyHubs.ServiceDirectory.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace FamilyHubs.ServiceDirectory.Admin.Web.IntegrationTests;
+namespace FamilyHubs.ServiceDirectory.UnitTests.Web;
 
-public abstract class BaseTest : IDisposable
+public abstract class BaseWebTest : IDisposable
 {
-    protected readonly Random Random = new();
-
+    protected const string BaseUrl = "https://localhost";
     private readonly HttpClient _client;
     private readonly WebApplicationFactory<Program> _factory;
 
@@ -37,7 +37,7 @@ public abstract class BaseTest : IDisposable
         }
     }
 
-    protected BaseTest()
+    protected BaseWebTest()
     {
         _factory = new MyWebApplicationFactory();
         _client = _factory.WithWebHostBuilder(builder =>
@@ -46,17 +46,15 @@ public abstract class BaseTest : IDisposable
             }
         ).CreateClient(
             new WebApplicationFactoryClientOptions {
-                BaseAddress = new Uri("https://localhost"),
+                BaseAddress = new Uri(BaseUrl),
                 HandleCookies = true
             }
         );
     }
 
-    protected abstract void Configure(IServiceCollection services);
-
-    protected async Task Login(StubUser user)
+    protected virtual void Configure(IServiceCollection services)
     {
-        await _client.GetAsync($"account/stub/roleSelected?user={user.Email}&redirect=%2f");
+        
     }
 
     protected async Task<IHtmlDocument> Navigate(string uri, Action<HttpResponseMessage>? responseValidation = null)
@@ -106,18 +104,5 @@ public abstract class BaseTest : IDisposable
     {
         Dispose(true);
         GC.SuppressFinalize(this);
-    }
-
-    protected class StubUser
-    {
-        public string Email { get; }
-
-        private StubUser(string email)
-        {
-            Email = email;
-        }
-
-        public static readonly StubUser DfeAdmin = new("dfeAdmin.user@stub.com");
-        public static readonly StubUser LaAdmin = new("laOrgOne.LaAdmin@stub.com");
     }
 }
