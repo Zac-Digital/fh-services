@@ -12,14 +12,14 @@ public class ServiceDirectoryClientTaxonomies
 {
     private readonly IHttpClientFactory _httpClientFactory = Substitute.For<IHttpClientFactory>();
 
-    readonly PaginatedList<TaxonomyDto> _taxonomies = new(
+    private readonly PaginatedList<TaxonomyDto> _taxonomies = new(
         [
             new TaxonomyDto { Id = 1, Name = "Activities, clubs and groups", TaxonomyType = TaxonomyType.ServiceCategory },
             new TaxonomyDto { Id = 2, Name = "Activities", TaxonomyType = TaxonomyType.ServiceCategory, ParentId = 1 }
         ],
         2, 1, 10
     );
-    
+
     [Fact]
     public async Task GetTaxonomiesUsesCache()
     {

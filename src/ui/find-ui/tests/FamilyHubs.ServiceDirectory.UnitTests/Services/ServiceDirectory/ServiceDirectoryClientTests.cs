@@ -6,7 +6,7 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Services.ServiceDirectory;
 public class ServiceDirectoryClientTests
 {
     [Fact]
-    public void GetEndpoint()
+    public void HealthUrl_ReturnsCorrectUrl()
     {
         var config = new ConfigurationBuilder()
             .AddInMemoryCollection(

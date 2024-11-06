@@ -5,23 +5,23 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Filtering;
 
 public class SearchWithinFilterTests
 {
-    private readonly ServicesParams _mServicesParams = new("", 0, 0);
+    private readonly ServicesParams _servicesParams = new("", 0, 0);
 
     [Fact]
-    private void TestFilterNone()
+    private void WhenSearchWithinFilterHasNoCriteria_Properties_AreNull()
     {
         var filter = new SearchWithinFilter();
-        filter.AddFilterCriteria([], _mServicesParams);
+        filter.AddFilterCriteria([], _servicesParams);
 
-        Assert.Null(_mServicesParams.MaximumProximityMeters);
+        Assert.Null(_servicesParams.MaximumProximityMeters);
     }
 
     [Fact]
-    private void TestFilter()
+    private void WhenSearchWithinFilterHasOneMileCriteria_Properties_AreCorrect()
     {
         var filter = new SearchWithinFilter();
-        filter.AddFilterCriteria([filter.Aspects.First()], _mServicesParams);
+        filter.AddFilterCriteria([filter.Aspects.First()], _servicesParams);
 
-        Assert.Equal(1609, _mServicesParams.MaximumProximityMeters);
+        Assert.Equal(1609, _servicesParams.MaximumProximityMeters);
     }
 }

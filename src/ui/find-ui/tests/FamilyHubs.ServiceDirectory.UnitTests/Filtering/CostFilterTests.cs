@@ -5,23 +5,23 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Filtering;
 
 public class CostFilterTests
 {
-    private readonly ServicesParams _mServicesParams = new("", 0, 0);
+    private readonly ServicesParams _servicesParams = new("", 0, 0);
 
     [Fact]
-    private void TestFilterNone()
+    private void WhenCostFilterHasNoCriteria_IsPaidFor_AreNull()
     {
         var filter = new CostFilter();
-        filter.AddFilterCriteria([], _mServicesParams);
+        filter.AddFilterCriteria([], _servicesParams);
 
-        Assert.Null(_mServicesParams.IsPaidFor);
+        Assert.Null(_servicesParams.IsPaidFor);
     }
 
     [Fact]
-    private void TestFilter()
+    private void WhenCostFilterHasFreeCriteria_IsPaidFor_IsFalse()
     {
         var filter = new CostFilter();
-        filter.AddFilterCriteria([filter.Aspects.First()], _mServicesParams);
+        filter.AddFilterCriteria([filter.Aspects.First()], _servicesParams);
 
-        Assert.False(_mServicesParams.IsPaidFor);
+        Assert.False(_servicesParams.IsPaidFor);
     }
 }

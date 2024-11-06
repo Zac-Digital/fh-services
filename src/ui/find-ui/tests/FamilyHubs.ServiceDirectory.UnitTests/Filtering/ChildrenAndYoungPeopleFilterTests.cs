@@ -5,38 +5,38 @@ namespace FamilyHubs.ServiceDirectory.UnitTests.Filtering;
 
 public class ChildrenAndYoungPeopleFilterTests
 {
-    private readonly ServicesParams _mServicesParams = new("", 0, 0);
+    private readonly ServicesParams _servicesParams = new("", 0, 0);
 
     [Fact]
-    private void TestFilterNone()
+    private void WhenCaypFilterHasNoCriteria_Properties_AreNull()
     {
         var filter = new ChildrenAndYoungPeopleFilter();
-        filter.AddFilterCriteria([], _mServicesParams);
+        filter.AddFilterCriteria([], _servicesParams);
 
-        Assert.Null(_mServicesParams.AllChildrenYoungPeople);
-        Assert.Null(_mServicesParams.GivenAge);
+        Assert.Null(_servicesParams.AllChildrenYoungPeople);
+        Assert.Null(_servicesParams.GivenAge);
     }
 
     [Fact]
-    private void TestFilterAll()
+    private void WhenCaypFilterHasAllAgesCriteria_Properties_AreCorrect()
     {
         var filter = new ChildrenAndYoungPeopleFilter();
-        filter.AddFilterCriteria([filter.Aspects.First()], _mServicesParams);
+        filter.AddFilterCriteria([filter.Aspects.First()], _servicesParams);
 
-        Assert.Equal(true, _mServicesParams.AllChildrenYoungPeople);
-        Assert.Null(_mServicesParams.GivenAge);
+        Assert.Equal(true, _servicesParams.AllChildrenYoungPeople);
+        Assert.Null(_servicesParams.GivenAge);
     }
     
     [Fact]
-    private void TestFilter()
+    private void WhenCaypFilterHasSpecificAgeCriteria_Properties_AreCorrect()
     {
         var filter = new ChildrenAndYoungPeopleFilter();
         foreach (var filterAspect in filter.Aspects.Skip(1))
         {
-            filter.AddFilterCriteria([filterAspect], _mServicesParams);
+            filter.AddFilterCriteria([filterAspect], _servicesParams);
 
-            Assert.NotEqual(true, _mServicesParams.AllChildrenYoungPeople);
-            Assert.Equal(int.Parse(filterAspect.Id), _mServicesParams.GivenAge);
+            Assert.NotEqual(true, _servicesParams.AllChildrenYoungPeople);
+            Assert.Equal(int.Parse(filterAspect.Id), _servicesParams.GivenAge);
         }
     }
 }

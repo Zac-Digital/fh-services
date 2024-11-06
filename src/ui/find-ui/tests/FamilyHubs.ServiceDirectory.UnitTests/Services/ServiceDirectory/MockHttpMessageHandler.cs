@@ -11,7 +11,7 @@ public class MockHttpMessageHandler(string response, HttpStatusCode statusCode) 
         NumberOfCalls++;
 
         // Could be a GET-request without a body
-        if (request.Content != null)
+        if (request.Content is not null)
             Input = await request.Content.ReadAsStringAsync(cancellationToken);
 
         return new HttpResponseMessage
