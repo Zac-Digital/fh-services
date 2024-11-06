@@ -7,7 +7,11 @@ on:
       environment:
         required: true
         type: string
-        description: Environment to apply database teardown script to
+        description: Environment to apply database SQL script to
+      database:
+        required: true
+        type: string
+        description: The database being updated  
       title:
         required: true
         type: string
@@ -24,7 +28,7 @@ on:
 jobs:
   run-script-against-database:
     #if: startsWith(inputs.environment, 'Test')
-    name: Runs theSQL script against the selected database
+    name: Runs the SQL script against the ${{ inputs.database }}
     runs-on: windows-2022
     environment: ${{ inputs.environment }}
     env:

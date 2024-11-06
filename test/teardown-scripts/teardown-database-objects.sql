@@ -1,16 +1,6 @@
 begin transaction
 
-SELECT [Id]
-        ,[OpenId]
-        ,[Name]
-        ,[Email]
-        ,[PhoneNumber]
-        ,[Status]
-        ,[Created]
-        ,[CreatedBy]
-        ,[LastModified]
-        ,[LastModifiedBy]
-FROM [dbo].[Accounts]
+
 
 
     /*

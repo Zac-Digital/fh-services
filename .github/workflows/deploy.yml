@@ -122,6 +122,7 @@ jobs:
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
+      database: ${{ matrix.database }}
       title: ${{ matrix.title }}
       keyvault_secret_name: ${{ matrix.keyvault_secret_name }}
       sql_file_path: ./test/teardown-scripts/teardown-database-objects.sql
@@ -312,6 +313,7 @@ jobs:
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
+      database: ${{ matrix.database }}
       title: ${{ matrix.title }}
       keyvault_secret_name: ${{ matrix.keyvault_secret_name }}
       sql_file_path: ${{ matrix.sql_file_path }}
