@@ -15,6 +15,7 @@ FROM sys.tables AS t
 INNER JOIN sys.schemas AS s ON t.schema_id = s.schema_id;
 EXEC sp_executesql @sql;
 
+/*
 -- Drop all views
 SET @sql = N'';
 SELECT @sql += 'DROP VIEW ' + QUOTENAME(s.name) + '.' + QUOTENAME(v.name) + ';'
@@ -36,5 +37,6 @@ FROM sys.objects AS f
 INNER JOIN sys.schemas AS s ON f.schema_id = s.schema_id
 WHERE f.type IN ('FN', 'IF', 'TF');
 EXEC sp_executesql @sql;
+*/
 
 ROLLBACK TRANSACTION
