@@ -39,4 +39,4 @@ WHERE f.type IN ('FN', 'IF', 'TF');
 EXEC sp_executesql @sql;
 */
 
-ROLLBACK TRANSACTION
+COMMIT TRANSACTION
