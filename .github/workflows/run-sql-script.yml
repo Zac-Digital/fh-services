@@ -12,10 +12,6 @@ on:
         required: true
         type: string
         description: The database being updated  
-      #title:
-      #  required: true
-      #  type: string
-      #  description: Title for the workflow  
       keyvault_secret_name:
         required: true
         type: string
