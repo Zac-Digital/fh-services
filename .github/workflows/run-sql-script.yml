@@ -1,5 +1,5 @@
 name: Run SQL Script
-run-name: ${{ inputs.title }}
+run-name: Run SQL Script for the ${{ inputs.display_name }} database
 
 on:
   workflow_call:
@@ -8,14 +8,14 @@ on:
         required: true
         type: string
         description: Environment to apply database SQL script to
-      database_name:
+      display_name:
         required: true
         type: string
         description: The database being updated  
-      title:
-        required: true
-        type: string
-        description: Title for the workflow  
+      #title:
+      #  required: true
+      #  type: string
+      #  description: Title for the workflow  
       keyvault_secret_name:
         required: true
         type: string
@@ -28,7 +28,7 @@ on:
 jobs:
   run-script-against-database:
     if: startsWith(inputs.environment, 'Pre-')
-    name: Runs the SQL script against the ${{ inputs.database_name }}
+    name: Runs the SQL script against the ${{ inputs.display_name }}
     runs-on: windows-2022
     environment: ${{ inputs.environment }}
     env:
@@ -59,7 +59,7 @@ jobs:
           action: "Add"
           az_resource_group: ${{ env.RESOURCE_GROUP }}
           az_sql_server_name: ${{ env.SQL_SERVER }}
-          az_firewall_rule_name: sql-script-rule #${{ inputs.database_name }}
+          az_firewall_rule_name: sql-script-rule
           
       - name: Run SQL Script PowerShell
         uses: ./.github/actions/run-sql-script
@@ -76,4 +76,4 @@ jobs:
           action: "Remove"
           az_resource_group: ${{ env.RESOURCE_GROUP }}
           az_sql_server_name: ${{ env.SQL_SERVER }}
-          az_firewall_rule_name: sql-script-rule #${{ inputs.database_name }}    
+          az_firewall_rule_name: sql-script-rule    

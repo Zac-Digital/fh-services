@@ -89,8 +89,8 @@ jobs:
 
   # Only runs in test. See run-sql-script.yml which conditionally checks for the test environment. Due to needing 
   # sensible dependencies in this yml to control the workflow and deploy-services doing the migrations
-  teardown-database-objects:
-    name: ${{ matrix.title }}
+  reset-databases:
+    name: Reset the ${{ matrix.display_name }} database
     needs: [ build-projects-upload-artifacts ]
     strategy:
       matrix:
@@ -99,46 +99,52 @@ jobs:
           notification-database,
           open-referral-mock-database,
           referral-database,
-          #report-database,
+          report-database,
           service-directory-database
         ]
         include:
           - databases: idam-database
-            name: IDAM
-            title: Teardown IDAM database schema and data
+            display_name: IDAM
+            #title: Reset IDAM database
             keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
+            sql_file_path: ./test/reset-scripts/reset-database.sql
           - databases: notification-database
-            name: Notification
-            title: Teardown Notification database schema and data
-            keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION  
+            display_name: Notification
+            #title: Reset Notification database
+            keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
+            sql_file_path: ./test/reset-scripts/reset-database.sql
           - databases: open-referral-mock-database
-            name: Open Referral Mock
-            title: Teardown Open Referral Mock database schema and data
-            keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION  
+            display_name: Open Referral Mock
+            #title: Reset Open Referral Mock database
+            keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION
+            sql_file_path: ./test/reset-scripts/reset-database.sql
           - databases: referral-database
-            name: Referral
-            title: Teardown Referral database schema and data
-            keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION  
-          #- databases: report-database
-          #  name: Report
-          #  title: Teardown Report database schema and data
-          #  keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION  
+            display_name: Referral
+            #title: Reset Referral database
+            keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION
+            sql_file_path: ./test/reset-scripts/reset-database.sql
+          - databases: report-database
+            display_name: Report
+            #title: Reset Report database
+            keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION  
+            sql_file_path: ./test/reset-scripts/reset-report-database.sql
           - databases: service-directory-database
-            name: Service Directory
-            title: Teardown Service Directory database schema and data
-            keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION  
+            display_name: Service Directory
+            #title: Reset Service Directory database
+            keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
+            sql_file_path: ./test/reset-scripts/reset-database.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
-      database_name: ${{ matrix.name }}
-      title: ${{ matrix.title }}
+      display_name: ${{ matrix.display_name }}
+      #title: ${{ matrix.title }}
       keyvault_secret_name: ${{ matrix.keyvault_secret_name }}
-      sql_file_path: ./test/teardown-scripts/teardown-database-objects.sql
+      sql_file_path: ${{ matrix.sql_file_path }}
     secrets: inherit
     
   deploy-api-services:
     name: ${{ matrix.job_name }}
-    needs: [ teardown-database-objects ]
+    needs: [ reset-databases ]
     strategy:
       matrix:
         artifact_name: [ idam-api,
@@ -256,7 +262,7 @@ jobs:
 
   deploy-functions:
     name: ${{ matrix.job_name }}
-    needs: [ teardown-database-objects ]
+    needs: [ reset-databases ]
     strategy:
       matrix:
         artifact_name: [
@@ -279,7 +285,7 @@ jobs:
   # Only runs in test. See run-sql-script.yml which conditionally checks for the test environment. Due to needing 
   # sensible dependencies in this yml to control the workflow and deploy-services doing the migrations
   seed-databases: 
-    name: ${{ matrix.title }}
+    name: Seed the ${{ matrix.display_name }} database
     needs: [ deploy-api-services, deploy-ui-services, deploy-functions ]
     strategy:
       matrix:
@@ -288,45 +294,45 @@ jobs:
           notification-database, 
           open-referral-mock-database, 
           referral-database, 
-          #report-database, 
+          report-database, 
           service-directory-database 
         ]
         include:
           - databases: idam-database
-            name: IDAM
-            title: Seed the IDAM database
+            display_name: IDAM
+            #title: Seed the IDAM database
             keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
             sql_file_path: ./test/seed-scripts/idam-data.sql
           - databases: notification-database
-            name: Notification
-            title: Seed the Notification database
+            display_name: Notification
+            #title: Seed the Notification database
             keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
             sql_file_path: ./test/seed-scripts/notification-data.sql
           - databases: open-referral-mock-database
-            name: Open Referral Mock
-            title: Seed the Open Referral Mock database
+            display_name: Open Referral Mock
+            #title: Seed the Open Referral Mock database
             keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION
             sql_file_path: ./test/seed-scripts/open-referral-mock-data.sql
           - databases: referral-database
-            name: Referral
-            title: Seed the Referral database
+            display_name: Referral
+            #title: Seed the Referral database
             keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION
             sql_file_path: ./test/seed-scripts/referral-data.sql
-          #- databases: report-database
-          #  name: Report
-          #  title: Seed the Report database
-          #  keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION
-          #  sql_file_path: ./test/seed-scripts/report-data.sql
+          - databases: report-database
+            display_name: Report
+            #title: Seed the Report database
+            keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION
+            sql_file_path: ./test/seed-scripts/report-data.sql
           - databases: service-directory-database
-            name: Service Directory
-            title: Seed the Service Directory database
+            display_name: Service Directory
+            #title: Seed the Service Directory database
             keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
             sql_file_path: ./test/seed-scripts/service-directory-data.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
-      database_name: ${{ matrix.name }}
-      title: ${{ matrix.title }}
+      display_name: ${{ matrix.display_name }}
+      #title: ${{ matrix.title }}
       keyvault_secret_name: ${{ matrix.keyvault_secret_name }}
       sql_file_path: ${{ matrix.sql_file_path }}
     secrets: inherit

@@ -1,20 +1,16 @@
+--
+-- This is a report-specific script that just clears the data from certain tables and leaves all the seeded dim tables
+-- untouched. Only migrations that have not previously run will be applied to the report database in this case.
+-- The reason is that there is a huge volume of seeded time and date data that simply cannot be done via a pipeline in
+-- an efficient manner.
+--
+
 BEGIN TRY
     BEGIN TRANSACTION
-    
-    -- Drop all foreign key constraints
-    DECLARE @sql NVARCHAR(MAX) = N'';
-    SELECT @sql += 'ALTER TABLE ' + QUOTENAME(s.name) + '.' + QUOTENAME(t.name) + ' DROP CONSTRAINT ' + QUOTENAME(f.name) + ';'
-    FROM sys.foreign_keys AS f
-    INNER JOIN sys.tables AS t ON f.parent_object_id = t.object_id
-    INNER JOIN sys.schemas AS s ON t.schema_id = s.schema_id;
-    EXEC sp_executesql @sql;
-    
-    -- Drop all tables
-    SET @sql = N'';
-    SELECT @sql += 'DROP TABLE ' + QUOTENAME(s.name) + '.' + QUOTENAME(t.name) + ';'
-    FROM sys.tables AS t
-    INNER JOIN sys.schemas AS s ON t.schema_id = s.schema_id;
-    EXEC sp_executesql @sql;
+
+    DELETE FROM [dim].[ConnectionRequestsSentFacts]
+
+    DELETE FROM [dim].[ServiceSearchFacts]
     
     COMMIT TRANSACTION
 END TRY
