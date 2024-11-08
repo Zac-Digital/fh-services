@@ -24,11 +24,7 @@ public class ApplicationDbContextInitialiser
                     await _context.Database.EnsureDeletedAsync();
 
                 if (_context.Database.IsSqlServer())
-                    await _context.Database.MigrateAsync();
-                else
                     await _context.Database.EnsureCreatedAsync();
-
-                await SeedAsync();
             }
         }
         catch (Exception ex)
@@ -36,24 +32,5 @@ public class ApplicationDbContextInitialiser
             _logger.LogError(ex, "An error occurred while initialising the database.");
             throw;
         }
-    }
-
-    public async Task SeedAsync()
-    {
-        try
-        {
-            await TrySeedAsync();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "An error occurred while seeding the database.");
-            throw;
-        }
-    }
-
-    public async Task TrySeedAsync()
-    {
-        
-        await _context.SaveChangesAsync();
     }
 }

@@ -18,9 +18,7 @@ public class ApplicationDbContextInitialiser
             if (shouldRestDatabaseOnRestart)
                 await _context.Database.EnsureDeletedAsync();
 
-            if (_context.Database.IsSqlServer())
-                await _context.Database.MigrateAsync();
-            else
+            if (!_context.Database.IsSqlServer())
                 await _context.Database.EnsureCreatedAsync();
 
             await SeedAsync();

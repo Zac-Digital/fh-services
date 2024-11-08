@@ -162,13 +162,10 @@ public static class StartupExtensions
         
         if (!webApplication.Environment.IsProduction())
         {
-
             if (shouldRestDatabaseOnRestart) 
                 await dbContext.Database.EnsureDeletedAsync();
 
-            if(dbContext.Database.IsSqlServer())
-                await dbContext.Database.MigrateAsync();
-            else
+            if(!dbContext.Database.IsSqlServer())
                 await dbContext.Database.EnsureCreatedAsync();
         }
     }
