@@ -110,7 +110,7 @@ public static class StartupExtensions
         services.AddTransient<ExceptionHandlingMiddleware>();
     }
 
-    public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration, bool isProduction)
+    public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<ITelemetryInitializer, IdamsTelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
@@ -159,14 +159,11 @@ public static class StartupExtensions
         // Seed Database
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var shouldRestDatabaseOnRestart = webApplication.Configuration.GetValue<bool>("ShouldRestDatabaseOnRestart");
-        
-        if (!webApplication.Environment.IsProduction())
-        {
-            if (shouldRestDatabaseOnRestart) 
-                await dbContext.Database.EnsureDeletedAsync();
 
-            if(!dbContext.Database.IsSqlServer())
-                await dbContext.Database.EnsureCreatedAsync();
-        }
+        if (shouldRestDatabaseOnRestart) 
+            await dbContext.Database.EnsureDeletedAsync();
+
+        if(!dbContext.Database.IsSqlServer())
+            await dbContext.Database.EnsureCreatedAsync();
     }
 }

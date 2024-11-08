@@ -14,18 +14,15 @@ public class ApplicationDbContextInitialiser
         _context = context;
     }
 
-    public async Task InitialiseAsync(bool isProduction, bool shouldRestDatabaseOnRestart)
+    public async Task InitialiseAsync(bool shouldRestDatabaseOnRestart)
     {
         try
         {
-            if (!isProduction)
-            {
-                if (shouldRestDatabaseOnRestart)
-                    await _context.Database.EnsureDeletedAsync();
+            if (shouldRestDatabaseOnRestart)
+                await _context.Database.EnsureDeletedAsync();
 
-                if (_context.Database.IsSqlServer())
-                    await _context.Database.EnsureCreatedAsync();
-            }
+            if (_context.Database.IsSqlServer())
+                await _context.Database.EnsureCreatedAsync();
         }
         catch (Exception ex)
         {

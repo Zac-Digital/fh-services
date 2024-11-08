@@ -170,7 +170,7 @@ public static class StartupExtensions
         services.AddTransient<ExceptionHandlingMiddleware>();
     }
 
-    public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration, bool isProduction)
+    public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<ITelemetryInitializer, ConnectTelemetryPiiRedactor>();
         services.AddApplicationInsightsTelemetry();
@@ -227,14 +227,9 @@ public static class StartupExtensions
 
         try
         {
-            if (!app.Environment.IsProduction())
-            {
-                // Seed Database
-                // Seed Database
-                var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-                var shouldRestDatabaseOnRestart = app.Configuration.GetValue<bool>("ShouldRestDatabaseOnRestart");
-                await initialiser.InitialiseAsync(app.Environment.IsProduction(), shouldRestDatabaseOnRestart);
-            }
+            var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
+            var shouldRestDatabaseOnRestart = app.Configuration.GetValue<bool>("ShouldRestDatabaseOnRestart");
+            await initialiser.InitialiseAsync(shouldRestDatabaseOnRestart);
         }
         catch (Exception ex)
         {

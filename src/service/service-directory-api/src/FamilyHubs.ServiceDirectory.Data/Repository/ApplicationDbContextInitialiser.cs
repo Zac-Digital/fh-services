@@ -11,22 +11,18 @@ public class ApplicationDbContextInitialiser
         _context = context;
     }
 
-    public async Task InitialiseAsync(bool isProduction, bool shouldRestDatabaseOnRestart)
+    public async Task InitialiseAsync(bool shouldRestDatabaseOnRestart)
     {
-        if (!isProduction)
+        if (shouldRestDatabaseOnRestart) 
+            await _context.Database.EnsureDeletedAsync();
+
+        if (!_context.Database.IsSqlServer())
         {
-
-            if (shouldRestDatabaseOnRestart) 
-                await _context.Database.EnsureDeletedAsync();
-
-            if (!_context.Database.IsSqlServer())
-            {
-                await _context.Database.EnsureCreatedAsync();
-                await _context.Database.ExecuteSqlRawAsync("UPDATE geometry_columns SET srid = 4326 WHERE f_table_name = 'locations';");
-            }
-
-            await SeedAsync();
+            await _context.Database.EnsureCreatedAsync();
+            await _context.Database.ExecuteSqlRawAsync("UPDATE geometry_columns SET srid = 4326 WHERE f_table_name = 'locations';");
         }
+
+        await SeedAsync();
     }
 
     private async Task SeedAsync()
