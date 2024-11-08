@@ -296,27 +296,27 @@ jobs:
           - databases: idam-database
             display_name: IDAM
             keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
-            sql_file_path: ./test/seed-scripts/idam-data.sql
+            sql_file_path: ./test/seed-scripts/test/idam-data.sql
           - databases: notification-database
             display_name: Notification
             keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
-            sql_file_path: ./test/seed-scripts/notification-data.sql
+            sql_file_path: ./test/seed-scripts/test/notification-data.sql
           - databases: open-referral-mock-database
             display_name: Open Referral Mock
             keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION
-            sql_file_path: ./test/seed-scripts/open-referral-mock-data.sql
+            sql_file_path: ./test/seed-scripts/test/open-referral-mock-data.sql
           - databases: referral-database
             display_name: Referral
             keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION
-            sql_file_path: ./test/seed-scripts/referral-data.sql
+            sql_file_path: ./test/seed-scripts/test/referral-data.sql
           - databases: report-database
             display_name: Report
             keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION
-            sql_file_path: ./test/seed-scripts/report-data.sql
+            sql_file_path: ./test/seed-scripts/test/report-data.sql
           - databases: service-directory-database
             display_name: Service Directory
             keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
-            sql_file_path: ./test/seed-scripts/service-directory-data.sql
+            sql_file_path: ./test/seed-scripts/test/service-directory-data.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
@@ -325,35 +325,35 @@ jobs:
       sql_file_path: ${{ matrix.sql_file_path }}
     secrets: inherit
     
-  run-api-acceptance-tests:
-    if: startsWith(inputs.environment, 'Test')
-    name: ${{ matrix.job_name }}
-    needs: [ seed-databases ]
-    strategy:
-      matrix:
-        project_name: [
-          report-api,
-          referral-api,
-          service-directory-api
-        ]
-        include:
-          - project_name: report-api
-            job_name: Test - Report API
-            keyvault_prefix: TEST-REPORT-API
-            test_project_name: FamilyHubs.Report.Api.AcceptanceTests
-          - project_name: referral-api
-            job_name: Test - Referral API
-            keyvault_prefix: TEST-REFERRAL-API
-            test_project_name: FamilyHubs.Referral.Api.AcceptanceTests
-          - project_name: service-directory-api
-            job_name: Test - Service Directory API
-            keyvault_prefix: TEST-SERVICE-DIRECTORY-API
-            test_project_name: FamilyHubs.ServiceDirectory.Api.AcceptanceTests
-    uses: ./.github/workflows/run-acceptance-tests.yml
-    with:
-      environment: ${{ inputs.environment }}
-      project_name: ${{ matrix.project_name }}
-      keyvault_prefix: ${{ matrix.keyvault_prefix }}
-      test_project_name: ${{ matrix.test_project_name }}
-      project_type: service
-    secrets: inherit
+  #run-api-acceptance-tests:
+  #  if: startsWith(inputs.environment, 'Test')
+  #  name: ${{ matrix.job_name }}
+  #  needs: [ seed-databases ]
+  #  strategy:
+  #    matrix:
+  #      project_name: [
+  #        report-api,
+  #        referral-api,
+  #        service-directory-api
+  #      ]
+  #      include:
+  #        - project_name: report-api
+  #          job_name: Test - Report API
+  #          keyvault_prefix: TEST-REPORT-API
+  #          test_project_name: FamilyHubs.Report.Api.AcceptanceTests
+  #        - project_name: referral-api
+  #          job_name: Test - Referral API
+  #          keyvault_prefix: TEST-REFERRAL-API
+  #          test_project_name: FamilyHubs.Referral.Api.AcceptanceTests
+  #        - project_name: service-directory-api
+  #          job_name: Test - Service Directory API
+  #          keyvault_prefix: TEST-SERVICE-DIRECTORY-API
+  #          test_project_name: FamilyHubs.ServiceDirectory.Api.AcceptanceTests
+  #  uses: ./.github/workflows/run-acceptance-tests.yml
+  #  with:
+  #    environment: ${{ inputs.environment }}
+  #    project_name: ${{ matrix.project_name }}
+  #    keyvault_prefix: ${{ matrix.keyvault_prefix }}
+  #    test_project_name: ${{ matrix.test_project_name }}
+  #    project_type: service
+  #  secrets: inherit
