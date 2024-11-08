@@ -1,5 +1,7 @@
 ﻿@page "{OrganisationId}"
 @using FamilyHubs.ServiceDirectory.Admin.Core.Models;
+@using FamilyHubs.ServiceDirectory.Admin.Core.Models.ServiceJourney
+@using FamilyHubs.ServiceDirectory.Shared.Dto
 @model FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages.ViewOrganisationModel
 @{
     ViewData["Title"] = Model.OrganisationName;
@@ -10,25 +12,47 @@
 }
 
 <div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l app-wrap-anywhere">@Model.OrganisationName</h1>
-  </div>
+    </div>
 </div>
 <form method="post">
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-                    @await Html.PartialAsync("_checkDetailRow", new CheckDetailsRowModel("Name", Model.OrganisationName, $"/VcsAdmin/UpdateOrganisation/{Model.OrganisationId}", "OrganisationName"))
-                    @await Html.PartialAsync("_checkDetailRow", new CheckDetailsRowModel("Local authority", Model.LocalAuthority, "LocalAuthority"))
-                    @await Html.PartialAsync("_checkDetailRow", new CheckDetailsRowModel("Type", Model.OrganisationType, "OrganisationType"))
+                @await Html.PartialAsync("_checkDetailRow", new CheckDetailsRowModel("Name", Model.OrganisationName, $"/VcsAdmin/UpdateOrganisation/{Model.OrganisationId}", "OrganisationName"))
+                @await Html.PartialAsync("_checkDetailRow", new CheckDetailsRowModel("Local authority", Model.LocalAuthority, "LocalAuthority"))
+                @await Html.PartialAsync("_checkDetailRow", new CheckDetailsRowModel("Type", Model.OrganisationType, "OrganisationType"))
             </dl>
-        
+
+            <table class="govuk-table govuk-!-margin-bottom-9" data-module="moj-sortable-table">
+                <caption class="govuk-table__caption govuk-table__caption--m">Services</caption>
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header" aria-sort="none" style="width: 100%">Service</th>
+                </tr>
+                </thead>
+                @if (Model.Services.Any())
+                {
+                    <tbody class="govuk-table__body">
+                    @foreach (ServiceNameDto service in Model.Services)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                <a asp-page="/manage-services/start-edit-service" asp-route-serviceId="@service.Id" asp-route-entryPoint="@ServiceDetailEntrance.FromViewOrganisationsPage">
+                                    <span class="govuk-visually-hidden">View</span>@service.Name
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                }
+            </table>
+
             @if (Model.CanSave)
             {
-                <button class="govuk-button" id="buttonSave">Save</button> 
+                <button class="govuk-button" id="buttonSave">Save</button>
             }
-
-            <p><a href="@Model.BackPath">Back to manage local authorities and organisations</a></p>
         </div>
     </div>
 </form>
