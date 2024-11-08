@@ -23,7 +23,7 @@ on:
 
 jobs:
   run-script-against-database:
-    if: startsWith(inputs.environment, 'Test')
+    if: startsWith(inputs.environment, 'Pre-')
     name: Runs the SQL script against the ${{ inputs.display_name }}
     runs-on: windows-2022
     environment: ${{ inputs.environment }}

@@ -296,27 +296,27 @@ jobs:
           - databases: idam-database
             display_name: IDAM
             keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
-            sql_file_path: ./test/seed-scripts/test/idam-data.sql
+            sql_file_path: ./test/seed-scripts/pre-prod/idam-data.sql
           - databases: notification-database
             display_name: Notification
             keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
-            sql_file_path: ./test/seed-scripts/test/notification-data.sql
+            sql_file_path: ./test/seed-scripts/pre-prod/notification-data.sql
           - databases: open-referral-mock-database
             display_name: Open Referral Mock
             keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION
-            sql_file_path: ./test/seed-scripts/test/open-referral-mock-data.sql
+            sql_file_path: ./test/seed-scripts/pre-prod/open-referral-mock-data.sql
           - databases: referral-database
             display_name: Referral
             keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION
-            sql_file_path: ./test/seed-scripts/test/referral-data.sql
+            sql_file_path: ./test/seed-scripts/pre-prod/referral-data.sql
           - databases: report-database
             display_name: Report
             keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION
-            sql_file_path: ./test/seed-scripts/test/report-data.sql
+            sql_file_path: ./test/seed-scripts/pre-prod/report-data.sql
           - databases: service-directory-database
             display_name: Service Directory
             keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
-            sql_file_path: ./test/seed-scripts/test/service-directory-data.sql
+            sql_file_path: ./test/seed-scripts/pre-prod/service-directory-data.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
