@@ -110,8 +110,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
             migrationBuilder.Sql("""
                  IF NOT EXISTS (SELECT * FROM Organisations)
                  BEGIN
-                     BEGIN TRANSACTION;
-                 
                      INSERT INTO Organisations (OrganisationType, Name, Description, AdminAreaCode, Uri, Url) VALUES
                          ('LA', 'Bristol County Council', 'Bristol County Council', 'E06000023', 'https://www.bristol.gov.uk/', 'https://www.bristol.gov.uk/'),
                          ('LA', 'Lancashire County Council', 'Lancashire County Council', 'E10000017', 'https://www.lancashire.gov.uk/', 'https://www.lancashire.gov.uk/'),
@@ -123,8 +121,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                          ('LA', 'North East Lincolnshire Council', 'North East Lincolnshire Council', 'E06000012', 'https://www.nelincs.gov.uk/', 'https://www.nelincs.gov.uk/'),
                          ('LA', 'City of Wolverhampton Council', 'City of Wolverhampton Council', 'E08000031', 'https://www.wolverhampton.gov.uk/', 'https://www.wolverhampton.gov.uk/'),
                          ('LA', 'Sheffield City Council', 'Sheffield City Council', 'E08000019', 'https://www.sheffield.gov.uk/', 'https://www.sheffield.gov.uk/');
-                 
-                     COMMIT;
                  END;
             """);
         }
