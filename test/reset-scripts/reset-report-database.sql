@@ -11,6 +11,8 @@ BEGIN TRY
     DELETE FROM [dim].[ConnectionRequestsSentFacts]
 
     DELETE FROM [dim].[ServiceSearchFacts]
+
+    DELETE FROM [dim].[ServiceSearchesDim]
     
     COMMIT TRANSACTION
 END TRY
