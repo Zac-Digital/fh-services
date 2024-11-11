@@ -289,7 +289,7 @@ jobs:
           notification-database, 
           open-referral-mock-database, 
           referral-database, 
-          #report-database, 
+          report-database, 
           service-directory-database 
         ]
         include:
@@ -309,10 +309,10 @@ jobs:
             display_name: Referral
             keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION
             sql_file_path: ./test/seed-scripts/test/referral-data.sql
-          #- databases: report-database
-          #  display_name: Report
-          #  keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION
-          #  sql_file_path: ./test/seed-scripts/test/report-data.sql
+          - databases: report-database
+            display_name: Report
+            keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION
+            sql_file_path: ./test/seed-scripts/test/report-data.sql
           - databases: service-directory-database
             display_name: Service Directory
             keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
