@@ -132,7 +132,7 @@ public static class StartupExtensions
         services.AddFamilyHubsHealthChecks(configuration);
     }
 
-    public static async Task ConfigureWebApplication(this WebApplication webApplication)
+    public static void ConfigureWebApplication(this WebApplication webApplication)
     {
         webApplication.UseSerilogRequestLogging();
 
@@ -148,18 +148,5 @@ public static class StartupExtensions
         webApplication.MapControllers();
 
         webApplication.MapFamilyHubsHealthChecks(typeof(StartupExtensions).Assembly);
-
-        await webApplication.InitialiseDatabase();
-    }
-
-    private static async Task InitialiseDatabase(this WebApplication webApplication)
-    {
-        using var scope = webApplication.Services.CreateScope();
-
-        // Seed Database
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        if(!dbContext.Database.IsSqlServer())
-            await dbContext.Database.EnsureCreatedAsync();
     }
 }

@@ -13,9 +13,6 @@ public class ApplicationDbContextInitialiser
 
     public async Task InitialiseAsync()
     {
-        if (!_context.Database.IsSqlServer())
-            await _context.Database.EnsureCreatedAsync();
-
         await SeedAsync();
     }
 

@@ -53,6 +53,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             var context = scopedServices.GetRequiredService<ApplicationDbContext>();
 
+            context.Database.ExecuteSqlRaw("UPDATE geometry_columns SET srid = 4326 WHERE f_table_name = 'locations';");
+
             var testOrganisations = context.Organisations.Select(o => new { o.Id, o.Name })
                 .Where(o => o.Name == "Bristol County Council" || o.Name == "Salford City Council")
                 .ToDictionary(arg => arg.Name, arg => arg.Id);

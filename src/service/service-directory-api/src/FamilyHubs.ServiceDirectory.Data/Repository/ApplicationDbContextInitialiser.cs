@@ -13,12 +13,6 @@ public class ApplicationDbContextInitialiser
 
     public async Task InitialiseAsync()
     {
-        if (!_context.Database.IsSqlServer())
-        {
-            await _context.Database.EnsureCreatedAsync();
-            await _context.Database.ExecuteSqlRawAsync("UPDATE geometry_columns SET srid = 4326 WHERE f_table_name = 'locations';");
-        }
-
         await SeedAsync();
     }
 
