@@ -11,11 +11,8 @@ public class ApplicationDbContextInitialiser
         _context = context;
     }
 
-    public async Task InitialiseAsync(bool shouldRestDatabaseOnRestart)
+    public async Task InitialiseAsync()
     {
-        if (shouldRestDatabaseOnRestart)
-            await _context.Database.EnsureDeletedAsync();
-
         if (!_context.Database.IsSqlServer())
             await _context.Database.EnsureCreatedAsync();
 

@@ -228,8 +228,7 @@ public static class StartupExtensions
         try
         {
             var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-            var shouldRestDatabaseOnRestart = app.Configuration.GetValue<bool>("ShouldRestDatabaseOnRestart");
-            await initialiser.InitialiseAsync(shouldRestDatabaseOnRestart);
+            await initialiser.InitialiseAsync();
         }
         catch (Exception ex)
         {

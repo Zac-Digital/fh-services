@@ -158,10 +158,6 @@ public static class StartupExtensions
 
         // Seed Database
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var shouldRestDatabaseOnRestart = webApplication.Configuration.GetValue<bool>("ShouldRestDatabaseOnRestart");
-
-        if (shouldRestDatabaseOnRestart) 
-            await dbContext.Database.EnsureDeletedAsync();
 
         if(!dbContext.Database.IsSqlServer())
             await dbContext.Database.EnsureCreatedAsync();

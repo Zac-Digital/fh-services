@@ -188,8 +188,7 @@ public static class StartupExtensions
         {
             // Seed Database
             var initialiser = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitialiser>();
-            var shouldRestDatabaseOnRestart = webApplication.Configuration.GetValue<bool>("ShouldRestDatabaseOnRestart");
-            await initialiser.InitialiseAsync(shouldRestDatabaseOnRestart);
+            await initialiser.InitialiseAsync();
         }
         catch (Exception ex)
         {
