@@ -139,6 +139,9 @@ public abstract class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         TestDbContext.Database.EnsureDeleted();
         TestDbContext.Database.EnsureCreated();
         TestDbContext.Database.ExecuteSqlRaw($"UPDATE geometry_columns SET srid = {GeoPoint.WGS84} WHERE f_table_name = 'locations';");
+        var seedData = new OrganisationSeedData(TestDbContext);
+        seedData.SeedTaxonomies();
+        seedData.SeedOrganisations();
     }
 
     private ServiceProvider CreateNewServiceProvider()

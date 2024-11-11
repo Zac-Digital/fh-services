@@ -1,8 +1,7 @@
 ﻿using FamilyHubs.ServiceDirectory.Data.Entities;
-using FamilyHubs.ServiceDirectory.Data.Repository;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 
-namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
+namespace FamilyHubs.ServiceDirectory.Data.Repository;
 
 #pragma warning disable S1075
 public class OrganisationSeedData
