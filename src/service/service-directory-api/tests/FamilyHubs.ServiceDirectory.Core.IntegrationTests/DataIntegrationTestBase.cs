@@ -136,9 +136,9 @@ public abstract class DataIntegrationTestBase : IDisposable, IAsyncDisposable
 
     private void InitialiseDatabase()
     {
-        TestDbContext.Database.ExecuteSqlRaw($"UPDATE geometry_columns SET srid = {GeoPoint.WGS84} WHERE f_table_name = 'locations';");
         TestDbContext.Database.EnsureDeleted();
         TestDbContext.Database.EnsureCreated();
+        TestDbContext.Database.ExecuteSqlRaw($"UPDATE geometry_columns SET srid = {GeoPoint.WGS84} WHERE f_table_name = 'locations';");
     }
 
     private ServiceProvider CreateNewServiceProvider()
