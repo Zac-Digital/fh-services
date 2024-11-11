@@ -25,7 +25,7 @@ public class Program
             
             var webApplication = builder.Build();
 
-            await webApplication.ConfigureWebApplication();
+            webApplication.ConfigureWebApplication();
 
             await webApplication.RunAsync();
         }
