@@ -206,6 +206,7 @@ jobs:
     secrets: inherit
     
   deploy-ui-services:
+    if: always() && deploy-api-services.result == 'success' && (needs.reset-databases.result == 'success' || needs.reset-databases.result == 'skipped')
     name: ${{ matrix.job_name }}
     needs: [ deploy-api-services ]
     strategy:
