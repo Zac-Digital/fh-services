@@ -38,7 +38,7 @@
                     @foreach (ServiceNameDto service in Model.Services)
                     {
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">
+                            <td class="govuk-table__cell" data-sort-value="@service.Name">
                                 <a asp-page="/manage-services/start-edit-service" asp-route-serviceId="@service.Id" asp-route-entryPoint="@ServiceDetailEntrance.FromViewOrganisationsPage">
                                     <span class="govuk-visually-hidden">View</span>@service.Name
                                 </a>
