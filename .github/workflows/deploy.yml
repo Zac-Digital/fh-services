@@ -87,9 +87,6 @@ jobs:
       publish_project: ${{ matrix.publish_project }}
       dotnet_version: ${{ matrix.dotnet_version_override || vars.DOTNET_VERSION }}
 
-  # Only runs in test. See run-sql-script.yml which conditionally checks for the test environment. Due to needing 
-  # sensible dependencies in this yml to control the workflow and deploy-services doing the migrations. If we add
-  # the Test check here, it blocks subsequent jobs from running when not in the Test environment.
   reset-databases:
     if: startsWith(inputs.environment, 'Test')
     name: Reset the ${{ matrix.display_name }} database
@@ -280,10 +277,8 @@ jobs:
       azure_app_name: ${{ matrix.azure_app_name }}
     secrets: inherit
   
-  # Only runs in test. See run-sql-script.yml which conditionally checks for the test environment. Due to needing 
-  # sensible dependencies in this yml to control the workflow and deploy-services doing the migrations. If we add
-  # the Test check here, it blocks subsequent jobs from running when not in the Test environment.
-  seed-databases: 
+  seed-databases:
+    if: startsWith(inputs.environment, 'Test')
     name: Seed the ${{ matrix.display_name }} database
     needs: [ deploy-api-services, deploy-ui-services, deploy-functions ]
     strategy:
