@@ -92,7 +92,7 @@ jobs:
   # the Test check here, it blocks subsequent jobs from running when not in the Test environment.
   reset-databases:
     if: startsWith(inputs.environment, 'Test')
-    name: ${{ matrix.step_title || 'Skipping dataabse reset' }}
+    name: Reset the ${{ matrix.display_name }} database
     needs: [ build-projects-upload-artifacts ]
     strategy:
       matrix:
@@ -107,32 +107,26 @@ jobs:
         include:
           - databases: idam-database
             display_name: IDAM
-            step_title: Reset the IDAM database
             keyvault_secret_name: IDAM-API-CONNECTIONSTRINGS-IDAMCONNECTION
             sql_file_path: ./test/reset-scripts/reset-database.sql
           - databases: notification-database
             display_name: Notification
-            step_title: Reset the Notifcation database
             keyvault_secret_name: NOTIFICATIONS-API-CONNECTIONSTRINGS-NOTIFICATIONCONNECTION
             sql_file_path: ./test/reset-scripts/reset-database.sql
           - databases: open-referral-mock-database
             display_name: Open Referral Mock
-            step_title: Reset the Open Referral Mock database
             keyvault_secret_name: MOCK-HSDA-API-CONNECTIONSTRINGS-HSDAMOCKRESPONSESCONNECTION
             sql_file_path: ./test/reset-scripts/reset-database.sql
           - databases: referral-database
             display_name: Referral
-            step_title: Reset the Referral database
             keyvault_secret_name: REFERRAL-API-CONNECTIONSTRINGS-REFERRALCONNECTION
             sql_file_path: ./test/reset-scripts/reset-database.sql
           - databases: report-database
             display_name: Report
-            step_title: Reset the Report database
             keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION  
             sql_file_path: ./test/reset-scripts/reset-report-database.sql
           - databases: service-directory-database
             display_name: Service Directory
-            step_title: Reset the Service Directory database
             keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
             sql_file_path: ./test/reset-scripts/reset-database.sql
     uses: ./.github/workflows/run-sql-script.yml
