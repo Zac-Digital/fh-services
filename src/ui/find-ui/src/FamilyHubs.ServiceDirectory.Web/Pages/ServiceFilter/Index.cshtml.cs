@@ -1,6 +1,7 @@
 using System.Dynamic;
 using System.Net;
 using System.Text.Json;
+using FamilyHubs.ServiceDirectory.Core.FamilyHubs;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -18,6 +19,7 @@ using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Primitives;
+using ServiceType = FamilyHubs.ServiceDirectory.Shared.Enums.ServiceType;
 
 namespace FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 
@@ -64,6 +66,7 @@ public class ServiceFilterModel : PageModel
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
     private readonly IPostcodeLookup _postcodeLookup;
     private readonly IPageFilterFactory _pageFilterFactory;
+    private readonly IFamilyHubsProvider _familyHubsProvider;
     private readonly ILogger<ServiceFilterModel> _logger;
     private const int PageSize = 10;
 
@@ -71,12 +74,14 @@ public class ServiceFilterModel : PageModel
         IServiceDirectoryClient serviceDirectoryClient,
         IPostcodeLookup postcodeLookup,
         IPageFilterFactory pageFilterFactory,
+        IFamilyHubsProvider familyHubsProvider,
         ILogger<ServiceFilterModel> logger
     )
     {
         _serviceDirectoryClient = serviceDirectoryClient;
         _postcodeLookup = postcodeLookup;
         _pageFilterFactory = pageFilterFactory;
+        _familyHubsProvider = familyHubsProvider;
         _logger = logger;
 
         Services = Enumerable.Empty<Service>();
@@ -300,12 +305,19 @@ public class ServiceFilterModel : PageModel
             PageSize = PageSize
         };
 
-        foreach (var filter in Filters)
+        foreach (IFilter filter in Filters)
         {
             filter.AddFilterCriteria(serviceParams);
         }
 
-        var (services, response) = await _serviceDirectoryClient.GetServices(serviceParams);
+        (PaginatedList<ServiceDto> services, HttpResponseMessage? response) 
+            = await _serviceDirectoryClient.GetServices(serviceParams);
+        
+        await _familyHubsProvider.LoadFamilyHubsAsync();
+        List<ServiceDto> familyHubsServices = _familyHubsProvider.GetFamilyHubsInAdminArea(adminArea, latitude, longitude).ToList();
+        
+        services.Items.AddRange(familyHubsServices);
+        services.TotalCount += familyHubsServices.Count;
 
         var pagination = new LargeSetPagination(services.TotalPages, CurrentPage);
 

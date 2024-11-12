@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
+﻿using FamilyHubs.ServiceDirectory.Core.FamilyHubs;
+using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
 using FamilyHubs.SharedKernel.Health;
 using FamilyHubs.SharedKernel.Services.PostcodesIo;
@@ -45,6 +46,7 @@ public static class StartupExtensions
         services.AddHsts(o => o.ExcludedHosts.Clear());
 #endif
         services.AddSingleton<IPageFilterFactory, PageFilterFactory>();
+        services.AddSingleton<IFamilyHubsProvider, FamilyHubsProvider>();
         services.AddPostcodesIoClient(configuration);
         services.AddServiceDirectoryClient(configuration);
         services.AddFamilyHubs(configuration);

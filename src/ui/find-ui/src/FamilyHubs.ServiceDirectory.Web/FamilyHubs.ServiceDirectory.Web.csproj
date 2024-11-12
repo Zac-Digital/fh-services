@@ -44,4 +44,8 @@
         <Folder Include="wwwroot\js\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Config\family-hubs.json" />
+    </ItemGroup>
+
 </Project>
