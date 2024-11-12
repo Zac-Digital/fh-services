@@ -91,6 +91,7 @@ jobs:
   # sensible dependencies in this yml to control the workflow and deploy-services doing the migrations. If we add
   # the Test check here, it blocks subsequent jobs from running when not in the Test environment.
   reset-databases:
+    if: startsWith(inputs.environment, 'Test')
     name: Reset the ${{ matrix.display_name }} database
     needs: [ build-projects-upload-artifacts ]
     strategy:
@@ -137,6 +138,7 @@ jobs:
     secrets: inherit
     
   deploy-api-services:
+    if: always() && (needs.reset-databases.result == 'success' || needs.reset-databases.result == 'skipped')
     name: ${{ matrix.job_name }}
     needs: [ reset-databases ]
     strategy:
@@ -255,6 +257,7 @@ jobs:
     secrets: inherit
 
   deploy-functions:
+    if: always() && (needs.reset-databases.result == 'success' || needs.reset-databases.result == 'skipped')
     name: ${{ matrix.job_name }}
     needs: [ reset-databases ]
     strategy:
