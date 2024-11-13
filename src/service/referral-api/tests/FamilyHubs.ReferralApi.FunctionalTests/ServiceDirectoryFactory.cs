@@ -60,22 +60,54 @@ public class ServiceDirectoryFactory : WebApplicationFactory<Program>
         using var scope = Services.CreateScope();
 
         var scopedServices = scope.ServiceProvider;
-        var logger = scopedServices.GetRequiredService<ILogger<ServiceDirectoryFactory>>();
+        var context = scopedServices.GetRequiredService<ApplicationDbContext>();
 
-        try
-        {
-            var context = scopedServices.GetRequiredService<ApplicationDbContext>();
-
-            if (!context.Services.Any())
-                SeedServices(context);
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An error occurred seeding the database with test messages. Error: {exceptionMessage}", ex.Message);
-        }
+        SeedOrganisations(context);
+        SeedServices(context);
     }
 
-    private void SeedServices(ApplicationDbContext context)
+    private static void SeedOrganisations(ApplicationDbContext context)
+    {
+        const OrganisationType organisationType = OrganisationType.LA;
+        var organisations = new List<Organisation>
+        {
+            new()
+            {
+                Id = 1,
+                OrganisationType =      organisationType,
+                Name =                  "Bristol County Council",
+                Description =           "Bristol County Council",
+                Uri =                   new Uri("https://www.bristol.gov.uk/").ToString(),
+                Url =                   "https://www.bristol.gov.uk/",
+                AdminAreaCode =         "E06000023",
+            },
+            new()
+            {
+                Id = 2,
+                OrganisationType =      organisationType,
+                Name =                  "Lancashire County Council",
+                Description =           "Lancashire County Council",
+                Uri =                   new Uri("https://www.lancashire.gov.uk/").ToString(),
+                Url =                   "https://www.lancashire.gov.uk/",
+                AdminAreaCode =         "E10000017",
+            },
+            new()
+            {
+                Id = 3,
+                OrganisationType =      organisationType,
+                Name =                  "London Borough of Redbridge",
+                Description =           "London Borough of Redbridge",
+                Uri =                   new Uri("https://www.redbridge.gov.uk/").ToString(),
+                Url =                   "https://www.redbridge.gov.uk/",
+                AdminAreaCode =         "E09000026",
+            }
+        };
+
+        context.Organisations.AddRange(organisations);
+        context.SaveChanges();
+    }
+
+    private static void SeedServices(ApplicationDbContext context)
     {
         var services = new List<Service>
         {

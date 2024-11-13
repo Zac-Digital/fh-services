@@ -24,7 +24,7 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
     {
         var confBuilder = new ConfigurationBuilder();
         ConfigSetup(confBuilder);
-        var conf = confBuilder.Build();    
+        var conf = confBuilder.Build();
 
         var jti = Guid.NewGuid().ToString();
         var key = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(conf["GovUkOidcConfiguration:BearerTokenSigningKey"]!));

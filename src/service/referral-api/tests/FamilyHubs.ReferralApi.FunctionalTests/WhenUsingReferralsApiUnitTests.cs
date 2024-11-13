@@ -75,7 +75,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
                 ReasonForSupport = "Reason For Support",
                 EngageWithFamily = "Engage With Family",
                 RecipientDto = new RecipientDto
-                { 
+                {
                     Id = 3,
                     Name = "Fred Blogs",
                     Email = "FredBlog@email.com",
@@ -88,7 +88,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
                     PostCode = "B31 2TV"
                 },
                 ReferralUserAccountDto = new UserAccountDto
-                { 
+                {
                     Id = 2,
                     EmailAddress = "Bob.Referrer@email.com",
                     Name = "Bob Referrer",
@@ -111,7 +111,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
                     Description = "Service Description",
                     Url = "www.service.com",
                     OrganisationDto = new OrganisationDto
-                    { 
+                    {
                         Id = 3,
                         Name = "New Organisation",
                         Description = "Organisation Description",
@@ -357,7 +357,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenReferralStatusListIsRetrieved()
     {
-        
+
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,

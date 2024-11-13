@@ -43,7 +43,7 @@ jobs:
         run: |
           sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
           sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
-          
+
       - name: Restore Project
         shell: bash
         run: dotnet restore
