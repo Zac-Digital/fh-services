@@ -121,7 +121,7 @@ jobs:
           - databases: report-database
             display_name: Report
             keyvault_secret_name: REPORT-API-CONNECTIONSTRINGS-REPORTCONNECTION  
-            sql_file_path: ./test/reset-scripts/reset-report-database.sql
+            sql_file_path: ./test/reset-scripts/reset-database.sql
           - databases: service-directory-database
             display_name: Service Directory
             keyvault_secret_name: SD-API-CONNECTIONSTRINGS-SERVICEDIRECTORYCONNECTION
