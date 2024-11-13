@@ -54,4 +54,4 @@ jobs:
 
       - name: Test Solution
         shell: bash
-        run: dotnet test --configuration Release --filter FullyQualifiedName\!~AcceptanceTests --no-restore --no-build --verbosity minimal
+        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --verbosity minimal --no-restore --no-build
