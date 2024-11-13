@@ -8,6 +8,7 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.ServiceDirectory.Shared.ReferenceData.ICalendar;
+using FamilyHubs.SharedKernel.Helpers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -259,7 +260,7 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
             foreach (var service in services)
             {
                 service.Distance = service.Locations
-                    .Min(location => HelperUtility.GetDistance(
+                    .Min(location => LocationHelpers.GetDistance(
                         request.Latitude,
                         request.Longitude,
                         location.Latitude,

@@ -1,7 +1,7 @@
 using System.Text.Json;
-using FamilyHubs.ServiceDirectory.Core.Distance;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.SharedKernel.Helpers;
 using GeoCoordinatePortable;
 
 namespace FamilyHubs.ServiceDirectory.Core.FamilyHubs;
@@ -13,7 +13,9 @@ public interface IFamilyHubsProvider
     /// <summary>
     /// Gets a list of Family Hubs as ServiceDtos in a given admin area.
     /// </summary>
-    /// <param name="adminArea"></param>
+    /// <param name="adminArea">The admin area to load Family Hubs for.</param>
+    /// <param name="currLat">Current latitude of the requester.</param>
+    /// <param name="currLng">Current longitude of the requester.</param>
     /// <returns></returns>
     IEnumerable<ServiceDto> GetFamilyHubsInAdminArea(string adminArea, double? currLat, double? currLng);
 }
@@ -39,8 +41,6 @@ public class FamilyHubsProvider : IFamilyHubsProvider
         
         foreach (JsonElement familyHub in _data.RootElement.EnumerateArray())
         {
-            Console.WriteLine(familyHub.GetProperty("name").GetString()!);
-            
             int status = familyHub
                 .GetProperty("lookup")
                 .GetProperty("status")
@@ -61,14 +61,18 @@ public class FamilyHubsProvider : IFamilyHubsProvider
             if (!string.Equals(adminArea, familyHubAdminArea, StringComparison.OrdinalIgnoreCase))
                 continue;
 
+            string name = familyHub.GetProperty("name").GetString()!;
             double lat = result.GetProperty("latitude").GetDouble();
             double lng = result.GetProperty("longitude").GetDouble();
-            double distance = GetDistance(lat, lng, currLat, currLng);
-
+            double distance = LocationHelpers. GetDistance(lat, lng, currLat, currLng);
+            string postcode = familyHub.GetProperty("postcode").GetString()!;
+            string adminDistrict = result.GetProperty("admin_district").GetString()!;
+            string country = result.GetProperty("country").GetString()!;
+            
             ServiceDto familyHubService = new()
             {
-                Name = familyHub.GetProperty("name").GetString()!,
-                Description = "This is a test description!",
+                Name = name,
+                Description = "",
                 ServiceType = ServiceType.FamilyExperience,
                 Status = ServiceStatusType.Active,
                 DeliverableType = DeliverableType.NotSet,
@@ -77,16 +81,16 @@ public class FamilyHubsProvider : IFamilyHubsProvider
                 [
                     new()
                     {
-                        LocationTypeCategory = LocationTypeCategory.NotSet,
-                        Name = "Address",
+                        LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                        Name = name,
                         Latitude = lat,
                         Longitude = lng,
                         Distance = distance,
-                        Address1 = "???",
-                        City = "???",
-                        PostCode = familyHub.GetProperty("postcode").GetString()!,
-                        StateProvince = result.GetProperty("admin_district").GetString()!,
-                        Country = result.GetProperty("country").GetString()!,
+                        Address1 = "",
+                        City = "",
+                        PostCode = postcode,
+                        StateProvince = adminDistrict,
+                        Country = country,
                         LocationType = LocationType.Physical,
                         Region = null,
                         AccessibilityForDisabilities = [],
@@ -108,18 +112,5 @@ public class FamilyHubsProvider : IFamilyHubsProvider
         }
 
         return familyHubs;
-    }
-
-    private static double GetDistance(double? latitude1, double? longitude1, double? latitude2, double? longitude2)
-    {
-        latitude1 ??= 0.0;
-        longitude1 ??= 0.0;
-        latitude2 ??= 0.0;
-        longitude2 ??= 0.0;
-
-        var pin1 = new GeoCoordinate(latitude1.Value, longitude1.Value);
-        var pin2 = new GeoCoordinate(latitude2.Value, longitude2.Value);
-
-        return pin1.GetDistanceTo(pin2);
     }
 }
