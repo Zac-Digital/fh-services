@@ -14,7 +14,6 @@ concurrency:
 
 jobs:
   build-test:
-    name: Build & Test Solution
     runs-on: ubuntu-22.04
     defaults:
       run:
