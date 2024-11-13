@@ -1,0 +1,53 @@
+name: Build & Test Solution
+
+on:
+  push:
+    branches:
+      - 'ci/build-test-super-solution'
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build & Test Solution
+    runs-on: ubuntu-22.04
+    defaults:
+      working-directory: '/src'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup .NET ${{ vars.DOTNET_VERSION_V8 }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
+
+      - name: Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Install & Configure Spatialite
+        shell: bash
+        run: |
+          sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
+          sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
+
+      - name: Restore Project
+        shell: bash
+        run: dotnet restore
+
+      - name: Build Project
+        shell: bash
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test Project
+        shell: bash
+        run: dotnet test --configuration Release --no-build --no-restore --verbosity minimal
