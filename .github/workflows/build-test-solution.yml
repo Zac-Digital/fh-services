@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: '/src'
+        working-directory: 'src/'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
