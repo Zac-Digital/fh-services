@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build-test:
     name: Build & Test Solution
-    runs-on: ubuntu-24.04 [Beta]
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: 'src/'
@@ -44,14 +44,14 @@ jobs:
           sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
           sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
 
-      - name: Restore Project
+      - name: Restore Solution
         shell: bash
         run: dotnet restore
 
-      - name: Build Project
+      - name: Build Solution
         shell: bash
         run: dotnet build --configuration Release --no-restore
 
-      - name: Test Project
+      - name: Test Solution
         shell: bash
         run: dotnet test --configuration Release --filter FullyQualifiedName\!~AcceptanceTests --no-restore --no-build --verbosity minimal
