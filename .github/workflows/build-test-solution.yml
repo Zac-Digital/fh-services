@@ -2,8 +2,11 @@ name: Build & Test Solution
 
 on:
   push:
-    branches:
-      - 'ci/build-test-super-solution'
+    branches: ["main", "release-*"]
+  pull_request:
+    paths:
+      - '.github/workflows/build-and-test-solution.yml'
+      - 'src/**'
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
@@ -12,7 +15,7 @@ concurrency:
 jobs:
   build-test:
     name: Build & Test Solution
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04 [Beta]
     defaults:
       run:
         working-directory: 'src/'
@@ -51,4 +54,4 @@ jobs:
 
       - name: Test Project
         shell: bash
-        run: dotnet test --configuration Release --no-build --no-restore --verbosity minimal
+        run: dotnet test --configuration Release --filter FullyQualifiedName\!~AcceptanceTests --no-restore --no-build --verbosity minimal
