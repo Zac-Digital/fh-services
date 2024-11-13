@@ -17,9 +17,13 @@ public static class DictionaryForQueryParamsExtension
 
     public static Dictionary<string, string?> AddOptionalQueryParams(this Dictionary<string, string?> queryParams, string key, IEnumerable<string>? values)
     {
-        if (values?.Any() == true)
+        if (values is not null)
         {
-            queryParams.Add(key, string.Join(',', values));
+            var joined = string.Join(',', values);
+            if (joined != string.Empty)
+            {
+                queryParams.Add(key, joined);
+            }
         }
 
         return queryParams;

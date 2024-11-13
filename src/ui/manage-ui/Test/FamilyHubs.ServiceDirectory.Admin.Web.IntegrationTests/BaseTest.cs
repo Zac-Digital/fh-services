@@ -98,16 +98,13 @@ public abstract class BaseTest : IDisposable
 
     protected virtual void Dispose(bool disposing)
     {
-        // Cleanup
+        _client.Dispose();
+        _factory.Dispose();
     }
 
     public void Dispose()
     {
         Dispose(true);
-
-        _client.Dispose();
-        _factory.Dispose();
-
         GC.SuppressFinalize(this);
     }
 

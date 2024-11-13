@@ -1,10 +1,7 @@
 using System.Dynamic;
-using System.Net;
-using System.Text.Json;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Interfaces;
 using FamilyHubs.ServiceDirectory.Core.ServiceDirectory.Models;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.ServiceDirectory.Web.Content;
@@ -83,7 +80,7 @@ public class ServiceFilterModel : PageModel
         Pagination = new DontShowPagination();
     }
 
-    public async Task<IActionResult> OnPost(string? postcode, string? adminArea)
+    public async Task<IActionResult> OnPost(string? postcode, string? adminArea, [FromForm] IFormCollection form)
     {
         dynamic routeValues;
 
@@ -99,10 +96,10 @@ public class ServiceFilterModel : PageModel
         }
         else
         {
-            var remove = GetRemove(Request.Form);
+            var remove = GetRemove(form);
 
             // remove key/values we don't want to keep
-            var filteredForm = Request.Form
+            var filteredForm = form
                 .Where(kvp => KeepParam(kvp.Key, remove.Key))
                 .ToList();
 

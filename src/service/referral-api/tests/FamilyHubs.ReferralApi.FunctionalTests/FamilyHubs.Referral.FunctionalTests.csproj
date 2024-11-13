@@ -11,6 +11,8 @@
     <PackageReference Include="Ardalis.HttpClientTestExtensions" />
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+    <PackageReference Include="mod_spatialite" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="xunit" />
@@ -24,7 +26,22 @@
     </PackageReference>
   </ItemGroup>
 
+  <Choose>
+    <When Condition="$([System.OperatingSystem]::IsLinux())">
+      <ItemGroup>
+        <PackageReference Include="SQLitePCLRaw.bundle_sqlite3" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"/>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\shared\service-directory-shared\src\FamilyHubs.ServiceDirectory.Shared\FamilyHubs.ServiceDirectory.Shared.csproj" />
+    <ProjectReference Include="..\..\..\service-directory-api\src\FamilyHubs.ServiceDirectory.Api\FamilyHubs.ServiceDirectory.Api.csproj" />
     <ProjectReference Include="..\..\src\FamilyHubs.Referral.Api\FamilyHubs.Referral.Api.csproj" />
   </ItemGroup>
 

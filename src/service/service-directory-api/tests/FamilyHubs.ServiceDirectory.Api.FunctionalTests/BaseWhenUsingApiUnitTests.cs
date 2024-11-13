@@ -8,47 +8,32 @@ namespace FamilyHubs.ServiceDirectory.Api.FunctionalTests;
 
 public abstract class BaseWhenUsingApiUnitTests : IDisposable
 {
-    protected readonly HttpClient? Client;
+    protected readonly HttpClient Client;
     private readonly CustomWebApplicationFactory? _webAppFactory;
-    private readonly bool _initSuccessful;
     private static string? _bearerTokenSigningKey;
 
     protected BaseWhenUsingApiUnitTests()
     {
-        try
-        {
-            var configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(
-                    new Dictionary<string, string?> {
-                        {"GovUkOidcConfiguration:BearerTokenSigningKey", "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
-                    }
-                )
-                .AddUserSecrets<Program>()
-                .Build();
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(
+                new Dictionary<string, string?> {
+                    {"GovUkOidcConfiguration:BearerTokenSigningKey", "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"},
+                }
+            )
+            .AddUserSecrets<Program>()
+            .Build();
 
-            _webAppFactory = new CustomWebApplicationFactory();
-            _webAppFactory.SetupTestDatabaseAndSeedData();
+        _webAppFactory = new CustomWebApplicationFactory();
+        _webAppFactory.SetupTestDatabaseAndSeedData();
 
-            Client = _webAppFactory.CreateDefaultClient();
-            Client.BaseAddress = new Uri("https://localhost:7128/");
+        Client = _webAppFactory.CreateDefaultClient();
+        Client.BaseAddress = new Uri("https://localhost:7128/");
 
-            _initSuccessful = true;
-
-            _bearerTokenSigningKey = configuration["GovUkOidcConfiguration:BearerTokenSigningKey"]!;
-        }
-        catch
-        {
-            _initSuccessful = false;
-        }
+        _bearerTokenSigningKey = configuration["GovUkOidcConfiguration:BearerTokenSigningKey"]!;
     }
 
-    public void Dispose()
+    protected virtual void Dispose(bool disposing)
     {
-        if (!_initSuccessful)
-        {
-            return;
-        }
-
         if (_webAppFactory != null)
         {
             using var scope = _webAppFactory.Services.CreateScope();
@@ -56,16 +41,13 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
             context.Database.EnsureDeleted();
         }
 
-        if (Client != null)
-        {
-            Client.Dispose();
-        }
+        Client.Dispose();
+        _webAppFactory?.Dispose();
+    }
 
-        if (_webAppFactory != null)
-        {
-            _webAppFactory.Dispose();
-        }
-
+    public void Dispose()
+    {
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -135,5 +117,3 @@ public abstract class BaseWhenUsingApiUnitTests : IDisposable
         return request;
     }
 }
-
-#pragma warning restore S3881
