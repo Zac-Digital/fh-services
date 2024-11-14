@@ -3048,14 +3048,6 @@ resource "azurerm_key_vault" "kv6" {
   tags = local.tags
 }
 
-# Log Analytics Workspace - App Services
-resource "azurerm_log_analytics_workspace" "app_services" {
-  name                = "${var.prefix}-la-as-familyhubs"
-  resource_group_name = local.resource_group_name
-  location            = var.location
-  tags = local.tags
-}
-
 # SQL Server VA Microsoft Defender
 resource "azurerm_mssql_server_security_alert_policy" "sqlserver_security_policy" {
   resource_group_name = local.resource_group_name
@@ -4350,7 +4342,6 @@ resource "azurerm_monitor_metric_alert" "failedalt-03" {
 # hence the count block
 # This ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-906 will handle removing this
 resource "azurerm_security_center_subscription_pricing" "app_services" {
-  count = var.prefix == "s181d01" || var.prefix == "s181t01" || var.prefix == "s181p01" ? 1 : 0
   tier = var.defender_app_services_tier
   resource_type = "AppServices"
 }
