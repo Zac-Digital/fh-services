@@ -61,6 +61,7 @@ jobs:
         run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" --verbosity minimal --no-restore --no-build
 
       - name: Generate Report
+        if: always()
         shell: bash
         run: |-
           if find ./tests -name "*.trx" -print -quit | grep -q .; 
