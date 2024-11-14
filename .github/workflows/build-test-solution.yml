@@ -30,6 +30,10 @@ jobs:
         with:
           dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
 
+      - name: Install Test Coverage Tool
+        shell: bash
+        run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
+
       - name: Package Cache
         uses: actions/cache@v4
         with:
@@ -54,4 +58,10 @@ jobs:
 
       - name: Test Solution
         shell: bash
-        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --verbosity minimal --no-restore --no-build
+        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --logger "trx;LogFileName=test-results.trx" --verbosity minimal --no-restore --no-build
+
+      - name: Generate Report
+        shell: bash
+        run: |
+          liquid --inputs "File=**/*test-results.trx" --output-file results.md
+          cat results.md >> $GITHUB_STEP_SUMMARY
