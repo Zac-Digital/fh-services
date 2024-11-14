@@ -281,7 +281,7 @@ public static class TestDataProvider
                                 new Schedule
                                 {
                                     Description = "Friday 1.30pm - 2.30pm",
-                                    ByDay = "1.30pm - 2.30pm"
+                                    ByDay = "FR"
                                 }
                             },
                             Contacts = new List<Contact>
@@ -295,6 +295,14 @@ public static class TestDataProvider
                                     Url = "https://www.gov.uk",
                                     Email = "help@gov.uk"
                                 }
+                            }
+                        },
+                        Schedules = new List<Schedule>
+                        {
+                            new Schedule
+                            {
+                                Description = "Friday 1.30pm - 2.30pm",
+                                ByDay = "SU"
                             }
                         }
                     }
@@ -639,7 +647,7 @@ public static class TestDataProvider
                         Description = "Schedule",
                         OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                         ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                        ByDay = "byDay",
+                        ByDay = "MO,TU",
                         ByMonthDay = "byMonth",
                         DtStart = "dtStart",
                         Freq = null,
@@ -685,7 +693,7 @@ public static class TestDataProvider
                                     Description = "Schedule",
                                     OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
                                     ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
-                                    ByDay = "byDay",
+                                    ByDay = "WE",
                                     ByMonthDay = "byMonth",
                                     DtStart = "dtStart",
                                     Freq = null,
@@ -704,6 +712,21 @@ public static class TestDataProvider
                                     Url = "https://www.gov.uk",
                                     Email = "help@gov.uk"
                                 }
+                            }
+                        },
+                        Schedules = new List<Schedule>
+                        {
+                            new Schedule
+                            {
+                                Description = "Schedule",
+                                OpensAt = new DateTime(2023, 1, 1).ToUniversalTime(),
+                                ClosesAt = new DateTime(2023, 1, 1).ToUniversalTime(),
+                                ByDay = "TH",
+                                ByMonthDay = "byMonth",
+                                DtStart = "dtStart",
+                                Freq = null,
+                                ValidFrom = new DateTime(2023, 1, 1).ToUniversalTime(),
+                                ValidTo = new DateTime(2023, 1, 1).ToUniversalTime(),
                             }
                         }
                     }
@@ -730,6 +753,85 @@ public static class TestDataProvider
                     }
                 }
             },
+            new Service
+            {
+                OrganisationId = organisationId,
+                ServiceType = ServiceType.FamilyExperience,
+                Name = "Defunct Family Hub",
+                Description = "Family Hub",
+                DeliverableType = DeliverableType.NotSet,
+                Status = ServiceStatusType.Defunct,
+                CanFamilyChooseDeliveryLocation = false,
+                ServiceDeliveries = new List<ServiceDelivery>
+                {
+                    new ServiceDelivery
+                    {
+                        Name = AttendingType.InPerson,
+                    }
+                },
+                Eligibilities = new List<Eligibility>
+                {
+                    new Eligibility
+                    {
+                        EligibilityType = null,
+                        MaximumAge = 90,
+                        MinimumAge = 0,
+                    }
+                },
+                Languages = new List<Language>
+                {
+                    new Language
+                    {
+                        Name = "English",
+                        Code = "en",
+                    }
+                },
+                ServiceAreas = new List<ServiceArea>
+                {
+                    new ServiceArea
+                    {
+                        ServiceAreaName = "Local",
+                        Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
+                    }
+                },
+                ServiceAtLocations = new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation
+                    {
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
+                        {
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.FamilyHub,
+                            Name = "North Family Hub",
+                            Description = "Swinton Gateway",
+                            Longitude = 53.5124278D,
+                            Latitude = -2.342044D,
+                            GeoPoint = new Point(-2.342044D, 53.5124278D) { SRID = GeoPoint.WGS84 },
+                            Address1 = "100 Chorley Road",
+                            City = "Manchester",
+                            PostCode = "M27 6BP",
+                            Country = "United Kingdom",
+                            StateProvince = "Salford",
+                            LocationType= LocationType.Postal,
+                            Contacts = new List<Contact>
+                            {
+                                new Contact
+                                {
+                                    Title = "Ms",
+                                    Name = "Kate Berry",
+                                    Telephone = "0161 778 0495",
+                                    TextPhone = "0161 778 0495",
+                                    Url = "https://www.gov.uk",
+                                    Email = "help@gov.uk"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
         };
     }
 
@@ -751,6 +853,13 @@ public static class TestDataProvider
                     new ServiceDelivery
                     {
                         Name = AttendingType.Online,
+                    }
+                },
+                Schedules = new List<Schedule>
+                {
+                    new Schedule
+                    {
+                        AttendingType = AttendingType.Online.ToString()
                     }
                 },
                 Eligibilities = new List<Eligibility>
@@ -1072,6 +1181,107 @@ public static class TestDataProvider
                             OrganisationId = organisationId,
                             LocationTypeCategory = LocationTypeCategory.NotSet,
                             Name = "Bristol-Service-4-Location",
+                            Description = "",
+                            Longitude = 51.63123,
+                            Latitude = -1.66519,
+                            GeoPoint = new Point(-1.66519, 51.63123) { SRID = GeoPoint.WGS84 },
+                            Address1 = "7A Boyce's Ave, Clifton",
+                            City = "Bristol",
+                            PostCode = "BS8 4AA",
+                            Country = "England",
+                            StateProvince = "",
+                            LocationType= LocationType.Postal,
+                            Contacts = new List<Contact>
+                            {
+                                new Contact
+                                {
+                                    Title = "Mr",
+                                    Name = "John Smith",
+                                    Telephone = "01827 64328",
+                                    TextPhone = "01827 64328",
+                                    Url = "https://www.gov.uk",
+                                    Email = "help@gov.uk"
+                                }
+                            }
+                        }
+                    }
+                },
+                Taxonomies = new List<Taxonomy>
+                {
+                    new Taxonomy
+                    {
+                        Name = "swimming",
+                        TaxonomyType = TaxonomyType.ServiceCategory,
+                        ParentId = 4
+                    }
+                }
+            },
+            new Service
+            {
+                OrganisationId = organisationId,
+                ServiceType = ServiceType.InformationSharing,
+                Name = "Test Service - Defunct",
+                Description = "This is a Defunct test service.",
+                DeliverableType = DeliverableType.NotSet,
+                Status = ServiceStatusType.Defunct,
+                CanFamilyChooseDeliveryLocation = true,
+                ServiceDeliveries = new List<ServiceDelivery>
+                {
+                    new ServiceDelivery
+                    {
+                        Name = AttendingType.InPerson,
+                    },
+                    new ServiceDelivery
+                    {
+                        Name = AttendingType.Online,
+                    }
+                },
+                Eligibilities = new List<Eligibility>
+                {
+                    new Eligibility
+                    {
+                        EligibilityType = null,
+                        MaximumAge = 90,
+                        MinimumAge = 10,
+                    }
+                },
+                CostOptions = new List<CostOption>
+                {
+                    new CostOption
+                    {
+                        Option = "Hour",
+                        Amount = 25.0m,
+                        AmountDescription = "AmountDescription"
+                    }
+                },
+                Languages = new List<Language>
+                {
+                    new Language
+                    {
+                        Name = "English",
+                        Code = "en",
+                    }
+                },
+                ServiceAreas = new List<ServiceArea>
+                {
+                    new ServiceArea
+                    {
+                        ServiceAreaName = "National",
+                        Uri = "http://statistics.data.gov.uk/id/statistical-geography/K02000001",
+                    }
+                },
+                ServiceAtLocations = new List<ServiceAtLocation>
+                {
+                    new ServiceAtLocation
+                    {
+                        Id = 0,
+                        LocationId = 0,
+                        ServiceId = 0,
+                        Location = new Location
+                        {
+                            OrganisationId = organisationId,
+                            LocationTypeCategory = LocationTypeCategory.NotSet,
+                            Name = "Bristol-Service-5-Location",
                             Description = "",
                             Longitude = 51.63123,
                             Latitude = -1.66519,

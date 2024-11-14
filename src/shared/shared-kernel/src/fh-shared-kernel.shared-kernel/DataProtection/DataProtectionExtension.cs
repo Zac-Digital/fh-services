@@ -28,14 +28,23 @@ public static class DataProtectionExtension
                         .MigrationsAssembly(typeof(DataProtectionKeysContext).Assembly.ToString());
                 }));
 
-        var dpOptions = configuration.GetSection("DataProtection").Get<DataProtectionOptions>()
-            ?? throw new ArgumentException("DataProtection section missing from configuration.");
-
-        dpOptions.Validate();
-
-        services.AddDataProtection()
+        var dataProtectionBuilder = services
+            .AddDataProtection()
             .SetApplicationName(appName)
-            .PersistKeysToDbContext<DataProtectionKeysContext>()
-            .ProtectKeysWithAzureKeyVault(new Uri(dpOptions.KeyIdentifier!), new ClientSecretCredential(dpOptions.TenantId!, dpOptions.ClientId!, dpOptions.ClientSecret!));
+            .PersistKeysToDbContext<DataProtectionKeysContext>();
+
+        AppendKeyVaultPersist(configuration, dataProtectionBuilder);
+    }
+
+    private static void AppendKeyVaultPersist(IConfiguration configuration, IDataProtectionBuilder dataProtectionBuilder)
+    {
+        var keyIdentifier = configuration["DataProtection:KeyIdentifier"];
+        
+        if (string.IsNullOrWhiteSpace(keyIdentifier)) return;
+
+        if (!Uri.TryCreate(keyIdentifier, UriKind.Absolute, out var uri)) 
+            throw new ArgumentException($"Invalid key identifier URI format: '{keyIdentifier}'");
+        
+        dataProtectionBuilder.ProtectKeysWithAzureKeyVault(uri, new ManagedIdentityCredential());
     }
 }

@@ -55,6 +55,5 @@ public class ServiceDirectoryService : IServiceDirectoryService
         }
 
         return JsonSerializer.Deserialize<ServiceDto>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
     }
 }

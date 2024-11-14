@@ -4,15 +4,17 @@ description: Fetch secrets from Azure KeyVault for an API/UI and update the App 
 outputs:
   publish_profile:
     value: ${{ steps.fetch.outputs.publish_profile }}
+    description: Publish profile to use for the deployment
 
 inputs:
   keyvault_name:
     required: true
     type: string
+    description: Key vault name without the prefix
   keyvault_prefix:
     required: true
-    description: The prefix of the KeyVault Key, e.g., IDAM-API-SECRET-NAME will have the prefix IDAM-API
     type: string
+    description: The prefix of the KeyVault Key, e.g., IDAM-API-SECRET-NAME will have the prefix IDAM-API
   files:
     required: true
     description: Comma seperated list of files to update
@@ -22,6 +24,7 @@ inputs:
     type: choice
     options:
       - 'Applications'
+      - 'Functions'
       - 'Tests'
 
 runs:
@@ -42,7 +45,7 @@ runs:
           Write-Output "::add-mask::$value"
           if ($key -eq "AZURE_WEBAPP_PUBLISH_PROFILE")
           {
-            Write-Output "publish_profile=""$value""" >> $env:GITHUB_OUTPUT
+            Write-Output "publish_profile=$value" >> $env:GITHUB_OUTPUT
           }
           Write-Output "$key=$value" >> $env:GITHUB_OUTPUT
         }
@@ -58,15 +61,8 @@ runs:
         APPINSIGHTS_CONNECTION_STRING: ${{ steps.fetch.outputs.APPINSIGHTS_CONNECTION_STRING }}
         APPINSIGHTS_INSTRUMENTATIONKEY: ${{ steps.fetch.outputs.APPINSIGHTS_INSTRUMENTATIONKEY }}
         ConnectionStrings.IdamConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_IDAMCONNECTION }}
-        Crypto.clientId: ${{ steps.fetch.outputs.CRYPTO_CLIENTID }}
-        Crypto.clientSecret: ${{ steps.fetch.outputs.CRYPTO_CLIENTSECRET }}
         Crypto.DbEncryptionIVKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEY }}
-        Crypto.DbEncryptionIVKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONIVKEYSECRETNAME }}
         Crypto.DbEncryptionKey: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEY }}
-        Crypto.DbEncryptionKeySecretName: ${{ steps.fetch.outputs.CRYPTO_DBENCRYPTIONKEYSECRETNAME }}
-        Crypto.KeyVaultIdentifier: ${{ steps.fetch.outputs.CRYPTO_KEYVAULTIDENTIFIER }}
-        Crypto.tenantId: ${{ steps.fetch.outputs.CRYPTO_TENANTID }}
-        Crypto.UseKeyVault: ${{ steps.fetch.outputs.CRYPTO_USEKEYVAULT }}
         GovUkOidcConfiguration.BearerTokenSigningKey: ${{ steps.fetch.outputs.GOVUKOIDCCONFIGURATION_BEARERTOKENSIGNINGKEY }}
         ServiceDirectoryApiBaseUrl: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPIBASEURL }}
         ConnectionStrings.ServiceDirectoryConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_SERVICEDIRECTORYCONNECTION }}
@@ -82,10 +78,7 @@ runs:
         Idams.Endpoint: ${{ steps.fetch.outputs.IDAMS_ENDPOINT }}
         FamilyHubsUi.Urls.GovUkLoginAccountPage: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_GOVUKLOGINACCOUNTPAGE }}
         FamilyHubsUi.Urls.DashboardWeb: ${{ steps.fetch.outputs.FAMILYHUBSUI_URLS_DASHBOARDWEB }}
-        DataProtection.TenantId: ${{ steps.fetch.outputs.DATAPROTECTION_TENANTID }}
         DataProtection.KeyIdentifier: ${{ steps.fetch.outputs.DATAPROTECTION_KEYIDENTIFIER }}
-        DataProtection.ClientSecret: ${{ steps.fetch.outputs.DATAPROTECTION_CLIENTSECRET }}
-        DataProtection.ClientId: ${{ steps.fetch.outputs.DATAPROTECTION_CLIENTID }}
         ConnectionStrings.SharedKernelConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_SHAREDKERNELCONNECTION }}
         ServiceDirectoryAPI.Endpoint: ${{ steps.fetch.outputs.SERVICEDIRECTORYAPI_ENDPOINT }}
         SqlServerCache.Connection: ${{ steps.fetch.outputs.SQLSERVERCACHE_CONNECTION }}
@@ -109,6 +102,16 @@ runs:
         FamilyHubsUi.Analytics.ContainerId: ${{ steps.fetch.outputs.FAMILYHUBSUI_ANALYTICS_CONTAINERID }}
         FamilyHubsUi.Analytics.MeasurementId: ${{ steps.fetch.outputs.FAMILYHUBSUI_ANALYTICS_MEASUREMENTID }}
         FamilyHubsUi.Analytics.ClarityId: ${{ steps.fetch.outputs.FAMILYHUBSUI_ANALYTICS_CLARITYID }}
+        ConnectionStrings.HsdaMockResponsesConnection: ${{ steps.fetch.outputs.CONNECTIONSTRINGS_HSDAMOCKRESPONSESCONNECTION }}
+
+    - name: Function Settings Variable Substitution
+      if: inputs.configure == 'Functions'
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ${{ inputs.files }}
+      env:
+        ApiConnection: ${{ steps.fetch.outputs.CONNECTIONAPI }}
+        ServiceDirectoryConnection: ${{ steps.fetch.outputs.SERVICEDIRECTORYCONNECTION }}
         
     - name: Test Settings Variable Substitution
       if: inputs.configure == 'Tests'

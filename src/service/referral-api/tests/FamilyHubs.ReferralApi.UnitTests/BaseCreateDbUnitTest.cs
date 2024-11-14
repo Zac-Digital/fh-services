@@ -27,7 +27,7 @@ public abstract class BaseCreateDbUnitTest<T> : BaseUnitTest<T>
         MockApplicationDbContext = GetApplicationDbContext();
     }
 
-    private static ApplicationDbContext GetApplicationDbContext()
+    protected static ApplicationDbContext GetApplicationDbContext()
     {
         var options = CreateNewContextOptions();
         var mockIHttpContextAccessor = Substitute.For<IHttpContextAccessor>();
@@ -101,10 +101,10 @@ public abstract class BaseCreateDbUnitTest<T> : BaseUnitTest<T>
                 Id = 1,
                 Name = "Test Service",
                 Description = "Test Service Description",
+                OrganizationId = 1,
                 Organisation = new Organisation
                 {
                     Id = 1,
-                    ReferralServiceId = 1,
                     Name = "Test Organisation",
                     Description = "Test Organisation Description",
                 }
