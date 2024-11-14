@@ -62,6 +62,10 @@ jobs:
 
       - name: Generate Report
         shell: bash
-        run: |
-          liquid --inputs "File=**/*test-results.trx" --output-file results.md
-          cat results.md >> $GITHUB_STEP_SUMMARY
+        run: |-
+          if find ./tests -name "*.trx" -print -quit | grep -q .; then
+            liquid --inputs "File=**/*test-results.trx" --output-file results.md
+            cat results.md >> $GITHUB_STEP_SUMMARY
+           else
+            echo "Skipping - No tests found in this project."
+           fi
