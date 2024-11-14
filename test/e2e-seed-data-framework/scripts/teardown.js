@@ -1,32 +1,34 @@
 import { Op } from 'sequelize'
-import { closeConnections } from '../connections.js'
+import { checkConnections, closeConnections } from '../connections.js'
 import * as ServiceDirectory from '../models/service-directory-models.js'
 import * as Referral from '../models/referral-models.js'
 
-const baseId = parseInt(process.env.IDS_START_FROM)
+const baseId = parseInt(process.env.IDS_START_FROM);
+
+await checkConnections();
 
 try {
-  await teardown()
+  await teardown();
 } catch (error) {
   console.error('Unable to run teardown:', error)
 } finally {
-  await closeConnections()
+  await closeConnections();
 }
 
 /**
  * Runs the test data teardown scripts.
  */
 async function teardown () {
-  console.log('Executing teardown...')
+  console.log('Tearing down Databases...');
 
-  await teardownServiceDirectoryData(baseId)
-  await teardownReferralData(baseId)
+  await teardownServiceDirectoryData(baseId);
+  await teardownReferralData(baseId);
 
-  console.log('Successfully executed teardown.')
+  console.log('Databases Torn Down!');
 }
 
 async function teardownServiceDirectoryData (baseId) {
-  console.log('Tearing down service directory data...')
+  console.log('Tearing Down Service Directory...');
 
   await teardownModels([
     ServiceDirectory.ServiceSearchResults,
@@ -45,22 +47,22 @@ async function teardownServiceDirectoryData (baseId) {
     ServiceDirectory.Locations,
     ServiceDirectory.Organisations,
     ServiceDirectory.Taxonomies
-  ])
+  ]);
 
-  // Manually delete anything that can't doesn't have an Id field
+  // Manually delete anything that doesn't have an ID field
   const totalDeletedServiceTaxonomiesItems = await ServiceDirectory.ServiceTaxonomies.destroy({
     where: {
       ServiceId: {
         [Op.gt]: baseId
       }
     }
-  })
+  });
 
-  console.log(`Successfully deleted ${totalDeletedServiceTaxonomiesItems} from 'ServiceTaxonomies'.`)
+  console.log(`Successfully Deleted ${totalDeletedServiceTaxonomiesItems} From 'ServiceTaxonomies'!`);
 }
 
 async function teardownReferralData (baseId) {
-  console.log('Tearing down referral data...')
+  console.log('Tearing Down Referral Data...');
 
   await teardownModels([
     Referral.ConnectCache,
@@ -76,11 +78,11 @@ async function teardownReferralData (baseId) {
     Referral.UserAccountServices,
     Referral.Referrals,
     Referral.ConnectionRequestsSentMetric
-  ])
+  ]);
 }
 
 async function teardownModels (models) {
-  console.log(`Tearing down data for ${models.length} models`, models)
+  console.log(`Tearing down data for ${models.length} models`, models);
 
   for (const model of models) {
     const totalDeletedItems = await model.destroy({
@@ -89,8 +91,8 @@ async function teardownModels (models) {
           [Op.gt]: baseId
         }
       }
-    })
+    });
 
-    console.log(`Successfully deleted ${totalDeletedItems} from '${model.tableName}'`)
+    console.log(`Successfully Deleted ${totalDeletedItems} From '${model.tableName}!'`);
   }
 }
