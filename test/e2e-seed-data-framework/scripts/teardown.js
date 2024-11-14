@@ -65,7 +65,6 @@ async function teardownReferralData (baseId) {
   console.log('Tearing Down Referral Data...');
 
   await teardownModels([
-    Referral.ConnectCache,
     Referral.Roles,
     Referral.Statuses,
     Referral.DataProtectionKeys,
@@ -88,7 +87,7 @@ async function teardownModels (models) {
     const totalDeletedItems = await model.destroy({
       where: {
         id: {
-          [Op.gt]: baseId
+          [Op.gte]: baseId
         }
       }
     });

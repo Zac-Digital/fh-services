@@ -1,36 +1,6 @@
 import { DataTypes } from 'sequelize'
 import { referralDb } from '../connections.js'
 
-// Model for ConnectCache
-export const ConnectCache = referralDb.define(
-  'ConnectCache',
-  {
-    Id: {
-      type: DataTypes.STRING(449),
-      primaryKey: true,
-      allowNull: false
-    },
-    Value: {
-      type: DataTypes.BLOB, // varbinary(max)
-      allowNull: false
-    },
-    ExpiresAtTime: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    SlidingExpirationInSeconds: {
-      type: DataTypes.BIGINT
-    },
-    AbsoluteExpiration: {
-      type: DataTypes.DATE
-    }
-  },
-  {
-    tableName: 'ConnectCache',
-    timestamps: false
-  }
-)
-
 // Model for ConnectionRequestsSentMetric
 export const ConnectionRequestsSentMetric = referralDb.define(
   'ConnectionRequestsSentMetric',
