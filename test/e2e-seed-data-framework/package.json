@@ -2,13 +2,13 @@
   "name": "e2e-framework",
   "type": "module",
   "scripts": {
-    "setup:dev": "dotenvx run -f .env.local -- node scripts/setup.js",
-    "teardown:dev": "dotenvx run -f .env.local -- node scripts/teardown.js",
-    "prepare": "husky",
+    "setup:dev": "dotenvx run -f .env -- node scripts/setup.js",
+    "teardown:dev": "dotenvx run -f .env -- node scripts/teardown.js",
     "format": "standard --fix"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.16.1",
+    "@tediousjs/connection-string": "^0.6.0",
     "sequelize": "^6.37.4",
     "tedious": "^18.6.1"
   },
