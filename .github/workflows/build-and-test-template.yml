@@ -29,6 +29,10 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
+      - name: Install Report Tool
+        shell: bash
+        run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
+
       - name: Package Cache
         uses: actions/cache@v4
         with:
@@ -50,8 +54,14 @@ jobs:
 
       - name: Build Project
         shell: bash
-        run: dotnet build --no-restore
+        run: dotnet build --configuration Release --no-restore
 
       - name: Test Project
         shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
+        run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" --verbosity minimal --no-restore --no-build
+
+      - name: Generate Report
+        shell: bash
+        run: |
+          liquid --inputs "File=**/*test-results.trx" --output-file results.md
+          cat results.md >> $GITHUB_STEP_SUMMARY
