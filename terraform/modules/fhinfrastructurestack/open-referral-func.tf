@@ -32,7 +32,6 @@ resource "azurerm_windows_function_app" "open_referral_function_app" {
     use_32_bit_worker = false
     minimum_tls_version = "1.2"
     always_on = true
-    application_insights_key = azurerm_application_insights.open_referral_function_app_insights.instrumentation_key
     application_stack {
       dotnet_version = var.dotnet_version_general
       use_dotnet_isolated_runtime = true

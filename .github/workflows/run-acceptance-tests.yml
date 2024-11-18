@@ -12,6 +12,9 @@ on:
       keyvault_prefix:
         required: true
         type: string
+      app_name:
+        required: true
+        type: string
       test_project_name:
         required: true
         type: string
@@ -27,6 +30,8 @@ jobs:
     env:
       KEYVAULT: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-general
       RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_PREFIX }}-familyhubs
+      API_APP_NAME: ${{ vars.AZURE_RESOURCE_PREFIX }}-${{ inputs.app_name }}
+      APP_FIREWALL_NAME: acceptance-tests
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -45,6 +50,15 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
+      - name: Get Workflow Runner IP
+        id: runner-ip
+        uses: ./.github/actions/get-runner-ip-address
+
+      - name: Add IP Address to App Firewall
+        shell: pwsh
+        run: |-
+          az webapp config access-restriction add -g ${{ env.RESOURCE_GROUP }} -n ${{ env.API_APP_NAME }} --rule-name ${{ env.APP_FIREWALL_NAME }} --action Allow --ip-address ${{ steps.runner-ip.outputs.ip_address }} --priority 50
+
       - name: Test Settings Variable Substitution
         id: substitution
         uses: ./.github/actions/variable-substitution
@@ -57,3 +71,9 @@ jobs:
       - name: Run Acceptance Tests
         shell: bash
         run: dotnet test "${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.project_name }}/acceptance-tests/${{ inputs.test_project_name }}/${{ inputs.test_project_name }}.csproj" --logger "html;logfilename=testResults.html"
+        
+      - name: Remove IP Address from App Firewall
+        if: always()
+        shell: pwsh
+        run: |-
+          az webapp config access-restriction remove -g ${{ env.RESOURCE_GROUP }} -n ${{ env.API_APP_NAME }} --rule-name ${{ env.APP_FIREWALL_NAME }}  

@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.Idam.Api.FunctionalTests;
@@ -10,10 +12,19 @@ namespace FamilyHubs.Idam.Api.FunctionalTests;
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly string _serviceDirectoryConnection;
+    private readonly Action<IConfigurationBuilder> _conf;
 
-    public CustomWebApplicationFactory()
+    public CustomWebApplicationFactory(Action<IConfigurationBuilder> conf)
     {
+        _conf = conf;
         _serviceDirectoryConnection = $"Data Source=idam-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";
+    }
+    
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        builder.ConfigureHostConfiguration(_conf);
+
+        return base.CreateHost(builder);
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -45,6 +56,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             var context = scopedServices.GetRequiredService<ApplicationDbContext>();
 
+            context.Database.EnsureCreated();
             context.Accounts.Add(TestDataProvider.GetTestAccount(many));
 
             context.SaveChanges();
