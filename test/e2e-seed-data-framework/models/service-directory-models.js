@@ -1,8 +1,7 @@
 import { DataTypes } from 'sequelize'
 import { serviceDirectoryDb } from '../connections.js'
 
-// Model for Events
-// TODO: Don't think this table is needed
+// This model is pre-seeded with static values in an earlier pipeline stage.
 export const Events = serviceDirectoryDb.define(
   'Events',
   {
@@ -25,7 +24,6 @@ export const Events = serviceDirectoryDb.define(
   }
 )
 
-// Model for Organisations
 export const Organisations = serviceDirectoryDb.define(
   'Organisations',
   {
@@ -81,7 +79,6 @@ export const Organisations = serviceDirectoryDb.define(
   }
 )
 
-// Model for Locations
 export const Locations = serviceDirectoryDb.define(
   'Locations',
   {
@@ -189,7 +186,7 @@ export const Locations = serviceDirectoryDb.define(
   }
 )
 
-// Model for AccessibilityForDisabilities
+// TODO: This may also not really be needed
 export const AccessibilityForDisabilities = serviceDirectoryDb.define(
   'AccessibilityForDisabilities',
   {
@@ -228,7 +225,7 @@ export const AccessibilityForDisabilities = serviceDirectoryDb.define(
   }
 )
 
-// Model for ServiceTypes
+// This model is pre-seeded with static values in an earlier pipeline stage.
 export const ServiceTypes = serviceDirectoryDb.define(
   'ServiceTypes',
   {
@@ -251,7 +248,6 @@ export const ServiceTypes = serviceDirectoryDb.define(
   }
 )
 
-// Model for ServiceSearches
 export const ServiceSearches = serviceDirectoryDb.define(
   'ServiceSearches',
   {
@@ -310,7 +306,6 @@ export const ServiceSearches = serviceDirectoryDb.define(
   }
 )
 
-// Model for Services
 export const Services = serviceDirectoryDb.define(
   'Services',
   {
@@ -384,7 +379,6 @@ export const Services = serviceDirectoryDb.define(
   }
 )
 
-// Model for Contacts
 export const Contacts = serviceDirectoryDb.define(
   'Contacts',
   {
@@ -445,7 +439,6 @@ export const Contacts = serviceDirectoryDb.define(
   }
 )
 
-// Model for CostOptions
 export const CostOptions = serviceDirectoryDb.define(
   'CostOptions',
   {
@@ -499,7 +492,6 @@ export const CostOptions = serviceDirectoryDb.define(
   }
 )
 
-// Model for Eligibilities
 export const Eligibilities = serviceDirectoryDb.define(
   'Eligibilities',
   {
@@ -546,7 +538,6 @@ export const Eligibilities = serviceDirectoryDb.define(
   }
 )
 
-// Model for Fundings
 export const Fundings = serviceDirectoryDb.define(
   'Fundings',
   {
@@ -585,7 +576,6 @@ export const Fundings = serviceDirectoryDb.define(
   }
 )
 
-// Model for Languages
 export const Languages = serviceDirectoryDb.define(
   'Languages',
   {
@@ -633,7 +623,6 @@ export const Languages = serviceDirectoryDb.define(
   }
 )
 
-// Model for ServiceAreas
 export const ServiceAreas = serviceDirectoryDb.define(
   'ServiceAreas',
   {
@@ -678,7 +667,6 @@ export const ServiceAreas = serviceDirectoryDb.define(
   }
 )
 
-// Model for ServiceAtLocations
 export const ServiceAtLocations = serviceDirectoryDb.define(
   'ServiceAtLocations',
   {
@@ -725,7 +713,6 @@ export const ServiceAtLocations = serviceDirectoryDb.define(
   }
 )
 
-// Model for Schedules
 export const Schedules = serviceDirectoryDb.define(
   'Schedules',
   {
@@ -833,7 +820,6 @@ export const Schedules = serviceDirectoryDb.define(
   }
 )
 
-// Model for ServiceDeliveries
 export const ServiceDeliveries = serviceDirectoryDb.define(
   'ServiceDeliveries',
   {
@@ -873,7 +859,6 @@ export const ServiceDeliveries = serviceDirectoryDb.define(
   }
 )
 
-// Model for ServiceSearchResults
 export const ServiceSearchResults = serviceDirectoryDb.define(
   'ServiceSearchResults',
   {
@@ -905,7 +890,6 @@ export const ServiceSearchResults = serviceDirectoryDb.define(
   }
 )
 
-// Model for Taxonomies
 export const Taxonomies = serviceDirectoryDb.define(
   'Taxonomies',
   {
@@ -944,7 +928,6 @@ export const Taxonomies = serviceDirectoryDb.define(
   }
 )
 
-// Model for ServiceTaxonomies
 export const ServiceTaxonomies = serviceDirectoryDb.define(
   'ServiceTaxonomies',
   {

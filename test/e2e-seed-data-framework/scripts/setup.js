@@ -2,7 +2,7 @@ import { checkConnections, closeConnections } from '../connections.js'
 import { testId, testPrefix } from '../helpers.js'
 import * as ServiceDirectory from '../models/service-directory-models.js'
 import {fn, literal} from "sequelize";
-import {addLocation} from "../core/seed-service-directory.js";
+import { addLocation, addServiceSearch } from '../core/seed-service-directory.js'
 
 await checkConnections();
 
@@ -30,37 +30,16 @@ async function setup () {
         stateProvince: "London",
     });
 
-  // const orgOne = await ServiceDirectory.Organisations.create({
-  //   Id: testId(1),
-  //   OrganisationType: 'LA',
-  //   Name: testPrefix("Aaron's test organisation"),
-  //   Description: testPrefix('test desc'),
-  //   AdminAreaCode: 'E08000031',
-  //   Created: new Date()
-  // });
-  //
-  // const serviceOne = await ServiceDirectory.Services.create({
-  //   Id: testId(1),
-  //   ServiceType: 'FamilyExperience',
-  //   Name: testPrefix("Aaron's test service"),
-  //   Description: testPrefix("Aaron's test description"),
-  //   CanFamilyChooseDeliveryLocation: false,
-  //   Status: 'Active',
-  //   DeliverableType: 'NotSet',
-  //   Created: new Date(),
-  //   CreatedBy: 2,
-  //   OrganisationId: orgOne.Id,
-  //   Summary: testPrefix('asdf')
-  // });
-  //
-  // await ServiceDirectory.Eligibilities.create({
-  //   Id: 78645,
-  //   ServiceId: serviceOne.Id,
-  //   MaximumAge: 16,
-  //   MinimumAge: 7,
-  //   Created: new Date(),
-  //   CreatedBy: 2
-  // });
+    await addServiceSearch({
+      id: 1,
+      searchTriggerEventId: 1,
+      searchPostcode: "AA1 1AA",
+      searchRadiusMiles: 20,
+      requestTimestamp: new Date(),
+      responseTimestamp: new Date(new Date().getTime() + 1000),
+      serviceSearchTypeId: 1,
+      organisationId: 1
+    });
 
   console.log('Successfully Seeded Database!');
 }

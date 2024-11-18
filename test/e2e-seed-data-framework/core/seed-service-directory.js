@@ -1,6 +1,7 @@
 import { testId, testPrefix } from '../helpers.js'
 import * as ServiceDirectory from '../models/service-directory-models.js'
-import { fn, literal } from 'sequelize'
+import { literal } from 'sequelize'
+import { v4 as uuidv4 } from 'uuid'
 
 /*
 This script provides wrapper methods for adding new objects for each given table.
@@ -30,16 +31,18 @@ are abstracted away from the testers to ease the cognitive load.
  * @param lastModifiedBy {Number} - The ID of the user who last modified this Organisation
  */
 export async function addOrganisation (
-  id,
-  organisationType,
-  name,
-  description,
-  adminAreaCode,
-  associatedOrganisationId = null,
-  uri = null,
-  url = null,
-  createdBy = null,
-  lastModifiedBy = null
+  {
+    id,
+    organisationType,
+    name,
+    description,
+    adminAreaCode,
+    associatedOrganisationId = null,
+    uri = null,
+    url = null,
+    createdBy = null,
+    lastModifiedBy = null
+  }
 ) {
   await ServiceDirectory.Organisations.create({
     Id: testId(id),
@@ -54,7 +57,7 @@ export async function addOrganisation (
     CreatedBy: createdBy,
     LastModified: new Date(),
     LastModifiedBy: lastModifiedBy
-  })
+  });
 }
 
 /**
@@ -74,8 +77,6 @@ export async function addOrganisation (
  * @param createdBy {Number} - The user ID that created the Location
  * @param lastModifiedBy {Number} - The user ID that last modified the Location
  * @param organisationId {Number} - The ID of the organisation that this Location belongs to
- * @param geoPoint {String} - The GeoPoint of the location
- * @returns {Promise<void>}
  */
 export async function addLocation (
   {
@@ -119,6 +120,47 @@ export async function addLocation (
 }
 
 /**
+ * Add a Service Search
+ *
+ * @param id {Number} - The ID of the Service Search
+ * @param searchTriggerEventId {Number} - Either 1 (ServiceDirectoryInitialSearch) or 2 (ServiceDirectorySearchFilter)
+ * @param searchPostcode {String} - The postcode from which this search was made
+ * @param searchRadiusMiles {String} - The radius in miles that was selected in Find or Connect when the search was made
+ * @param userId {Number} - The ID of the User who made the search, if it came from Connect
+ * @param httpResponseCode {Number} - The response status code
+ * @param requestTimestamp {Date} - The timestamp of the request
+ * @param responseTimestamp {Date} - The timestamp of the response, if there was a successful one
+ * @param serviceSearchTypeId {Number} - Either 1 (FamilyExperience, Find) or 2 (InformationSharing, Connect)
+ * @param organisationId {Number} - The organisation ID of the search
+ */
+export async function addServiceSearch({
+  id,
+  searchTriggerEventId,
+  searchPostcode,
+  searchRadiusMiles,
+  userId,
+  httpResponseCode = 200,
+  requestTimestamp,
+  responseTimestamp,
+  serviceSearchTypeId,
+  organisationId
+}) {
+  await ServiceDirectory.ServiceSearches.create({
+    Id: testId(id),
+    SearchTriggerEventId: searchTriggerEventId,
+    SearchPostcode: searchPostcode,
+    SearchRadiusMiles: searchRadiusMiles,
+    UserId: userId,
+    HttpResponseCode: httpResponseCode,
+    RequestTimestamp: requestTimestamp,
+    ResponseTimestamp: responseTimestamp,
+    CorrelationId: uuidv4(),
+    ServiceSearchTypeId: serviceSearchTypeId,
+    OrganisationId: organisationId
+  });
+}
+
+/**
  * Add a Service
  *
  * @param id {Number} - The ID of the Service
@@ -133,16 +175,18 @@ export async function addLocation (
  * @param summary {String} - The Service summary
  */
 export async function addService (
-  id,
-  serviceType,
-  name,
-  description = '',
-  status,
-  createdBy = null,
-  lastModifiedBy = null,
-  organisationId,
-  interpretationServices = null,
-  summary = '') {
+  {
+    id,
+    serviceType,
+    name,
+    description = '',
+    status,
+    createdBy = null,
+    lastModifiedBy = null,
+    organisationId,
+    interpretationServices = null,
+    summary = ''
+  }) {
   await ServiceDirectory.Services.create({
     Id: testId(id),
     ServiceType: serviceType,
@@ -158,5 +202,43 @@ export async function addService (
     OrganisationId: organisationId,
     InterpretationServices: interpretationServices,
     Summary: summary === '' ? null : testPrefix(summary)
-  })
+  });
+}
+
+/**
+ *
+ * @param id {Number} - The ID of the Contact
+ * @param telephone {String} - The telephone number of the Contact
+ * @param textPhone {String} - The text message number of the Contact
+ * @param url {String} - The website of the Contact
+ * @param email {String} - the email of the Contact
+ * @param createdBy {Number} - The user ID who created the Contact
+ * @param lastModifiedBy {Number} - The user ID who last modified the Contact
+ * @param serviceId {Number} - The ID of the Service that this Contact belongs to
+ * @param locationId {Number} - The ID of the Location that this Contact belongs to
+ */
+export async function addContact ({
+  id,
+  telephone,
+  textPhone,
+  url,
+  email,
+  createdBy,
+  lastModifiedBy,
+  serviceId,
+  locationId
+}){
+  await ServiceDirectory.Contacts.create({
+    Id: testId(id),
+    Telephone: telephone,
+    TextPhone: textPhone,
+    Url: url,
+    Email: email,
+    Created: new Date(),
+    CreatedBy: createdBy,
+    LastModified: new Date(),
+    LastModifiedBy: lastModifiedBy,
+    ServiceId: serviceId,
+    LocationId: locationId
+  });
 }
