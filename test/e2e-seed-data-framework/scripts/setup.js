@@ -20,6 +20,8 @@ try {
 async function setup () {
     console.log('Seeding Database...');
 
+    // TODO: Add examples of adding each type
+
     await addLocation({
         id: 1,
         latitude: 51.498572,

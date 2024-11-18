@@ -206,6 +206,7 @@ export async function addService (
 }
 
 /**
+ * Add a Contact
  *
  * @param id {Number} - The ID of the Contact
  * @param telephone {String} - The telephone number of the Contact
@@ -240,5 +241,38 @@ export async function addContact ({
     LastModifiedBy: lastModifiedBy,
     ServiceId: serviceId,
     LocationId: locationId
+  });
+}
+
+/**
+ * Add Cost Option
+ *
+ * @param id {Number} - The ID of the CostOption
+ * @param option {String} - If a value is given, one of: Session, Course, Per Family, Hour, Day, Week, Month
+ * @param amount {Number} - How much it costs in GBP
+ * @param amountDescription {String} - Any extra information about the cost
+ * @param createdBy {Number} - The user ID of the person who created the Cost Option (which will be the same as who is making the Service)
+ * @param lastModifiedBy {Number} - The user ID of the person who modified the Cost Option (which will be the same as who is modifying the Service)
+ * @param serviceId {Number} - The Service ID that this Cost Option belongs to
+ */
+export async function addCostOption({
+  id,
+  option,
+  amount,
+  amountDescription,
+  createdBy,
+  lastModifiedBy,
+  serviceId
+}) {
+  await ServiceDirectory.CostOptions.create({
+    Id: testId(id),
+    Option: option,
+    Amount: amount,
+    AmountDescription: amountDescription == null ? "" : testPrefix(amountDescription),
+    Created: new Date(),
+    CreatedBy: createdBy,
+    LastModified: new Date(),
+    LastModifiedBy: lastModifiedBy,
+    ServiceId: serviceId,
   });
 }
