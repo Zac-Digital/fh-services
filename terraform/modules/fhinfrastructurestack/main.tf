@@ -151,7 +151,6 @@ resource "azurerm_application_insights" "fh_idam_maintenance_ui_app_insights" {
 # Create App Service for IDAM Maintenance UI
 resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_idam_maintenance_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -214,7 +213,6 @@ resource "azurerm_application_insights" "fh_referral_api_app_insights" {
 # Create App Service for Referral API
 resource "azurerm_windows_web_app" "fh_referral_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_referral_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -276,7 +274,6 @@ resource "azurerm_application_insights" "fh_referral_ui_app_insights" {
 # Create App Service for Referral UI
 resource "azurerm_windows_web_app" "fh_referral_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_referral_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -340,7 +337,6 @@ resource "azurerm_application_insights" "fh_sd_api_app_insights" {
 # Create App Service for Service Directory API
 resource "azurerm_windows_web_app" "fh_sd_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_sd_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -406,7 +402,6 @@ resource "azurerm_application_insights" "fh_sd_ui_app_insights" {
 # Create App Service for Service Directory UI
 resource "azurerm_windows_web_app" "fh_sd_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_sd_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -466,7 +461,6 @@ resource "azurerm_application_insights" "fh_sd_admin_ui_app_insights" {
 # Create App Service for Service Directory Admin UI
 resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_sd_admin_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -529,7 +523,6 @@ resource "azurerm_application_insights" "fh_referral_dashboard_ui_app_insights" 
 # Create App Service for Referrals Dashboard UI
 resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_referral_dashboard_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -591,7 +584,6 @@ resource "azurerm_application_insights" "fh_idam_api_app_insights" {
 # Create App Service for IDAM API
 resource "azurerm_windows_web_app" "fh_idam_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_idam_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -650,7 +642,6 @@ resource "azurerm_application_insights" "fh_notification_api_app_insights" {
 # Create App Service for Notification API
 resource "azurerm_windows_web_app" "fh_notification_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_notification_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -3048,14 +3039,6 @@ resource "azurerm_key_vault" "kv6" {
   tags = local.tags
 }
 
-# Log Analytics Workspace - App Services
-resource "azurerm_log_analytics_workspace" "app_services" {
-  name                = "${var.prefix}-la-as-familyhubs"
-  resource_group_name = local.resource_group_name
-  location            = var.location
-  tags = local.tags
-}
-
 # SQL Server VA Microsoft Defender
 resource "azurerm_mssql_server_security_alert_policy" "sqlserver_security_policy" {
   resource_group_name = local.resource_group_name
@@ -4074,7 +4057,7 @@ resource "azurerm_monitor_action_group" "email_grp" {
 resource "azurerm_monitor_metric_alert" "cpu_alert01" {
   name                  = "${var.prefix}-fh-cpu-alert-referral-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_referral_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT30M"
   frequency             = "PT5M"
@@ -4094,7 +4077,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert01" {
 resource "azurerm_monitor_metric_alert" "cpu_alert02" {
   name                  = "${var.prefix}-fh-cpu-alert-sd-api"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_api_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4114,7 +4097,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert02" {
 resource "azurerm_monitor_metric_alert" "cpu_alert03" {
   name                  = "${var.prefix}-fh-cpu-alert-sd-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4134,7 +4117,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert03" {
 resource "azurerm_monitor_metric_alert" "cpu_alert04" {
   name                  = "${var.prefix}-fh-cpu-alert-sd-admin-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_admin_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4154,7 +4137,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert04" {
 resource "azurerm_monitor_metric_alert" "response-01" {
   name                  = "${var.prefix}-fh-response-alert-referral-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_referral_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4174,7 +4157,7 @@ resource "azurerm_monitor_metric_alert" "response-01" {
 resource "azurerm_monitor_metric_alert" "response-02" {
   name                  = "${var.prefix}-fh-response-alert-sd-api"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_api_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4194,7 +4177,7 @@ resource "azurerm_monitor_metric_alert" "response-02" {
 resource "azurerm_monitor_metric_alert" "response-03" {
   name                  = "${var.prefix}-fh-response-alert-sd-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4214,7 +4197,7 @@ resource "azurerm_monitor_metric_alert" "response-03" {
 resource "azurerm_monitor_metric_alert" "response-04" {
   name                  = "${var.prefix}-fh-response-alert-sd-admin-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_admin_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4346,6 +4329,9 @@ resource "azurerm_monitor_metric_alert" "failedalt-03" {
 }
 
 # Create Defender Protection for App Services
+# Note: We only want to manage this on the initial resources created in each subscription as this happens at subscription level
+# hence the count block
+# This ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-906 will handle removing this
 resource "azurerm_security_center_subscription_pricing" "app_services" {
   tier = var.defender_app_services_tier
   resource_type = "AppServices"

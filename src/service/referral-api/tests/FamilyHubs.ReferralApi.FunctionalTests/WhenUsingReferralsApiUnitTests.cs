@@ -5,8 +5,8 @@ using FluentAssertions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Json;
-
-//Only run locally
+using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
+using FamilyHubs.ReferralService.Shared.Dto.Metrics;
 
 namespace FamilyHubs.Referral.FunctionalTests;
 
@@ -20,13 +20,6 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenReferralsByReferrerAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-            
         var referrer = ReferralSeedData.SeedReferral().ElementAt(0).UserAccount.EmailAddress;
 
         var request = new HttpRequestMessage
@@ -35,7 +28,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
             RequestUri = new Uri(Client.BaseAddress + $"api/referrals/{referrer}?pageNumber=1&pageSize=10"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -52,20 +45,13 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenReferralsByReferrerIdAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
             RequestUri = new Uri(Client.BaseAddress + "api/referralsByReferrer/5?pageNumber=1&pageSize=10"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -82,65 +68,59 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenTheOpenReferralIsCreated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
-        var command = new ReferralDto
-        { 
-            Id = 3,
-            ReasonForSupport = "Reason For Support",
-            EngageWithFamily = "Engage With Family",
-            RecipientDto = new RecipientDto
-            { 
-                Id = 3,
-                Name = "Fred Blogs",
-                Email = "FredBlog@email.com",
-                Telephone = "078123455",
-                TextPhone = "078123455",
-                AddressLine1 = "Unit Test Address Line 1",
-                AddressLine2 = "Unit Test Address Line 2",
-                TownOrCity = "Town or City",
-                County = "County",
-                PostCode = "B31 2TV"
-            },
-            ReferralUserAccountDto = new UserAccountDto
-            { 
-                Id = 2,
-                EmailAddress = "Bob.Referrer@email.com",
-                Name = "Bob Referrer",
-                PhoneNumber = "011 222 5555",
-                Team = "Social Work team North",
-                UserAccountRoles = new List<UserAccountRoleDto>(),
-                ServiceUserAccounts = new List<UserAccountServiceDto>(),
-                OrganisationUserAccounts = null,
-            },
-            Status = new ReferralStatusDto
-            {
-                Id = 1,
-                Name = "New",
-                SortOrder = 0
-            },
-            ReferralServiceDto = new ReferralServiceDto
+        var command = new CreateReferralDto(
+            new ReferralDto
             {
                 Id = 3,
-                Name = "New Service",
-                Description = "Service Description",
-                Url = "www.service.com",
-                OrganisationDto = new OrganisationDto
-                { 
+                ReasonForSupport = "Reason For Support",
+                EngageWithFamily = "Engage With Family",
+                RecipientDto = new RecipientDto
+                {
                     Id = 3,
-                    Name = "New Organisation",
-                    Description = "Organisation Description",
+                    Name = "Fred Blogs",
+                    Email = "FredBlog@email.com",
+                    Telephone = "078123455",
+                    TextPhone = "078123455",
+                    AddressLine1 = "Unit Test Address Line 1",
+                    AddressLine2 = "Unit Test Address Line 2",
+                    TownOrCity = "Town or City",
+                    County = "County",
+                    PostCode = "B31 2TV"
+                },
+                ReferralUserAccountDto = new UserAccountDto
+                {
+                    Id = 2,
+                    EmailAddress = "Bob.Referrer@email.com",
+                    Name = "Bob Referrer",
+                    PhoneNumber = "011 222 5555",
+                    Team = "Social Work team North",
+                    UserAccountRoles = new List<UserAccountRoleDto>(),
+                    ServiceUserAccounts = new List<UserAccountServiceDto>(),
+                    OrganisationUserAccounts = null,
+                },
+                Status = new ReferralStatusDto
+                {
+                    Id = 1,
+                    Name = "New",
+                    SortOrder = 0
+                },
+                ReferralServiceDto = new ReferralServiceDto
+                {
+                    Id = 3,
+                    Name = "New Service",
+                    Description = "Service Description",
+                    Url = "www.service.com",
+                    OrganisationDto = new OrganisationDto
+                    {
+                        Id = 3,
+                        Name = "New Organisation",
+                        Description = "Organisation Description",
+                    }
                 }
-            }
-            
-        };
+            },
+            new ConnectionRequestsSentMetricDto(DateTimeOffset.UtcNow)
+        );
 
-        
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
@@ -148,7 +128,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -158,27 +138,20 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         ArgumentNullException.ThrowIfNull(result);
-        result.Id.Should().Be(command.ReferralServiceDto.Id);
+        result.Id.Should().Be(command.Referral.ReferralServiceDto.Id);
         result.ServiceName.Should().NotBeNullOrEmpty();
     }
 
     [Fact]
     public async Task ThenReferralsByOrganisationIdAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
             RequestUri = new Uri(Client.BaseAddress + "api/organisationreferrals/1?pageNumber=1&pageSize=10"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_vcstoken)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Vcstoken)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -195,20 +168,13 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenReferralByIdIsRetrievedByProfessional()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
             RequestUri = new Uri(Client.BaseAddress + "api/referral/1"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token_forOrganisation1)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(TokenForOrganisation1)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -222,22 +188,15 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     }
 
     [Fact]
-    public async Task ThenReferralByIdIsRetrievedByVCSAdmin()
+    public async Task ThenReferralByIdIsRetrievedByVcsAdmin()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
             RequestUri = new Uri(Client.BaseAddress + "api/referral/1"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_vcstoken)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Vcstoken)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -253,20 +212,13 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenReferralByIdIsForbidden()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
             RequestUri = new Uri(Client.BaseAddress + "api/referral/1"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_forbiddentoken)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Forbiddentoken)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -276,13 +228,6 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenTheOpenReferralIsUpdated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var command = new ReferralDto
         {
             Id = 1,
@@ -341,7 +286,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -353,20 +298,13 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenAcceptedReferralStatusIsSet()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
             RequestUri = new Uri(Client.BaseAddress + "api/status/1/Accepted")
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_vcstoken)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Vcstoken)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -375,27 +313,20 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
         var stringResult = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        stringResult.ToString().Should().Be("Accepted");
+        stringResult.Should().Be("Accepted");
     }
 
 
     [Fact]
     public async Task ThenDeclinedReferralStatusIsSet()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
             RequestUri = new Uri(Client.BaseAddress + "api/status/1/Declined/Unable to help")
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_vcstoken)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Vcstoken)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -404,26 +335,19 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
         var stringResult = await response.Content.ReadAsStringAsync();
 
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        stringResult.ToString().Should().Be("Declined");
+        stringResult.Should().Be("Declined");
     }
 
     [Fact]
     public async Task ThenForbiddenReferralStatusIsReturned()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
             RequestUri = new Uri(Client.BaseAddress + "api/status/1/Declined/Unable to help")
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -433,12 +357,6 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenReferralStatusListIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
 
         var request = new HttpRequestMessage
         {
@@ -446,7 +364,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
             RequestUri = new Uri(Client.BaseAddress + "api/statuses"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -462,20 +380,13 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [Fact]
     public async Task ThenReferralsByCompositeKeysAreRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client.BaseAddress + $"api/referral/compositekeys?serviceId=1&statusId=1&recipientId=1&referralId=1&pageNumber=1&pageSize=10"),
+            RequestUri = new Uri(Client.BaseAddress + "api/referral/compositekeys?serviceId=1&statusId=1&recipientId=1&referralId=1&pageNumber=1&pageSize=10"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 
@@ -494,13 +405,6 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [InlineData(2, 0)]
     public async Task Then_ReferralCount_ByServiceId_IsRetrieved(int serviceId, int expected)
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
@@ -508,7 +412,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
         };
 
         request.Headers.Authorization =
-            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_tokenLaManager!)}");
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", $"{new JwtSecurityTokenHandler().WriteToken(TokenLaManager!)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -526,33 +430,14 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
     [InlineData("Test User", "B30 2TV", "Name")]
     public async Task ThenReferralsByRecipientAreRetrieved(string value1, string? value2, string paraType)
     {
-        if (!IsRunningLocally() || Client == null)
+        var urlParam = paraType switch
         {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
-        string urlParam = string.Empty;
-
-        switch (paraType)
-        {
-            case "Email":
-                urlParam = $"api/referral/recipient?email={value1}";
-                break;
-
-            case "Telephone":
-                urlParam = $"api/referral/recipient?telephone={value1}";
-                break;
-
-            case "Textphone":
-                urlParam = $"api/referral/recipient?textphone={value1}";
-                break;
-
-            case "Name":
-                urlParam = $"api/referral/recipient?name={value1}&postcode={value2}";
-                break;
-        }
+            "Email" => $"api/referral/recipient?email={value1}",
+            "Telephone" => $"api/referral/recipient?telephone={value1}",
+            "Textphone" => $"api/referral/recipient?textphone={value1}",
+            "Name" => $"api/referral/recipient?name={value1}&postcode={value2}",
+            _ => string.Empty
+        };
 
         var request = new HttpRequestMessage
         {
@@ -560,7 +445,7 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingOpenReferralApiUnitTe
             RequestUri = new Uri(Client.BaseAddress + urlParam),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
 
         using var response = await Client.SendAsync(request);
 

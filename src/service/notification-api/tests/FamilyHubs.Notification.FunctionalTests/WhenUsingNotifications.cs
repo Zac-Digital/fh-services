@@ -9,30 +9,30 @@ namespace FamilyHubs.Notification.FunctionalTests;
 
 //https://stackoverflow.com/questions/7138935/xunit-net-does-not-capture-console-output
 
+[Collection("Sequential")]
 public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
 {
-    private readonly ITestOutputHelper output;
+    private readonly ITestOutputHelper _output;
 
     public WhenUsingNotifications(ITestOutputHelper output)
     {
-        this.output = output;
+        _output = output;
     }
 
-    public class ConsoleWriter : StringWriter
+    private class ConsoleWriter : StringWriter
     {
-        private readonly ITestOutputHelper output;
+        private readonly ITestOutputHelper _output;
         public ConsoleWriter(ITestOutputHelper output)
         {
-            this.output = output;
+            _output = output;
         }
 
         public override void WriteLine(string? value)
         {
-            output.WriteLine(value);
+            _output.WriteLine(value);
         }
     }
 
-#if LOCAL_ONLY
     // Uncomment to run locally
     [Theory]
     [InlineData("ProfessionalAcceptRequest")]
@@ -41,15 +41,8 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
     [InlineData("VcsNewRequest")]
     public async Task ThenSendEmailNotificationToUser(string key)
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
-        Console.SetOut(new ConsoleWriter(output));
-        if (!_templates!.ContainsKey(key))
+        Console.SetOut(new ConsoleWriter(_output));
+        if (!Templates!.ContainsKey(key))
         {
             return;
         }
@@ -57,8 +50,8 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
         var command = new MessageDto
         {
             ApiKeyType = ApiKeyType.ConnectKey,
-            NotificationEmails = new List<string> { _emailRecipient! },
-            TemplateId = _templates[key],
+            NotificationEmails = new List<string> { EmailRecipient! },
+            TemplateId = Templates[key],
             TemplateTokens = new Dictionary<string, string>
             {
                 { "reference number", "0001" },
@@ -78,7 +71,7 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
             Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Token)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -90,18 +83,10 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         result.Should().BeTrue();
     }
-#endif
 
     [Fact]
     public async Task ThenGetNotificationsList()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         SeedDatabase();
 
         var expected = new PaginatedList<MessageDto>(GetMapper().Map<List<MessageDto>>(GetNotificationList()),2,1,10);
@@ -109,10 +94,10 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/notify"),
+            RequestUri = new Uri(Client.BaseAddress + $"api/notify"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Token)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -129,13 +114,6 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
     [Fact]
     public async Task ThenGetNotificationById()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         SeedDatabase();
 
         var expected = GetMapper().Map<MessageDto>(GetNotificationList().First(x => x.Id == 1));
@@ -143,10 +121,10 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Get,
-            RequestUri = new Uri(Client!.BaseAddress + $"api/notify/1"),
+            RequestUri = new Uri(Client.BaseAddress + $"api/notify/1"),
         };
 
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(_token)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue($"Bearer", $"{new JwtSecurityTokenHandler().WriteToken(Token)}");
 
         using var response = await Client.SendAsync(request);
 
@@ -157,6 +135,5 @@ public class WhenUsingNotifications : BaseWhenUsingOpenReferralApiUnitTests
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         retVal.Should().NotBeNull();
         retVal.Should().BeEquivalentTo(expected, options => options.Excluding(x => x.Created));
-
     }
 }

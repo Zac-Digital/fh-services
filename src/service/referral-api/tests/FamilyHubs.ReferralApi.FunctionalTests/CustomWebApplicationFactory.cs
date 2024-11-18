@@ -6,15 +6,20 @@ using Microsoft.Extensions.Hosting;
 using FamilyHubs.Referral.Data.Repository;
 using Microsoft.Extensions.Logging;
 using FamilyHubs.Referral.Api;
-using FamilyHubs.Referral.Data.Entities;
+using FamilyHubs.Referral.Core.ClientServices;
+using Microsoft.Extensions.Configuration;
 
 namespace FamilyHubs.Referral.FunctionalTests;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private readonly string _referralConnection;
-    public CustomWebApplicationFactory()
+    private readonly Action<IConfigurationBuilder> _conf;
+    private readonly HttpClient _sdClient;
+    public CustomWebApplicationFactory(Action<IConfigurationBuilder> conf, HttpClient sdClient)
     {
+        _conf = conf;
+        _sdClient = sdClient;
         _referralConnection = $"Data Source=sd-{Random.Shared.Next().ToString()}.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;Recursive Triggers=True;Default Timeout=30;Pooling=True";
     }
 
@@ -26,8 +31,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     /// <returns></returns>
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        var host = builder.Build();
-        host.Start();
+        builder.ConfigureHostConfiguration(_conf);
+
+        var host = base.CreateHost(builder);
 
         // Get service provider.
         var serviceProvider = host.Services;
@@ -55,6 +61,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
             efCoreServices.ForEach(s => services.Remove(s));
 
+            services.AddSingleton<IServiceDirectoryService>(new ServiceDirectoryService(_sdClient));
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlite(_referralConnection, mg =>
@@ -77,7 +84,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             var context = scopedServices.GetRequiredService<ApplicationDbContext>();
 
 
-            IReadOnlyCollection<Status> statuses = ReferralSeedData.SeedStatuses();
+            var statuses = ReferralSeedData.SeedStatuses();
 
             if (!context.Statuses.Any())
             {

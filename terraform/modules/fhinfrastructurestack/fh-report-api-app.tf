@@ -14,7 +14,6 @@ resource "azurerm_application_insights" "fh_report_api_app_insights" {
 # Create App Service for Report API
 resource "azurerm_windows_web_app" "fh_report_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = "${azurerm_application_insights.fh_report_api_app_insights.instrumentation_key}"
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = "${var.asp_netcore_environment}"
