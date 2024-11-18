@@ -3,27 +3,27 @@ import { serviceDirectoryDb } from '../connections.js'
 
 // Model for Events
 // TODO: Don't think this table is needed
-// export const Events = serviceDirectoryDb.define(
-//   'Events',
-//   {
-//     Id: {
-//       type: DataTypes.SMALLINT,
-//       primaryKey: true,
-//       allowNull: false
-//     },
-//     Name: {
-//       type: DataTypes.STRING(100),
-//       allowNull: false
-//     },
-//     Description: {
-//       type: DataTypes.STRING(500)
-//     }
-//   },
-//   {
-//     tableName: 'Events',
-//     timestamps: false
-//   }
-// )
+export const Events = serviceDirectoryDb.define(
+  'Events',
+  {
+    Id: {
+      type: DataTypes.SMALLINT,
+      primaryKey: true,
+      allowNull: false
+    },
+    Name: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
+    Description: {
+      type: DataTypes.STRING(500)
+    }
+  },
+  {
+    tableName: 'Events',
+    timestamps: false
+  }
+)
 
 // Model for Organisations
 export const Organisations = serviceDirectoryDb.define(
@@ -179,7 +179,7 @@ export const Locations = serviceDirectoryDb.define(
       }
     },
     GeoPoint: {
-      type: DataTypes.GEOGRAPHY,
+      type: DataTypes.GEOGRAPHY("POINT", 4326),
       allowNull: false
     }
   },
