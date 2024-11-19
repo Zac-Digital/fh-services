@@ -137,17 +137,6 @@ resource "azurerm_monitor_autoscale_setting" "autoscale" {
   }
 }
 
-# Create Application Insights for IDAM Maintenance UI
-resource "azurerm_application_insights" "fh_idam_maintenance_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-idam-maintenance-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for IDAM Maintenance UI
 resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
   app_settings = {
@@ -197,17 +186,6 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
 resource "azurerm_app_service_virtual_network_swift_connection" "fh_idam_maintenance_ui" {
   app_service_id = azurerm_windows_web_app.fh_idam_maintenance_ui.id
   subnet_id      = azurerm_subnet.vnetint.id
-}
-
-# Create Application Insights for Referral API 
-resource "azurerm_application_insights" "fh_referral_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-referral-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
 }
 
 # Create App Service for Referral API
@@ -260,17 +238,6 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_api
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Referral UI
-resource "azurerm_application_insights" "fh_referral_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-referral-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Referral UI
 resource "azurerm_windows_web_app" "fh_referral_ui" {
   app_settings = {
@@ -320,18 +287,6 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
 resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_ui" {
   app_service_id = azurerm_windows_web_app.fh_referral_ui.id
   subnet_id      = azurerm_subnet.vnetint.id
-}
-
-
-# Create Application Insights for Service Directory API
-resource "azurerm_application_insights" "fh_sd_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-sd-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
 }
 
 # Create App Service for Service Directory API
@@ -388,17 +343,6 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_api" {
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Service Directory UI
-resource "azurerm_application_insights" "fh_sd_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-sd-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Service Directory UI
 resource "azurerm_windows_web_app" "fh_sd_ui" {
   app_settings = {
@@ -445,17 +389,6 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
 resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_ui" {
   app_service_id = azurerm_windows_web_app.fh_sd_ui.id
   subnet_id      = azurerm_subnet.vnetint.id
-}
-
-# Create Application Insights for Service Directory Admin UI
-resource "azurerm_application_insights" "fh_sd_admin_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-sd-admin-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
 }
 
 # Create App Service for Service Directory Admin UI
@@ -509,17 +442,6 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_admin_ui"
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Referrals Dashboard UI
-resource "azurerm_application_insights" "fh_referral_dashboard_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-ref-dash-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Referrals Dashboard UI
 resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
   app_settings = {
@@ -570,17 +492,6 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_das
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for IDAM API 
-resource "azurerm_application_insights" "fh_idam_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-idam-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for IDAM API
 resource "azurerm_windows_web_app" "fh_idam_api" {
   app_settings = {
@@ -626,17 +537,6 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
 resource "azurerm_app_service_virtual_network_swift_connection" "fh_idam_api" {
   app_service_id = azurerm_windows_web_app.fh_idam_api.id
   subnet_id      = azurerm_subnet.vnetint.id
-}
-
-# Create Application Insights for Notification API 
-resource "azurerm_application_insights" "fh_notification_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-notification-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
 }
 
 # Create App Service for Notification API
