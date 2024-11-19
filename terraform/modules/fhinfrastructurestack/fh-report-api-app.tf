@@ -1,16 +1,5 @@
 # Report API Application Group
 
-# Create Application Insight for Report API
-resource "azurerm_application_insights" "fh_report_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-report-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Report API
 resource "azurerm_windows_web_app" "fh_report_api" {
   app_settings = {
