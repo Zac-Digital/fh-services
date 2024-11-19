@@ -538,6 +538,7 @@ export const Eligibilities = serviceDirectoryDb.define(
   }
 )
 
+// TODO: Table is unused in production
 export const Fundings = serviceDirectoryDb.define(
   'Fundings',
   {
@@ -623,6 +624,7 @@ export const Languages = serviceDirectoryDb.define(
   }
 )
 
+// TODO: Table is unused in production
 export const ServiceAreas = serviceDirectoryDb.define(
   'ServiceAreas',
   {
@@ -890,6 +892,7 @@ export const ServiceSearchResults = serviceDirectoryDb.define(
   }
 )
 
+// This model is pre-seeded with static values in an earlier pipeline stage.
 export const Taxonomies = serviceDirectoryDb.define(
   'Taxonomies',
   {
