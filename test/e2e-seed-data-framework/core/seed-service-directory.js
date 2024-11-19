@@ -1,7 +1,6 @@
 import { testId, testPrefix } from "../helpers.js";
 import * as ServiceDirectory from "../models/service-directory-models.js";
 import { literal } from "sequelize";
-import { v4 as uuidv4 } from "uuid";
 
 /*
 This script provides wrapper methods for adding new objects for each given table.
@@ -152,7 +151,6 @@ export async function addServiceSearch({
     HttpResponseCode: httpResponseCode,
     RequestTimestamp: requestTimestamp,
     ResponseTimestamp: responseTimestamp,
-    CorrelationId: uuidv4(),
     ServiceSearchTypeId: serviceSearchTypeId,
     OrganisationId: testId(organisationId),
   });
@@ -321,7 +319,7 @@ export async function addLanguage({
   createdBy,
   lastModifiedBy,
   serviceId,
-  code
+  code,
 }) {
   await ServiceDirectory.Languages.create({
     Id: testId(id),
@@ -337,7 +335,7 @@ export async function addLanguage({
 
 /**
  * Add a Service @ Location
- * 
+ *
  * @param serviceId - The ID of the Service that the Location is attached to
  * @param locationId - The ID of the Location that the Service is attached to
  * @param id - The ID of this Service @ Location entry
@@ -364,13 +362,13 @@ export async function addServiceAtLocation({
 
 /**
  * Add a Schedule
- * 
+ *
  * The way schedules are connected to services & locations is a bit confusing, so here is what the possibilities are:
- * 
+ *
  * InPerson  - populate ServiceAtLocationId, leave ServiceId blank
  * Online    - populate ServiceId, leave ServiceAtLocationId blank
  * Telephone - populate ServiceId, leave ServiceAtLocationId blank
- * 
+ *
  * @param id - The ID of the Schedule
  * @param frequency - Either leave it as null if there are no days in the schedule, or set to "WEEKLY" if the schedule has days available
  * @param byDay - If the schedule has days available, this is an ordered list of the days in the format "MO,TU,WE,TH,FR,SA,SU"
@@ -409,7 +407,7 @@ export async function addSchedule({
 
 /**
  * Add a ServiceDelivery
- * 
+ *
  * @param id - The ID of this ServiceDelivery
  * @param name - Either InPerson, Online or Telephone
  * @param createdBy - The User ID which created this ServiceDelivery
@@ -436,9 +434,9 @@ export async function addServiceDelivery({
 
 /**
  * Add a Service Search Result
- * 
+ *
  * This is a Many-Many join table, so there should be as many of these as there are services searches for a specific service
- * 
+ *
  * @param id - The ID of the ServiceSearchResult
  * @param serviceId - The ID of the Service that this ServiceSearchResult links to
  * @param serviceSearchId - The ID of the ServiceSearch that this ServiceSearchResult links to
@@ -457,11 +455,11 @@ export async function addServiceSearchResult({
 
 /**
  * Add a Service Taxonomy
- * 
+ *
  * This is a Many-Many join table, so there should be as many of these as there are taxonomies linked for a specific service
- * 
+ *
  * Note that "Taxonomy" means the categories you select when creating a new service. These are statically defined in [dbo].[Taxomomies]
- * 
+ *
  * @param serviceId - The ServiceId which this ServiceTaxonomy links to
  * @param taxonomyId - The Taxonomy which this ServiceTaxonomy links to
  * @returns {Promise<void>}

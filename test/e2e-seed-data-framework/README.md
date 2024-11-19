@@ -38,4 +38,3 @@ The following packages are used:
 - @dotenvx/dotenvx: to support `.env` files for local development and testing
 - sequelize: an ORM for interacting with databases through a JS API
 - tedious: a SQL Server DB driver used by sequelize
-- uuid: Generate RFC9562 (formally RFC4122) compliant UUIDs
