@@ -23,3 +23,17 @@ export function testId(id) {
  * @param {string} text
  */
 export const testPrefix = (text) => `[E2E] ${text}`;
+
+/**
+ * Encrypts some text using the same keys as the web apps
+ *
+ * @param plaintext - The text to be encrypted
+ * @returns the encrypted ciphertext
+ */
+export function encrypt(plaintext) {
+  if (plaintext == null) {
+    return null;
+  }
+
+  return null; // TODO: Implementation
+}
