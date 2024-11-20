@@ -1,4 +1,4 @@
-import { Op } from "sequelize";
+import { Model, Op } from "sequelize";
 import { checkConnections, closeConnections } from "../connections.js";
 import * as ServiceDirectory from "../models/service-directory-models.js";
 import * as Referral from "../models/referral-models.js";
@@ -21,66 +21,27 @@ try {
 async function teardown() {
   console.log("Tearing down Databases...");
 
-  await teardownServiceDirectoryData(baseId);
-  await teardownReferralData(baseId);
+  await teardownTable(ServiceDirectory);
+  await teardownTable(Referral);
 
   console.log("Databases Torn Down!");
 }
 
-async function teardownServiceDirectoryData(baseId) {
-  console.log("Tearing Down Service Directory...");
+async function teardownTable(table) {
+  const tableModels = [];
 
-  await teardownModels([
-    ServiceDirectory.ServiceSearchResults,
-    ServiceDirectory.ServiceSearches,
-    ServiceDirectory.AccessibilityForDisabilities,
-    ServiceDirectory.Contacts,
-    ServiceDirectory.CostOptions,
-    ServiceDirectory.Eligibilities,
-    ServiceDirectory.Fundings,
-    ServiceDirectory.Languages,
-    ServiceDirectory.ServiceAreas,
-    ServiceDirectory.ServiceAtLocations,
-    ServiceDirectory.Schedules,
-    ServiceDirectory.ServiceDeliveries,
-    ServiceDirectory.Services,
-    ServiceDirectory.Locations,
-    ServiceDirectory.Organisations,
-    ServiceDirectory.Taxonomies,
-  ]);
+  Object.keys(table).map((k) => {
+    const component = table[k];
+    for (const key in component.rawAttributes) {
+      if (key === "Id") {
+        tableModels.push(component);
+        return;
+      }
+    }
+    console.log(`Skipping ${k} as it has no Id column!`);
+  });
 
-  // Manually delete anything that doesn't have an ID field
-  const totalDeletedServiceTaxonomiesItems =
-    await ServiceDirectory.ServiceTaxonomies.destroy({
-      where: {
-        ServiceId: {
-          [Op.gt]: baseId,
-        },
-      },
-    });
-
-  console.log(
-    `Successfully Deleted ${totalDeletedServiceTaxonomiesItems} From 'ServiceTaxonomies'!`
-  );
-}
-
-async function teardownReferralData(baseId) {
-  console.log("Tearing Down Referral Data...");
-
-  await teardownModels([
-    Referral.Roles,
-    Referral.Statuses,
-    Referral.DataProtectionKeys,
-    Referral.ReferralServices,
-    Referral.Organisations,
-    Referral.Recipients,
-    Referral.UserAccounts,
-    Referral.UserAccountRoles,
-    Referral.UserAccountOrganisations,
-    Referral.UserAccountServices,
-    Referral.Referrals,
-    Referral.ConnectionRequestsSentMetric,
-  ]);
+  await teardownModels(tableModels);
 }
 
 async function teardownModels(models) {
