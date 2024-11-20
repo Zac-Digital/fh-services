@@ -310,6 +310,9 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -357,6 +360,9 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = false
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -506,6 +512,9 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -553,6 +562,9 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
