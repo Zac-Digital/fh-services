@@ -29,6 +29,8 @@ Environment variables are used to configure the setup and teardown scripts.
 
 To run the tests, make a copy of `.env.local` and call it `.env`, and then edit the connection strings to match your local database setup. Example connection strings are included but your mileage may vary!
 
+You will also need to obtain Development encryption key and encryption IV key from KeyVault for the Referral Db.
+
 The CI/CD pipeline will create its own `.env` file using the connection strings for the environment it's running against.
 
 ## Packages
@@ -38,4 +40,3 @@ The following packages are used:
 - @dotenvx/dotenvx: to support `.env` files for local development and testing
 - sequelize: an ORM for interacting with databases through a JS API
 - tedious: a SQL Server DB driver used by sequelize
-- uuid: Generate RFC9562 (formally RFC4122) compliant UUIDs

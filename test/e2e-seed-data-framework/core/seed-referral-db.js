@@ -1,10 +1,10 @@
-import { testId, testPrefix, encrypt } from "../helpers.js";
+import { testId, encrypt } from "../helpers.js";
 import * as Referral from "../models/referral-models.js";
-import { v4 as uuidv4 } from "uuid";
+import crypto from "crypto";
 
 /**
  * Add an Organisation
- * 
+ *
  * @param id - the ID of the organisation
  * @param name - the name of the organisation
  * @param description - a description of the organisation
@@ -15,8 +15,8 @@ export async function addOrganisation({
   id,
   name,
   description,
-  createdBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  lastModifiedBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
+  createdBy,
+  lastModifiedBy,
 }) {
   await Referral.Organisations.create({
     Id: testId(id),
@@ -31,7 +31,7 @@ export async function addOrganisation({
 
 /**
  * Add a Connection Request Sent Metric
- * 
+ *
  * @param id - The ID of the con. req. sent metric
  * @param laOrganisationId - The ID of the LA that the person who made the request works for
  * @param userAccountId - The ID of the person who made the request
@@ -53,8 +53,8 @@ export async function addConnectionRequestSentMetric({
   httpResponseCode,
   referralId,
   referralReferenceCode,
-  createdBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  lastModifiedBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
+  createdBy,
+  lastModifiedBy,
   vcsOrganisationId,
 }) {
   await Referral.ConnectionRequestsSentMetric.create({
@@ -62,7 +62,7 @@ export async function addConnectionRequestSentMetric({
     LaOrganisationId: testId(laOrganisationId),
     UserAccountId: userAccountId,
     RequestTimestamp: requestTimestamp,
-    RequestCorrelationId: uuidv4(),
+    RequestCorrelationId: crypto.randomUUID(),
     ResponseTimestamp: responseTimestamp,
     HttpResponseCode: httpResponseCode,
     ConnectionRequestId: testId(referralId),
@@ -77,7 +77,7 @@ export async function addConnectionRequestSentMetric({
 
 /**
  * Add a Recipient
- * 
+ *
  * @param id - the ID of the recipient
  * @param name - the name of the recipient
  * @param email - the email of the recipient
@@ -91,19 +91,19 @@ export async function addConnectionRequestSentMetric({
  * @param createdBy - who created the recipient
  * @param lastModifiedBy - who modified the recipient
  */
-export async function addRecipients({
+export async function addRecipient({
   id,
-  name = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  email = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  telephone = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  textPhone = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  addressLine1 = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  addressLine2 = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  townOrCity = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  county = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  postCode = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  createdBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  lastModifiedBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
+  name,
+  email,
+  telephone,
+  textPhone,
+  addressLine1,
+  addressLine2,
+  townOrCity,
+  county,
+  postCode,
+  createdBy,
+  lastModifiedBy,
 }) {
   await Referral.Recipients.create({
     Id: testId(id),
@@ -125,7 +125,7 @@ export async function addRecipients({
 
 /**
  * Add a Referral Service
- * 
+ *
  * @param id - the ID of the referral service
  * @param name - the name of the service
  * @param description - the description of the service
@@ -137,8 +137,8 @@ export async function addReferralService({
   id,
   name,
   description,
-  createdBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  lastModifiedBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
+  createdBy,
+  lastModifiedBy,
   organisationId,
 }) {
   await Referral.ReferralServices.create({
@@ -155,7 +155,7 @@ export async function addReferralService({
 
 /**
  * Add a User Account
- * 
+ *
  * @param id - the ID of the account
  * @param emailAddress - the email address of the user
  * @param name - the name of the user
@@ -166,12 +166,12 @@ export async function addReferralService({
  */
 export async function addUserAccount({
   id,
-  emailAddress = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  name = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  phoneNumber = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  team = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  createdBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  lastModifiedBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
+  emailAddress,
+  name,
+  phoneNumber,
+  team,
+  createdBy,
+  lastModifiedBy,
 }) {
   await Referral.UserAccounts.create({
     Id: testId(id),
@@ -188,7 +188,7 @@ export async function addUserAccount({
 
 /**
  * Add a Referral
- * 
+ *
  * @param id - the ID of the referral
  * @param referrerTelephone - the phone number of the person who made the referral
  * @param reasonForSupport - the reason for support written by the referrer
@@ -203,16 +203,16 @@ export async function addUserAccount({
  */
 export async function addReferral({
   id,
-  referrerTelephone = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  reasonForSupport = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  engageWithFamily = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  reasonForDecliningSupport = "ENCRYPTED FIELD", // TODO: Implement Encryption
+  referrerTelephone,
+  reasonForSupport,
+  engageWithFamily,
+  reasonForDecliningSupport,
   statusId,
   recepientId,
   userAccountId,
   referralServiceId,
-  createdBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  lastModifiedBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
+  createdBy,
+  lastModifiedBy,
 }) {
   await Referral.Referrals.create({
     Id: testId(id),
@@ -233,9 +233,9 @@ export async function addReferral({
 
 /**
  * Add a User Account Role
- * 
+ *
  * This is a Many-Many join table, it is used to link a UserAccount with a Role from the statically defined Roles table
- * 
+ *
  * @param id - the ID of this UserAccountRole
  * @param userAccountId - the ID of the user to have a role assosciated with them
  * @param roleId - the ID of the role, taken from the Roles table
@@ -246,8 +246,8 @@ export async function addUserAccountRole({
   id,
   userAccountId,
   roleId,
-  createdBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
-  lastModifiedBy = "ENCRYPTED FIELD", // TODO: Implement Encryption
+  createdBy,
+  lastModifiedBy,
 }) {
   await Referral.UserAccountRoles.create({
     Id: testId(id),

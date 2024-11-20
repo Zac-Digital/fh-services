@@ -1,4 +1,13 @@
+import crypto from "crypto";
 import "@dotenvx/dotenvx";
+
+const ENCRYPTION_KEY = new Uint8Array(
+  process.env.ENCRYPTION_KEY.split(",").map(Number)
+);
+
+const INITIALISATION_VECTOR = new Uint8Array(
+  process.env.INITIALISATION_VECTOR.split(",").map(Number)
+);
 
 /**
  * Generates a test ID starting from the base ID configured in the environment variables.
@@ -25,7 +34,7 @@ export function testId(id) {
 export const testPrefix = (text) => `[E2E] ${text}`;
 
 /**
- * Encrypts some text using the same keys as the web apps
+ * Encrypts some text using the same algorithm & keys as the web apps
  *
  * @param plaintext - The text to be encrypted
  * @returns the encrypted ciphertext
@@ -35,5 +44,13 @@ export function encrypt(plaintext) {
     return null;
   }
 
-  return null; // TODO: Implementation
+  let cipher = crypto.createCipheriv(
+    "aes-256-cbc",
+    ENCRYPTION_KEY,
+    INITIALISATION_VECTOR
+  );
+  let encrypted = cipher.update(plaintext, "utf8", "base64");
+  encrypted += cipher.final("base64");
+
+  return encrypted;
 }
