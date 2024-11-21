@@ -8,7 +8,7 @@ resource "azurerm_windows_web_app" "fh_report_api" {
     ASPNETCORE_ENVIRONMENT                      = "${var.asp_netcore_environment}"
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "REPORT_API"
+    "AppConfiguration:KeyVaultPrefix"           = "REPORT-API"
   }
   name                                          = "${var.prefix}-as-fh-report-api"
   resource_group_name                           = local.resource_group_name

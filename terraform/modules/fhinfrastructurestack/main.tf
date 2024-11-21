@@ -226,7 +226,7 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "IDAM_MAINTENANCE_UI"
+    "AppConfiguration:KeyVaultPrefix"           = "IDAM-MAINTENANCE-UI"
   }
   name                                          = "${var.prefix}-as-fh-idam-maintenance-ui"
   resource_group_name                           = local.resource_group_name
@@ -279,7 +279,7 @@ resource "azurerm_windows_web_app" "fh_referral_api" {
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "REFERRAL_API"
+    "AppConfiguration:KeyVaultPrefix"           = "REFERRAL-API"
   }
   name                                          = "${var.prefix}-as-fh-referral-api"
   resource_group_name                           = local.resource_group_name
@@ -331,7 +331,7 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "CONNECT_UI"
+    "AppConfiguration:KeyVaultPrefix"           = "CONNECT-UI"
   }
   name                                          = "${var.prefix}-as-fh-referral-ui"
   resource_group_name                           = local.resource_group_name
@@ -391,7 +391,7 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
     XDT_MicrosoftApplicationInsights_NodeJS     = "1"
     XDT_MicrosoftApplicationInsights_PreemptSdk = "disabled"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "SD_API"
+    "AppConfiguration:KeyVaultPrefix"           = "SD-API"
   }
   name                                          = "${var.prefix}-as-fh-sd-api"
   resource_group_name                           = local.resource_group_name
@@ -443,7 +443,7 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "FIND_UI"
+    "AppConfiguration:KeyVaultPrefix"           = "FIND-UI"
   }
   name                                          = "${var.prefix}-as-fh-sd-ui"
   resource_group_name                           = local.resource_group_name
@@ -496,7 +496,7 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "MANAGE_UI"
+    "AppConfiguration:KeyVaultPrefix"           = "MANAGE-UI"
   }
   name                                          = "${var.prefix}-as-fh-sd-admin-ui"
   resource_group_name                           = local.resource_group_name
@@ -549,7 +549,7 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "CONNECT_DASHBOARD_UI"
+    "AppConfiguration:KeyVaultPrefix"           = "CONNECT-DASHBOARD-UI"
   }
   name                                          = "${var.prefix}-as-fh-ref-dash-ui"
   resource_group_name                           = local.resource_group_name
@@ -601,7 +601,7 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "IDAM_API"
+    "AppConfiguration:KeyVaultPrefix"           = "IDAM-API"
   }
   name                                          = "${var.prefix}-as-fh-idam-api"
   resource_group_name                           = local.resource_group_name
@@ -653,7 +653,7 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "NOTIFICATIONS_API"
+    "AppConfiguration:KeyVaultPrefix"           = "NOTIFICATIONS-API"
   }
   name                                          = "${var.prefix}-as-fh-notification-api"
   resource_group_name                           = local.resource_group_name
@@ -705,7 +705,7 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
     ASPNETCORE_ENVIRONMENT = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE = "1"
     "AppConfiguration:KeyVaultIdentifier" = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix" = "MOCK_HSDA_API"
+    "AppConfiguration:KeyVaultPrefix" = "MOCK-HSDA-API"
   }
   name = "${var.prefix}-as-fh-open-referral-mock-api"
   resource_group_name = local.resource_group_name
