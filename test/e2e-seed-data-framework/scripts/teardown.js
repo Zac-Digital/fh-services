@@ -33,11 +33,12 @@ async function teardownServiceDirectoryTable() {
   await teardownTable(ServiceDirectory);
 
   // Manually delete anything that doesn't have an ID field
+
   const totalDeletedServiceTaxonomiesItems =
     await ServiceDirectory.ServiceTaxonomies.destroy({
       where: {
         ServiceId: {
-          [Op.gt]: baseId,
+          [Op.gte]: baseId,
         },
       },
     });
@@ -57,6 +58,59 @@ async function teardownReferralTable() {
 
 async function teardownReportTable() {
   await teardownTable(Report);
+
+  // Manually delete anything that doesn't have an ID field
+
+  const totalDeletedOrganisationDimItems = await Report.OrganisationDim.destroy(
+    {
+      where: {
+        OrganisationKey: {
+          [Op.gte]: baseId,
+        },
+      },
+    }
+  );
+
+  const totalDeletedServiceSearchesDimItems =
+    await Report.ServiceSearchesDim.destroy({
+      where: {
+        ServiceSearchesKey: {
+          [Op.gte]: baseId,
+        },
+      },
+    });
+
+  const totalDeletedUserAccountDimItems = await Report.UserAccountDim.destroy({
+    where: {
+      UserAccountKey: {
+        [Op.gte]: baseId,
+      },
+    },
+  });
+
+  if (totalDeletedOrganisationDimItems === 0) {
+    console.log("No items to delete from 'OrganisationDim'");
+  } else {
+    console.log(
+      `Successfully Deleted ${totalDeletedOrganisationDimItems} From 'OrganisationDim!'`
+    );
+  }
+
+  if (totalDeletedServiceSearchesDimItems === 0) {
+    console.log("No items to delete from 'ServiceSearchesDim'");
+  } else {
+    console.log(
+      `Successfully Deleted ${totalDeletedServiceSearchesDimItems} From 'ServiceSearchesDim!'`
+    );
+  }
+
+  if (totalDeletedUserAccountDimItems === 0) {
+    console.log("No items to delete from 'UserAccountDim'");
+  } else {
+    console.log(
+      `Successfully Deleted ${totalDeletedUserAccountDimItems} From 'UserAccountDim!'`
+    );
+  }
 }
 
 async function teardownTable(table) {

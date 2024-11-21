@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { reportDb } from "../connections.js";
 
-// Static
+// This model is pre-seeded with static values in an earlier pipeline stage.
 export const DateDim = reportDb.define(
   "DateDim",
   {
@@ -65,9 +65,11 @@ export const DateDim = reportDb.define(
   },
   {
     schema: "dim",
+    tableName: "DateDim",
   }
 );
 
+// This model is pre-seeded with static values in an earlier pipeline stage.
 export const TimeDim = reportDb.define(
   "TimeDim",
   {
@@ -100,6 +102,7 @@ export const TimeDim = reportDb.define(
   },
   {
     schema: "dim",
+    tableName: "TimeDim",
   }
 );
 
@@ -147,6 +150,7 @@ export const OrganisationDim = reportDb.define(
   },
   {
     schema: "idam",
+    tableName: "OrganisationDim",
   }
 );
 
@@ -238,6 +242,7 @@ export const ServiceSearchesDim = reportDb.define(
   },
   {
     schema: "dim",
+    tableName: "ServiceSearchesDim",
   }
 );
 
@@ -319,6 +324,7 @@ export const UserAccountDim = reportDb.define(
   },
   {
     schema: "idam",
+    tableName: "UserAccountDim",
   }
 );
 
