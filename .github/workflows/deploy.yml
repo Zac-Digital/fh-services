@@ -18,6 +18,10 @@ on:
           - 'Test2'
           - 'Pre-production'
           - 'Production'
+      reset_and_reseed_databases:
+        description: Choose to reset all the databases and reseed
+        default: true
+        type: boolean
 
 permissions:
   id-token: write
@@ -88,7 +92,7 @@ jobs:
       dotnet_version: ${{ matrix.dotnet_version_override || vars.DOTNET_VERSION }}
 
   reset-databases:
-    if: startsWith(inputs.environment, 'Test')
+    if: startsWith(inputs.environment, 'Test') && inputs.reset_and_reseed_databases
     name: Reset the ${{ matrix.display_name }} database
     needs: [ build-projects-upload-artifacts ]
     strategy:
@@ -278,7 +282,7 @@ jobs:
     secrets: inherit
   
   seed-databases:
-    if: startsWith(inputs.environment, 'Test')
+    if: startsWith(inputs.environment, 'Test') && inputs.reset_and_reseed_databases
     name: Seed the ${{ matrix.display_name }} database
     needs: [ deploy-api-services, deploy-ui-services, deploy-functions ]
     strategy:
