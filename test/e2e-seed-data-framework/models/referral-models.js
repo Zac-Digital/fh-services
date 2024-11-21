@@ -1,104 +1,6 @@
 import { DataTypes } from "sequelize";
 import { referralDb } from "../connections.js";
 
-/**
- * The following tables appear to be unused as A) nothing in the web apps appear to populate them and B) they are currently empty in each live environment
- *
- * I have kept the code for them commented out in here however in-case it's discovered they actually are used, or become used in the future.
- */
-
-// export const UserAccountOrganisations = referralDb.define(
-//   "UserAccountOrganisations",
-//   {
-//     Id: {
-//       type: DataTypes.BIGINT,
-//       primaryKey: true,
-//       autoIncrement: true,
-//     },
-//     UserAccountId: {
-//       type: DataTypes.BIGINT,
-//       allowNull: false,
-//       references: {
-//         model: UserAccounts,
-//         key: "Id",
-//       },
-//     },
-//     OrganisationId: {
-//       type: DataTypes.BIGINT,
-//       allowNull: false,
-//       references: {
-//         model: Organisations,
-//         key: "Id",
-//       },
-//     },
-//     Created: {
-//       type: DataTypes.DATE,
-//       allowNull: false,
-//     },
-//     CreatedBy: {
-//       type: DataTypes.STRING(512),
-//       allowNull: false,
-//     },
-//     LastModified: {
-//       type: DataTypes.DATE,
-//     },
-//     LastModifiedBy: {
-//       type: DataTypes.STRING(512),
-//     },
-//   },
-//   {
-//     tableName: "UserAccountOrganisations",
-//     timestamps: false,
-//   }
-// );
-
-// export const UserAccountServices = referralDb.define(
-//   "UserAccountServices",
-//   {
-//     Id: {
-//       type: DataTypes.BIGINT,
-//       primaryKey: true,
-//       autoIncrement: true,
-//     },
-//     UserAccountId: {
-//       type: DataTypes.BIGINT,
-//       allowNull: false,
-//       references: {
-//         model: UserAccounts,
-//         key: "Id",
-//       },
-//     },
-//     ReferralServiceId: {
-//       type: DataTypes.BIGINT,
-//       allowNull: false,
-//       references: {
-//         model: ReferralServices,
-//         key: "Id",
-//       },
-//     },
-//     Created: {
-//       type: DataTypes.DATE,
-//       allowNull: false,
-//     },
-//     CreatedBy: {
-//       type: DataTypes.STRING(512),
-//       allowNull: false,
-//     },
-//     LastModified: {
-//       type: DataTypes.DATE,
-//     },
-//     LastModifiedBy: {
-//       type: DataTypes.STRING(512),
-//     },
-//   },
-//   {
-//     tableName: "UserAccountServices",
-//     timestamps: false,
-//   }
-// );
-
-// --------------------------------
-
 export const Organisations = referralDb.define(
   "Organisations",
   {
@@ -561,6 +463,100 @@ export const UserAccountRoles = referralDb.define(
   },
   {
     tableName: "UserAccountRoles",
+    timestamps: false,
+  }
+);
+
+// -------------------------------- //
+
+// I've moved these to the bottom as they appear to be unused in the web-app and so don't need seeding, but leaving them at least ensures the schema is identical to that of the web apps.
+
+export const UserAccountOrganisations = referralDb.define(
+  "UserAccountOrganisations",
+  {
+    Id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    UserAccountId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      references: {
+        model: UserAccounts,
+        key: "Id",
+      },
+    },
+    OrganisationId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      references: {
+        model: Organisations,
+        key: "Id",
+      },
+    },
+    Created: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    CreatedBy: {
+      type: DataTypes.STRING(512),
+      allowNull: false,
+    },
+    LastModified: {
+      type: DataTypes.DATE,
+    },
+    LastModifiedBy: {
+      type: DataTypes.STRING(512),
+    },
+  },
+  {
+    tableName: "UserAccountOrganisations",
+    timestamps: false,
+  }
+);
+
+export const UserAccountServices = referralDb.define(
+  "UserAccountServices",
+  {
+    Id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    UserAccountId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      references: {
+        model: UserAccounts,
+        key: "Id",
+      },
+    },
+    ReferralServiceId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      references: {
+        model: ReferralServices,
+        key: "Id",
+      },
+    },
+    Created: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    CreatedBy: {
+      type: DataTypes.STRING(512),
+      allowNull: false,
+    },
+    LastModified: {
+      type: DataTypes.DATE,
+    },
+    LastModifiedBy: {
+      type: DataTypes.STRING(512),
+    },
+  },
+  {
+    tableName: "UserAccountServices",
     timestamps: false,
   }
 );

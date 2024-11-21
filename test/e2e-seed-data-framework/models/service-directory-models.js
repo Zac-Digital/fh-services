@@ -1,134 +1,6 @@
 import { DataTypes } from "sequelize";
 import { serviceDirectoryDb } from "../connections.js";
 
-/**
- * The following tables appear to be unused as A) nothing in the web apps appear to populate them and B) they are currently empty in each live environment
- *
- * I have kept the code for them commented out in here however in-case it's discovered they actually are used, or become used in the future.
- */
-
-// export const AccessibilityForDisabilities = serviceDirectoryDb.define(
-//   'AccessibilityForDisabilities',
-//   {
-//     Id: {
-//       type: DataTypes.BIGINT,
-//       primaryKey: true,
-//       autoIncrement: true
-//     },
-//     Accessibility: {
-//       type: DataTypes.STRING(255)
-//     },
-//     Created: {
-//       type: DataTypes.DATE
-//     },
-//     CreatedBy: {
-//       type: DataTypes.BIGINT
-//     },
-//     LastModified: {
-//       type: DataTypes.DATE
-//     },
-//     LastModifiedBy: {
-//       type: DataTypes.BIGINT
-//     },
-//     LocationId: {
-//       type: DataTypes.BIGINT,
-//       allowNull: false,
-//       references: {
-//         model: Locations,
-//         key: 'Id'
-//       }
-//     }
-//   },
-//   {
-//     tableName: 'AccessibilityForDisabilities',
-//     timestamps: false
-//   }
-// )
-
-// export const Fundings = serviceDirectoryDb.define(
-//   'Fundings',
-//   {
-//     Id: {
-//       type: DataTypes.BIGINT,
-//       primaryKey: true,
-//       autoIncrement: true
-//     },
-//     Source: {
-//       type: DataTypes.STRING(255)
-//     },
-//     Created: {
-//       type: DataTypes.DATE
-//     },
-//     CreatedBy: {
-//       type: DataTypes.BIGINT
-//     },
-//     LastModified: {
-//       type: DataTypes.DATE
-//     },
-//     LastModifiedBy: {
-//       type: DataTypes.BIGINT
-//     },
-//     ServiceId: {
-//       type: DataTypes.BIGINT,
-//       allowNull: false,
-//       references: {
-//         model: Services,
-//         key: 'Id'
-//       }
-//     }
-//   },
-//   {
-//     tableName: 'Fundings',
-//     timestamps: false
-//   }
-// )
-
-// export const ServiceAreas = serviceDirectoryDb.define(
-//   'ServiceAreas',
-//   {
-//     Id: {
-//       type: DataTypes.BIGINT,
-//       primaryKey: true,
-//       autoIncrement: true
-//     },
-//     ServiceAreaName: {
-//       type: DataTypes.STRING(255)
-//     },
-//     Extent: {
-//       type: DataTypes.STRING(255)
-//     },
-//     Uri: {
-//       type: DataTypes.STRING(2083)
-//     },
-//     Created: {
-//       type: DataTypes.DATE
-//     },
-//     CreatedBy: {
-//       type: DataTypes.BIGINT
-//     },
-//     LastModified: {
-//       type: DataTypes.DATE
-//     },
-//     LastModifiedBy: {
-//       type: DataTypes.BIGINT
-//     },
-//     ServiceId: {
-//       type: DataTypes.BIGINT,
-//       allowNull: false,
-//       references: {
-//         model: Services,
-//         key: 'Id'
-//       }
-//     }
-//   },
-//   {
-//     tableName: 'ServiceAreas',
-//     timestamps: false
-//   }
-// )
-
-// --------------------------------
-
 // This model is pre-seeded with static values in an earlier pipeline stage.
 export const Events = serviceDirectoryDb.define(
   "Events",
@@ -966,3 +838,127 @@ export const ServiceTaxonomies = serviceDirectoryDb.define(
     primaryKey: ["ServiceId", "TaxonomyId"],
   }
 );
+
+// -------------------------------- //
+
+// I've moved these to the bottom as they appear to be unused in the web-app and so don't need seeding, but leaving them at least ensures the schema is identical to that of the web apps.
+
+export const AccessibilityForDisabilities = serviceDirectoryDb.define(
+  'AccessibilityForDisabilities',
+  {
+    Id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    Accessibility: {
+      type: DataTypes.STRING(255)
+    },
+    Created: {
+      type: DataTypes.DATE
+    },
+    CreatedBy: {
+      type: DataTypes.BIGINT
+    },
+    LastModified: {
+      type: DataTypes.DATE
+    },
+    LastModifiedBy: {
+      type: DataTypes.BIGINT
+    },
+    LocationId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      references: {
+        model: Locations,
+        key: 'Id'
+      }
+    }
+  },
+  {
+    tableName: 'AccessibilityForDisabilities',
+    timestamps: false
+  }
+)
+
+export const Fundings = serviceDirectoryDb.define(
+  'Fundings',
+  {
+    Id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    Source: {
+      type: DataTypes.STRING(255)
+    },
+    Created: {
+      type: DataTypes.DATE
+    },
+    CreatedBy: {
+      type: DataTypes.BIGINT
+    },
+    LastModified: {
+      type: DataTypes.DATE
+    },
+    LastModifiedBy: {
+      type: DataTypes.BIGINT
+    },
+    ServiceId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      references: {
+        model: Services,
+        key: 'Id'
+      }
+    }
+  },
+  {
+    tableName: 'Fundings',
+    timestamps: false
+  }
+)
+
+export const ServiceAreas = serviceDirectoryDb.define(
+  'ServiceAreas',
+  {
+    Id: {
+      type: DataTypes.BIGINT,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    ServiceAreaName: {
+      type: DataTypes.STRING(255)
+    },
+    Extent: {
+      type: DataTypes.STRING(255)
+    },
+    Uri: {
+      type: DataTypes.STRING(2083)
+    },
+    Created: {
+      type: DataTypes.DATE
+    },
+    CreatedBy: {
+      type: DataTypes.BIGINT
+    },
+    LastModified: {
+      type: DataTypes.DATE
+    },
+    LastModifiedBy: {
+      type: DataTypes.BIGINT
+    },
+    ServiceId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      references: {
+        model: Services,
+        key: 'Id'
+      }
+    }
+  },
+  {
+    tableName: 'ServiceAreas',
+    timestamps: false
+  }
+)
