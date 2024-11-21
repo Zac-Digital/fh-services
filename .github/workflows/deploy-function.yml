@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     env:
-      KEYVAULT: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-general
+      KEYVAULT: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-admin
       APP_NAME: ${{ vars.AZURE_RESOURCE_PREFIX }}-${{ inputs.azure_app_name }}
       RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_PREFIX }}-familyhubs
     steps:
@@ -44,18 +44,16 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: App Settings Variable Substitution
-        id: substitution
-        uses: ./.github/actions/variable-substitution
-        with:
-          keyvault_name: ${{ env.KEYVAULT }}
-          keyvault_prefix: ${{ inputs.keyvault_prefix }}
-          files: "./out/appsettings.json"
-          configure: 'Functions'
+      - name: Fetch Publish Profile
+        id: fetch_profile
+        shell: pwsh
+        run: |-
+          $PublishProfile = az keyvault secret show --name ${{ inputs.keyvault_prefix }}-AZURE-WEBAPP-PUBLISH-PROFILE --vault-name ${{ env.KEYVAULT }} --query value --output tsv
+          Write-Output "publish_profile=$PublishProfile" >> $env:GITHUB_OUTPUT
 
       - name: Deploy Artifact to Azure
         uses: azure/functions-action@v1
         with:
           app-name: ${{ env.APP_NAME }}
-          publish-profile: ${{ steps.substitution.outputs.publish_profile }}
+          publish-profile: ${{ steps.fetch_profile.outputs.publish_profile }}
           package: ./out
