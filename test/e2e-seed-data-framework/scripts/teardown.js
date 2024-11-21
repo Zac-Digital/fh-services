@@ -2,6 +2,7 @@ import { Op } from "sequelize";
 import { checkConnections, closeConnections } from "../connections.js";
 import * as ServiceDirectory from "../models/service-directory-models.js";
 import * as Referral from "../models/referral-models.js";
+import * as Report from "../models/report-models.js";
 
 const baseId = parseInt(process.env.IDS_START_FROM);
 
@@ -21,8 +22,9 @@ try {
 async function teardown() {
   console.log("Tearing down Databases...");
 
-  await teardownServiceDirectoryTable(ServiceDirectory);
-  await teardownReferralTable(Referral);
+  await teardownServiceDirectoryTable();
+  await teardownReferralTable();
+  await teardownReportTable();
 
   console.log("Databases Torn Down!");
 }
@@ -51,6 +53,10 @@ async function teardownServiceDirectoryTable() {
 
 async function teardownReferralTable() {
   await teardownTable(Referral);
+}
+
+async function teardownReportTable() {
+  await teardownTable(Report);
 }
 
 async function teardownTable(table) {

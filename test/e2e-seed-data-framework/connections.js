@@ -5,8 +5,13 @@ import "@dotenvx/dotenvx";
 export const serviceDirectoryDb = buildSequelizeConnection(
   process.env.CONNECTION_STRING_SERVICEDIRECTORY
 );
+
 export const referralDb = buildSequelizeConnection(
   process.env.CONNECTION_STRING_REFERRAL
+);
+
+export const reportDb = buildSequelizeConnection(
+  process.env.CONNECTION_STRING_REPORT
 );
 
 function buildSequelizeConnection(connectionString) {
@@ -29,6 +34,7 @@ export async function checkConnections() {
   try {
     await serviceDirectoryDb.authenticate();
     await referralDb.authenticate();
+    await reportDb.authenticate();
   } catch (error) {
     console.error("Unable to establish connection to the database:", error);
   }
@@ -42,6 +48,7 @@ export async function closeConnections() {
   try {
     await serviceDirectoryDb.close();
     await referralDb.close();
+    await reportDb.close();
   } catch (error) {
     console.error("Unable to close connection to the database:", error);
   }
