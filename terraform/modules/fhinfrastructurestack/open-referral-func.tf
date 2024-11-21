@@ -7,16 +7,6 @@ module "open_referral_storage_account" {
   tags = local.tags
 }
 
-resource "azurerm_application_insights" "open_referral_function_app_insights" {
-  name = "${var.prefix}-as-fh-open-referral-func"
-  resource_group_name = local.resource_group_name
-  location = var.location
-  application_type = "web"
-  sampling_percentage = 0
-  workspace_id = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 resource "azurerm_windows_function_app" "open_referral_function_app" {
   name = "${var.prefix}-fa-fh-open-referral"
   location = var.location
