@@ -1,6 +1,6 @@
 using FamilyHubs.OpenReferral.Function.ClientServices;
-using FamilyHubs.OpenReferral.Function.Extensions;
 using FamilyHubs.OpenReferral.Function.Repository;
+using FamilyHubs.SharedKernel.Extensions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
