@@ -246,88 +246,6 @@ export const ServiceSearchesDim = reportDb.define(
   }
 );
 
-export const UserAccountDim = reportDb.define(
-  "UserAccountDim",
-  {
-    UserAccountKey: {
-      type: DataTypes.BIGINT,
-      autoIncrement: true,
-      primaryKey: true,
-      allowNull: false,
-    },
-    UserAccountId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
-    UserAccountRoleTypeId: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-    },
-    UserAccountRoleTypeName: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    OrganisationTypeId: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-    },
-    OrganisationId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
-    OrganisationName: {
-      type: DataTypes.STRING(512),
-      allowNull: false,
-    },
-    OrganisationTypeName: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    Name: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    Email: {
-      type: DataTypes.STRING(512),
-      allowNull: false,
-    },
-    Status: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-    },
-    Created: {
-      type: DataTypes.DATE(7),
-      allowNull: false,
-    },
-    LastModified: {
-      type: DataTypes.DATE(7),
-      allowNull: false,
-    },
-    SysStartTime: {
-      type: DataTypes.DATE(7),
-      allowNull: false,
-    },
-    SysEndTime: {
-      type: DataTypes.DATE(7),
-      allowNull: false,
-    },
-    CreatedBy: {
-      type: DataTypes.STRING(320),
-      allowNull: false,
-      defaultValue: "",
-    },
-    LastModifiedBy: {
-      type: DataTypes.STRING(320),
-      allowNull: false,
-      defaultValue: "",
-    },
-  },
-  {
-    schema: "idam",
-    tableName: "UserAccountDim",
-  }
-);
-
 export const ServiceSearchFacts = reportDb.define(
   "ServiceSearchFacts",
   {
@@ -376,74 +294,6 @@ export const ServiceSearchFacts = reportDb.define(
   },
   {
     schema: "dim",
-  }
-);
-
-export const ConnectionRequestsFacts = reportDb.define(
-  "ConnectionRequestsFacts",
-  {
-    Id: {
-      type: DataTypes.BIGINT,
-      autoIncrement: true,
-      primaryKey: true,
-      allowNull: false,
-    },
-    DateKey: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: DateDim,
-        key: "DateKey",
-      },
-    },
-    TimeKey: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: TimeDim,
-        key: "TimeKey",
-      },
-    },
-    OrganisationKey: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: OrganisationDim,
-        key: "OrganisationKey",
-      },
-    },
-    ConnectionRequestServiceKey: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
-    ConnectionRequestStatusTypeKey: {
-      type: DataTypes.SMALLINT,
-      allowNull: false,
-    },
-    ConnectionRequestId: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
-    Created: {
-      type: DataTypes.DATE(7),
-      allowNull: false,
-    },
-    CreatedBy: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
-    Modified: {
-      type: DataTypes.DATE(7),
-      allowNull: false,
-    },
-    ModifiedBy: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
-  },
-  {
-    schema: "dim",
-    tableName: "ConnectionRequestsFacts",
   }
 );
 
@@ -528,5 +378,91 @@ export const ConnectionRequestsSentFacts = reportDb.define(
   },
   {
     schema: "dim",
+  }
+);
+
+// -------------------------------- //
+
+// I've moved these to the bottom as they appear to be unused in the web-app and so don't need seeding, but leaving them at least ensures the schema is identical to that of the web apps.
+
+export const UserAccountDim = reportDb.define(
+  "UserAccountDim",
+  {
+    UserAccountKey: {
+      type: DataTypes.BIGINT,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
+    },
+    UserAccountId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
+    UserAccountRoleTypeId: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+    },
+    UserAccountRoleTypeName: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    OrganisationTypeId: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+    },
+    OrganisationId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+    },
+    OrganisationName: {
+      type: DataTypes.STRING(512),
+      allowNull: false,
+    },
+    OrganisationTypeName: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
+    Name: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    Email: {
+      type: DataTypes.STRING(512),
+      allowNull: false,
+    },
+    Status: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+    },
+    Created: {
+      type: DataTypes.DATE(7),
+      allowNull: false,
+    },
+    LastModified: {
+      type: DataTypes.DATE(7),
+      allowNull: false,
+    },
+    SysStartTime: {
+      type: DataTypes.DATE(7),
+      allowNull: false,
+    },
+    SysEndTime: {
+      type: DataTypes.DATE(7),
+      allowNull: false,
+    },
+    CreatedBy: {
+      type: DataTypes.STRING(320),
+      allowNull: false,
+      defaultValue: "",
+    },
+    LastModifiedBy: {
+      type: DataTypes.STRING(320),
+      allowNull: false,
+      defaultValue: "",
+    },
+  },
+  {
+    schema: "idam",
+    tableName: "UserAccountDim",
   }
 );

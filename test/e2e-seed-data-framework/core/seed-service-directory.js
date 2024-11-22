@@ -2,19 +2,6 @@ import { testId, testPrefix } from "../helpers.js";
 import * as ServiceDirectory from "../models/service-directory-models.js";
 import { literal } from "sequelize";
 
-/*
-This script provides wrapper methods for adding new objects for each given table.
-
-These can be called when setting up seed data and ensure things like using the base ID and prepending the test prefix
-are done automatically.
-
-There are also certain fields that are unused (e.g., always null, so the codebase doesn't actually set them - such as AssuredDate) so those
-are abstracted away from the testers to ease the cognitive load.
-
-// TODO: Report Table
-// TODO: Referral Table
- */
-
 /**
  * Add an Organisation
  *
