@@ -41,7 +41,7 @@ public static class StartupExtensions
         services.AddFamilyHubsDataProtection(configuration, dataProtectionAppName);
 
         //services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
-        services.AddApplicationInsightsTelemetry(configuration);
+        services.AddApplicationInsightsTelemetry();
 
         services.AddAndConfigureGovUkAuthentication(configuration);
 

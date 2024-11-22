@@ -152,7 +152,7 @@ public static class StartupExtensions
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddApplicationInsightsTelemetry(configuration);
+        services.AddApplicationInsightsTelemetry();
 
         // Add services to the container.
         services.AddControllers();
