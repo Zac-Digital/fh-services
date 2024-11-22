@@ -15,7 +15,7 @@ public static class StartupExtensions
 
         if (!string.IsNullOrEmpty(keyVaultPrefix) && !string.IsNullOrEmpty(keyVaultIdentifier))
         {
-            return configuration.AddAzureKeyVault(
+            return configurationBuilder.AddAzureKeyVault(
                 new Uri($"https://{keyVaultIdentifier}.vault.azure.net/"),
                 new DefaultAzureCredential(),
                 new PrefixKeyVaultSecretManager(keyVaultPrefix));
