@@ -9,15 +9,15 @@ public static class StartupExtensions
 {
     public static void ConfigureAzureKeyVault(this ConfigurationManager configuration)
     {
-        var keyVaultEndpoint = configuration["AppConfiguration:KeyVaultPrefix"];
+        var keyVaultPrefix = configuration["AppConfiguration:KeyVaultPrefix"];
         var keyVaultIdentifier = configuration["AppConfiguration:KeyVaultIdentifier"];
 
-        if (!string.IsNullOrEmpty(keyVaultEndpoint) && !string.IsNullOrEmpty(keyVaultIdentifier))
+        if (!string.IsNullOrEmpty(keyVaultPrefix) && !string.IsNullOrEmpty(keyVaultIdentifier))
         {
             configuration.AddAzureKeyVault(
                 new Uri($"https://{keyVaultIdentifier}.vault.azure.net/"),
                 new DefaultAzureCredential(),
-                new PrefixKeyVaultSecretManager(keyVaultEndpoint));
+                new PrefixKeyVaultSecretManager(keyVaultPrefix));
         }
     }
 

@@ -225,6 +225,7 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "IDAM-MAINTENANCE-UI"
   }
@@ -278,6 +279,7 @@ resource "azurerm_windows_web_app" "fh_referral_api" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "REFERRAL-API"
   }
@@ -330,6 +332,7 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "CONNECT-UI"
   }
@@ -390,6 +393,7 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
     XDT_MicrosoftApplicationInsights_Java       = "1"
     XDT_MicrosoftApplicationInsights_NodeJS     = "1"
     XDT_MicrosoftApplicationInsights_PreemptSdk = "disabled"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "SD-API"
   }
@@ -442,6 +446,7 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "FIND-UI"
   }
@@ -495,6 +500,7 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "MANAGE-UI"
   }
@@ -548,6 +554,7 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "CONNECT-DASHBOARD-UI"
   }
@@ -600,6 +607,7 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "IDAM-API"
   }
@@ -652,6 +660,7 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "NOTIFICATIONS-API"
   }
@@ -704,6 +713,7 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
     XDT_MicrosoftApplicationInsights_Mode = "Recommended"
     ASPNETCORE_ENVIRONMENT = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier" = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix" = "MOCK-HSDA-API"
   }

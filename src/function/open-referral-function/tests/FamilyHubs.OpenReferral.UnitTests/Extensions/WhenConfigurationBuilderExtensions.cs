@@ -1,5 +1,5 @@
 using Azure.Security.KeyVault.Secrets;
-using static FamilyHubs.OpenReferral.Function.Extensions.WhenConfigurationBuilderExtensions;
+using static FamilyHubs.OpenReferral.Function.Extensions.ConfigurationBuilderExtensions;
 
 namespace FamilyHubs.OpenReferral.UnitTests.Extensions;
 

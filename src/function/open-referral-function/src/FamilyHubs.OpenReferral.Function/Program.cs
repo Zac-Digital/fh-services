@@ -12,7 +12,11 @@ IHost host = new HostBuilder()
     {
         config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
         config.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: false);
-        config.ConfigureAzureKeyVault();
+    })
+    .ConfigureAppConfiguration(builder =>
+    {
+        builder.AddEnvironmentVariables();
+        builder.ConfigureAzureKeyVault();
     })
     .ConfigureFunctionsWebApplication()
     .ConfigureServices(services =>
