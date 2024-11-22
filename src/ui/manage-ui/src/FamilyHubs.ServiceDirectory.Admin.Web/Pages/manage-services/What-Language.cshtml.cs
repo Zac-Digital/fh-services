@@ -51,7 +51,7 @@ public class What_LanguageModel : ServicePageModel<WhatLanguageViewModel>
 
     protected override void OnGetWithError()
     {
-        SetFormUserInputData();
+        SetFormDataFromUserInput();
 
         if (ServiceModel?.UserInput?.ErrorIndexes == null)
         {
@@ -71,13 +71,13 @@ public class What_LanguageModel : ServicePageModel<WhatLanguageViewModel>
     protected override void OnGetWithModel()
     {
         // redirectingToSelf is only set when adding a new field. Javascript is disabled
-        if(ServiceModel?.UserInput is not null && Request.Query.TryGetValue("redirectingToSelf", out var redirectToSelf) && redirectToSelf == "true")
+        if(ServiceModel?.UserInput is not null && RedirectingToSelf)
         {
-            SetFormUserInputData();
+            SetFormDataFromUserInput();
             return;
         }
 
-        SetFormServiceModelData();
+        SetFormDataFromServiceModel();
     }
     
     protected override IActionResult OnPostWithModel()
@@ -168,7 +168,7 @@ public class What_LanguageModel : ServicePageModel<WhatLanguageViewModel>
         return updatedList;
     }
 
-    private void SetFormServiceModelData()
+    private void SetFormDataFromServiceModel()
     {
         SetServiceModelLanguageOptions();
         
@@ -177,7 +177,7 @@ public class What_LanguageModel : ServicePageModel<WhatLanguageViewModel>
         
     }
 
-    private void SetFormUserInputData()
+    private void SetFormDataFromUserInput()
     {
         // Override with the languages that are already selected
         SetUserInputLanguageOptions();
@@ -194,7 +194,6 @@ public class What_LanguageModel : ServicePageModel<WhatLanguageViewModel>
         {
             UserLanguageOptions = ServiceModel!.LanguageCodes.Select(lang =>
             {
-                //todo: put into method
                 var codeFound = Languages.CodeToName.TryGetValue(lang, out var name);
                 return new SelectListItem(name, codeFound ? lang : InvalidNameValue);
             });
