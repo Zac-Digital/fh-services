@@ -51,7 +51,7 @@ public class Program
         services.AddBearerAuthentication(configuration);
 
         services.AddSingleton<ITelemetryInitializer, ReportTelemetryPiiRedactor>();
-        services.AddApplicationInsightsTelemetry();
+        services.AddApplicationInsightsTelemetry(configuration);
         services.AddTransient<ExceptionHandlingMiddleware>();
 
         services.AddFamilyHubsHealthChecks(configuration);

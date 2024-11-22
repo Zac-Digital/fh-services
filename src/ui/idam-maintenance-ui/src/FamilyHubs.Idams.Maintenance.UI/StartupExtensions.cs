@@ -44,7 +44,7 @@ public static class StartupExtensions
 
     public static void ConfigureServices(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.AddApplicationInsightsTelemetry();
+        services.AddApplicationInsightsTelemetry(configuration);
 #if MABUSE_DistributedCache
         services.AddSingleton<ICacheService, CacheService>();
 #endif

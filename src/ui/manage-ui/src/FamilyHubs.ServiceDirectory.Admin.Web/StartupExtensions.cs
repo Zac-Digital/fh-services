@@ -39,7 +39,7 @@ public static class StartupExtensions
     public static void ConfigureServices(this IServiceCollection services, ConfigurationManager configuration)
     {
         services.AddSingleton<ITelemetryInitializer, TelemetryPiiRedactor>();
-        services.AddApplicationInsightsTelemetry();
+        services.AddApplicationInsightsTelemetry(configuration);
 
         // Add services to the container.
         services

@@ -17,7 +17,7 @@ IHost host = new HostBuilder()
     {
         IConfiguration config = services.BuildServiceProvider().GetService<IConfiguration>()!;
 
-        services.AddApplicationInsightsTelemetryWorkerService();
+        services.AddApplicationInsightsTelemetryWorkerService(config);
         services.ConfigureFunctionsApplicationInsights();
 
         services.AddHttpClient<IHsdaApiService, HsdaApiService>(httpClient =>
