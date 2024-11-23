@@ -433,7 +433,7 @@ export async function addServiceSearchResult({
   serviceId,
   serviceSearchId,
 }) {
-  await ServiceDirectory.ServiceDeliveries.create({
+  await ServiceDirectory.ServiceSearchResults.create({
     Id: testId(id),
     ServiceId: testId(serviceId),
     ServiceSearchId: testId(serviceSearchId),

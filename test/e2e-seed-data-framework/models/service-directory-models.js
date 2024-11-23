@@ -648,7 +648,6 @@ export const Schedules = serviceDirectoryDb.define(
     },
     ServiceId: {
       type: DataTypes.BIGINT,
-      allowNull: false,
       references: {
         model: Services,
         key: "Id",
@@ -656,7 +655,6 @@ export const Schedules = serviceDirectoryDb.define(
     },
     LocationId: {
       type: DataTypes.BIGINT,
-      allowNull: false,
       references: {
         model: Locations,
         key: "Id",
@@ -818,6 +816,7 @@ export const ServiceTaxonomies = serviceDirectoryDb.define(
     ServiceId: {
       type: DataTypes.BIGINT,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: Services,
         key: "Id",
@@ -826,6 +825,7 @@ export const ServiceTaxonomies = serviceDirectoryDb.define(
     TaxonomyId: {
       type: DataTypes.BIGINT,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: Taxonomies,
         key: "Id",
@@ -835,7 +835,6 @@ export const ServiceTaxonomies = serviceDirectoryDb.define(
   {
     tableName: "ServiceTaxonomies",
     timestamps: false,
-    primaryKey: ["ServiceId", "TaxonomyId"],
   }
 );
 
@@ -844,121 +843,121 @@ export const ServiceTaxonomies = serviceDirectoryDb.define(
 // I've moved these to the bottom as they appear to be unused in the web-app and so don't need seeding, but leaving them at least ensures the schema is identical to that of the web apps.
 
 export const AccessibilityForDisabilities = serviceDirectoryDb.define(
-  'AccessibilityForDisabilities',
+  "AccessibilityForDisabilities",
   {
     Id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     Accessibility: {
-      type: DataTypes.STRING(255)
+      type: DataTypes.STRING(255),
     },
     Created: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
     CreatedBy: {
-      type: DataTypes.BIGINT
+      type: DataTypes.BIGINT,
     },
     LastModified: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
     LastModifiedBy: {
-      type: DataTypes.BIGINT
+      type: DataTypes.BIGINT,
     },
     LocationId: {
       type: DataTypes.BIGINT,
       allowNull: false,
       references: {
         model: Locations,
-        key: 'Id'
-      }
-    }
+        key: "Id",
+      },
+    },
   },
   {
-    tableName: 'AccessibilityForDisabilities',
-    timestamps: false
+    tableName: "AccessibilityForDisabilities",
+    timestamps: false,
   }
-)
+);
 
 export const Fundings = serviceDirectoryDb.define(
-  'Fundings',
+  "Fundings",
   {
     Id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     Source: {
-      type: DataTypes.STRING(255)
+      type: DataTypes.STRING(255),
     },
     Created: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
     CreatedBy: {
-      type: DataTypes.BIGINT
+      type: DataTypes.BIGINT,
     },
     LastModified: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
     LastModifiedBy: {
-      type: DataTypes.BIGINT
+      type: DataTypes.BIGINT,
     },
     ServiceId: {
       type: DataTypes.BIGINT,
       allowNull: false,
       references: {
         model: Services,
-        key: 'Id'
-      }
-    }
+        key: "Id",
+      },
+    },
   },
   {
-    tableName: 'Fundings',
-    timestamps: false
+    tableName: "Fundings",
+    timestamps: false,
   }
-)
+);
 
 export const ServiceAreas = serviceDirectoryDb.define(
-  'ServiceAreas',
+  "ServiceAreas",
   {
     Id: {
       type: DataTypes.BIGINT,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     ServiceAreaName: {
-      type: DataTypes.STRING(255)
+      type: DataTypes.STRING(255),
     },
     Extent: {
-      type: DataTypes.STRING(255)
+      type: DataTypes.STRING(255),
     },
     Uri: {
-      type: DataTypes.STRING(2083)
+      type: DataTypes.STRING(2083),
     },
     Created: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
     CreatedBy: {
-      type: DataTypes.BIGINT
+      type: DataTypes.BIGINT,
     },
     LastModified: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
     LastModifiedBy: {
-      type: DataTypes.BIGINT
+      type: DataTypes.BIGINT,
     },
     ServiceId: {
       type: DataTypes.BIGINT,
       allowNull: false,
       references: {
         model: Services,
-        key: 'Id'
-      }
-    }
+        key: "Id",
+      },
+    },
   },
   {
-    tableName: 'ServiceAreas',
-    timestamps: false
+    tableName: "ServiceAreas",
+    timestamps: false,
   }
-)
+);

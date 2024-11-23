@@ -1,13 +1,17 @@
 import { checkConnections, closeConnections } from "../connections.js";
-import { testId, testPrefix, encrypt } from "../helpers.js";
-import * as ServiceDirectory from "../models/service-directory-models.js";
-import { fn, literal } from "sequelize";
-import {
-  addLocation,
-  addServiceSearch,
-} from "../core/seed-service-directory.js";
+import "@dotenvx/dotenvx";
 
-import * as SeedReferral from "../core/seed-referral-db.js";
+let SeedServiceDirectoryDb;
+
+if (process.env.EXAMPLE_SEED.toUpperCase() === "TRUE") {
+  import("./seed/example/seed-service-directory-db.js").then((module) => {
+    SeedServiceDirectoryDb = module.seed;
+  });
+} else {
+  import("./seed/seed-service-directory-db.js").then((module) => {
+    const SeedServiceDirectoryDb = module.seed;
+  });
+}
 
 await checkConnections();
 
@@ -25,20 +29,7 @@ try {
 async function setup() {
   console.log("Seeding Database...");
 
-  SeedReferral.addRecipient({
-    id: 1,
-    name: "Jane Doe",
-    email: "jane.doe@email.co.uk",
-    telephone: "01234567890",
-    textPhone: "01234567890",
-    addressLine1: "128 Test Street",
-    townOrCity: "Testville",
-    county: "Testshire",
-    postCode: "AA1 1AA",
-    createdBy: "test-lapro@email.co.uk",
-  });
-
-  // TODO: Add examples of adding each type
+  await SeedServiceDirectoryDb();
 
   console.log("Successfully Seeded Database!");
 }
