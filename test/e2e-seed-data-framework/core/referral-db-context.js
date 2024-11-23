@@ -1,4 +1,4 @@
-import { testId, encrypt } from "../helpers.js";
+import { testId, testPrefix, encrypt } from "../helpers.js";
 import * as Referral from "../models/referral-models.js";
 import crypto from "crypto";
 
@@ -20,8 +20,8 @@ export async function addOrganisation({
 }) {
   await Referral.Organisations.create({
     Id: testId(id),
-    Name: name,
-    Description: description,
+    Name: testPrefix(name),
+    Description: testPrefix(description),
     Created: new Date(),
     CreatedBy: encrypt(createdBy),
     LastModified: new Date(),
@@ -143,13 +143,13 @@ export async function addReferralService({
 }) {
   await Referral.ReferralServices.create({
     Id: testId(id),
-    Name: name,
-    Description: description,
+    Name: testPrefix(name),
+    Description: testPrefix(description),
     Created: new Date(),
     CreatedBy: encrypt(createdBy),
     LastModified: new Date(),
     LastModifiedBy: encrypt(lastModifiedBy),
-    OrganisationId: testId(organisationId),
+    OrganizationId: testId(organisationId),
   });
 }
 

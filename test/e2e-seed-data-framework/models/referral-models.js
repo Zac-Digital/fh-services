@@ -210,7 +210,7 @@ export const ReferralServices = referralDb.define(
     LastModifiedBy: {
       type: DataTypes.STRING(512),
     },
-    OrganisationId: {
+    OrganizationId: {
       type: DataTypes.BIGINT,
       allowNull: false,
       references: {
