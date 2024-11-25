@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     env:
-      KEYVAULT: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-general
+      KEYVAULT: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-admin
       RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_PREFIX }}-familyhubs
       API_APP_NAME: ${{ vars.AZURE_RESOURCE_PREFIX }}-${{ inputs.app_name }}
       APP_FIREWALL_NAME: acceptance-tests
@@ -63,7 +63,7 @@ jobs:
       - name: Run Acceptance Tests
         shell: pwsh
         run: |-
-          dotnet user-secrets set "AppConfiguration:KeyVaultIdentifier" "${{ inputs.general_key_vault }}" --project ${{ env.PROJECT_PATH }}
+          dotnet user-secrets set "AppConfiguration:KeyVaultIdentifier" "${{ env.KEYVAULT }}" --project ${{ env.PROJECT_PATH }}
           dotnet user-secrets set "AppConfiguration:KeyVaultPrefix" "${{ inputs.keyvault_prefix }}" --project ${{ env.PROJECT_PATH }}
           dotnet test "${{ env.PROJECT_PATH }}/${{ inputs.test_project_name }}.csproj" --logger "html;logfilename=testResults.html"
         
