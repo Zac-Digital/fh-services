@@ -7,21 +7,21 @@ namespace FamilyHubs.SharedKernel.Extensions;
 
 public static class StartupExtensions
 {
-    public static IConfigurationBuilder ConfigureAzureKeyVault(this IConfigurationBuilder configuration)
+    public static IConfigurationBuilder ConfigureAzureKeyVault(this IConfigurationBuilder configurationBuilder)
     {
-        var tempConfig = configuration.Build();
-        var keyVaultEndpoint = tempConfig["AppConfiguration:KeyVaultPrefix"];
+        var tempConfig = configurationBuilder.Build();
+        var keyVaultPrefix = tempConfig["AppConfiguration:KeyVaultPrefix"];
         var keyVaultIdentifier = tempConfig["AppConfiguration:KeyVaultIdentifier"];
 
-        if (!string.IsNullOrEmpty(keyVaultEndpoint) && !string.IsNullOrEmpty(keyVaultIdentifier))
+        if (!string.IsNullOrEmpty(keyVaultPrefix) && !string.IsNullOrEmpty(keyVaultIdentifier))
         {
-            return configuration.AddAzureKeyVault(
+            return configurationBuilder.AddAzureKeyVault(
                 new Uri($"https://{keyVaultIdentifier}.vault.azure.net/"),
                 new DefaultAzureCredential(),
-                new PrefixKeyVaultSecretManager(keyVaultEndpoint));
+                new PrefixKeyVaultSecretManager(keyVaultPrefix));
         }
 
-        return configuration;
+        return configurationBuilder;
     }
 
     public sealed class PrefixKeyVaultSecretManager(string prefix) : KeyVaultSecretManager

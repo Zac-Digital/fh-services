@@ -225,6 +225,9 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "IDAM-MAINTENANCE-UI"
   }
   name                                          = "${var.prefix}-as-fh-idam-maintenance-ui"
   resource_group_name                           = local.resource_group_name
@@ -276,6 +279,9 @@ resource "azurerm_windows_web_app" "fh_referral_api" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "REFERRAL-API"
   }
   name                                          = "${var.prefix}-as-fh-referral-api"
   resource_group_name                           = local.resource_group_name
@@ -326,6 +332,9 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "CONNECT-UI"
   }
   name                                          = "${var.prefix}-as-fh-referral-ui"
   resource_group_name                           = local.resource_group_name
@@ -384,6 +393,9 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
     XDT_MicrosoftApplicationInsights_Java       = "1"
     XDT_MicrosoftApplicationInsights_NodeJS     = "1"
     XDT_MicrosoftApplicationInsights_PreemptSdk = "disabled"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "SD-API"
   }
   name                                          = "${var.prefix}-as-fh-sd-api"
   resource_group_name                           = local.resource_group_name
@@ -434,6 +446,9 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "FIND-UI"
   }
   name                                          = "${var.prefix}-as-fh-sd-ui"
   resource_group_name                           = local.resource_group_name
@@ -485,6 +500,9 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "MANAGE-UI"
   }
   name                                          = "${var.prefix}-as-fh-sd-admin-ui"
   resource_group_name                           = local.resource_group_name
@@ -536,6 +554,9 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "CONNECT-DASHBOARD-UI"
   }
   name                                          = "${var.prefix}-as-fh-ref-dash-ui"
   resource_group_name                           = local.resource_group_name
@@ -586,6 +607,9 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "IDAM-API"
   }
   name                                          = "${var.prefix}-as-fh-idam-api"
   resource_group_name                           = local.resource_group_name
@@ -636,6 +660,9 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "NOTIFICATIONS-API"
   }
   name                                          = "${var.prefix}-as-fh-notification-api"
   resource_group_name                           = local.resource_group_name
@@ -686,6 +713,9 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
     XDT_MicrosoftApplicationInsights_Mode = "Recommended"
     ASPNETCORE_ENVIRONMENT = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier" = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix" = "MOCK-HSDA-API"
   }
   name = "${var.prefix}-as-fh-open-referral-mock-api"
   resource_group_name = local.resource_group_name
