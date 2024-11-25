@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using FamilyHubs.Report.Api.AcceptanceTests.Tests.Steps;
 using TestStack.BDDfy;
@@ -5,6 +6,7 @@ using Xunit;
 
 namespace FamilyHubs.Report.Api.AcceptanceTests.Tests.Stories;
 
+[SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters")]
 public class ServiceSearchesForAnLaOrgTests
 {
     private readonly SharedSteps _sharedSteps = new();

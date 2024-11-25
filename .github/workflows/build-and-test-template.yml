@@ -9,6 +9,9 @@ on:
       dotnet_version:
         required: true
         type: string
+      job_name:
+        required: true
+        type: string
 
 jobs:
   build_and_test:
@@ -29,6 +32,10 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
+      - name: Install Report Tool
+        shell: bash
+        run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
+
       - name: Package Cache
         uses: actions/cache@v4
         with:
@@ -41,6 +48,7 @@ jobs:
         if: ${{ inputs.working_directory == 'service/service-directory-api' || inputs.working_directory == 'service/referral-api' }}
         shell: bash
         run: |
+          sudo apt-get update
           sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
           sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
 
@@ -50,8 +58,20 @@ jobs:
 
       - name: Build Project
         shell: bash
-        run: dotnet build --no-restore
+        run: dotnet build --configuration Release --no-restore
 
       - name: Test Project
         shell: bash
-        run: dotnet test --no-build --no-restore --verbosity minimal
+        run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" --verbosity minimal --no-restore --no-build
+
+      - name: Generate Report
+        if: always()
+        shell: bash
+        run: |-
+          if find ./tests -name "*.trx" -print -quit | grep -q .; 
+          then
+            liquid --inputs "File=**/*test-results.trx" --output-file results.md --title "${{ inputs.job_name }}"
+            cat results.md >> $GITHUB_STEP_SUMMARY
+           else
+            echo "Skipping - No tests found in this project."
+           fi

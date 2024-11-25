@@ -137,21 +137,9 @@ resource "azurerm_monitor_autoscale_setting" "autoscale" {
   }
 }
 
-# Create Application Insights for IDAM Maintenance UI
-resource "azurerm_application_insights" "fh_idam_maintenance_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-idam-maintenance-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for IDAM Maintenance UI
 resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_idam_maintenance_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -200,21 +188,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_idam_mainten
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Referral API 
-resource "azurerm_application_insights" "fh_referral_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-referral-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Referral API
 resource "azurerm_windows_web_app" "fh_referral_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_referral_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -262,21 +238,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_api
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Referral UI
-resource "azurerm_application_insights" "fh_referral_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-referral-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Referral UI
 resource "azurerm_windows_web_app" "fh_referral_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_referral_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -325,22 +289,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_ui"
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-
-# Create Application Insights for Service Directory API
-resource "azurerm_application_insights" "fh_sd_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-sd-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Service Directory API
 resource "azurerm_windows_web_app" "fh_sd_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_sd_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -359,6 +310,9 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -392,21 +346,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_api" {
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Service Directory UI
-resource "azurerm_application_insights" "fh_sd_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-sd-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Service Directory UI
 resource "azurerm_windows_web_app" "fh_sd_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_sd_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -418,6 +360,9 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = false
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -452,21 +397,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_ui" {
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Service Directory Admin UI
-resource "azurerm_application_insights" "fh_sd_admin_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-sd-admin-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Service Directory Admin UI
 resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_sd_admin_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -515,21 +448,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_admin_ui"
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Referrals Dashboard UI
-resource "azurerm_application_insights" "fh_referral_dashboard_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-ref-dash-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Referrals Dashboard UI
 resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_referral_dashboard_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -577,21 +498,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_das
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for IDAM API 
-resource "azurerm_application_insights" "fh_idam_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-idam-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for IDAM API
 resource "azurerm_windows_web_app" "fh_idam_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_idam_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -603,6 +512,9 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -636,21 +548,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_idam_api" {
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Notification API 
-resource "azurerm_application_insights" "fh_notification_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-notification-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Notification API
 resource "azurerm_windows_web_app" "fh_notification_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_notification_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -662,6 +562,9 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -4066,7 +3969,7 @@ resource "azurerm_monitor_action_group" "email_grp" {
 resource "azurerm_monitor_metric_alert" "cpu_alert01" {
   name                  = "${var.prefix}-fh-cpu-alert-referral-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_referral_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT30M"
   frequency             = "PT5M"
@@ -4086,7 +3989,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert01" {
 resource "azurerm_monitor_metric_alert" "cpu_alert02" {
   name                  = "${var.prefix}-fh-cpu-alert-sd-api"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_api_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4106,7 +4009,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert02" {
 resource "azurerm_monitor_metric_alert" "cpu_alert03" {
   name                  = "${var.prefix}-fh-cpu-alert-sd-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4126,7 +4029,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert03" {
 resource "azurerm_monitor_metric_alert" "cpu_alert04" {
   name                  = "${var.prefix}-fh-cpu-alert-sd-admin-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_admin_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4146,7 +4049,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert04" {
 resource "azurerm_monitor_metric_alert" "response-01" {
   name                  = "${var.prefix}-fh-response-alert-referral-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_referral_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4166,7 +4069,7 @@ resource "azurerm_monitor_metric_alert" "response-01" {
 resource "azurerm_monitor_metric_alert" "response-02" {
   name                  = "${var.prefix}-fh-response-alert-sd-api"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_api_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4186,7 +4089,7 @@ resource "azurerm_monitor_metric_alert" "response-02" {
 resource "azurerm_monitor_metric_alert" "response-03" {
   name                  = "${var.prefix}-fh-response-alert-sd-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4206,7 +4109,7 @@ resource "azurerm_monitor_metric_alert" "response-03" {
 resource "azurerm_monitor_metric_alert" "response-04" {
   name                  = "${var.prefix}-fh-response-alert-sd-admin-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_admin_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
