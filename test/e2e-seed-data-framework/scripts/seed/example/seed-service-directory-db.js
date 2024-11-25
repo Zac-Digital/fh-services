@@ -15,7 +15,7 @@ async function createAFullyFeaturedService() {
     organisationType: "LA",
     name: "Test Organisation",
     description: "Test Description",
-    adminAreaCode: "E00000000",
+    adminAreaCode: "E09000030",
   });
 
   // Then let's create the Service
@@ -35,13 +35,12 @@ async function createAFullyFeaturedService() {
     locationTypeCategory: "NotSet",
     name: "Test Location",
     description: "Test Description",
-    latitude: 51.5251,
-    longitude: 0.0347,
+    latitude: 51.517612,
+    longitude: -0.056838,
     address1: "100 Test Street",
     city: "London",
     postcode: "E1 2EN",
     stateProvince: "City of London",
-    organisationId: 1,
   });
 
   // To link them together, we need to create an entry in ServiceAtLocations
