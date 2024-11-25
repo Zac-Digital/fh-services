@@ -64,7 +64,7 @@ export function getDateKeyAndTimeKey(dateTime) {
     dateTime.toISOString().slice(0, 10).replaceAll("-", "")
   );
 
-  // TimeKey is in the format 1 - 86400, with each index representing 1 minute of the day 00:00:00 - 23:59:59
+  // TimeKey is in the format 1 - 86400, with each index representing 1 second of the day 00:00:00 - 23:59:59
   // So to calculate a TimeKey we figure out how many minutes have passed since midnight
   const timeKey = Math.trunc((dateTime - midnight) / 1000);
 
