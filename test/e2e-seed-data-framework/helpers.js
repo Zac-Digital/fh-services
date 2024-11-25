@@ -54,3 +54,26 @@ export function encrypt(plaintext) {
 
   return encrypted;
 }
+
+// Calculates a DateKey & TimeKey from a given input date
+export function getDateKeyAndTimeKey(dateTime) {
+  const midnight = new Date().setHours(0, 0, 0, 0);
+
+  // DateKey is in the format YYYYMMDD, this takes the date as e.g., 2024-08-16 and converts it to an integer 20240816
+  const dateKey = Number(
+    dateTime.toISOString().slice(0, 10).replaceAll("-", "")
+  );
+
+  // TimeKey is in the format 1 - 86400, with each index representing 1 minute of the day 00:00:00 - 23:59:59
+  // So to calculate a TimeKey we figure out how many minutes have passed since midnight
+  const timeKey = Math.trunc((dateTime - midnight) / 1000);
+
+  return [dateKey, timeKey];
+}
+
+// Generate a Response Timestamp from a given Request Timestamp, basically just adds 512ms to the response.
+export const getHttpResponseTimeFromHttpRequestTime = (httpResponseTimestamp) =>
+  new Date(httpResponseTimestamp.getTime() + 512);
+
+// Get the event name from the event ID, taken from the pre-seeded Events table in the SD Db
+export const eventName = (eventId) => (eventId == 1 ? "ServiceDirectoryInitialSearch" : "ServiceDirectorySearchFilter");

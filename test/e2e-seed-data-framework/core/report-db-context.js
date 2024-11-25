@@ -1,4 +1,4 @@
-import { testId, encrypt } from "../helpers.js";
+import { testId, encrypt, eventName } from "../helpers.js";
 import * as Report from "../models/report-models.js";
 import crypto from "crypto";
 
@@ -43,7 +43,6 @@ export async function addOrganisationDim({
  * @param serviceTypeId - Either 1 (InformationSharing, Connect) or 2 (FamilyExperience, Find) - matches the Service Search that this Dim represents, from the Service Directory Db
  * @param serviceTypeName - Either InformationSharing (Connect) or FamilyExperience (Find) - determined from the ServiceTypeId
  * @param eventId - Either 1 (ServiceDirectoryInitialSearch) or 2 (ServiceDirectorySearchFilter) - matches the Service Search that this Dim represents, from the Service Directory Db
- * @param eventName - Either ServiceDirectoryInitialSearch or ServiceDirectorySearchFilter - determined from the EventId
  * @param userId - The ID of the User who performed the service search, if applicable
  * @param organisationId - If ServiceTypeId == 1 (Connect), this is the organisation of the user. If ServiceTypeId == 2 (Find), this is the LA organisation that matches the postcode entered
  * @param postcode - The postcode that was entered for the search
@@ -59,7 +58,6 @@ export async function addServiceSearchesDim({
   serviceTypeId,
   serviceTypeName,
   eventId,
-  eventName,
   userId,
   organisationId,
   postcode,
@@ -74,7 +72,7 @@ export async function addServiceSearchesDim({
     ServiceTypeId: serviceTypeId,
     ServiceTypeName: serviceTypeName,
     EventId: eventId,
-    EventName: eventName,
+    EventName: eventName(eventId),
     UserId: userId,
     OrganisationId: testId(organisationId),
     PostCode: postcode,

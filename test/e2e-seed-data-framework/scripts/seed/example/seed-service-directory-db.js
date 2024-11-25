@@ -6,6 +6,7 @@
  */
 
 import * as Database from "../../../core/service-directory-db-context.js";
+import { getHttpResponseTimeFromHttpRequestTime } from "../../../helpers.js";
 
 async function createAFullyFeaturedService() {
   // Create an Organisation for our Service
@@ -163,7 +164,8 @@ async function createAFullyFeaturedService() {
 
 async function createServiceSearchMetricData() {
   const requestTimestamp = new Date();
-  const responseTimestamp = new Date(requestTimestamp.getTime() + 1000); // Get the request timestamp and add 1 second (in ms) to it
+  const responseTimestamp =
+    getHttpResponseTimeFromHttpRequestTime(requestTimestamp);
 
   // First, add a Service Search metric..
   await Database.addServiceSearch({

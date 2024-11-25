@@ -291,7 +291,7 @@ export const ServiceSearchFacts = reportDb.define(
     },
     Id: {
       type: DataTypes.BIGINT,
-      autoIncrement: true,
+      autoIncrement: false,
       primaryKey: true,
       allowNull: false,
     },
