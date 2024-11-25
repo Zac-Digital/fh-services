@@ -162,9 +162,6 @@ async function createAFullyFeaturedService() {
 }
 
 async function createServiceSearchMetricData() {
-  // ServiceSearch
-  // ServiceSearchResult
-
   const requestTimestamp = new Date();
   const responseTimestamp = new Date(requestTimestamp.getTime() + 1000); // Get the request timestamp and add 1 second (in ms) to it
 

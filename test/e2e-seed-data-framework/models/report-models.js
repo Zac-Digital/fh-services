@@ -66,6 +66,7 @@ export const DateDim = reportDb.define(
   {
     schema: "dim",
     tableName: "DateDim",
+    timestamps: false,
   }
 );
 
@@ -103,6 +104,7 @@ export const TimeDim = reportDb.define(
   {
     schema: "dim",
     tableName: "TimeDim",
+    timestamps: false,
   }
 );
 
@@ -132,7 +134,7 @@ export const OrganisationDim = reportDb.define(
       allowNull: false,
     },
     Created: {
-      type: DataTypes.DATE(7),
+      type: DataTypes.DATE,
       allowNull: false,
     },
     CreatedBy: {
@@ -140,7 +142,7 @@ export const OrganisationDim = reportDb.define(
       allowNull: false,
     },
     Modified: {
-      type: DataTypes.DATE(7),
+      type: DataTypes.DATE,
       allowNull: false,
     },
     ModifiedBy: {
@@ -151,6 +153,7 @@ export const OrganisationDim = reportDb.define(
   {
     schema: "idam",
     tableName: "OrganisationDim",
+    timestamps: false,
   }
 );
 
@@ -243,6 +246,7 @@ export const ServiceSearchesDim = reportDb.define(
   {
     schema: "dim",
     tableName: "ServiceSearchesDim",
+    timestamps: false,
   }
 );
 
@@ -294,6 +298,7 @@ export const ServiceSearchFacts = reportDb.define(
   },
   {
     schema: "dim",
+    timestamps: false,
   }
 );
 
@@ -364,7 +369,7 @@ export const ConnectionRequestsSentFacts = reportDb.define(
     },
     Id: {
       type: DataTypes.BIGINT,
-      autoIncrement: true,
+      autoIncrement: false,
       primaryKey: true,
       allowNull: false,
     },
@@ -378,6 +383,7 @@ export const ConnectionRequestsSentFacts = reportDb.define(
   },
   {
     schema: "dim",
+    timestamps: false,
   }
 );
 

@@ -4,9 +4,9 @@ import * as ServiceDirectory from "../models/service-directory-models.js";
 import * as Referral from "../models/referral-models.js";
 import * as Report from "../models/report-models.js";
 
-const baseId = parseInt(process.env.IDS_START_FROM);
-
 await checkConnections();
+
+const baseId = parseInt(process.env.IDS_START_FROM);
 
 try {
   await teardown();
@@ -16,9 +16,6 @@ try {
   await closeConnections();
 }
 
-/**
- * Runs the test data teardown scripts.
- */
 async function teardown() {
   console.log("Tearing down Databases...");
 
@@ -52,10 +49,10 @@ async function teardown() {
 
   console.log("Tearing Down Report..");
   await deleteRecords([
-    Report.OrganisationDim,
-    Report.ServiceSearchesDim,
     Report.ServiceSearchFacts,
     Report.ConnectionRequestsSentFacts,
+    Report.OrganisationDim,
+    Report.ServiceSearchesDim,
     Report.UserAccountDim,
   ]);
 

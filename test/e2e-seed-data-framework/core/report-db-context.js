@@ -1,5 +1,6 @@
-import { testId, encrypt } from "../helpers";
-import * as Report from "../models/report-models";
+import { testId, encrypt } from "../helpers.js";
+import * as Report from "../models/report-models.js";
+import crypto from "crypto";
 
 /**
  * Add an Organisation Dim
@@ -64,7 +65,6 @@ export async function addServiceSearchesDim({
   postcode,
   searchRadiusMiles,
   httpRequestTimestamp,
-  httpRequestCorrelationId,
   httpResponseCode,
   httpResponseTimestamp,
 }) {
@@ -80,7 +80,7 @@ export async function addServiceSearchesDim({
     PostCode: postcode,
     SearchRadiusMiles: searchRadiusMiles,
     HttpRequestTimestamp: httpRequestTimestamp,
-    HttpRequestCorrelationId: httpRequestCorrelationId,
+    HttpRequestCorrelationId: crypto.randomUUID(),
     HttpResponseCode: httpResponseCode,
     HttpResponseTimestamp: httpResponseTimestamp,
     Created: new Date(),
@@ -90,7 +90,7 @@ export async function addServiceSearchesDim({
 
 /**
  * Add a Service Search Fact
- * 
+ *
  * @param serviceSearchesKey - The ID of the ServiceSearchesDim entry that this Service Search Fact is linked to
  * @param dateKey - The ID of the DateDim entry that this Service Search Fact is linked to
  * @param timeKey - The ID iof the TimeDim entry that this Service Search Fact is linked to
@@ -117,21 +117,21 @@ export async function addServiceSearchFact({
 
 /**
  * Add a Connection Request Sent Fact
- * 
+ *
  * @param dateKey - The ID of the DateDim entry that this Con. Req. Sent Fact is linked to
  * @param timeKey - The ID of the TimeDim entry that this Con. Req. Sent Fact is linked to
- * @param organisationKey - The ID of the OrganisationDim entry that this Con. Req. Sent Fact is linked to
+ * @param organisationKey - The LA that this Fact is connected to, from the OrganisationDim table
  * @param connectionRequestsSentMetricsId - The ID of the connection requests sent metrics ID is linked to, from the Service Directory Db
  * @param requestTimestamp - When this connection request was initiated
  * @param requestCorrelationId - Telemetry data, can be made up
- * @param responseTimestamp - When the connection request is saved by the server 
+ * @param responseTimestamp - When the connection request is saved by the server
  * @param httpResponseCode - The response code
  * @param connectionRequestId - The ID of the Referral from the Referral Db
  * @param connectionRequestReferenceCode - The reference code also from the Referral Db
- * @param createdBy - Which
- * @param modifiedBy
- * @param id
- * @param vcsOrganisationKey
+ * @param createdBy - Which user created this Fact
+ * @param modifiedBy - Which user modified this Fact
+ * @param id - The ID of this Fact
+ * @param vcsOrganisationKey - The VCFS Organisation that this Fact is connected to, from the OrganisationDim table
  */
 export async function addConnectionRequestsSentFact({
   dateKey,
@@ -139,7 +139,6 @@ export async function addConnectionRequestsSentFact({
   organisationKey,
   connectionRequestsSentMetricsId,
   requestTimestamp,
-  requestCorrelationId,
   responseTimestamp,
   httpResponseCode,
   connectionRequestId,
@@ -152,10 +151,10 @@ export async function addConnectionRequestsSentFact({
   await Report.ConnectionRequestsSentFacts.create({
     DateKey: dateKey,
     TimeKey: timeKey,
-    OrganisationKey: testId(organisationKey),
+    OrganisationKey: organisationKey,
     ConnectionRequestsSentMetricsId: testId(connectionRequestsSentMetricsId),
     RequestTimestamp: requestTimestamp,
-    RequestCorrelationId: requestCorrelationId,
+    RequestCorrelationId: crypto.randomUUID(),
     ResponseTimestamp: responseTimestamp,
     HttpResponseCode: httpResponseCode,
     ConnectionRequestId: testId(connectionRequestId),
