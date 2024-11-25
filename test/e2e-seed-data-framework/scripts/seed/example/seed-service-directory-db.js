@@ -39,7 +39,7 @@ async function createAFullyFeaturedService() {
     longitude: 0.0347,
     address1: "100 Test Street",
     city: "London",
-    postcode: "AA1 1AA",
+    postcode: "E1 2EN",
     stateProvince: "City of London",
     organisationId: 1,
   });
@@ -171,7 +171,7 @@ async function createServiceSearchMetricData() {
   await Database.addServiceSearch({
     id: 1,
     searchTriggerEventId: 1,
-    searchPostcode: "AA1 1AA",
+    searchPostcode: "E1 2EN",
     searchRadiusMiles: 20,
     httpResponseCode: 200,
     requestTimestamp: requestTimestamp,

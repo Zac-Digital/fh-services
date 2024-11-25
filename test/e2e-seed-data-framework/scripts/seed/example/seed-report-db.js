@@ -60,7 +60,7 @@ async function createServiceSearch() {
     eventName: "ServiceDirectoryInitialSearch",
     userId: 1,
     organisationId: 1,
-    postcode: "AA1 1AA",
+    postcode: "E1 2EN",
     searchRadiusMiles: 20,
     httpRequestTimestamp: dateTime,
     httpResponseCode: 200,
