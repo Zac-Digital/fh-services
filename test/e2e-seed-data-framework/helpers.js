@@ -65,7 +65,7 @@ export function getDateKeyAndTimeKey(dateTime) {
   );
 
   // TimeKey is in the format 1 - 86400, with each index representing 1 second of the day 00:00:00 - 23:59:59
-  // So to calculate a TimeKey we figure out how many minutes have passed since midnight
+  // So to calculate a TimeKey we figure out how many seconds have passed since midnight
   const timeKey = Math.trunc((dateTime - midnight) / 1000);
 
   return [dateKey, timeKey];
