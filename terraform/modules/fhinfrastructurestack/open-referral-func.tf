@@ -14,6 +14,11 @@ resource "azurerm_windows_function_app" "open_referral_function_app" {
   service_plan_id = azurerm_service_plan.apps_plan.id
   storage_account_name = module.open_referral_storage_account.storage_account_name
   storage_account_access_key = module.open_referral_storage_account.storage_account_primary_access_key
+  app_settings = {
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier" = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix" = "OPEN-REFERRAL-FUNC"
+  }
   identity {
     type = "SystemAssigned"
   }

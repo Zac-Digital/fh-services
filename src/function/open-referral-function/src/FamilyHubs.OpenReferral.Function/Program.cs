@@ -1,5 +1,6 @@
 using FamilyHubs.OpenReferral.Function.ClientServices;
 using FamilyHubs.OpenReferral.Function.Repository;
+using FamilyHubs.SharedKernel.Extensions;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -12,12 +13,17 @@ IHost host = new HostBuilder()
         config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
         config.AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: false);
     })
+    .ConfigureAppConfiguration(builder =>
+    {
+        builder.AddEnvironmentVariables();
+        builder.ConfigureAzureKeyVault();
+    })
     .ConfigureFunctionsWebApplication()
     .ConfigureServices(services =>
     {
         IConfiguration config = services.BuildServiceProvider().GetService<IConfiguration>()!;
 
-        services.AddApplicationInsightsTelemetryWorkerService();
+        services.AddApplicationInsightsTelemetryWorkerService(config);
         services.ConfigureFunctionsApplicationInsights();
 
         services.AddHttpClient<IHsdaApiService, HsdaApiService>(httpClient =>
