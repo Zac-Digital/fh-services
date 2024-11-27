@@ -55,6 +55,8 @@ public class FamilyHubsUiOptions : IFamilyHubsUiOptions
         return alternativeFamilyHubsUi;
     }
 
+    public bool IsError { get; set; }
+
     /// <summary>
     /// Returns an absolute URL from the Urls config section/dictionary, with an optional relativeUrl applied to the base..
     /// </summary>
