@@ -24,7 +24,7 @@ public static class ViewStart
 
         if (pageModel is IHasErrorStatePageModel hasErrorStatePageModel)
         {
-            familyHubsLayoutModel.FamilyHubsUiOptions.Value.IsError = hasErrorStatePageModel.Errors.HasErrors;
+            familyHubsLayoutModel.IsError = hasErrorStatePageModel.Errors.HasErrors;
         }
 
         viewData.SetFamilyHubsLayoutModel(familyHubsLayoutModel);
