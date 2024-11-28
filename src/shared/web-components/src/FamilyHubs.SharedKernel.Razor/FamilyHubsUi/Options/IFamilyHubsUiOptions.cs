@@ -29,7 +29,6 @@ public interface IFamilyHubsUiOptions
     FooterOptions Footer { get; set; }
 
     FamilyHubsUiOptions GetAlternative(string serviceName);
-    bool IsError { get; set; }
 
     Uri Url<TUrlKeyEnum>(TUrlKeyEnum baseUrl, string? relativeUrl = null)
         where TUrlKeyEnum : struct, Enum;
