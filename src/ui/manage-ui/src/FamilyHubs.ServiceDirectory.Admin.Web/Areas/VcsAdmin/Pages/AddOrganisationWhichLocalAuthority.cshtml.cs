@@ -1,12 +1,16 @@
 using FamilyHubs.ServiceDirectory.Admin.Core.ApiClient;
+using FamilyHubs.ServiceDirectory.Admin.Core.Models;
 using FamilyHubs.ServiceDirectory.Admin.Core.Services;
+using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
 {
-    public class AddOrganisationWhichLocalAuthorityModel : InputPageViewModel
+    public class AddOrganisationWhichLocalAuthorityModel : InputPageViewModel, IHasErrorStatePageModel
     {
         [BindProperty]
         public required string LaOrganisationName { get; set; } = string.Empty;
@@ -20,11 +24,14 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
         {
             ErrorMessage = "Select a local authority";
             ErrorElementId = "LaOrganisationName";
+            Errors = ErrorState.Empty;
             _cacheService = cacheService;
             _serviceDirectoryClient = serviceDirectoryClient;
             PageHeading = "Which local authority is the organisation in?";
             BackButtonPath = "/Welcome";
         }
+
+        public IErrorState Errors { get; private set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -67,11 +74,11 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
 
             HasValidationError = true;
 
+            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Add_Organisation_WhichLocalAuthority);
+
             LocalAuthorities = laOrganisations.Select(l => l.Name).ToList();
 
             return Page();
-        }      
-
-        
+        }
     }
 }
