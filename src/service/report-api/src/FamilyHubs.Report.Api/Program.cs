@@ -35,6 +35,7 @@ public class Program
         app.UseSerilogRequestLogging();
         app.UseMiddleware<ExceptionHandlingMiddleware>();
         app.UseHttpsRedirection();
+        app.UseHsts();
         app.UseAuthorization();
         app.MapFamilyHubsHealthChecks(typeof(Program).Assembly);
 

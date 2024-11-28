@@ -57,6 +57,7 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseHttpsRedirection();
+app.UseHsts();
 
 app.UseRouting();
 

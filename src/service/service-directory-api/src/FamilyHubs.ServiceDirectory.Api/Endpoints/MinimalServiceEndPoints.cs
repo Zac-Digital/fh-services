@@ -1,11 +1,14 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
+﻿using System.Net.Mime;
+using FamilyHubs.ServiceDirectory.Core.Commands.Services.CreateService;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.DeleteService;
 using FamilyHubs.ServiceDirectory.Core.Commands.Services.UpdateService;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServiceById;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServices;
 using FamilyHubs.ServiceDirectory.Core.Queries.Services.GetServicesByOrganisationId;
 using FamilyHubs.ServiceDirectory.Shared.CreateUpdateDto;
+using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.ServiceDirectory.Shared.Models;
 using FamilyHubs.SharedKernel.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -39,8 +42,9 @@ public class MinimalServiceEndPoints
                 allChildrenYoungPeople, givenAge, latitude, longitude, proximity, pageNumber, pageSize, text,
                 serviceDeliveries, isPaidFor, taxonomyIds, languages, canFamilyChooseLocation, isFamilyHub, days);
             return mediator.Send(command, cancellationToken);
-
-        }).WithMetadata(new SwaggerOperationAttribute("List Services", "List Services") { Tags = new[] { "Services" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("List Services", "List Services") { Tags = new[] { "Services" } })
+            .Produces<PaginatedList<ServiceDto>>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("api/services-simple/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalServiceEndPoints> logger) =>
         {
@@ -60,7 +64,9 @@ public class MinimalServiceEndPoints
                 
                 throw;
             }
-        }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } })
+            .Produces<ServiceDto>(contentType: MediaTypeNames.Application.Json);
 
         //todo: are there any other consumers? if not, change to simple (or summary)
         //todo: this looks like old code
@@ -82,7 +88,9 @@ public class MinimalServiceEndPoints
 
                 throw;
             }
-        }).WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Service by Id", "Get Service by Id") { Tags = new[] { "Services" } })
+            .Produces<ServiceDto>(contentType: MediaTypeNames.Application.Json);
 
         //todo: provide default for all params?
         app.MapGet("api/services/summary", 
@@ -99,7 +107,9 @@ public class MinimalServiceEndPoints
             };
             return await mediator.Send(command, cancellationToken);
 
-        }).WithMetadata(new SwaggerOperationAttribute("Get service names", "Get service names, optionally by Organisation Id") { Tags = new[] { "Services" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get service names", "Get service names, optionally by Organisation Id") { Tags = new[] { "Services" } })
+            .Produces<ServiceNameDto>(contentType: MediaTypeNames.Application.Json);
 
         //todo: check with rider's ef core analyzer
         app.MapPut("api/services/{id}", [Authorize(Roles = RoleGroups.AdminRole)] async 
