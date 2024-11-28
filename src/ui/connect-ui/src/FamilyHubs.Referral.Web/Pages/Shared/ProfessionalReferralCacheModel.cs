@@ -2,11 +2,12 @@
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Errors;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
-public class ProfessionalReferralCacheModel : ProfessionalReferralModel
+public class ProfessionalReferralCacheModel : ProfessionalReferralModel, IHasErrorStatePageModel
 {
     // we could stop passing this to get/set
     public ConnectionRequestModel? ConnectionRequestModel { get; set; }
