@@ -55,5 +55,9 @@ public enum ErrorId
     AccountAdmin_TypeOfRole_MissingSelection,
     AccountAdmin_TypeOfUserLa_MissingSelection,
     AccountAdmin_TypeOfUserVcs_MissingSelection,
-    Delete_Service__NeitherRadioButtonIsSelected
+    Delete_Service__NeitherRadioButtonIsSelected,
+    Add_Organisation,
+    Add_Organisation_WhichLocalAuthority,
+    Update_Organisation,
+    Delete_Organisation
 }

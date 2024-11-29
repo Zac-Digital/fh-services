@@ -1,11 +1,15 @@
 using FamilyHubs.ServiceDirectory.Admin.Core.ApiClient;
+using FamilyHubs.ServiceDirectory.Admin.Core.Models;
 using FamilyHubs.ServiceDirectory.Admin.Core.Services;
+using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
 {
-    public class UpdateOrganisationModel : InputPageViewModel
+    public class UpdateOrganisationModel : InputPageViewModel, IHasErrorStatePageModel
     {
         private readonly ICacheService _cacheService;
         private readonly IServiceDirectoryClient _serviceDirectoryClient;
@@ -16,6 +20,8 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
         [BindProperty]
         public string OrganisationName { get; set; } = string.Empty;
 
+        public IErrorState Errors { get; private set; }
+
         public UpdateOrganisationModel(ICacheService cacheService, IServiceDirectoryClient serviceDirectoryClient)
         {
             _cacheService = cacheService;
@@ -23,6 +29,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
 
             PageHeading = "What is the organisation's name?";
             ErrorMessage = "Enter the organisation's name";
+            Errors = ErrorState.Empty;
         }
 
         public async Task OnGet()
@@ -50,6 +57,8 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
             }
 
             HasValidationError = true;
+
+            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Update_Organisation);
 
             return Page();
         }
