@@ -5,7 +5,7 @@ resource "azurerm_windows_web_app" "fh_report_api" {
   app_settings = {
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
-    ASPNETCORE_ENVIRONMENT                      = "${var.asp_netcore_environment}"
+    ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
   }
   name                                          = "${var.prefix}-as-fh-report-api"
@@ -21,9 +21,10 @@ resource "azurerm_windows_web_app" "fh_report_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     application_stack {
-      current_stack                               = "${var.current_stack}"
-      dotnet_version                              = "${var.dotnet_version_general}"
+      current_stack                               = var.current_stack
+      dotnet_version                              = var.dotnet_version_general
     }
     ip_restriction {
       name       = "AllowAppAccess"

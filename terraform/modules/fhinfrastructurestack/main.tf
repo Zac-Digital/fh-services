@@ -150,7 +150,7 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = true
   identity {
     type                                        = "SystemAssigned"
   }
@@ -159,6 +159,7 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     vnet_route_all_enabled                      = "true"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -209,6 +210,7 @@ resource "azurerm_windows_web_app" "fh_referral_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -251,7 +253,7 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = false # SSL termination at GW
   identity {
     type                                        = "SystemAssigned"
   }
@@ -260,6 +262,7 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     vnet_route_all_enabled                      = "true"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -317,6 +320,7 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -359,7 +363,7 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = false # SSL termination at GW
   identity {
     type                                        = "SystemAssigned"
   }
@@ -368,9 +372,10 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     vnet_route_all_enabled                      = "true"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
-      dotnet_version                              = "v7.0"
+      dotnet_version                              = var.dotnet_version_general
     }
     ip_restriction {
       name       = "AllowAppAccess"
@@ -410,7 +415,7 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = false # SSL termination at GW
   identity {
     type                                        = "SystemAssigned"
   }
@@ -419,6 +424,7 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
     vnet_route_all_enabled                      = "true"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -461,7 +467,7 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = false # SSL termination at GW
   identity {
     type                                        = "SystemAssigned"
   }
@@ -469,6 +475,7 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -519,6 +526,7 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -569,6 +577,7 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -611,7 +620,7 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
   location = var.location
   service_plan_id = azurerm_service_plan.apps_plan.id
   client_affinity_enabled = false
-  https_only = false
+  https_only = true
   identity {
     type = "SystemAssigned"
   }
@@ -620,6 +629,7 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
     ftps_state = "Disabled"
     health_check_path = "/"
     vnet_route_all_enabled = "true"
+    http2_enabled = true
     application_stack {
       current_stack = var.current_stack
       dotnet_version = "v8.0"
