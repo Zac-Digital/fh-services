@@ -48,7 +48,8 @@ public class CookiePage : ICookiePage
         {
             Expires = DateTime.Now.AddDays(365),
             Path = "/",
-            SameSite = SameSiteMode.Strict
+            SameSite = SameSiteMode.Strict,
+            HttpOnly = true
         };
 
         if (request.IsHttps)

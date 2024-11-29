@@ -13,6 +13,7 @@ using FamilyHubs.Notification.Api.Client.Templates;
 using FamilyHubs.Referral.Core;
 using FamilyHubs.Referral.Infrastructure.Health;
 using FamilyHubs.Referral.Infrastructure.Notifications;
+using FamilyHubs.SharedKernel.Cookies;
 using FamilyHubs.SharedKernel.DataProtection;
 using FamilyHubs.SharedKernel.Health;
 using FamilyHubs.SharedKernel.Telemetry;
@@ -63,6 +64,8 @@ public static class StartupExtensions
         services.AddSiteHealthChecks(configuration);
 
         services.AddFamilyHubs(configuration);
+
+        services.AddCookieStartupOptions();
     }
 
     private static void AddWebUiServices(this IServiceCollection services, IConfiguration configuration)

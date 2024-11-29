@@ -3,6 +3,7 @@ using FamilyHubs.ServiceDirectory.Admin.Core.ApiClient;
 using FamilyHubs.ServiceDirectory.Admin.Core.DistributedCache;
 using FamilyHubs.ServiceDirectory.Admin.Core.Health;
 using FamilyHubs.ServiceDirectory.Admin.Core.Services;
+using FamilyHubs.SharedKernel.Cookies;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FamilyHubs.SharedKernel.Health;
 using FamilyHubs.SharedKernel.Identity;
@@ -93,6 +94,8 @@ public static class StartupExtensions
         services.AddPostcodesIoClient(configuration);
 
         services.AddFamilyHubs(configuration);
+
+        services.AddCookieStartupOptions();
     }
 
     //todo: components use distributed cache

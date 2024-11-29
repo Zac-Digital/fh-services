@@ -10,6 +10,7 @@ using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.RequestForSupport.Infrastructure.Health;
+using FamilyHubs.SharedKernel.Cookies;
 using FamilyHubs.SharedKernel.Health;
 
 namespace FamilyHubs.RequestForSupport.Web;
@@ -65,6 +66,8 @@ public static class StartupExtensions
         services.AddSiteHealthChecks(configuration);
 
         services.AddFamilyHubs(configuration);
+
+        services.AddCookieStartupOptions();
     }
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)

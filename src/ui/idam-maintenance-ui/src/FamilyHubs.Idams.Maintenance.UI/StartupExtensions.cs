@@ -5,6 +5,7 @@ using FamilyHubs.Idams.Maintenance.Core.Services;
 using FamilyHubs.Idams.Maintenance.Data.Interceptors;
 using FamilyHubs.Idams.Maintenance.Data.Repository;
 using FamilyHubs.Idams.Maintenance.UI.Middleware;
+using FamilyHubs.SharedKernel.Cookies;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Extensions;
 using FamilyHubs.SharedKernel.Security;
@@ -123,6 +124,8 @@ public static class StartupExtensions
 
         services.AddTransient<CorrelationMiddleware>();
         services.AddTransient<ExceptionHandlingMiddleware>();
+
+        services.AddCookieStartupOptions();
     }
 
 #if MABUSE_DistributedCache

@@ -1,5 +1,6 @@
 ﻿using FamilyHubs.ServiceDirectory.Infrastructure.Services.ServiceDirectory.Extensions;
 using FamilyHubs.ServiceDirectory.Web.Pages.ServiceFilter;
+using FamilyHubs.SharedKernel.Cookies;
 using FamilyHubs.SharedKernel.Health;
 using FamilyHubs.SharedKernel.Services.PostcodesIo;
 using FamilyHubs.SharedKernel.Services.PostcodesIo.Extensions;
@@ -50,6 +51,7 @@ public static class StartupExtensions
         services.AddFamilyHubs(configuration);
         services.AddFamilyHubsHealthChecks(configuration)
             .AddUrlGroup(PostcodesIoLookup.HealthUrl(configuration), "PostcodesIo", HealthStatus.Degraded, new[] {"ExternalAPI"});
+        services.AddCookieStartupOptions();
     }
 
     public static IServiceProvider ConfigureWebApplication(this WebApplication app)
