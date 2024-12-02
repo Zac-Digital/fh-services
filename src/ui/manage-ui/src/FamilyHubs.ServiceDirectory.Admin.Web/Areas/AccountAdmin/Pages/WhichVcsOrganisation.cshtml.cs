@@ -1,11 +1,15 @@
 ﻿using FamilyHubs.ServiceDirectory.Admin.Core.ApiClient;
+using FamilyHubs.ServiceDirectory.Admin.Core.Models;
 using FamilyHubs.ServiceDirectory.Admin.Core.Services;
+using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages;
 
-public class WhichVcsOrganisation : AccountAdminViewModel
+public class WhichVcsOrganisation : AccountAdminViewModel, IHasErrorStatePageModel
 {
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
 
@@ -14,12 +18,15 @@ public class WhichVcsOrganisation : AccountAdminViewModel
         PageHeading = "Which organisation do they work for?";
         ErrorMessage = "Select an organisation";
         _serviceDirectoryClient = serviceDirectoryClient;
+        Errors = ErrorState.Empty;
     }
 
     [BindProperty]
     public required string VcsOrganisationName { get; set; } = string.Empty;
 
     public required List<string> VcsOrganisations { get; set; } = new List<string>();
+
+    public IErrorState Errors { get; private set; }
 
     public override async Task OnGet()
     {
@@ -50,6 +57,8 @@ public class WhichVcsOrganisation : AccountAdminViewModel
         }
         
         HasValidationError = true;
+
+        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_WhichVcsOrganisation);
         
         VcsOrganisations = vcsOrganisations.Select(l => l.Name).ToList();
         
