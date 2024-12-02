@@ -53,6 +53,13 @@ locals {
   data_protection_keys_public_network_access_enabled_storage = true
   infrastructure_encryption_enabled = true
   
+  # SQL
+  sal_audit_actions_and_groups = [
+    "BATCH_COMPLETED_GROUP",
+    "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
+    "FAILED_DATABASE_AUTHENTICATION_GROUP"
+  ]
+  
   # Tags
   tags = {
     "Parent Business" = "Children's Care"
@@ -2991,8 +2998,22 @@ resource "azurerm_mssql_server" "sqlserver" {
 
     administrator_login = var.sql_server_user
     administrator_login_password = var.sql_server_pwd
-
     tags = local.tags
+}
+
+resource "azurerm_mssql_server_extended_auditing_policy" "sql_server_auditing_policy" { 
+  server_id = azurerm_mssql_server.sqlserver.id
+  log_monitoring_enabled = true
+  audit_actions_and_groups = local.sal_audit_actions_and_groups
+}
+
+resource "azurerm_monitor_diagnostic_setting" "sql_server_diagnostics" {
+  name = "sql-server-diagnostics"
+  target_resource_id = "${azurerm_mssql_server.sqlserver.id}/databases/master"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.app_services.id
+  enabled_log {
+    category_group = "AllLogs"
+  }
 }
 
 # SQL Server Databases
