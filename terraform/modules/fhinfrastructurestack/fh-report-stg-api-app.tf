@@ -12,6 +12,21 @@ resource "azurerm_mssql_server" "reporting_sql_server" {
   tags = local.tags
 }
 
+resource "azurerm_mssql_server_extended_auditing_policy" "reporting_sql_server_auditing_policy" {
+  server_id = azurerm_mssql_server.reporting_sql_server.id
+  log_monitoring_enabled = true
+  audit_actions_and_groups = local.sal_audit_actions_and_groups
+}
+
+resource "azurerm_monitor_diagnostic_setting" "reporting_sql_server_diagnostics" {
+  name = "reporting-sql-server-diagnostics"
+  target_resource_id = "${azurerm_mssql_server.reporting_sql_server.id}/databases/master"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.app_services.id
+  enabled_log {
+    category_group = "AllLogs"
+  }
+}
+
 # SQL Server Database for Report Staging API
 resource "azurerm_mssql_database" "report_staging_db" {
   name = "${var.prefix}-fh-report-staging-db"
