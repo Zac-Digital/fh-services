@@ -50,7 +50,6 @@ locals {
   delete_retention_policy_days = 7
   container_delete_retention_policy_days = 7
   public_network_access_enabled_storage = true
-  data_protection_keys_public_network_access_enabled_storage = true
   infrastructure_encryption_enabled = true
   
   # SQL
@@ -3014,6 +3013,18 @@ resource "azurerm_monitor_diagnostic_setting" "sql_server_diagnostics" {
   enabled_log {
     category_group = "AllLogs"
   }
+  metric {
+    category = "Basic"
+    enabled  = false
+  }
+  metric {
+    category = "InstanceAndAppAdvanced"
+    enabled  = false
+  }
+  metric {
+   category = "WorkloadManagement" 
+   enabled  = false
+  }
 }
 
 # SQL Server Databases
@@ -3779,7 +3790,6 @@ data "azurerm_public_ip" "sd_ui_public_ip" {
 }
 
 # Storage Accounts
-
 resource "azurerm_storage_account" "storage_appgw_errorpage" {
   name                      			    = "${var.prefix}saappgwerror"
   resource_group_name       			    = local.resource_group_name
@@ -3791,6 +3801,10 @@ resource "azurerm_storage_account" "storage_appgw_errorpage" {
   public_network_access_enabled 		  = local.public_network_access_enabled_storage
   account_replication_type  			    = local.account_replication_type
   infrastructure_encryption_enabled 	= local.infrastructure_encryption_enabled
+  provisioner "local-exec" {
+    command = "az storage account update --name ${self.name} --resource-group ${self.resource_group_name} --key-exp-days 365"
+    interpreter = ["pwsh", "-Command"]
+  }
   blob_properties {
     versioning_enabled     				    = local.versioning_enabled
     change_feed_enabled    				    = local.change_feed_enabled
@@ -3879,6 +3893,10 @@ resource "azurerm_storage_account" "storage_db_logs" {
   public_network_access_enabled = local.public_network_access_enabled_storage
   account_replication_type = local.account_replication_type
   infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
+  provisioner "local-exec" {
+    command = "az storage account update --name ${self.name} --resource-group ${self.resource_group_name} --key-exp-days 365"
+    interpreter = ["pwsh", "-Command"]
+  }
   blob_properties {
     versioning_enabled     = local.versioning_enabled
     change_feed_enabled    = local.change_feed_enabled
@@ -3895,37 +3913,6 @@ resource "azurerm_storage_account" "storage_db_logs" {
 resource "azurerm_storage_container" "container_db_va_logs" {
   name                  = "${var.prefix}sadbvalogs"
   storage_account_name  = azurerm_storage_account.storage_db_logs.name
-  container_access_type = "blob"
-}
-
-resource "azurerm_storage_account" "connect_data_protection_keys" {
-  name                = "${var.prefix}saconnectdpkeys"
-  resource_group_name = local.resource_group_name
-  location            = var.location
-  account_tier             = local.account_tier
-  account_kind             = local.account_kind
-  access_tier              = local.access_tier
-  min_tls_version          = local.min_tls_version
-  is_hns_enabled           = local.is_hns_enabled
-  public_network_access_enabled = local.data_protection_keys_public_network_access_enabled_storage
-  account_replication_type = local.account_replication_type
-  infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
-  blob_properties {
-    versioning_enabled     = local.versioning_enabled
-    change_feed_enabled    = local.change_feed_enabled
-    delete_retention_policy {
-      days                 = local.delete_retention_policy_days
-    }
-    container_delete_retention_policy {
-      days                 = local.container_delete_retention_policy_days
-    }
-  }
-  tags = local.tags
-}
-
-resource "azurerm_storage_container" "container_connect_data_protection_keys" {
-  name                  = "${var.prefix}saconnectdpkeys"
-  storage_account_name  = azurerm_storage_account.connect_data_protection_keys.name
   container_access_type = "blob"
 }
 
