@@ -2,13 +2,16 @@ using FamilyHubs.ServiceDirectory.Admin.Core.ApiClient;
 using FamilyHubs.ServiceDirectory.Admin.Core.Helpers;
 using FamilyHubs.ServiceDirectory.Admin.Core.Models;
 using FamilyHubs.ServiceDirectory.Admin.Core.Services;
+using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages.ManagePermissions;
 
-public class EditEmailModel : InputPageViewModel
+public class EditEmailModel : InputPageViewModel, IHasErrorStatePageModel
 {
     private readonly IIdamClient _idamClient;
     private readonly IEmailService _emailService;
@@ -19,6 +22,8 @@ public class EditEmailModel : InputPageViewModel
 
     [BindProperty]
     public required string EmailAddress { get; set; } = string.Empty;
+
+    public IErrorState Errors { get; private set; }
 
     public EditEmailModel(
         IIdamClient idamClient,
@@ -34,6 +39,8 @@ public class EditEmailModel : InputPageViewModel
         _idamClient = idamClient;
         _emailService = emailService;
         _logger = logger;
+
+        Errors = ErrorState.Empty;
     }
 
     public void OnGet()
@@ -71,6 +78,7 @@ public class EditEmailModel : InputPageViewModel
 
         BackButtonPath = $"/AccountAdmin/ManagePermissions/{AccountId}";
         HasValidationError = true;
+        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.ManagePermissions_EditEmail);
         return Page();
     }
 

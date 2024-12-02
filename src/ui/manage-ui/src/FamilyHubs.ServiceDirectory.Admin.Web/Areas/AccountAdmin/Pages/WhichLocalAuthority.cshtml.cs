@@ -1,11 +1,15 @@
 ﻿using FamilyHubs.ServiceDirectory.Admin.Core.ApiClient;
+using FamilyHubs.ServiceDirectory.Admin.Core.Models;
 using FamilyHubs.ServiceDirectory.Admin.Core.Services;
+using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages;
 
-public class WhichLocalAuthority : AccountAdminViewModel
+public class WhichLocalAuthority : AccountAdminViewModel, IHasErrorStatePageModel
 {
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
 
@@ -14,6 +18,7 @@ public class WhichLocalAuthority : AccountAdminViewModel
         PageHeading = string.Empty;
         ErrorMessage = "Select a local authority";
         _serviceDirectoryClient = serviceDirectoryClient;
+        Errors = ErrorState.Empty;
     }
     
     [BindProperty]
@@ -23,7 +28,9 @@ public class WhichLocalAuthority : AccountAdminViewModel
 
     private const string LaJourneyLabel = "Which local authority do they work for?";
     private const string VcsJourneyLabel = "Which local authority area do they work in?";
-    
+
+    public IErrorState Errors { get; private set; }
+
     public override async Task OnGet()
     {
         await base.OnGet();
@@ -57,6 +64,8 @@ public class WhichLocalAuthority : AccountAdminViewModel
         PageHeading = PermissionModel.VcsJourney ? VcsJourneyLabel : LaJourneyLabel;
         
         HasValidationError = true;
+
+        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_WhichLocalAuthority);
         
         LocalAuthorities = laOrganisations.Select(l => l.Name).ToList();
 

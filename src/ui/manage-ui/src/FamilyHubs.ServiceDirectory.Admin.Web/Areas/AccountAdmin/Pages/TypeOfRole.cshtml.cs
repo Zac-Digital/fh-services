@@ -6,11 +6,12 @@ using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using FamilyHubs.SharedKernel.Razor.FullPages.Radios;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages;
 
-public class TypeOfRole : AccountAdminViewModel, IRadiosPageModel
+public class TypeOfRole : AccountAdminViewModel, IRadiosPageModel, IHasErrorStatePageModel
 {   
     private readonly IServiceDirectoryClient _directoryClient;
 
