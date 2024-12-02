@@ -1,13 +1,16 @@
 using FamilyHubs.ServiceDirectory.Admin.Core.ApiClient;
 using FamilyHubs.ServiceDirectory.Admin.Core.Models;
 using FamilyHubs.ServiceDirectory.Admin.Core.Services;
+using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages.ManagePermissions
 {
-    public class EditRolesModel : InputPageViewModel
+    public class EditRolesModel : InputPageViewModel, IHasErrorStatePageModel
     {
         private readonly IIdamClient _idamClient;
         private readonly IEmailService _emailService;
@@ -28,6 +31,8 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages.ManageP
         
         public bool IsVcs { get; set; } = false;
 
+        public IErrorState Errors { get; private set; }
+
         public EditRolesModel(IIdamClient idamClient, IEmailService emailService)
         {
             PageHeading = "What do they need to do?";
@@ -35,6 +40,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages.ManageP
             SubmitButtonText = "Confirm";
             _idamClient = idamClient;
             _emailService = emailService;
+            Errors = ErrorState.Empty;
         }
 
         public async Task OnGet(long accountId)
@@ -77,6 +83,8 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages.ManageP
             }
 
             HasValidationError = true;
+
+            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.ManagePermissions_EditRole);
                         
             string role = GetRole(account);
             SetOrganisationType(role);

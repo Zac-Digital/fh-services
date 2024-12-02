@@ -52,6 +52,8 @@ public enum ErrorId
     Time_Details_At_Location__MissingText,
     Time_Details_At_Location__DescriptionTooLong,
     ManagePermissions_Delete_MissingSelection,
+    ManagePermissions_EditEmail,
+    ManagePermissions_EditRole,
     AccountAdmin_TypeOfRole_MissingSelection,
     AccountAdmin_TypeOfUserLa_MissingSelection,
     AccountAdmin_TypeOfUserVcs_MissingSelection,
