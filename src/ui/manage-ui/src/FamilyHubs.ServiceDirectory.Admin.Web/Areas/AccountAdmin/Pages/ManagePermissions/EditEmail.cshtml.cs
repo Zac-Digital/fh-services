@@ -73,7 +73,7 @@ public class EditEmailModel : InputPageViewModel
         }
 
         BackButtonPath = $"/AccountAdmin/ManagePermissions/{AccountId}";
-        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.ManagePermissions_EditEmail);
+        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.ManagePermissions_EditEmail_Missing);
         return Page();
     }
 

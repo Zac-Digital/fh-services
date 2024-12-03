@@ -48,7 +48,7 @@ public class UserEmail : AccountAdminViewModel
             return RedirectToPage(NextPageLink, new { cacheId = CacheId });
         }
         
-        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_UserEmail);
+        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_UserEmail_MissingText);
         return Page();
     }
 

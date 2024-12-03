@@ -59,7 +59,7 @@ public class WhichLocalAuthority : AccountAdminViewModel
         
         PageHeading = PermissionModel.VcsJourney ? VcsJourneyLabel : LaJourneyLabel;
 
-        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_WhichLocalAuthority);
+        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_WhichLocalAuthority_MissingSelection);
         
         LocalAuthorities = laOrganisations.Select(l => l.Name).ToList();
 

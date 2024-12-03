@@ -52,7 +52,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
                 return RedirectToPage($"ViewOrganisation", new { OrganisationId = OrganisationId, updated = true });
             }
 
-            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Update_Organisation);
+            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Update_Organisation__Organisation_Missing);
 
             return Page();
         }

@@ -52,7 +52,7 @@ public class WhichVcsOrganisation : AccountAdminViewModel
             return RedirectToPage(NextPageLink, new {cacheId= CacheId});
         }
 
-        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_WhichVcsOrganisation);
+        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_WhichVcsOrganisation_MissingSelection);
         
         VcsOrganisations = vcsOrganisations.Select(l => l.Name).ToList();
         

@@ -79,7 +79,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages.ManageP
                 return RedirectToPage("EditRolesChangedConfirmation", new { AccountId = accountId });
             }
 
-            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.ManagePermissions_EditRole);
+            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.ManagePermissions_EditRole_MissingSelection);
                         
             string role = GetRole(account);
             SetOrganisationType(role);

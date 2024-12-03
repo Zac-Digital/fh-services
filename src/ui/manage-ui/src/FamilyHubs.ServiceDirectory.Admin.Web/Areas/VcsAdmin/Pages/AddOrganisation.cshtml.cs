@@ -65,7 +65,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
                 return RedirectToPage("/AddOrganisationCheckDetails", new { cacheId = cacheId });
             }
 
-            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Add_Organisation);
+            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Add_Organisation__Organisation_Missing);
 
             return Page();
         }

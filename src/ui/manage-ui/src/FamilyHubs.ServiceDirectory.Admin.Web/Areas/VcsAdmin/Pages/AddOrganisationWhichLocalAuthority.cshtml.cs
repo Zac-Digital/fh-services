@@ -67,7 +67,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
                 return RedirectToPage("/AddOrganisation");
             }
 
-            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Add_Organisation_WhichLocalAuthority);
+            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Add_Organisation__WhichLocalAuthority_Missing);
 
             LocalAuthorities = laOrganisations.Select(l => l.Name).ToList();
 

@@ -37,7 +37,7 @@ public class UserName : AccountAdminViewModel
             return RedirectToPage(NextPageLink, new { cacheId = CacheId});
         }
 
-        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_UserName);
+        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_UserName_MissingText);
         return Page();
     }
 }
