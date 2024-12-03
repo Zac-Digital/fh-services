@@ -6,12 +6,11 @@ using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
-using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages.ManagePermissions;
 
-public class EditEmailModel : InputPageViewModel, IHasErrorStatePageModel
+public class EditEmailModel : InputPageViewModel
 {
     private readonly IIdamClient _idamClient;
     private readonly IEmailService _emailService;
@@ -23,15 +22,12 @@ public class EditEmailModel : InputPageViewModel, IHasErrorStatePageModel
     [BindProperty]
     public required string EmailAddress { get; set; } = string.Empty;
 
-    public IErrorState Errors { get; private set; }
-
     public EditEmailModel(
         IIdamClient idamClient,
         IEmailService emailService,
         ILogger<EditEmailModel> logger)
     {
         PageHeading = "What's their email address?";
-        ErrorMessage = "Enter an email address";
         BackButtonPath = $"/AccountAdmin/ManagePermissions/{AccountId}";
         SubmitButtonText = "Confirm";
         HintText = "They will use this to sign in to their account.";
@@ -77,8 +73,7 @@ public class EditEmailModel : InputPageViewModel, IHasErrorStatePageModel
         }
 
         BackButtonPath = $"/AccountAdmin/ManagePermissions/{AccountId}";
-        HasValidationError = true;
-        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.ManagePermissions_EditEmail);
+        Errors = ErrorState.Create(PossibleErrors.All, ErrorId.ManagePermissions_EditEmail_Missing);
         return Page();
     }
 

@@ -5,12 +5,11 @@ using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using FamilyHubs.SharedKernel.Razor.FullPages.Checkboxes;
-using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages;
 
-public class TypeOfUserLa : AccountAdminViewModel, ICheckboxesPageModel, IHasErrorStatePageModel
+public class TypeOfUserLa : AccountAdminViewModel, ICheckboxesPageModel
 {
     public IEnumerable<ICheckbox> Checkboxes => new[]
     {
@@ -19,7 +18,6 @@ public class TypeOfUserLa : AccountAdminViewModel, ICheckboxesPageModel, IHasErr
     };
     [BindProperty]
     public IEnumerable<string> SelectedValues { get; set; } = Enumerable.Empty<string>();
-    public IErrorState Errors { get; protected set; } = ErrorState.Empty;
     public string? DescriptionPartial => null;
     public string Legend => "What do they need to do?";
     public string? Hint => null;

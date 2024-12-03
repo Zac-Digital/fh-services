@@ -5,12 +5,11 @@ using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
-using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
 {
-    public class AddOrganisationWhichLocalAuthorityModel : InputPageViewModel, IHasErrorStatePageModel
+    public class AddOrganisationWhichLocalAuthorityModel : InputPageViewModel
     {
         [BindProperty]
         public required string LaOrganisationName { get; set; } = string.Empty;
@@ -22,16 +21,12 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
 
         public AddOrganisationWhichLocalAuthorityModel(ICacheService cacheService, IServiceDirectoryClient serviceDirectoryClient) 
         {
-            ErrorMessage = "Select a local authority";
-            ErrorElementId = "LaOrganisationName";
             Errors = ErrorState.Empty;
             _cacheService = cacheService;
             _serviceDirectoryClient = serviceDirectoryClient;
             PageHeading = "Which local authority is the organisation in?";
             BackButtonPath = "/Welcome";
         }
-
-        public IErrorState Errors { get; private set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -72,9 +67,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
                 return RedirectToPage("/AddOrganisation");
             }
 
-            HasValidationError = true;
-
-            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Add_Organisation_WhichLocalAuthority);
+            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Add_Organisation__WhichLocalAuthority_Missing);
 
             LocalAuthorities = laOrganisations.Select(l => l.Name).ToList();
 

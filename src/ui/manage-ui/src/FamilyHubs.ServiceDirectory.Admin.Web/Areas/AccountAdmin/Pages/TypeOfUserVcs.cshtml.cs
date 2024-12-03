@@ -4,12 +4,11 @@ using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using FamilyHubs.SharedKernel.Razor.FullPages.Checkboxes;
-using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages;
 
-public class TypeOfUserVcs : AccountAdminViewModel, ICheckboxesPageModel, IHasErrorStatePageModel
+public class TypeOfUserVcs : AccountAdminViewModel, ICheckboxesPageModel
 {
     public IEnumerable<ICheckbox> Checkboxes => new[]
     {
@@ -19,7 +18,6 @@ public class TypeOfUserVcs : AccountAdminViewModel, ICheckboxesPageModel, IHasEr
 
     [BindProperty]
     public IEnumerable<string> SelectedValues { get; set; } = Enumerable.Empty<string>();
-    public IErrorState Errors { get; protected set; } = ErrorState.Empty;
     public string DescriptionPartial => "TypeOfUserVcsDescription";
     public string? Legend => null;
     public string? Hint => null;

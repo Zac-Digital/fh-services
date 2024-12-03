@@ -4,12 +4,11 @@ using FamilyHubs.ServiceDirectory.Admin.Core.Services;
 using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
-using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
 {
-    public class UpdateOrganisationModel : InputPageViewModel, IHasErrorStatePageModel
+    public class UpdateOrganisationModel : InputPageViewModel
     {
         private readonly ICacheService _cacheService;
         private readonly IServiceDirectoryClient _serviceDirectoryClient;
@@ -20,15 +19,12 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
         [BindProperty]
         public string OrganisationName { get; set; } = string.Empty;
 
-        public IErrorState Errors { get; private set; }
-
         public UpdateOrganisationModel(ICacheService cacheService, IServiceDirectoryClient serviceDirectoryClient)
         {
             _cacheService = cacheService;
             _serviceDirectoryClient = serviceDirectoryClient;
 
             PageHeading = "What is the organisation's name?";
-            ErrorMessage = "Enter the organisation's name";
             Errors = ErrorState.Empty;
         }
 
@@ -56,9 +52,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
                 return RedirectToPage($"ViewOrganisation", new { OrganisationId = OrganisationId, updated = true });
             }
 
-            HasValidationError = true;
-
-            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Update_Organisation);
+            Errors = ErrorState.Create(PossibleErrors.All, ErrorId.Update_Organisation__Organisation_Missing);
 
             return Page();
         }
