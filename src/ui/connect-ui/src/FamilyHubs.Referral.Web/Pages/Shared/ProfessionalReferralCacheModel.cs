@@ -22,10 +22,6 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel, IHasErr
         Errors = ErrorState.Empty;
     }
 
-    //todo: change to private set
-    //todo: remove this and reference Errors directly
-    public bool HasErrors { get; set; }
-
     protected virtual void OnGetWithModel(ConnectionRequestModel model)
     {
     }
@@ -60,11 +56,7 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel, IHasErr
             return RedirectToProfessionalReferralPage("LocalOfferDetail");
         }
 
-        if (ConnectionRequestModel.ErrorState?.ErrorPage == CurrentPage)
-        {
-            HasErrors = true;
-        }
-        else
+        if (ConnectionRequestModel.ErrorState?.ErrorPage != CurrentPage)
         {
             // we don't save the model on Get, but we don't want the page to pick up the error state when the user has gone back
             // (we'll clear the error state in the model on a non-redirect to self post
