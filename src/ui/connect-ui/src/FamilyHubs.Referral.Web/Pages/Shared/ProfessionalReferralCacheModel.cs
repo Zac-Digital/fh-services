@@ -22,8 +22,6 @@ public class ProfessionalReferralCacheModel : ProfessionalReferralModel, IHasErr
         Errors = ErrorState.Empty;
     }
 
-    public bool HasErrors => Errors.HasErrors;
-
     protected virtual void OnGetWithModel(ConnectionRequestModel model)
     {
     }
