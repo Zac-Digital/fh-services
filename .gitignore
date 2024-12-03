@@ -33,4 +33,4 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 
-local/db/sql 
+local/db/sql
