@@ -28,10 +28,11 @@ jobs:
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     env:
-      KEYVAULT: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-general
+      KEYVAULT: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-admin
       RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_PREFIX }}-familyhubs
       API_APP_NAME: ${{ vars.AZURE_RESOURCE_PREFIX }}-${{ inputs.app_name }}
       APP_FIREWALL_NAME: acceptance-tests
+      PROJECT_PATH: ${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.project_name }}/acceptance-tests/${{ inputs.test_project_name }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -59,18 +60,12 @@ jobs:
         run: |-
           az webapp config access-restriction add -g ${{ env.RESOURCE_GROUP }} -n ${{ env.API_APP_NAME }} --rule-name ${{ env.APP_FIREWALL_NAME }} --action Allow --ip-address ${{ steps.runner-ip.outputs.ip_address }} --priority 50
 
-      - name: Test Settings Variable Substitution
-        id: substitution
-        uses: ./.github/actions/variable-substitution
-        with:
-          keyvault_name: ${{ env.KEYVAULT }}
-          keyvault_prefix: ${{ inputs.keyvault_prefix }}
-          files: '${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.project_name }}/acceptance-tests/${{ inputs.test_project_name }}/appsettings.json'
-          configure: 'Tests'
-
       - name: Run Acceptance Tests
-        shell: bash
-        run: dotnet test "${{ github.workspace }}/src/${{ inputs.project_type }}/${{ inputs.project_name }}/acceptance-tests/${{ inputs.test_project_name }}/${{ inputs.test_project_name }}.csproj" --logger "html;logfilename=testResults.html"
+        shell: pwsh
+        run: |-
+          dotnet user-secrets set "AppConfiguration:KeyVaultIdentifier" "${{ env.KEYVAULT }}" --project ${{ env.PROJECT_PATH }}
+          dotnet user-secrets set "AppConfiguration:KeyVaultPrefix" "${{ inputs.keyvault_prefix }}" --project ${{ env.PROJECT_PATH }}
+          dotnet test "${{ env.PROJECT_PATH }}/${{ inputs.test_project_name }}.csproj" --logger "html;logfilename=testResults.html"
         
       - name: Remove IP Address from App Firewall
         if: always()
