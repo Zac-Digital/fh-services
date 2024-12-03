@@ -4,19 +4,17 @@ using FamilyHubs.ServiceDirectory.Admin.Core.Services;
 using FamilyHubs.ServiceDirectory.Admin.Web.Errors;
 using FamilyHubs.ServiceDirectory.Admin.Web.ViewModel;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
-using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.AccountAdmin.Pages;
 
-public class WhichVcsOrganisation : AccountAdminViewModel, IHasErrorStatePageModel
+public class WhichVcsOrganisation : AccountAdminViewModel
 {
     private readonly IServiceDirectoryClient _serviceDirectoryClient;
 
     public WhichVcsOrganisation(ICacheService cacheService, IServiceDirectoryClient serviceDirectoryClient) : base(nameof(WhichVcsOrganisation), cacheService)
     {
         PageHeading = "Which organisation do they work for?";
-        ErrorMessage = "Select an organisation";
         _serviceDirectoryClient = serviceDirectoryClient;
         Errors = ErrorState.Empty;
     }
@@ -25,8 +23,6 @@ public class WhichVcsOrganisation : AccountAdminViewModel, IHasErrorStatePageMod
     public required string VcsOrganisationName { get; set; } = string.Empty;
 
     public required List<string> VcsOrganisations { get; set; } = new List<string>();
-
-    public IErrorState Errors { get; private set; }
 
     public override async Task OnGet()
     {
@@ -55,8 +51,6 @@ public class WhichVcsOrganisation : AccountAdminViewModel, IHasErrorStatePageMod
 
             return RedirectToPage(NextPageLink, new {cacheId= CacheId});
         }
-        
-        HasValidationError = true;
 
         Errors = ErrorState.Create(PossibleErrors.All, ErrorId.AccountAdmin_WhichVcsOrganisation);
         

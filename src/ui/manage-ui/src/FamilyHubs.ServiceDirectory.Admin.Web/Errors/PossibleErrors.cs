@@ -61,5 +61,14 @@ public static class PossibleErrors
             .Add(ErrorId.AccountAdmin_TypeOfRole_MissingSelection, "Select the type of user you are adding")
             .Add(ErrorId.AccountAdmin_TypeOfUserLa_MissingSelection, "Select what they need to do")
             .Add(ErrorId.AccountAdmin_TypeOfUserVcs_MissingSelection, "Select what they need to do")
+            .Add(ErrorId.AccountAdmin_UserEmail, "Enter an email address")
+            .Add(ErrorId.AccountAdmin_UserName, "Enter a full name")
+            .Add(ErrorId.AccountAdmin_WhichLocalAuthority, "Select a local authority")
+            .Add(ErrorId.AccountAdmin_WhichVcsOrganisation, "Select an organisation")
+            .Add(ErrorId.ManagePermissions_EditEmail, "Enter an email address")
+            .Add(ErrorId.ManagePermissions_EditRole, "Select what they need to do")
+            .Add(ErrorId.Add_Organisation, "Enter the organisation's name")
+            .Add(ErrorId.Add_Organisation_WhichLocalAuthority, "Select a local authority")
+            .Add(ErrorId.Update_Organisation, "Enter the organisation's name")
         ;
 }
