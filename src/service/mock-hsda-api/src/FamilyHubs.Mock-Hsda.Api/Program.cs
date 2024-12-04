@@ -1,5 +1,6 @@
 using FamilyHubs.Mock_Hsda.Api.MockResponseGenerators;
 using FamilyHubs.Mock_Hsda.Api;
+using FamilyHubs.SharedKernel.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -12,6 +13,8 @@ using Microsoft.OpenApi.Models;
 // automated tests can set up and tear down test responses
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.ConfigureAzureKeyVault();
 
 var openApiDoc = builder.Services.AddOpenApiSpecFromFile();
 builder.Services.AddEndpointsApiExplorer();

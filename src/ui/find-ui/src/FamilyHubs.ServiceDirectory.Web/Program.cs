@@ -1,3 +1,4 @@
+using FamilyHubs.SharedKernel.Extensions;
 using Serilog;
 
 namespace FamilyHubs.ServiceDirectory.Web;
@@ -22,6 +23,8 @@ public class Program
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Configuration.ConfigureAzureKeyVault();
+            
             builder.ConfigureHost();
 
             builder.Services.ConfigureServices(builder.Configuration);
