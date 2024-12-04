@@ -10,20 +10,12 @@ namespace FamilyHubs.Idam.Api.FunctionalTests;
 [Collection("Sequential")]
 public class WhenUsingAccountApiUnitTests : BaseWhenUsingApiUnitTests
 {
-    
-    private const string _controller = "Account";
+    private const string Controller = "Account";
 
     [Theory]
     [InlineData(RoleTypes.DfeAdmin, RoleTypes.DfeAdmin, "Cannot create DfeAdmin via API")]
     public async Task InvalidAddRequest_ThenExpectedErrorReturned(string createRole, string bearerRole, string expectedMessage)
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         //  Arrange
         var requestContent = new AddAccountCommand
         {
@@ -33,7 +25,7 @@ public class WhenUsingAccountApiUnitTests : BaseWhenUsingApiUnitTests
             Claims = new List<AccountClaim> { new AccountClaim { Name = FamilyHubsClaimTypes.Role, Value = createRole } }
         };
 
-        var request = CreatePostRequest(_controller, requestContent, bearerRole);
+        var request = CreatePostRequest(Controller, requestContent, bearerRole);
 
         //  Act
         using var response = await Client.SendAsync(request);
@@ -48,13 +40,6 @@ public class WhenUsingAccountApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ValidAddRequest_ThenTheAccountIsCreated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         //  Arrange
         var requestContent = new AddAccountCommand
         {
@@ -64,7 +49,7 @@ public class WhenUsingAccountApiUnitTests : BaseWhenUsingApiUnitTests
             Claims = new List<AccountClaim> { new AccountClaim { Name = FamilyHubsClaimTypes.Role, Value = RoleTypes.LaManager} }
         };
 
-        var request = CreatePostRequest(_controller, requestContent, RoleTypes.DfeAdmin);
+        var request = CreatePostRequest(Controller, requestContent, RoleTypes.DfeAdmin);
 
         //  Act
         using var response = await Client.SendAsync(request);
@@ -81,16 +66,9 @@ public class WhenUsingAccountApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheAccountIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         //  Arrange
         var expected = TestDataProvider.GetTestAccount();
-        var request = CreateGetRequest($"{_controller}?email={TestDataProvider.AccountEmail}", RoleTypes.DfeAdmin);
+        var request = CreateGetRequest($"{Controller}?email={TestDataProvider.AccountEmail}", RoleTypes.DfeAdmin);
 
         //  Act
         using var response = await Client.SendAsync(request);
@@ -112,8 +90,6 @@ public class WhenUsingAccountApiUnitTests : BaseWhenUsingApiUnitTests
             .Excluding(info => info.LastModified)
             .Excluding(info => info.LastModifiedBy)
         );
-
-
     }
 
     public class ErrorResponse

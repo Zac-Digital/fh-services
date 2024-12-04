@@ -1,11 +1,16 @@
+using FamilyHubs.SharedKernel.Extensions;
 using Serilog;
 
 namespace FamilyHubs.ServiceDirectory.Web;
 
-public static class Program
+public class Program
 {
     public static IServiceProvider ServiceProvider { get; private set; } = default!;
 
+    private Program()
+    {
+    }
+    
     public static void Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
@@ -18,6 +23,8 @@ public static class Program
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Configuration.ConfigureAzureKeyVault();
+            
             builder.ConfigureHost();
 
             builder.Services.ConfigureServices(builder.Configuration);

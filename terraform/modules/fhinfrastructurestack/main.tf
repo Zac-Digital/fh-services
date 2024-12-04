@@ -63,6 +63,87 @@ locals {
     "Product" = "Growing Up Well"
     "Environment" = var.environment
   }
+
+  # Key vault perms
+  principal_certificate_permissions = [
+    "Create",
+    "Delete",
+    "DeleteIssuers",
+    "Get",
+    "GetIssuers",
+    "Import",
+    "List",
+    "ListIssuers",
+    "ManageContacts",
+    "ManageIssuers",
+    "SetIssuers",
+    "Update",
+    "Purge",
+  ]
+
+  principal_key_permissions = [
+    "Backup",
+    "Create",
+    "Decrypt",
+    "Delete",
+    "Encrypt",
+    "Get",
+    "Import",
+    "List",
+    "Purge",
+    "Recover",
+    "Restore",
+    "Sign",
+    "UnwrapKey",
+    "Update",
+    "Verify",
+    "WrapKey",
+    "Release",
+    "Rotate",
+    "GetRotationPolicy",
+    "SetRotationPolicy",
+  ]
+
+  principal_secret_permissions = [
+    "Backup",
+    "Delete",
+    "Get",
+    "List",
+    "Purge",
+    "Recover",
+    "Restore",
+    "Set",
+  ]
+
+  app_secret_permissions = [
+    "Get",
+    "List"
+  ]
+
+  app_key_permissions = [
+    "Get",
+    "List",
+    "UnwrapKey"
+  ]
+
+  referral_app_key_permissions = [
+    "Backup",
+    "Create",
+    "Decrypt",
+    "Delete",
+    "Encrypt",
+    "Get",
+    "Import",
+    "List",
+    "Purge",
+    "Recover",
+    "Restore",
+    "Sign",
+    "UnwrapKey",
+    "Update",
+    "Verify",
+    "WrapKey",
+  ]
 }
 
 # Create App Service Plan
@@ -137,25 +218,16 @@ resource "azurerm_monitor_autoscale_setting" "autoscale" {
   }
 }
 
-# Create Application Insights for IDAM Maintenance UI
-resource "azurerm_application_insights" "fh_idam_maintenance_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-idam-maintenance-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for IDAM Maintenance UI
 resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_idam_maintenance_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "IDAM-MAINTENANCE-UI"
   }
   name                                          = "${var.prefix}-as-fh-idam-maintenance-ui"
   resource_group_name                           = local.resource_group_name
@@ -200,25 +272,16 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_idam_mainten
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Referral API 
-resource "azurerm_application_insights" "fh_referral_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-referral-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Referral API
 resource "azurerm_windows_web_app" "fh_referral_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_referral_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "REFERRAL-API"
   }
   name                                          = "${var.prefix}-as-fh-referral-api"
   resource_group_name                           = local.resource_group_name
@@ -262,25 +325,16 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_api
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Referral UI
-resource "azurerm_application_insights" "fh_referral_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-referral-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Referral UI
 resource "azurerm_windows_web_app" "fh_referral_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_referral_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "CONNECT-UI"
   }
   name                                          = "${var.prefix}-as-fh-referral-ui"
   resource_group_name                           = local.resource_group_name
@@ -325,22 +379,9 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_ui"
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-
-# Create Application Insights for Service Directory API
-resource "azurerm_application_insights" "fh_sd_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-sd-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Service Directory API
 resource "azurerm_windows_web_app" "fh_sd_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_sd_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
@@ -352,6 +393,9 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
     XDT_MicrosoftApplicationInsights_Java       = "1"
     XDT_MicrosoftApplicationInsights_NodeJS     = "1"
     XDT_MicrosoftApplicationInsights_PreemptSdk = "disabled"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "SD-API"
   }
   name                                          = "${var.prefix}-as-fh-sd-api"
   resource_group_name                           = local.resource_group_name
@@ -359,6 +403,9 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -392,25 +439,16 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_api" {
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Service Directory UI
-resource "azurerm_application_insights" "fh_sd_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-sd-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Service Directory UI
 resource "azurerm_windows_web_app" "fh_sd_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_sd_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "FIND-UI"
   }
   name                                          = "${var.prefix}-as-fh-sd-ui"
   resource_group_name                           = local.resource_group_name
@@ -418,6 +456,9 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = false
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -452,25 +493,16 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_ui" {
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Service Directory Admin UI
-resource "azurerm_application_insights" "fh_sd_admin_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-sd-admin-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Service Directory Admin UI
 resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_sd_admin_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "MANAGE-UI"
   }
   name                                          = "${var.prefix}-as-fh-sd-admin-ui"
   resource_group_name                           = local.resource_group_name
@@ -515,25 +547,16 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_admin_ui"
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Referrals Dashboard UI
-resource "azurerm_application_insights" "fh_referral_dashboard_ui_app_insights" {
-  name                  = "${var.prefix}-as-fh-ref-dash-ui"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Referrals Dashboard UI
 resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_referral_dashboard_ui_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "CONNECT-DASHBOARD-UI"
   }
   name                                          = "${var.prefix}-as-fh-ref-dash-ui"
   resource_group_name                           = local.resource_group_name
@@ -577,25 +600,16 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_das
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for IDAM API 
-resource "azurerm_application_insights" "fh_idam_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-idam-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for IDAM API
 resource "azurerm_windows_web_app" "fh_idam_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_idam_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "IDAM-API"
   }
   name                                          = "${var.prefix}-as-fh-idam-api"
   resource_group_name                           = local.resource_group_name
@@ -603,6 +617,9 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -636,25 +653,16 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_idam_api" {
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create Application Insights for Notification API 
-resource "azurerm_application_insights" "fh_notification_api_app_insights" {
-  name                  = "${var.prefix}-as-fh-notification-api"
-  resource_group_name   = local.resource_group_name
-  location              = var.location
-  application_type      = "web"
-  sampling_percentage   = 0
-  workspace_id          = azurerm_log_analytics_workspace.app_services.id
-  tags = local.tags
-}
-
 # Create App Service for Notification API
 resource "azurerm_windows_web_app" "fh_notification_api" {
   app_settings = {
-    APPINSIGHTS_INSTRUMENTATIONKEY              = azurerm_application_insights.fh_notification_api_app_insights.instrumentation_key
     ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
     XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
     ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE                    = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix"           = "NOTIFICATIONS-API"
   }
   name                                          = "${var.prefix}-as-fh-notification-api"
   resource_group_name                           = local.resource_group_name
@@ -662,6 +670,9 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
   https_only                                    = true
+  identity {
+    type                                        = "SystemAssigned"
+  }
   site_config {
     always_on                                   = true
     ftps_state                                  = "Disabled"
@@ -702,6 +713,9 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
     XDT_MicrosoftApplicationInsights_Mode = "Recommended"
     ASPNETCORE_ENVIRONMENT = var.asp_netcore_environment
     WEBSITE_RUN_FROM_PACKAGE = "1"
+    APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.app_insights.connection_string
+    "AppConfiguration:KeyVaultIdentifier" = "${var.prefix}-kv-fh-admin"
+    "AppConfiguration:KeyVaultPrefix" = "MOCK-HSDA-API"
   }
   name = "${var.prefix}-as-fh-open-referral-mock-api"
   resource_group_name = local.resource_group_name
@@ -1597,7 +1611,7 @@ resource "azurerm_monitor_diagnostic_setting" "ref_ui_gw_law_logs" {
 # Key Vaults, Secrets, Certs & Keys
 data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "kv1" {
-  depends_on = [ local.resource_group_name]
+  depends_on = [local.resource_group_name]
   name                        = "${var.prefix}-kv-fh-general"
   resource_group_name         = local.resource_group_name
   location                    = var.location
@@ -1609,220 +1623,49 @@ resource "azurerm_key_vault" "kv1" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = [
-      "Create",
-      "Delete",
-      "DeleteIssuers",
-      "Get",
-      "GetIssuers",
-      "Import",
-      "List",
-      "ListIssuers",
-      "ManageContacts",
-      "ManageIssuers",
-      "SetIssuers",
-      "Update",
-      "Purge",
-    ]
-
-    key_permissions = [
-      "Backup",
-      "Create",
-      "Decrypt",
-      "Delete",
-      "Encrypt",
-      "Get",
-      "Import",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Sign",
-      "UnwrapKey",
-      "Update",
-      "Verify",
-      "WrapKey",
-      "Release",
-      "Rotate",
-      "GetRotationPolicy",
-      "SetRotationPolicy",
-    ]
-
-    secret_permissions = [
-      "Backup",
-      "Delete",
-      "Get",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Set",
-    ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   tags = local.tags
 }
 
 resource "azurerm_key_vault" "kv2" {
-  depends_on = [ local.resource_group_name]
+  depends_on = [
+    azurerm_windows_web_app.fh_referral_api,
+    azurerm_windows_web_app.fh_referral_dashboard_ui,
+    azurerm_windows_web_app.open_referral_mock_api_web_app,
+    azurerm_windows_web_app.fh_notification_api,
+    azurerm_windows_web_app.fh_idam_api,
+    azurerm_windows_web_app.fh_idam_maintenance_ui,
+    azurerm_windows_web_app.fh_referral_ui,
+    azurerm_windows_web_app.fh_report_api,
+    azurerm_windows_web_app.fh_sd_api,
+    azurerm_windows_web_app.fh_sd_admin_ui,
+    azurerm_windows_web_app.fh_sd_ui,
+    azurerm_windows_function_app.open_referral_function_app
+  ]
   name                        = "${var.prefix}-kv-fh-admin"
   resource_group_name         = local.resource_group_name
   location                    = var.location
@@ -1834,214 +1677,90 @@ resource "azurerm_key_vault" "kv2" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = [
-      "Create",
-      "Delete",
-      "DeleteIssuers",
-      "Get",
-      "GetIssuers",
-      "Import",
-      "List",
-      "ListIssuers",
-      "ManageContacts",
-      "ManageIssuers",
-      "SetIssuers",
-      "Update",
-      "Purge",
-    ]
-
-    key_permissions = [
-      "Backup",
-      "Create",
-      "Decrypt",
-      "Delete",
-      "Encrypt",
-      "Get",
-      "Import",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Sign",
-      "UnwrapKey",
-      "Update",
-      "Verify",
-      "WrapKey",
-      "Release",
-      "Rotate",
-      "GetRotationPolicy",
-      "SetRotationPolicy",
-    ]
-
-    secret_permissions = [
-      "Backup",
-      "Delete",
-      "Get",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Set",
-    ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_referral_api.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_referral_dashboard_ui.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.open_referral_mock_api_web_app.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_notification_api.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_idam_api.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_idam_maintenance_ui.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_referral_ui.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_report_api.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_sd_api.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_sd_admin_ui.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_web_app.fh_sd_ui.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
+  }
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_windows_function_app.open_referral_function_app.identity.0.principal_id
+    secret_permissions = local.app_secret_permissions
   }
   tags = local.tags
 }
@@ -2059,232 +1778,40 @@ resource "azurerm_key_vault" "kv3" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_web_app.fh_referral_dashboard_ui.identity.0.principal_id
-    key_permissions = [
-      "Get",
-      "List",
-      "UnwrapKey"
-    ]
+    key_permissions = local.app_key_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_web_app.fh_referral_ui.identity.0.principal_id
-    key_permissions = [
-      "Get",
-      "List",
-      "UnwrapKey"
-    ]
+    key_permissions = local.app_key_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = [
-      "Create",
-      "Delete",
-      "DeleteIssuers",
-      "Get",
-      "GetIssuers",
-      "Import",
-      "List",
-      "ListIssuers",
-      "ManageContacts",
-      "ManageIssuers",
-      "SetIssuers",
-      "Update",
-      "Purge",
-    ]
-
-    key_permissions = [
-      "Backup",
-      "Create",
-      "Decrypt",
-      "Delete",
-      "Encrypt",
-      "Get",
-      "Import",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Sign",
-      "UnwrapKey",
-      "Update",
-      "Verify",
-      "WrapKey",
-      "Release",
-      "Rotate",
-      "GetRotationPolicy",
-      "SetRotationPolicy",
-    ]
-
-    secret_permissions = [
-      "Backup",
-      "Delete",
-      "Get",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Set",
-    ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   tags = local.tags
 }
@@ -2320,214 +1847,30 @@ resource "azurerm_key_vault" "kv4" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = [
-      "Create",
-      "Delete",
-      "DeleteIssuers",
-      "Get",
-      "GetIssuers",
-      "Import",
-      "List",
-      "ListIssuers",
-      "ManageContacts",
-      "ManageIssuers",
-      "SetIssuers",
-      "Update",
-      "Purge",
-    ]
-
-    key_permissions = [
-      "Backup",
-      "Create",
-      "Decrypt",
-      "Delete",
-      "Encrypt",
-      "Get",
-      "Import",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Sign",
-      "UnwrapKey",
-      "Update",
-      "Verify",
-      "WrapKey",
-      "Release",
-      "Rotate",
-      "GetRotationPolicy",
-      "SetRotationPolicy",
-    ]
-
-    secret_permissions = [
-      "Backup",
-      "Delete",
-      "Get",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Set",
-    ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   tags = local.tags
 }
@@ -2545,280 +1888,45 @@ resource "azurerm_key_vault" "kv5" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_web_app.fh_sd_admin_ui.identity.0.principal_id
-    key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-          ]
+    key_permissions = local.referral_app_key_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_web_app.fh_referral_dashboard_ui.identity.0.principal_id
-    key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-          ]
+    key_permissions = local.referral_app_key_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_web_app.fh_referral_ui.identity.0.principal_id
-    key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-          ]
+    key_permissions = local.referral_app_key_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = [
-      "Create",
-      "Delete",
-      "DeleteIssuers",
-      "Get",
-      "GetIssuers",
-      "Import",
-      "List",
-      "ListIssuers",
-      "ManageContacts",
-      "ManageIssuers",
-      "SetIssuers",
-      "Update",
-      "Purge",
-    ]
-
-    key_permissions = [
-      "Backup",
-      "Create",
-      "Decrypt",
-      "Delete",
-      "Encrypt",
-      "Get",
-      "Import",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Sign",
-      "UnwrapKey",
-      "Update",
-      "Verify",
-      "WrapKey",
-      "Release",
-      "Rotate",
-      "GetRotationPolicy",
-      "SetRotationPolicy",
-    ]
-
-    secret_permissions = [
-      "Backup",
-      "Delete",
-      "Get",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Set",
-    ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   tags = local.tags
 }
@@ -2836,223 +1944,31 @@ resource "azurerm_key_vault" "kv6" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = [
-            "Create",
-            "Delete",
-            "DeleteIssuers",
-            "Get",
-            "GetIssuers",
-            "Import",
-            "List",
-            "ListIssuers",
-            "ManageContacts",
-            "ManageIssuers",
-            "SetIssuers",
-            "Update",
-            "Purge",
-          ]
-
-          key_permissions = [
-            "Backup",
-            "Create",
-            "Decrypt",
-            "Delete",
-            "Encrypt",
-            "Get",
-            "Import",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Sign",
-            "UnwrapKey",
-            "Update",
-            "Verify",
-            "WrapKey",
-            "Release",
-            "Rotate",
-            "GetRotationPolicy",
-            "SetRotationPolicy",
-          ]
-
-          secret_permissions = [
-            "Backup",
-            "Delete",
-            "Get",
-            "List",
-            "Purge",
-            "Recover",
-            "Restore",
-            "Set",
-          ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = [
-      "Create",
-      "Delete",
-      "DeleteIssuers",
-      "Get",
-      "GetIssuers",
-      "Import",
-      "List",
-      "ListIssuers",
-      "ManageContacts",
-      "ManageIssuers",
-      "SetIssuers",
-      "Update",
-      "Purge",
-    ]
-
-    key_permissions = [
-      "Backup",
-      "Create",
-      "Decrypt",
-      "Delete",
-      "Encrypt",
-      "Get",
-      "Import",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Sign",
-      "UnwrapKey",
-      "Update",
-      "Verify",
-      "WrapKey",
-      "Release",
-      "Rotate",
-      "GetRotationPolicy",
-      "SetRotationPolicy",
-    ]
-
-    secret_permissions = [
-      "Backup",
-      "Delete",
-      "Get",
-      "List",
-      "Purge",
-      "Recover",
-      "Restore",
-      "Set",
-    ]
+    certificate_permissions = local.principal_certificate_permissions
+    key_permissions = local.principal_key_permissions
+    secret_permissions = local.principal_secret_permissions
   }
-  tags = local.tags
-}
-
-# Log Analytics Workspace - App Services
-resource "azurerm_log_analytics_workspace" "app_services" {
-  name                = "${var.prefix}-la-as-familyhubs"
-  resource_group_name = local.resource_group_name
-  location            = var.location
   tags = local.tags
 }
 
@@ -4074,7 +2990,7 @@ resource "azurerm_monitor_action_group" "email_grp" {
 resource "azurerm_monitor_metric_alert" "cpu_alert01" {
   name                  = "${var.prefix}-fh-cpu-alert-referral-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_referral_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT30M"
   frequency             = "PT5M"
@@ -4094,7 +3010,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert01" {
 resource "azurerm_monitor_metric_alert" "cpu_alert02" {
   name                  = "${var.prefix}-fh-cpu-alert-sd-api"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_api_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4114,7 +3030,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert02" {
 resource "azurerm_monitor_metric_alert" "cpu_alert03" {
   name                  = "${var.prefix}-fh-cpu-alert-sd-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4134,7 +3050,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert03" {
 resource "azurerm_monitor_metric_alert" "cpu_alert04" {
   name                  = "${var.prefix}-fh-cpu-alert-sd-admin-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_admin_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "CPU-Utilization is greater than 75%"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4154,7 +3070,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert04" {
 resource "azurerm_monitor_metric_alert" "response-01" {
   name                  = "${var.prefix}-fh-response-alert-referral-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_referral_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4174,7 +3090,7 @@ resource "azurerm_monitor_metric_alert" "response-01" {
 resource "azurerm_monitor_metric_alert" "response-02" {
   name                  = "${var.prefix}-fh-response-alert-sd-api"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_api_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4194,7 +3110,7 @@ resource "azurerm_monitor_metric_alert" "response-02" {
 resource "azurerm_monitor_metric_alert" "response-03" {
   name                  = "${var.prefix}-fh-response-alert-sd-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4214,7 +3130,7 @@ resource "azurerm_monitor_metric_alert" "response-03" {
 resource "azurerm_monitor_metric_alert" "response-04" {
   name                  = "${var.prefix}-fh-response-alert-sd-admin-ui"
   resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_insights.fh_sd_admin_ui_app_insights.id]
+  scopes                = [azurerm_application_insights.app_insights.id]
   description           = "Response Time alert has reached the threshold"
   window_size           = "PT15M"
   frequency             = "PT5M"  
@@ -4346,6 +3262,9 @@ resource "azurerm_monitor_metric_alert" "failedalt-03" {
 }
 
 # Create Defender Protection for App Services
+# Note: We only want to manage this on the initial resources created in each subscription as this happens at subscription level
+# hence the count block
+# This ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-906 will handle removing this
 resource "azurerm_security_center_subscription_pricing" "app_services" {
   tier = var.defender_app_services_tier
   resource_type = "AppServices"

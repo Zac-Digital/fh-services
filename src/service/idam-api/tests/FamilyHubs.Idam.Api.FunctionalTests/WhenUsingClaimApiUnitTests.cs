@@ -10,20 +10,13 @@ namespace FamilyHubs.Idam.Api.FunctionalTests;
 [Collection("Sequential")]
 public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
 {
-    private const string _controller = "AccountClaims";
+    private const string Controller = "AccountClaims";
 
     [Fact]
     public async Task ThenTheClaimIsRetrieved()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         //  Arrange
-        var request = CreateGetRequest($"{_controller}/GetAccountClaimsByEmail?email={TestDataProvider.AccountEmail}");
+        var request = CreateGetRequest($"{Controller}/GetAccountClaimsByEmail?email={TestDataProvider.AccountEmail}");
 
         //  Act
         using var response = await Client.SendAsync(request);
@@ -59,13 +52,6 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheClaimIsCreated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         //  Arrange
         var requestContent = new AddClaimCommand
         {
@@ -73,7 +59,7 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
             Name = "ClaimName1",
             Value = "ClaimValue2"
         };
-        var request = CreatePostRequest($"{_controller}/AddClaim", requestContent, RoleTypes.DfeAdmin);
+        var request = CreatePostRequest($"{Controller}/AddClaim", requestContent, RoleTypes.DfeAdmin);
 
         //  Act
         using var response = await Client.SendAsync(request);
@@ -90,13 +76,6 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheClaimIsUpdated()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         //  Arrange
         var requestContent = new
         {
@@ -104,7 +83,7 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
             Name = "ClaimNameUpdated",
             Value = "ClaimValueUpdated"
         };
-        var request = CreatePutRequest($"{_controller}/UpdateClaim", requestContent,RoleTypes.DfeAdmin);
+        var request = CreatePutRequest($"{Controller}/UpdateClaim", requestContent,RoleTypes.DfeAdmin);
 
         //  Act
         using var response = await Client.SendAsync(request);
@@ -121,20 +100,13 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenTheClaimIsDeleted()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         //  Arrange
         var requestContent = new
         {
             AccountId = 1,
             Name = "ClaimName"
         };
-        var request = CreateDeleteRequest($"{_controller}/DeleteClaim", requestContent, RoleTypes.DfeAdmin);
+        var request = CreateDeleteRequest($"{Controller}/DeleteClaim", requestContent, RoleTypes.DfeAdmin);
 
         //  Act
         using var response = await Client.SendAsync(request);
@@ -151,16 +123,9 @@ public class WhenUsingClaimApiUnitTests : BaseWhenUsingApiUnitTests
     [Fact]
     public async Task ThenAllTheClaimsAreDeleted()
     {
-        if (!IsRunningLocally() || Client == null)
-        {
-            // Skip the test if not running locally
-            Assert.True(true, "Test skipped because it is not running locally.");
-            return;
-        }
-
         //  Arrange
         var requestContent = new { accountId = 1 };
-        var request = CreateDeleteRequest($"{_controller}/DeleteAllClaims", requestContent, RoleTypes.DfeAdmin);
+        var request = CreateDeleteRequest($"{Controller}/DeleteAllClaims", requestContent, RoleTypes.DfeAdmin);
 
         //  Act
         using var response = await Client.SendAsync(request);

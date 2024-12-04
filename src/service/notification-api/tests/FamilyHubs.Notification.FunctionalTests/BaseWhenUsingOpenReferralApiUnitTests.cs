@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using FamilyHubs.Notification.Api;
 using FamilyHubs.Notification.Api.Contracts;
 using FamilyHubs.Notification.Core;
 using FamilyHubs.Notification.Data.Entities;
@@ -7,111 +6,79 @@ using FamilyHubs.Notification.Data.Repository;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Notify.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace FamilyHubs.Notification.FunctionalTests;
 
-#pragma warning disable S3881
 public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
 {
-    protected readonly HttpClient? Client;
-    protected readonly CustomWebApplicationFactory? _webAppFactory;
-    private bool _disposed;
-    protected readonly JwtSecurityToken? _token;
-    protected string? _emailRecipient;
-    protected Dictionary<string, string>? _templates;
-    private readonly bool _initSuccessful;
-    private readonly IConfiguration? _configuration;
+    protected readonly HttpClient Client;
+    private readonly CustomWebApplicationFactory? _webAppFactory;
+    protected readonly JwtSecurityToken? Token;
+    protected readonly string? EmailRecipient;
+    protected readonly Dictionary<string, string>? Templates;
 
     protected BaseWhenUsingOpenReferralApiUnitTests()
     {
-        _disposed = false;
+        var configBuilder = new ConfigurationBuilder();
+        ConfigSetup(configBuilder);
+        var conf = configBuilder.Build();
 
-        try
+        EmailRecipient = conf.GetValue<string>("EmailRecipient") ?? string.Empty;
+
+        string[] keys = { "ProfessionalAcceptRequest", "ProfessionalDecineRequest", "ProfessionalSentRequest", "VcsNewRequest" };
+
+        Templates = new Dictionary<string, string>();
+        foreach (string templatekey in keys)
         {
-            var config = new ConfigurationBuilder()
-                .AddUserSecrets<Program>()
-                 .AddEnvironmentVariables()
-                 .Build();
+            var value = conf.GetValue<string>(templatekey);
+            if (value != null)
+                Templates[templatekey] = value;
+        }
 
-            _configuration = config;
-
-            _emailRecipient = config.GetValue<string>("EmailRecipient") ?? string.Empty;
-
-            string[] keys = { "ProfessionalAcceptRequest", "ProfessionalDecineRequest", "ProfessionalSentRequest", "VcsNewRequest" };
-
-            _templates = new Dictionary<string, string>();
-            foreach (string templatekey in keys)
+        var jti = Guid.NewGuid().ToString();
+        var key = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(conf["GovUkOidcConfiguration:BearerTokenSigningKey"]!));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+        Token = new JwtSecurityToken(
+            claims: new List<Claim>
             {
-                var value = config.GetValue<string>(templatekey);
-                if (value != null)
-                    _templates[templatekey] = value;
-            }
+                new("sub", conf["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
+                new("jti", jti),
+                new(ClaimTypes.Role, "Professional")
+            },
+            signingCredentials: creds,
+            expires: DateTime.UtcNow.AddMinutes(5)
+            );
 
+        _webAppFactory = new CustomWebApplicationFactory(ConfigSetup);
+        _webAppFactory.SetupTestDatabaseAndSeedData();
 
-            var jti = Guid.NewGuid().ToString();
-            var key = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(config["GovUkOidcConfiguration:BearerTokenSigningKey"]!));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-            _token = new JwtSecurityToken(
-                claims: new List<Claim>
-                   {
-                    new Claim("sub", config["GovUkOidcConfiguration:Oidc:ClientId"] ?? ""),
-                    new Claim("jti", jti),
-                    new Claim(ClaimTypes.Role, "Professional")
-
-                   },
-                signingCredentials: creds,
-                expires: DateTime.UtcNow.AddMinutes(5)
-                );
-
-            _webAppFactory = new CustomWebApplicationFactory();
-            _webAppFactory.SetupTestDatabaseAndSeedData();
-
-            Client = _webAppFactory.CreateDefaultClient();
-            Client.BaseAddress = new Uri("https://localhost:7073/");
-
-            _initSuccessful = true;
-        }
-        catch
-        {
-            _initSuccessful = false;
-        }
-        
+        Client = _webAppFactory.CreateDefaultClient();
+        Client.BaseAddress = new Uri("https://localhost:7073/");
     }
+    
+    private static void ConfigSetup(IConfigurationBuilder builder) =>
+        builder.AddInMemoryCollection(new Dictionary<string, string?>
+        {
+            { "GovUkOidcConfiguration:BearerTokenSigningKey", "StubPrivateKey123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+            { "Crypto:DbEncryptionKey", "188,7,221,249,250,101,147,86,47,246,21,252,145,56,161,150,195,184,64,43,55,0,196,200,98,220,95,186,225,8,224,75" },
+            { "Crypto:DbEncryptionIVKey", "34,26,215,81,137,34,109,107,236,206,253,62,115,38,65,112" }
+        });
 
     protected virtual void Dispose(bool disposing)
     {
-        // Cleanup
-        if (!_disposed &&  disposing)
-        {
-            Dispose();
-        }
-        _disposed = true;
-    }
-
-    public void Dispose()
-    {
-        if (!_initSuccessful)
-        {
-            return;
-        }
-
         using var scope = _webAppFactory!.Services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         context.Database.EnsureDeleted();
 
-        if (Client != null)
-        {
-            Client.Dispose();
-        }
+        Client.Dispose();
+        _webAppFactory?.Dispose();
+    }
 
-        if (_webAppFactory != null)
-        {
-            _webAppFactory.Dispose();
-        }
-
+    public void Dispose()
+    {
+        Dispose(true);
         GC.SuppressFinalize(this);
     }
 
@@ -190,33 +157,4 @@ public abstract class BaseWhenUsingOpenReferralApiUnitTests : IDisposable
             },
         };
     }
-
-    protected bool IsRunningLocally()
-    {
-
-        if (!_initSuccessful || _configuration == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            string localMachineName = _configuration["LocalSettings:MachineName"] ?? string.Empty;
-
-            if (!string.IsNullOrEmpty(localMachineName))
-            {
-                return Environment.MachineName.Equals(localMachineName, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-        catch
-        {
-            return false;
-        }
-
-        // Fallback to a default check if User Secrets file or machine name is not specified
-        // For example, you can add additional checks or default behavior here
-        return false;
-    }
 }
-
-#pragma warning restore S3881
