@@ -2807,6 +2807,7 @@ resource "azurerm_storage_blob" "blob_appgw_referral_ui_error502" {
   type                   				= "Block"
   content_type           				= "text/html"
   source                 				= "${var.appgw_errorpage_path_referral_ui}/error502.html"
+  content_md5                           = filemd5("${var.appgw_errorpage_path_referral_ui}/error502.html")
 }
 
 resource "azurerm_storage_blob" "blob_appgw_referral_ui_error403" {
