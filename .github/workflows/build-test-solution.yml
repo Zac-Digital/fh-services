@@ -74,8 +74,9 @@ jobs:
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml \
-          /d:sonar.coverage.exclusions=**/*.json,**/*.sql,**/*.js,**/*.ts,**/wwwroot/**,**/*.scss \
+          /d:sonar.coverage.exclusions=**/*.json,**/*.sql,**/*.js,**/*.ts,**/*.scss,**/wwwroot/** \
           /d:sonar.scanner.skipJreProvisioning=true \
+          /d:sonar.dotnet.excludeTestProjects=true
 
       - name: Restore Solution
         shell: bash
