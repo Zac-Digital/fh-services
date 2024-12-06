@@ -76,3 +76,4 @@ jobs:
       working_directory: ${{ matrix.working_directory }}
       dotnet_version: ${{ vars.DOTNET_VERSION_V8 }}
       job_name: ${{ matrix.job_name }}
+    secrets: inherit
