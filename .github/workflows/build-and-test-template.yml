@@ -60,7 +60,12 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Install SonarCloud Scanner
+        shell: bash
         run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Install DotNet Coverage
+        shell: bash
+        run: dotnet tool install --global dotnet-coverage
 
       - name: Install & Configure Spatialite
         if: ${{ inputs.working_directory == 'service/service-directory-api' || inputs.working_directory == 'service/referral-api' }}
@@ -71,6 +76,7 @@ jobs:
           sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
 
       - name: Start SonarCloud Scanner
+        shell: bash
         run: |
           dotnet-sonarscanner begin \
           /k:"DFE-Digital_fh-services" \
@@ -78,7 +84,8 @@ jobs:
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml \
-          /d:sonar.coverage.exclusions=**.js,**.html,**/wwwroot/**, \
+          /d:sonar.coverage.exclusions=**.js,**.html,**/wwwroot/** \
+          /d:sonar.scanner.skipJreProvisioning=true \
           /d:sonar.scanner.scanAll=false
 
       - name: Restore Project
@@ -95,9 +102,11 @@ jobs:
         run: dotnet test --configuration Release --verbosity minimal --collect:"XPlat Code Coverage" --no-restore --no-build
 
       - name: Merge Test Results
+        shell: bash
         run: dotnet-coverage merge -f xml -o "coverage.xml" -s "coverage.settings.xml" -r coverage.cobertura.xml
 
       - name: End SonarCloud Scanner
+        shell: bash
         run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
 #      - name: Generate Report
