@@ -25,6 +25,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           ref: ${{ github.ref }}
 
       - name: Setup .NET ${{ inputs.dotnet_version }}
@@ -32,17 +33,34 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
-      - name: Install Report Tool
-        shell: bash
-        run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
+      # SonarCloud Scanner
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "microsoft"
+          java-version: "21"
 
-      - name: Package Cache
+#      - name: Install Report Tool
+#        shell: bash
+#        run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
+
+      - name: NuGet Package Cache
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
+
+      - name: SonarCloud Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Install SonarCloud Scanner
+        run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Install & Configure Spatialite
         if: ${{ inputs.working_directory == 'service/service-directory-api' || inputs.working_directory == 'service/referral-api' }}
@@ -51,6 +69,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
           sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
+
+      - name: Start SonarCloud Scanner
+        run: |
+          dotnet-sonarscanner begin \
+          /k:"DFE-Digital_fh-services" \
+          /o:"dfe-digital" \
+          /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
+          /d:sonar.host.url="https://sonarcloud.io" \
+          /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml \
+          /d:sonar.coverage.exclusions=**.js,**.html,**/wwwroot/**, \
+          /d:sonar.scanner.scanAll=false
 
       - name: Restore Project
         shell: bash
@@ -62,16 +91,23 @@ jobs:
 
       - name: Test Project
         shell: bash
-        run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" --verbosity minimal --no-restore --no-build
+#        run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" --verbosity minimal --no-restore --no-build
+        run: dotnet test --configuration Release --verbosity minimal --collect:"XPlat Code Coverage" --no-restore --no-build
 
-      - name: Generate Report
-        if: always()
-        shell: bash
-        run: |-
-          if find ./tests -name "*.trx" -print -quit | grep -q .; 
-          then
-            liquid --inputs "File=**/*test-results.trx" --output-file results.md --title "${{ inputs.job_name }}"
-            cat results.md >> $GITHUB_STEP_SUMMARY
-           else
-            echo "Skipping - No tests found in this project."
-           fi
+      - name: Merge Test Results
+        run: dotnet-coverage merge -f xml -o "coverage.xml" -s "coverage.settings.xml" -r coverage.cobertura.xml
+
+      - name: End SonarCloud Scanner
+        run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+#      - name: Generate Report
+#        if: always()
+#        shell: bash
+#        run: |-
+#          if find ./tests -name "*.trx" -print -quit | grep -q .;
+#          then
+#            liquid --inputs "File=**/*test-results.trx" --output-file results.md --title "${{ inputs.job_name }}"
+#            cat results.md >> $GITHUB_STEP_SUMMARY
+#           else
+#            echo "Skipping - No tests found in this project."
+#           fi
