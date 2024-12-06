@@ -1,26 +1,24 @@
-name: Build & Test Template
+name: Build & Test Solution
 
 on:
-  workflow_call:
-    inputs:
-      working_directory:
-        required: true
-        type: string
-      dotnet_version:
-        required: true
-        type: string
-      job_name:
-        required: true
-        type: string
+  push:
+    branches: ["main", "release-*"]
+  pull_request:
+    paths:
+      - '.github/workflows/build-test-solution.yml'
+      - 'src/**'
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
 
 jobs:
-  build_and_test:
-    name: Build Project & Run Tests
-    runs-on: 'ubuntu-22.04'
+  build-test:
+    name: Build & Test Solution
+    runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: src/${{ inputs.working_directory }}
-
+        working-directory: 'src/'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -28,21 +26,17 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}
 
-      - name: Setup .NET ${{ inputs.dotnet_version }}
+      - name: Setup .NET ${{ vars.DOTNET_VERSION_V8 }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ inputs.dotnet_version }}
+          dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
 
-      # SonarCloud Scanner
-      - name: Setup Java
+      # For SonarCloud Scanner
+      - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
           java-version: "21"
-
-#      - name: Install Report Tool
-#        shell: bash
-#        run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
 
       - name: NuGet Package Cache
         uses: actions/cache@v4
@@ -55,9 +49,9 @@ jobs:
       - name: SonarCloud Package Cache
         uses: actions/cache@v4
         with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+          path: ~/sonar/cache
+          key: ${{ runner.os }}-sonar-packages
+          restore-keys: ${{ runner.os }}-sonar-packages
 
       - name: Install SonarCloud Scanner
         shell: bash
@@ -67,11 +61,13 @@ jobs:
         shell: bash
         run: dotnet tool install --global dotnet-coverage
 
+#      - name: Install Test Coverage Tool
+#        shell: bash
+#        run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
+
       - name: Install & Configure Spatialite
-        if: ${{ inputs.working_directory == 'service/service-directory-api' || inputs.working_directory == 'service/referral-api' }}
         shell: bash
         run: |
-          sudo apt-get update
           sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
           sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
 
@@ -88,18 +84,18 @@ jobs:
           /d:sonar.scanner.skipJreProvisioning=true \
           /d:sonar.scanner.scanAll=false
 
-      - name: Restore Project
+      - name: Restore Solution
         shell: bash
         run: dotnet restore
 
-      - name: Build Project
+      - name: Build Solution
         shell: bash
         run: dotnet build --configuration Release --no-restore
 
-      - name: Test Project
+      - name: Test Solution
         shell: bash
-#        run: dotnet test --configuration Release --logger "trx;LogFileName=test-results.trx" --verbosity minimal --no-restore --no-build
-        run: dotnet test --configuration Release --verbosity minimal --collect:"XPlat Code Coverage" --no-restore --no-build
+#        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --logger "trx;LogFileName=test-results.trx" --verbosity minimal --no-restore --no-build
+        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --verbosity minimal --no-restore --no-build
 
       - name: Merge Test Results
         shell: bash
@@ -110,13 +106,7 @@ jobs:
         run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
 #      - name: Generate Report
-#        if: always()
 #        shell: bash
-#        run: |-
-#          if find ./tests -name "*.trx" -print -quit | grep -q .;
-#          then
-#            liquid --inputs "File=**/*test-results.trx" --output-file results.md --title "${{ inputs.job_name }}"
-#            cat results.md >> $GITHUB_STEP_SUMMARY
-#           else
-#            echo "Skipping - No tests found in this project."
-#           fi
+#        run: |
+#          liquid --inputs "File=**/*test-results.trx" --output-file results.md
+#          cat results.md >> $GITHUB_STEP_SUMMARY
