@@ -46,13 +46,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: SonarCloud Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/sonar/cache
-          key: ${{ runner.os }}-sonar-packages
-          restore-keys: ${{ runner.os }}-sonar-packages
-
       - name: Install SonarCloud Scanner
         shell: bash
         run: dotnet tool install --global dotnet-sonarscanner
@@ -68,6 +61,7 @@ jobs:
       - name: Install & Configure Spatialite
         shell: bash
         run: |
+          sudo apt-get update
           sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
           sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
 
@@ -95,7 +89,7 @@ jobs:
       - name: Test Solution
         shell: bash
 #        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --logger "trx;LogFileName=test-results.trx" --verbosity minimal --no-restore --no-build
-        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --verbosity minimal --no-restore --no-build
+        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --collect:"XPlat Code Coverage" --verbosity minimal --no-restore --no-build
 
       - name: Merge Test Results
         shell: bash
