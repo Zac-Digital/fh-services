@@ -74,7 +74,7 @@ jobs:
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml \
-          /d:sonar.coverage.exclusions=**/*.json,**/*.sql,**/*.js,**/*.ts,**/*.scss,**/wwwroot/** \
+          /d:sonar.coverage.exclusions=**/*.json,**/*.sql,**/*.js,**/*.ts,**/*.scss,**/wwwroot/**,**/bin/**,**/obj/**,**/node_modules/** \
           /d:sonar.scanner.skipJreProvisioning=true \
           /d:sonar.dotnet.excludeTestProjects=true \
           /d:sonar.scanner.scanAll=false
