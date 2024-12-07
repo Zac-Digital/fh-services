@@ -76,7 +76,8 @@ jobs:
           /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml \
           /d:sonar.coverage.exclusions=**/*.json,**/*.sql,**/*.js,**/*.ts,**/*.scss,**/wwwroot/** \
           /d:sonar.scanner.skipJreProvisioning=true \
-          /d:sonar.dotnet.excludeTestProjects=true
+          /d:sonar.dotnet.excludeTestProjects=true \
+          /d:sonar.scanner.scanAll=false
 
       - name: Restore Solution
         shell: bash
