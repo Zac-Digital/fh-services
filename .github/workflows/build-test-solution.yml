@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build-test:
     name: Build & Test Solution
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: 'src/'
@@ -25,6 +25,14 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ github.ref }}
+
+      - name: NuGet Package Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
       - name: Setup .NET ${{ vars.DOTNET_VERSION_V8 }}
         uses: actions/setup-dotnet@v4
@@ -37,14 +45,6 @@ jobs:
         with:
           distribution: "microsoft"
           java-version: ${{ vars.JAVA_VERSION }}
-
-      - name: NuGet Package Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
 
       - name: Install SonarCloud Scanner
         shell: bash
@@ -74,7 +74,8 @@ jobs:
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
           /d:sonar.host.url="https://sonarcloud.io" \
           /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml \
-          /d:sonar.coverage.exclusions=**/*.json,**/*.sql,**/*.js,**/*.ts,**/*.scss,**/wwwroot/**,**/bin/**,**/obj/**,**/node_modules/** \
+          /d:sonar.coverage.exclusions=**/*.json,**/*.sql,**/*.js,**/*.ts,**/*.scss,**/wwwroot/** \
+          /d:sonar.exclusions=**/*.json,**/*.sql,**/*.js,**/*.ts,**/*.scss,**/wwwroot/**,**/bin/**,**/obj/** \
           /d:sonar.scanner.skipJreProvisioning=true \
           /d:sonar.dotnet.excludeTestProjects=true \
           /d:sonar.scanner.scanAll=false
@@ -91,7 +92,7 @@ jobs:
         shell: bash
         run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage" --verbosity minimal --no-restore --no-build
 
-      - name: Merge Test Results
+      - name: Compile Test Results
         shell: bash
         run: dotnet-coverage merge **/*coverage.cobertura.xml -f xml -o "coverage.xml" -s "coverage.settings.xml"
 
@@ -99,7 +100,7 @@ jobs:
         shell: bash
         run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
-      - name: Generate Report
+      - name: Generate Test Report
         shell: bash
         run: |
           liquid --inputs "File=**/*test-results.trx" --output-file results.md
