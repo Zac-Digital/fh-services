@@ -92,7 +92,7 @@ jobs:
 
       - name: Merge Test Results
         shell: bash
-        run: dotnet-coverage merge -f xml -o "coverage.xml" -s "coverage.settings.xml" -r coverage.cobertura.xml
+        run: dotnet-coverage merge **/*coverage.cobertura.xml -f xml -o "coverage.xml" -s "coverage.settings.xml"
 
       - name: End SonarCloud Scanner
         shell: bash
