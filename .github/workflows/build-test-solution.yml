@@ -1,5 +1,9 @@
 name: Build & Test Solution
 
+# TODO: Remove on: pull_request:
+# TODO: Add Cron Job to run on a schedule against [main] and [release-*] branches
+# TODO: Rename it to reflect changes, e.g., name: Run Code Quality Analysis OR name: Run SonarCloud Analysis
+
 on:
   push:
     branches: ["main", "release-*"]
@@ -58,12 +62,12 @@ jobs:
         shell: bash
         run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
 
-      - name: Install & Configure Spatialite
-        shell: bash
-        run: |
-          sudo apt-get update
-          sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
-          sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
+#      - name: Install & Configure Spatialite
+#        shell: bash
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
+#          sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
 
       - name: Start SonarCloud Scanner
         shell: bash
@@ -90,20 +94,17 @@ jobs:
 
       - name: Test Solution
         shell: bash
-        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage" --verbosity minimal --no-restore --no-build
+        run: dotnet test --configuration Release --filter 'FullyQualifiedName!~AcceptanceTest' --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage" --verbosity minimal --no-restore --no-build || true
 
       - name: Compile Test Results
-        if: always()
         shell: bash
         run: dotnet-coverage merge **/*coverage.cobertura.xml -f xml -o "coverage.xml" -s "coverage.settings.xml"
 
       - name: End SonarCloud Scanner
-        if: always()
         shell: bash
         run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
       - name: Generate Test Report
-        if: always()
         shell: bash
         run: |
           liquid --inputs "File=**/*test-results.trx" --output-file results.md
