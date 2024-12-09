@@ -1,24 +1,16 @@
-name: Build & Test Solution
-
-# TODO: Remove on: pull_request:
-# TODO: Add Cron Job to run on a schedule against [main] and [release-*] branches
-# TODO: Rename it to reflect changes, e.g., name: Run Code Quality Analysis OR name: Run SonarCloud Analysis
+name: Run SonarCloud Analysis
 
 on:
   push:
     branches: ["main", "release-*"]
-  pull_request:
-    paths:
-      - '.github/workflows/build-test-solution.yml'
-      - 'src/**'
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
-  build-test:
-    name: Build & Test Solution
+  build-test-analyse:
+    name: Build, Test & Analyse Solution
     runs-on: ubuntu-24.04
     defaults:
       run:
