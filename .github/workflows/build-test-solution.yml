@@ -96,12 +96,36 @@ jobs:
         shell: bash
         run: dotnet-coverage merge **/*coverage.cobertura.xml -f xml -o "coverage.xml" -s "coverage.settings.xml"
 
-      - name: End SonarCloud Scanner
-        shell: bash
-        run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+#      - name: End SonarCloud Scanner
+#        shell: bash
+#        run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
       - name: Generate Test Report
         shell: bash
         run: |
           liquid --inputs "File=**/*test-results.trx" --output-file results.md
           cat results.md >> $GITHUB_STEP_SUMMARY
+
+  end-sonar-scan:
+    needs: [ build-test ]
+    name: Build & Test Solution
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Setup .NET ${{ vars.DOTNET_VERSION_V8 }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
+
+      - name: Setup Java ${{ vars.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: "microsoft"
+          java-version: ${{ vars.JAVA_VERSION }}
+
+      - name: Install SonarCloud Scanner
+        shell: bash
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: End SonarCloud Scanner
+        shell: bash
+        run: dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
