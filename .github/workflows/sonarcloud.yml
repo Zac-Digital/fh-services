@@ -3,6 +3,11 @@ name: Run SonarCloud Analysis
 on:
   push:
     branches: ["main", "release-*"]
+    paths:
+      - 'src/**'
+  pull_request:
+    paths:
+      - '.github/workflows/sonarcloud.yml' # Run it on PR only if the PR is changing this workflow specifically.
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"
