@@ -2,7 +2,6 @@
 
   <PropertyGroup>
 	  <UserSecretsId>bb382ce8-9487-4af3-bf28-cdb304dd3099</UserSecretsId>
-	  <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 	
 	  <PropertyGroup>

@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<NuGetAuditMode>direct</NuGetAuditMode>
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-        <SonarQubeExclude>true</SonarQubeExclude>
 	</PropertyGroup>
 
 	<ItemGroup>
