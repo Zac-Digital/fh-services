@@ -4,6 +4,7 @@
     <UserSecretsId>4283832e-54e8-430b-9376-815c12798e45</UserSecretsId>
 	<NuGetAuditMode>direct</NuGetAuditMode>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <ItemGroup>
