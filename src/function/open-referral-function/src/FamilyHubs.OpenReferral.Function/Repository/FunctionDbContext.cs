@@ -1,11 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
 using FamilyHubs.SharedKernel.OpenReferral.Entities;
 using FamilyHubs.SharedKernel.OpenReferral.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace FamilyHubs.OpenReferral.Function.Repository;
 
-[ExcludeFromCodeCoverage]
 public class FunctionDbContext(DbContextOptions<FunctionDbContext> options) : DbContext(options), IFunctionDbContext
 {
     private DbSet<Service> ServicesDbSet { get; init; } = null!;
