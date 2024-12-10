@@ -7,6 +7,7 @@ using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using FluentAssertions;
 using NSubstitute;
 using Xunit;
 
@@ -30,6 +31,10 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.UnitTests.Areas.VcsAdmin
         public async Task OnGet_DfeAdmin_SetsPaginatedList()
         {
             //  Arrange
+            int? pageNumber = null;
+            const string? sortBy = null;
+            const string? organisationName = null;
+
             var mockHttpContext = GetHttpContext(RoleTypes.DfeAdmin, -1);
             var organisations = GetTestOrganisations();
 
@@ -41,7 +46,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.UnitTests.Areas.VcsAdmin
             };
 
             //  Act
-            await sut.OnGet(null, null);
+            await sut.OnGet(pageNumber, sortBy, organisationName);
 
             //  Assert
             Assert.Equal(3, sut.PaginatedOrganisations.Items.Count);
@@ -51,6 +56,10 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.UnitTests.Areas.VcsAdmin
         public async Task OnGet_LaAdmin_SetsPaginatedList()
         {
             //  Arrange
+            int? pageNumber = null;
+            const string? sortBy = null;
+            const string? organisationName = null;
+
             const long organisationId = 1;
             var mockHttpContext = GetHttpContext(RoleTypes.LaManager, organisationId);
             var organisations = GetTestOrganisations();
@@ -63,10 +72,38 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.UnitTests.Areas.VcsAdmin
             };
 
             //  Act
-            await sut.OnGet(null, null);
+            await sut.OnGet(pageNumber, sortBy, organisationName);
 
             //  Assert
             Assert.Equal(3, sut.PaginatedOrganisations.Items.Count);
+        }
+
+        [Fact]
+        public async Task OnGet_SearchFilterOrganisationName_Returns_MatchingResults()
+        {
+            // Arrange
+            int? pageNumber = null;
+            const string? sortBy = null;
+            const string? organisationName = "OrgName 3";
+
+            HttpContext httpContext = GetHttpContext(RoleTypes.LaManager, 1);
+            List<OrganisationDto> organisations = GetTestOrganisations();
+
+            _mockServiceDirectoryClient.GetOrganisationByAssociatedOrganisation(1)
+                .Returns(Task.FromResult(organisations));
+
+            ManageOrganisationsModel pageModel =
+                new ManageOrganisationsModel(_mockServiceDirectoryClient, _mockCacheService)
+                {
+                    PageContext = { HttpContext = httpContext }
+                };
+
+            // Act
+            // Organisations are named "OrgName X" where X is the ID of the Org.
+            await pageModel.OnGet(pageNumber, sortBy, organisationName);
+
+            // Assert
+            pageModel.PaginatedOrganisations.Items.Count.Should().Be(1);
         }
 
         private static HttpContext GetHttpContext(string role, long organisationId)
