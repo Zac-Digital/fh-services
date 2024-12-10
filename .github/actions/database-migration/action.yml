@@ -48,6 +48,8 @@ runs:
       shell: pwsh
       run:  |-
         $ConnectionString = az keyvault secret show --name PIPELINE-${{ inputs.keyvault_prefix }}-ConnectionString --vault-name ${{ inputs.admin_key_vault }} --query value --output tsv
+        dotnet user-secrets set "AppConfiguration:KeyVaultIdentifier" "${{ inputs.admin_key_vault }}" --project ${{ inputs.startup_project_path }}
+        dotnet user-secrets set "AppConfiguration:KeyVaultPrefix" "${{ inputs.keyvault_prefix }}" --project ${{ inputs.startup_project_path }}
         dotnet ef database update -c ${{ inputs.db_context }} --project ${{ inputs.data_project_path }} --startup-project ${{ inputs.startup_project_path }} --connection $ConnectionString
 
     - name: Remove Azure Firewall Rule
