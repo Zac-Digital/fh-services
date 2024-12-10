@@ -161,6 +161,7 @@ We have the following environments deployed within the CIP infrastructure on Azu
 - **Development**: deployed in the Development subscription
 - **Test 1**: deployed in the Test subscription
 - **Test 2**: deployed in the Test subscription
+- **Pre-Production**: deployed in the Production subscription
 - **Production**: deployed in the Production subscription
 
 ### Networking
