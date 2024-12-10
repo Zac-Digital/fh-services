@@ -150,6 +150,15 @@ locals {
     "Verify",
     "WrapKey",
   ]
+  
+  # Database
+  database_connection_format = "Server=%s;Database=%s;Authentication=Active Directory Default;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  open_referral_mock_db_connection = format(local.database_connection_format, azurerm_mssql_server.sqlserver.fully_qualified_domain_name, "${var.prefix}-fh-open-referral-mock-db")
+  idam_db_connection = format(local.database_connection_format, azurerm_mssql_server.sqlserver.fully_qualified_domain_name, "${var.prefix}-fh-idam-db")
+  referral_db_connection = format(local.database_connection_format, azurerm_mssql_server.sqlserver.fully_qualified_domain_name, "${var.prefix}-fh-referral-db")
+  service_directory_db_connection = format(local.database_connection_format, azurerm_mssql_server.sqlserver.fully_qualified_domain_name, "${var.prefix}-fh-service-directory-db")
+  notification_db_connection = format(local.database_connection_format, azurerm_mssql_server.sqlserver.fully_qualified_domain_name, "${var.prefix}-fh-notification-db")
+  report_db_connection = format(local.database_connection_format, azurerm_mssql_server.sqlserver.fully_qualified_domain_name, "${var.prefix}-fh-report-db")
 }
 
 # Create App Service Plan
@@ -234,6 +243,8 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
     APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "IDAM-MAINTENANCE-UI"
+    "SqlServerCache:Connection"                 = local.idam_db_connection
+    "ConnectionStrings:IdamConnection"          = local.idam_db_connection
   }
   name                                          = "${var.prefix}-as-fh-idam-maintenance-ui"
   resource_group_name                           = local.resource_group_name
@@ -289,6 +300,7 @@ resource "azurerm_windows_web_app" "fh_referral_api" {
     APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "REFERRAL-API"
+    "ConnectionStrings:ReferralConnection"      = local.referral_db_connection
   }
   name                                          = "${var.prefix}-as-fh-referral-api"
   resource_group_name                           = local.resource_group_name
@@ -343,6 +355,8 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
     APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "CONNECT-UI"
+    "SqlServerCache:Connection"                 = local.referral_db_connection
+    "ConnectionStrings:SharedKernelConnection"  = local.referral_db_connection
   }
   name                                          = "${var.prefix}-as-fh-referral-ui"
   resource_group_name                           = local.resource_group_name
@@ -405,6 +419,7 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
     APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "SD-API"
+    "ConnectionStrings:ServiceDirectoryConnection" = local.service_directory_db_connection
   }
   name                                          = "${var.prefix}-as-fh-sd-api"
   resource_group_name                           = local.resource_group_name
@@ -514,6 +529,7 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
     APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "MANAGE-UI"
+    "CacheConnection"                           = local.idam_db_connection
   }
   name                                          = "${var.prefix}-as-fh-sd-admin-ui"
   resource_group_name                           = local.resource_group_name
@@ -569,6 +585,7 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
     APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "CONNECT-DASHBOARD-UI"
+    "ConnectionStrings:SharedKernelConnection"  = local.referral_db_connection
   }
   name                                          = "${var.prefix}-as-fh-ref-dash-ui"
   resource_group_name                           = local.resource_group_name
@@ -623,6 +640,7 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
     APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "IDAM-API"
+    "ConnectionStrings:IdamConnection"          = local.idam_db_connection
   }
   name                                          = "${var.prefix}-as-fh-idam-api"
   resource_group_name                           = local.resource_group_name
@@ -677,6 +695,7 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
     APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "NOTIFICATIONS-API"
+    "ConnectionStrings:NotificationConnection"  = local.notification_db_connection
   }
   name                                          = "${var.prefix}-as-fh-notification-api"
   resource_group_name                           = local.resource_group_name
@@ -731,6 +750,7 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
     APPLICATIONINSIGHTS_CONNECTION_STRING = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier" = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix" = "MOCK-HSDA-API"
+    "ConnectionStrings:HsdaMockResponsesConnection"  = local.open_referral_mock_db_connection
   }
   name = "${var.prefix}-as-fh-open-referral-mock-api"
   resource_group_name = local.resource_group_name
@@ -2011,14 +2031,20 @@ resource "azurerm_mssql_server_vulnerability_assessment" "sqlserver_db_vulnerabi
 
 # SQL Server Instance
 resource "azurerm_mssql_server" "sqlserver" {
-    name = "${var.prefix}-as-fh-sql-server"
-    resource_group_name = local.resource_group_name
-    location = var.location
-    version = "12.0"
+  name = "${var.prefix}-as-fh-sql-server"
+  resource_group_name = local.resource_group_name
+  location = var.location
+  version = "12.0"
 
-    administrator_login = var.sql_server_user
-    administrator_login_password = var.sql_server_pwd
-    tags = local.tags
+  administrator_login = var.sql_server_user
+  administrator_login_password = var.sql_server_pwd
+
+  azuread_administrator {
+    login_username = "s181-growingupwell-Delivery Team USR"
+    object_id      = var.service_principals.delivery_team_user_group_object_id
+  }
+  
+  tags = local.tags
 }
 
 resource "azurerm_mssql_server_extended_auditing_policy" "sql_server_auditing_policy" { 
@@ -2811,6 +2837,7 @@ data "azurerm_public_ip" "sd_ui_public_ip" {
 }
 
 # Storage Accounts
+
 resource "azurerm_storage_account" "storage_appgw_errorpage" {
   name                      			    = "${var.prefix}saappgwerror"
   resource_group_name       			    = local.resource_group_name
