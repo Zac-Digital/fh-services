@@ -10,6 +10,7 @@ resource "azurerm_windows_web_app" "fh_report_api" {
     APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
     "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix"           = "REPORT-API"
+    "ConnectionStrings:ReportConnection"        = local.report_db_connection
   }
   name                                          = "${var.prefix}-as-fh-report-api"
   resource_group_name                           = local.resource_group_name
@@ -95,7 +96,7 @@ resource "azurerm_private_endpoint" "reportapi" {
 
   ip_configuration {
     name                       = "${var.prefix}-as-fh-report-api"
-    private_ip_address         = "${var.private_endpoint_ip_address.report_api_ip}"
+    private_ip_address         = var.private_endpoint_ip_address.report_api_ip
     subresource_name           = "sites" 
   }
 

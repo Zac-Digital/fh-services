@@ -4,6 +4,7 @@ using FamilyHubs.SharedKernel.Identity;
 using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.ServiceDirectory.Admin.Web.Pages.Shared;
 using FamilyHubs.ServiceDirectory.Admin.Core.DistributedCache;
+using FamilyHubs.ServiceDirectory.Admin.Core.Models.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Factories;
@@ -26,6 +27,11 @@ public class Service_DetailModel : ServicePageModel
 
     public bool UserRoleCanDeleteService => RoleGroups.AdminRole.Contains(FamilyHubsUser.Role);
 
+    public bool ReadOnly => ServiceModel?.EntryPoint ==
+                            ServiceDetailEntrance.FromViewOrganisationsPage
+                            &&
+                            RoleGroups.LaManagerOrDualRole.Contains(FamilyHubsUser.Role);
+
     public Service_DetailModel(
         IRequestDistributedCache connectionRequestCache,
         IServiceDirectoryClient serviceDirectoryClient,
@@ -40,7 +46,17 @@ public class Service_DetailModel : ServicePageModel
     {
         if (Flow == JourneyFlow.Edit && ChangeFlow == null)
         {
-            return GenerateBackUrlToJourneyInitiatorPage(ServiceModel!.ServiceType!.Value);
+            var serviceType = ServiceModel?.ServiceType!.Value;
+
+            return ServiceModel?.EntryPoint switch
+            {
+                ServiceDetailEntrance.FromManageServicesPage =>
+                    $"/manage-services{(serviceType != null ? $"?serviceType={serviceType}" : "")}",
+                ServiceDetailEntrance.FromViewOrganisationsPage =>
+                    $"/VcsAdmin/ViewOrganisation/{ServiceModel.OrganisationId}",
+                _ => throw new ServiceDetailException(
+                    $"Cannot generate back button URL as the entry point to the page is unknown: {ServiceModel?.EntryPoint}")
+            };
         }
 
         ServiceJourneyPage? back = BackParam;
