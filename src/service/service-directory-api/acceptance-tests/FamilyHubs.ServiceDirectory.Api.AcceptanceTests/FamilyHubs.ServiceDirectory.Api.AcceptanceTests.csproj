@@ -20,8 +20,6 @@
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Newtonsoft.Json" />
-    <PackageReference Include="TestStack.BDDfy" />
-    <PackageReference Include="TestStack.BDDfy.Xunit" />
 
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
