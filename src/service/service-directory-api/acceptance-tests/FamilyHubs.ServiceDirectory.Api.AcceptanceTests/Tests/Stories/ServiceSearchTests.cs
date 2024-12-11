@@ -32,7 +32,7 @@ public partial class ServiceSearchTests
             _ => ThenExpectedStatusCodeReturned(HttpStatusCode.OK));
     }
     
-    [Theory]
+    [Scenario]
     [InlineData("15", "E1 2EN", "200", "3", "1")] // Invalid Search Trigger Event Type
     [InlineData("15", "E1 2EN", "200", "1", "3")] // Invalid ServiceSearchTypeId
     public async Task Service_Search_Metrics_Endpoint_Returns_Status_Code_Internal_Server_Error(
