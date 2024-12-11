@@ -1,28 +1,30 @@
-using FluentAssertions;
 using System.Net;
-using FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Configuration;
 using FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Builders.Http;
+using FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Configuration;
+using FluentAssertions;
+using LightBDD.XUnit2;
 
-namespace FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Tests.Steps;
+namespace FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Tests.Stories;
 
-public class ApiInfoSteps
+public partial class ApiInfoTests : FeatureFixture
 {
     private readonly string _baseUrl;
     private HttpResponseMessage? _lastResponse;
-
-    public ApiInfoSteps()
+    
+    public ApiInfoTests()
     {
         var config = ConfigAccessor.GetApplicationConfiguration();
         _baseUrl = config.BaseUrl;
     }
-
-    public async Task CheckTheApiInfo()
+    
+    private async Task CheckTheApiInfo()
     {
         _lastResponse = await HttpRequestFactory.Get(_baseUrl, "api/info");
     }
 
-    public void AnOkStatusCodeIsReturned()
+    private Task AnOkStatusCodeIsReturned()
     {
         _lastResponse?.StatusCode.Should().Be(HttpStatusCode.OK);
+        return Task.CompletedTask;
     }
 }

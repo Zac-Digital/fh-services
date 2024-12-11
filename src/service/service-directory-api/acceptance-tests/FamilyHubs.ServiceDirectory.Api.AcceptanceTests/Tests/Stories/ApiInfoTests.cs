@@ -1,18 +1,22 @@
-using TestStack.BDDfy;
-using Xunit;
-using FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Tests.Steps;
+using LightBDD.Framework;
+using LightBDD.Framework.Scenarios;
+using LightBDD.XUnit2;
 
 namespace FamilyHubs.ServiceDirectory.Api.AcceptanceTests.Tests.Stories;
 
-public class ApiInfoTests
+[FeatureDescription(
+    """
+    In order for the UI to call APIs
+    As a UI service
+    I want to be able to get API health status from the API
+    """)]
+public partial class ApiInfoTests
 {
-    private readonly ApiInfoSteps _steps = new();
-
-    [Fact]
-    public void Api_Info_Returned()
+    [Scenario]
+    public async Task Api_Info_Returned()
     {
-        this.When(s => _steps.CheckTheApiInfo())
-            .Then(s => _steps.AnOkStatusCodeIsReturned())
-            .BDDfy();
+        await Runner.RunScenarioAsync(
+            _ => CheckTheApiInfo(), 
+            _ => AnOkStatusCodeIsReturned());
     }
 }
