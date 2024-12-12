@@ -30,7 +30,7 @@ on:
 
 jobs:
   migrate-database:
-    name: Download Artifact & Migrate Database
+    name: Apply Migrations to Database
     runs-on: ubuntu-22.04
     environment: ${{ inputs.environment }}
     env:
