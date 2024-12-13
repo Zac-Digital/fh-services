@@ -1646,46 +1646,6 @@ resource "azurerm_monitor_diagnostic_setting" "ref_ui_gw_law_logs" {
 
 # Key Vaults, Secrets, Certs & Keys
 data "azurerm_client_config" "current" {}
-resource "azurerm_key_vault" "kv1" {
-  depends_on = [local.resource_group_name]
-  name                        = "${var.prefix}-kv-fh-general"
-  resource_group_name         = local.resource_group_name
-  location                    = var.location
-  enabled_for_disk_encryption = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
-  sku_name                    = "standard"
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  tags = local.tags
-}
 
 resource "azurerm_key_vault" "kv2" {
   depends_on = [
@@ -1708,7 +1668,7 @@ resource "azurerm_key_vault" "kv2" {
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
+  purge_protection_enabled    = true
   sku_name                    = "standard"
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -1809,7 +1769,7 @@ resource "azurerm_key_vault" "kv3" {
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
+  purge_protection_enabled    = true
   sku_name                    = "standard"
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -1870,47 +1830,6 @@ resource "azurerm_key_vault_key" "kv3k1" {
   ]
 }
 
-resource "azurerm_key_vault" "kv4" {
-  depends_on = [ local.resource_group_name]
-  name                        = "${var.prefix}-kv-fh-servdir"
-  resource_group_name         = local.resource_group_name
-  location                    = var.location
-  enabled_for_disk_encryption = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
-  sku_name                    = "standard"
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  tags = local.tags
-}
-
 resource "azurerm_key_vault" "kv5" {
   depends_on = [ local.resource_group_name]
   name                        = "${var.prefix}-kv-fh-idam"
@@ -1919,7 +1838,7 @@ resource "azurerm_key_vault" "kv5" {
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
+  purge_protection_enabled    = true
   sku_name                    = "standard"
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -1956,47 +1875,6 @@ resource "azurerm_key_vault" "kv5" {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_web_app.fh_referral_ui.identity.0.principal_id
     key_permissions = local.referral_app_key_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  tags = local.tags
-}
-
-resource "azurerm_key_vault" "kv6" {
-  depends_on = [ local.resource_group_name]
-  name                        = "${var.prefix}-kv-fh-notify"
-  resource_group_name         = local.resource_group_name
-  location                    = var.location
-  enabled_for_disk_encryption = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
-  sku_name                    = "standard"
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
