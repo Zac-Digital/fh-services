@@ -12,10 +12,10 @@ on:
         required: true
         type: string
         description: The database being updated  
-      keyvault_secret_name:
+      keyvault_db_prefix:
         required: true
         type: string
-        description: Name of the secret containing the database connection string
+        description: Key vault prefix omitting the PIPELINE- to get a connection string
       sql_file_path:
         required: true
         type: string
@@ -23,11 +23,11 @@ on:
 
 jobs:
   run-script-against-database:
-    name: Runs the SQL script against the ${{ inputs.display_name }}
+    name: Runs the SQL script against the ${{ inputs.display_name }} Database
     runs-on: windows-2022
     environment: ${{ inputs.environment }}
     env:
-      KEYVAULT_NAME: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-general
+      ADMIN_KEY_VAULT_NAME: ${{ vars.AZURE_RESOURCE_PREFIX }}-kv-fh-admin
       RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_PREFIX }}-familyhubs
       SQL_SERVER: ${{ vars.AZURE_RESOURCE_PREFIX }}-as-fh-sql-server
     steps:
@@ -59,8 +59,8 @@ jobs:
       - name: Run SQL Script PowerShell
         uses: ./.github/actions/run-sql-script
         with:
-          keyvault_name: ${{ env.KEYVAULT_NAME }}
-          keyvault_secret_name: ${{ inputs.keyvault_secret_name }}
+          admin_key_vault: ${{ env.ADMIN_KEY_VAULT_NAME }}
+          keyvault_db_prefix: ${{ inputs.keyvault_db_prefix }}
           sql_file_path: ${{ inputs.sql_file_path }}
         
       - name: Remove Azure Firewall Rule
