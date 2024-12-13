@@ -101,7 +101,7 @@ public class WhenOnGetIsCalled
         // Assert
         Assert.Equal("Vcs Admin", welcomeModel.Heading);
         Assert.Equal("Vcs organisation name", welcomeModel.CaptionText);
-        Assert.Equal("Manage services, locations and view performance data.", welcomeModel.Description);
+        Assert.Equal("Manage services and locations.", welcomeModel.Description);
     }
 
     [Theory]
