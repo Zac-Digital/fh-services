@@ -40,11 +40,6 @@ public static class StartupExtensions
         // Add services to the container.
         services.AddRazorPages();
 
-        // enable strict-transport-security header on localhost
-#if hsts_localhost
-        services.AddHsts(o => o.ExcludedHosts.Clear());
-#endif
-        services.AddHsts(o => o.ExcludedHosts.Clear());
         services.AddSingleton<IPageFilterFactory, PageFilterFactory>();
         services.AddPostcodesIoClient(configuration);
         services.AddServiceDirectoryClient(configuration);
