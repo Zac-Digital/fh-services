@@ -2816,7 +2816,7 @@ resource "azurerm_storage_account" "storage_appgw_errorpage" {
   public_network_access_enabled 		    = local.public_network_access_enabled_storage
   account_replication_type  			    = local.account_replication_type
   infrastructure_encryption_enabled 	    = local.infrastructure_encryption_enabled
-  cross_tenant_replication_enabled          = true
+  cross_tenant_replication_enabled          = false
   blob_properties {
     versioning_enabled     				    = local.versioning_enabled
     change_feed_enabled    				    = local.change_feed_enabled
@@ -2905,7 +2905,7 @@ resource "azurerm_storage_account" "storage_db_logs" {
   public_network_access_enabled = local.public_network_access_enabled_storage
   account_replication_type = local.account_replication_type
   infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
-  cross_tenant_replication_enabled   = true
+  cross_tenant_replication_enabled = false
   blob_properties {
     versioning_enabled     = local.versioning_enabled
     change_feed_enabled    = local.change_feed_enabled
@@ -2937,7 +2937,7 @@ resource "azurerm_storage_account" "connect_data_protection_keys" {
   public_network_access_enabled = local.data_protection_keys_public_network_access_enabled_storage
   account_replication_type = local.account_replication_type
   infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
-  cross_tenant_replication_enabled   = true
+  cross_tenant_replication_enabled = false
   blob_properties {
     versioning_enabled     = local.versioning_enabled
     change_feed_enabled    = local.change_feed_enabled
