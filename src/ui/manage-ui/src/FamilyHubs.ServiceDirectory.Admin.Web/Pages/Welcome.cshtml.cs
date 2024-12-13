@@ -64,7 +64,7 @@ public class WelcomeModel : HeaderPageModel
                 break;
             case RoleTypes.VcsManager:
             case RoleTypes.VcsDualRole:
-                Description = "Manage services, locations and view performance data.";
+                Description = "Manage services and locations.";
                 MenuPage = MenuPage.Vcs;
                 break;
             default:
