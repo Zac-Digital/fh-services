@@ -253,6 +253,7 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled                      = "true"
     application_stack {
       current_stack                               = var.current_stack
@@ -308,6 +309,7 @@ resource "azurerm_windows_web_app" "fh_referral_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -363,6 +365,7 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled                      = "true"
     application_stack {
       current_stack                               = var.current_stack
@@ -425,6 +428,7 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -478,6 +482,7 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled                      = "true"
     application_stack {
       current_stack                               = var.current_stack
@@ -533,6 +538,7 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled                      = "true"
     application_stack {
       current_stack                               = var.current_stack
@@ -588,6 +594,7 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -642,6 +649,7 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -696,6 +704,7 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -750,6 +759,7 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
     always_on = true
     ftps_state = "Disabled"
     health_check_path = "/"
+    health_check_eviction_time_in_min = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled = "true"
     application_stack {
       current_stack = var.current_stack
@@ -2803,9 +2813,10 @@ resource "azurerm_storage_account" "storage_appgw_errorpage" {
   account_kind              			    = local.account_kind
   access_tier               			    = local.access_tier
   min_tls_version           			    = local.min_tls_version
-  public_network_access_enabled 		  = local.public_network_access_enabled_storage
+  public_network_access_enabled 		    = local.public_network_access_enabled_storage
   account_replication_type  			    = local.account_replication_type
-  infrastructure_encryption_enabled 	= local.infrastructure_encryption_enabled
+  infrastructure_encryption_enabled 	    = local.infrastructure_encryption_enabled
+  cross_tenant_replication_enabled          = false
   blob_properties {
     versioning_enabled     				    = local.versioning_enabled
     change_feed_enabled    				    = local.change_feed_enabled
@@ -2899,6 +2910,7 @@ resource "azurerm_storage_account" "storage_db_logs" {
   public_network_access_enabled = local.public_network_access_enabled_storage
   account_replication_type = local.account_replication_type
   infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
+  cross_tenant_replication_enabled = false
   blob_properties {
     versioning_enabled     = local.versioning_enabled
     change_feed_enabled    = local.change_feed_enabled
@@ -2930,6 +2942,7 @@ resource "azurerm_storage_account" "connect_data_protection_keys" {
   public_network_access_enabled = local.data_protection_keys_public_network_access_enabled_storage
   account_replication_type = local.account_replication_type
   infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
+  cross_tenant_replication_enabled = false
   blob_properties {
     versioning_enabled     = local.versioning_enabled
     change_feed_enabled    = local.change_feed_enabled
@@ -2964,7 +2977,7 @@ resource "azurerm_subnet" "applicationgateway" {
   address_prefixes         = var.ag_address_space
   resource_group_name = local.resource_group_name
   virtual_network_name =  azurerm_virtual_network.vnet.name
-  private_endpoint_network_policies_enabled = false
+  private_endpoint_network_policies = "Disabled"
 }
 
 # Create vNET Integration Subnet
@@ -2973,7 +2986,7 @@ resource "azurerm_subnet" "vnetint" {
   address_prefixes         = var.vnetint_address_space
   resource_group_name = local.resource_group_name
   virtual_network_name =  azurerm_virtual_network.vnet.name
-  private_endpoint_network_policies_enabled = false
+  private_endpoint_network_policies = "Disabled"
   delegation {
     name = "delegation"
 
@@ -2993,7 +3006,7 @@ resource "azurerm_subnet" "pvtendpoint" {
   address_prefixes         = var.pvtendpt_address_space
   resource_group_name = local.resource_group_name
   virtual_network_name =  azurerm_virtual_network.vnet.name
-  private_endpoint_network_policies_enabled = false
+  private_endpoint_network_policies = "Disabled"
 }
 
 # Create SQL Server Subnet
@@ -3002,7 +3015,7 @@ resource "azurerm_subnet" "sqlserver" {
   address_prefixes         = var.sql_server_address_space
   resource_group_name = local.resource_group_name
   virtual_network_name =  azurerm_virtual_network.vnet.name
-  private_endpoint_network_policies_enabled = false
+  private_endpoint_network_policies = "Disabled"
 }
 
 # Email Group for alert monitoring
