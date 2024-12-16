@@ -57,11 +57,6 @@ public static class StartupExtensions
         // handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
         //services.AddHealthChecks();
 
-        // enable strict-transport-security header on localhost
-#if hsts_localhost
-        services.AddHsts(o => o.ExcludedHosts.Clear());
-#endif
-
         services.AddSiteHealthChecks(configuration);
 
         services.AddFamilyHubs(configuration);
