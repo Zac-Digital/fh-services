@@ -25,6 +25,7 @@ resource "azurerm_windows_web_app" "fh_report_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
