@@ -25,6 +25,7 @@ resource "azurerm_windows_web_app" "fh_report_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
@@ -137,4 +138,43 @@ resource "azurerm_private_dns_a_record" "sql_report_api_scm" {
   lifecycle {
     ignore_changes = [tags]
   }
+}
+
+# Storage Accounts for Report API Logging
+resource "azurerm_storage_account" "storage_rep_api_logs" {
+  name                = "${var.prefix}sarepapilogs"
+  resource_group_name = local.resource_group_name
+  location            = var.location
+  account_tier             = local.account_tier
+  account_kind             = local.account_kind
+  access_tier              = local.access_tier
+  min_tls_version          = local.min_tls_version
+  is_hns_enabled           = local.is_hns_enabled
+  public_network_access_enabled = local.public_network_access_enabled_storage
+  account_replication_type = local.account_replication_type
+  infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
+  cross_tenant_replication_enabled = false
+  blob_properties {
+    versioning_enabled     = local.versioning_enabled
+    change_feed_enabled    = local.change_feed_enabled
+    delete_retention_policy {
+      days                 = local.delete_retention_policy_days
+    }
+    container_delete_retention_policy {
+      days                 = local.container_delete_retention_policy_days
+    }
+  }
+  tags = local.tags
+}
+
+resource "azurerm_storage_container" "container_rep_api_app_logs" {
+  name                  = "${var.prefix}sarepapilogsapplogs"
+  storage_account_name  = azurerm_storage_account.storage_rep_api_logs.name
+  container_access_type = "blob"
+}
+
+resource "azurerm_storage_container" "container_rep_api_web_logs" {
+  name                  = "${var.prefix}sarepapilogswebserverlogs"
+  storage_account_name  = azurerm_storage_account.storage_rep_api_logs.name
+  container_access_type = "blob"
 }
