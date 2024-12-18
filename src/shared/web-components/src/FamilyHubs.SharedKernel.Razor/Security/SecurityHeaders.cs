@@ -59,6 +59,7 @@ public static class SecurityHeaders
                         });
 
                     builder.AddScriptSrc()
+                        .UnsafeInline()
                         .StrictDynamic()
                         .WithNonce();
 
