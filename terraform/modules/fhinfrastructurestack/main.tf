@@ -2843,6 +2843,7 @@ resource "azurerm_storage_blob" "blob_appgw_referral_ui_error502" {
   type                   				= "Block"
   content_type           				= "text/html"
   source                 				= "${var.appgw_errorpage_path_referral_ui}/error502.html"
+  content_md5                           = filemd5("${var.appgw_errorpage_path_referral_ui}/error502.html")
 }
 
 resource "azurerm_storage_blob" "blob_appgw_referral_ui_error403" {
@@ -2852,6 +2853,7 @@ resource "azurerm_storage_blob" "blob_appgw_referral_ui_error403" {
   type                   				= "Block"
   content_type           				= "text/html"
   source                 				= "${var.appgw_errorpage_path_referral_ui}/error403.html"
+  content_md5                           = filemd5("${var.appgw_errorpage_path_referral_ui}/error403.html")
 }
 
 resource "azurerm_storage_container" "container_appgw_sd_admin_ui" {
@@ -2867,6 +2869,7 @@ resource "azurerm_storage_blob" "blob_appgw_sd_admin_ui_error502" {
   type                   				= "Block"
   content_type           				= "text/html"
   source                 				= "${var.appgw_errorpage_path_sd_admin_ui}/error502.html"
+  content_md5                           = filemd5("${var.appgw_errorpage_path_sd_admin_ui}/error502.html")
 }
 
 resource "azurerm_storage_blob" "blob_appgw_sd_admin_ui_error403" {
@@ -2876,6 +2879,7 @@ resource "azurerm_storage_blob" "blob_appgw_sd_admin_ui_error403" {
   type                   				= "Block"
   content_type           				= "text/html"
   source                 				= "${var.appgw_errorpage_path_sd_admin_ui}/error403.html"
+  content_md5                           = filemd5("${var.appgw_errorpage_path_sd_admin_ui}/error403.html")
 }
 
 resource "azurerm_storage_container" "container_appgw_sd_ui" {
@@ -2891,6 +2895,7 @@ resource "azurerm_storage_blob" "blob_appgw_sd_ui_error502" {
   type                   				= "Block"
   content_type           				= "text/html"
   source                 				= "${var.appgw_errorpage_path_sd_ui}/error502.html"
+  content_md5                           = filemd5("${var.appgw_errorpage_path_sd_ui}/error502.html")
 }
 
 resource "azurerm_storage_account" "storage_db_logs" {
