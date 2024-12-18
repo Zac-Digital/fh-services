@@ -36,7 +36,6 @@ public class Program
         app.UseSwaggerUI();
         app.UseSerilogRequestLogging();
         app.UseMiddleware<ExceptionHandlingMiddleware>();
-        app.UseHttpsRedirection();
         app.UseHsts();
         app.UseAuthorization();
         app.MapFamilyHubsHealthChecks(typeof(Program).Assembly);

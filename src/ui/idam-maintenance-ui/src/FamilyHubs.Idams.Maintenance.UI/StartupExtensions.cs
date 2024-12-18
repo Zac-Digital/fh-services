@@ -308,8 +308,7 @@ public static class StartupExtensions
         app.UseMiddleware<CorrelationMiddleware>();
 
         app.UseFamilyHubs();
-
-        app.UseHttpsRedirection();
+        
         app.UseHsts();
         app.UseStaticFiles();
 

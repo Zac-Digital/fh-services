@@ -59,7 +59,6 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "HSDA Mock API V1");
 });
 
-app.UseHttpsRedirection();
 app.UseHsts();
 
 app.UseRouting();

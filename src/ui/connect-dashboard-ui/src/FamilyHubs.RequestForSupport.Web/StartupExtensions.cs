@@ -96,8 +96,7 @@ public static class StartupExtensions
         app.UseFamilyHubsDataProtection();
 
         app.UseFamilyHubs();
-
-        app.UseHttpsRedirection();
+        
         app.UseHsts();
         app.UseStaticFiles();
 
