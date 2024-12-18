@@ -222,8 +222,7 @@ public static class StartupExtensions
         app.UseSerilogRequestLogging();
 
         app.UseFamilyHubs();
-
-        app.UseHttpsRedirection();
+        
         app.UseHsts();
         app.UseStaticFiles();
 
