@@ -16,7 +16,7 @@ public class HeaderPageModel : PageModel, IFamilyHubsHeader
     }
 
     public bool ShowActionLinks => IsAuthenticatedAndTermsAccepted;
-    public bool ShowNavigationMenu => IsAuthenticatedAndTermsAccepted;
+    public bool ShowNavigationMenu => false;
 
     private bool IsAuthenticatedAndTermsAccepted =>
         User.Identity?.IsAuthenticated == true

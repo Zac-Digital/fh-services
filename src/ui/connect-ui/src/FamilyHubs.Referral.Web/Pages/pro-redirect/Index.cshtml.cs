@@ -10,12 +10,14 @@ namespace FamilyHubs.Referral.Web.Pages.pro_redirect;
 
 [Authorize]
 public class IndexModel : PageModel
-{ 
-    private readonly FamilyHubsUiOptions _familyHubsUiOptions;
+{
+    // Taking out redirect to connect dashboard for VCFS users as part of disabling.
+    // private readonly FamilyHubsUiOptions _familyHubsUiOptions;
 
     public IndexModel(IOptions<FamilyHubsUiOptions> familyHubsUiOptions)
     {
-        _familyHubsUiOptions = familyHubsUiOptions.Value;
+        // Taking out redirect to connect dashboard for VCFS users as part of disabling.
+        // _familyHubsUiOptions = familyHubsUiOptions.Value;
     }
 
     public IActionResult OnGet()
@@ -26,9 +28,11 @@ public class IndexModel : PageModel
         {
             // this case should be picked up by the middleware, but we leave it here, so that there's no way we can end up with a 403, when it should be a 401
             null or "" => "/Error/401",
-            RoleTypes.VcsProfessional or RoleTypes.VcsDualRole => _familyHubsUiOptions.Url(UrlKeys.DashboardWeb, "vcs/dashboard").ToString(),
-            RoleTypes.LaProfessional or RoleTypes.LaDualRole => "/ProfessionalReferral/Search",
-            _ => "/Error/403"
+            // Taking out redirect to connect dashboard for VCFS users as part of disabling.
+            // RoleTypes.VcsProfessional or RoleTypes.VcsDualRole => _familyHubsUiOptions.Url(UrlKeys.DashboardWeb, "vcs/dashboard").ToString(),
+            // RoleTypes.LaProfessional or RoleTypes.LaDualRole => "/ProfessionalReferral/Search",
+            // _ => "/Error/403"
+            _ => "/ProfessionalReferral/Search"
         };
 
         return Redirect(redirect);
