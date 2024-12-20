@@ -31,8 +31,8 @@ public class EmailService : IEmailService
 
     public async Task SendAccountPermissionAddedEmail(PermissionModel model)
     {
-        var tokens = new Dictionary<string, string?>
-        {                
+        var tokens = new Dictionary<string, string>
+        {
             { "ConnectFamiliesToSupportStartPage", _familyHubsUiOptions.Url(UrlKeys.ConnectWeb).ToString()  },
             { "ManageFamilySupportServicesStartPage", _familyHubsUiOptions.Url(UrlKeys.ManageWeb).ToString() }
         };
@@ -82,7 +82,7 @@ public class EmailService : IEmailService
     {
         var templateId = GetLaPermissionChangeTemplateId(notification.OldRole, notification.NewRole);
 
-        var tokens = new Dictionary<string, string?>
+        var tokens = new Dictionary<string, string>
         {                
             { "ConnectFamiliesToSupportStartPage", _familyHubsUiOptions.Url(UrlKeys.ConnectWeb).ToString()  },
             { "ManageFamilySupportServicesStartPage", _familyHubsUiOptions.Url(UrlKeys.ManageWeb).ToString() }
@@ -132,7 +132,7 @@ public class EmailService : IEmailService
     {
         var templateId = GetVcsPermissionChangeTemplateId(notification.OldRole, notification.NewRole);
 
-        var tokens = new Dictionary<string, string?>
+        var tokens = new Dictionary<string, string>
         {                
             { "ConnectFamiliesToSupportStartPage", _familyHubsUiOptions.Url(UrlKeys.ConnectWeb).ToString()  },
             { "ManageFamilySupportServicesStartPage", _familyHubsUiOptions.Url(UrlKeys.ManageWeb).ToString() }
@@ -182,7 +182,7 @@ public class EmailService : IEmailService
     {
         var templateId = GetEmailUpdatedTemplateId(model.Role);
         
-        var tokens = new Dictionary<string, string?>
+        var tokens = new Dictionary<string, string>
         {                
             { "ConnectFamiliesToSupportStartPage", _familyHubsUiOptions.Url(UrlKeys.ConnectWeb).ToString()  },
             { "ManageFamilySupportServicesStartPage", _familyHubsUiOptions.Url(UrlKeys.ManageWeb).ToString() } 
@@ -232,7 +232,7 @@ public class EmailService : IEmailService
     {
         var templateId = GetAccountDeletedTemplateId(model.Role);
 
-        var tokens = new Dictionary<string, string?>
+        var tokens = new Dictionary<string, string>
         {                
             { "ConnectFamiliesToSupportStartPage", _familyHubsUiOptions.Url(UrlKeys.ConnectWeb).ToString()  },
             { "ManageFamilySupportServicesStartPage", _familyHubsUiOptions.Url(UrlKeys.ManageWeb).ToString() }

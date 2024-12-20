@@ -190,9 +190,9 @@ public class VcsRequestDetailsPageModel : HeaderPageModel
         int requestNumber,
         string serviceName)
     {
-        var viewConnectionRequestUrl = Url.PageLink("RequestDetails", values: new { id = requestNumber });
+        var viewConnectionRequestUrl = Url.PageLink("RequestDetails", values: new { id = requestNumber }) ?? "";
 
-        var emailTokens = new Dictionary<string, string?>
+        var emailTokens = new Dictionary<string, string>
         {
             { "RequestNumber", requestNumber.ToString("X6") },
             { "ServiceName", serviceName },
@@ -205,4 +205,3 @@ public class VcsRequestDetailsPageModel : HeaderPageModel
         await _notifications.SendEmailsAsync(new List<string> { emailAddress }, templateId, emailTokens);
     }
 }
-

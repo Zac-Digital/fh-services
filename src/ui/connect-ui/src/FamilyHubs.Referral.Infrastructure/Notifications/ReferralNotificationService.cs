@@ -105,7 +105,7 @@ public class ReferralNotificationService : IReferralNotificationService
         var viewConnectionRequestUrl =
             _familyHubsUiOptions.Url(UrlKeys.DashboardWeb, $"{path}/RequestDetails?id={requestNumber}").ToString();
 
-        var emailTokens = new Dictionary<string, string?>
+        var emailTokens = new Dictionary<string, string>
         {
             { "RequestNumber", requestNumber.ToString("X6") },
             { "ServiceName", serviceName },
