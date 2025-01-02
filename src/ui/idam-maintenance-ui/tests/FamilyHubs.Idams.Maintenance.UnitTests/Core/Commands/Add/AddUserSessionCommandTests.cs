@@ -13,7 +13,7 @@ namespace FamilyHubs.Idams.Maintenance.UnitTests.Core.Commands.Add;
 public class AddUserSessionCommandTests
 {
     [Fact]
-    public async Task serSessionExists_Handle_ThrowsAlreadyExistsException()
+    public async Task UserSessionExists_Handle_ThrowsAlreadyExistsException()
     {
         var userSessionList = TestUserSessions.GetListOfTestUserSessions();
         var repository = Substitute.For<IRepository>();
