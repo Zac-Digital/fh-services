@@ -26,7 +26,7 @@ public class AddUserSessionCommandTests
     }
     
     [Fact]
-    public async Task serSessionDoesNotExist_Handle_AddsAccountAndSaves()
+    public async Task UserSessionDoesNotExist_Handle_AddsAccountAndSaves()
     {
         var userSessionList = TestUserSessions.GetListOfTestUserSessions();
         var repository = Substitute.For<IRepository>();

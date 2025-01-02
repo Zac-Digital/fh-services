@@ -9,7 +9,7 @@ using System.Text;
 
 namespace FamilyHubs.Idams.Maintenance.Core.Commands;
 
-[ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage] // May not be used anymore. See ticket https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1179
 public class SendEventGridMessageCommand : IRequest<string>
 {
     public SendEventGridMessageCommand(Account account)
@@ -19,7 +19,7 @@ public class SendEventGridMessageCommand : IRequest<string>
     public Account Account { get; set; }
 }
 
-[ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage] // May not be used anymore. See ticket https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1179
 public class SendEventGridMessageCommandHandler : IRequestHandler<SendEventGridMessageCommand, string>
 {
     private readonly IConfiguration _configuration;

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Text.Json;
-// ReSharper disable StaticMemberInGenericType
 
 namespace FamilyHubs.Idams.Maintenance.Core.ApiClient;
 
@@ -8,7 +7,7 @@ public abstract class ApiService<TApiService>
 {
     protected readonly HttpClient Client;
     protected readonly ILogger<TApiService> Logger;
-    private static readonly JsonSerializerOptions CaseInsensitive = new() { PropertyNameCaseInsensitive = true };
+    private readonly JsonSerializerOptions _caseInsensitive = new() { PropertyNameCaseInsensitive = true };
 
     protected ApiService(HttpClient client, ILogger<TApiService> logger)
     {
@@ -23,7 +22,7 @@ public abstract class ApiService<TApiService>
             var contents = cancellationToken is not null 
                 ? await response.Content.ReadAsStringAsync(cancellationToken.Value) 
                 : await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(contents, CaseInsensitive);
+            return JsonSerializer.Deserialize<T>(contents, _caseInsensitive);
         }
         catch (Exception exception)
         {
