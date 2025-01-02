@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using FamilyHubs.Idams.Maintenance.Data.Entities;
+﻿using FamilyHubs.Idams.Maintenance.Data.Entities;
 using FamilyHubs.Idams.Maintenance.Data.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.DataEncryption.Providers;
@@ -8,7 +7,6 @@ using System.Reflection;
 
 namespace FamilyHubs.Idams.Maintenance.Data.Repository;
 
-[ExcludeFromCodeCoverage]
 public class ApplicationDbContext : DbContext
 {
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;

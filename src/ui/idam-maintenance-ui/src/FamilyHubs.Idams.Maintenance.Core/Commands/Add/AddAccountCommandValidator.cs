@@ -1,12 +1,11 @@
-using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
 
 namespace FamilyHubs.Idams.Maintenance.Core.Commands.Add;
 
-// ReSharper disable once UnusedType.Global - Mediator
-[ExcludeFromCodeCoverage]
 public class AddAccountCommandValidator : AbstractValidator<AddAccountCommand>
 {
+    public const int NameMaxLength = 255;
+    
     public AddAccountCommandValidator()
     {
         RuleFor(v => v.Email)
@@ -14,7 +13,7 @@ public class AddAccountCommandValidator : AbstractValidator<AddAccountCommand>
             .NotEmpty();
 
         RuleFor(v => v.Name)
-            .MaximumLength(255)
+            .MaximumLength(NameMaxLength)
             .NotNull()
             .NotEmpty();
     }
