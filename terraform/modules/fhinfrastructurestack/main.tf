@@ -12,7 +12,6 @@ locals {
   appgw_listener_http_referral_ui_name     = "fh-listener-http-referral-ui"
   appgw_listener_https_referral_ui_name    = "fh-listener-https-referral-ui"
   appgw_redirect_referral_ui_name = "fh-redirect-referral-ui"
-  appgw_routing_https_referral_ui_name = "fh-routing-https-referral-ui"
   
   appgw_probe_sd_admin_ui_name = "fh-health-probe-sd-admin-ui"
   appgw_rewrites_sd_admin_ui_name = "fh-appgw-sd-admin-ui-rewrites"
@@ -1134,12 +1133,12 @@ resource "azurerm_application_gateway" "ref_ui_app_gateway" {
   }
 
   request_routing_rule {
-    name                       = "${var.prefix}-${local.appgw_routing_https_referral_ui_name}"
+    name                       = "${var.prefix}-fh-routing-https-referral-ui"
     backend_address_pool_name  = "${var.prefix}-${local.appgw_bep_referral_ui_name}"
     backend_http_settings_name = "${var.prefix}-${local.appgw_backend_referral_ui_name}"
     http_listener_name         = "${var.prefix}-${local.appgw_listener_https_referral_ui_name}"
     priority                   = 1
-    rule_type                  = "PathBasedRouting"
+    rule_type                  = "Basic"
     rewrite_rule_set_name      = "${var.prefix}-${local.appgw_rewrites_referral_ui_name}"
   }
 
