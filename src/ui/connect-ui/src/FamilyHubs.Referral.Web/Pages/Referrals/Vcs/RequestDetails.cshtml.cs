@@ -10,6 +10,7 @@ using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
+using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -29,7 +30,7 @@ public enum AcceptDecline
 }
 
 [Authorize(Roles = $"{RoleGroups.VcsProfessionalOrDualRole}")]
-public class VcsRequestDetailsPageModel : HeaderPageModel
+public class VcsRequestDetailsPageModel : HeaderPageModel, IHasErrorStatePageModel
 {
     private readonly IReferralDashboardClientService _referralClientService;
     private readonly INotifications _notifications;

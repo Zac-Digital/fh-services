@@ -6,6 +6,7 @@ using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.ReferralUi.UnitTests.Helpers;
+using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Routing.Tree;
 using NSubstitute;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Dashboard;
@@ -26,6 +26,8 @@ public class WhenUsingTheVcsDashboard
 
     public WhenUsingTheVcsDashboard()
     {
+        var mockOrganisationClientService = Substitute.For<IOrganisationClientService>();
+        
         var mockReferralClientService = Substitute.For<IReferralDashboardClientService>();
 
         List<ReferralDto> list = [TestHelpers.GetMockReferralDto()];
@@ -38,6 +40,8 @@ public class WhenUsingTheVcsDashboard
             Arg.Any<CancellationToken>()).Returns(pageList);
 
         var identity = new GenericIdentity("");
+        
+        identity.AddClaim(new Claim(FamilyHubsClaimTypes.OrganisationId, "1"));
         
         var principle = new ClaimsPrincipal(identity);
         var httpContext = new DefaultHttpContext
@@ -61,7 +65,7 @@ public class WhenUsingTheVcsDashboard
             ViewData = viewData
         };
 
-        _pageModel = new DashboardModel(mockReferralClientService)
+        _pageModel = new DashboardModel(mockReferralClientService, mockOrganisationClientService)
         {
             PageContext = pageContext,
             Url = urlHelper

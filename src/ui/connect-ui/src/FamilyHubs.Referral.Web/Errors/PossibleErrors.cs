@@ -24,5 +24,8 @@ public static class PossibleErrors
         .Add(ErrorId.VcsRequestDetails_SelectAResponse, "You must select a response")
         .Add(ErrorId.VcsRequestDetails_EnterReasonForDeclining, "Enter a reason for declining")
         .Add(ErrorId.VcsRequestDetails_ReasonForDecliningTooLong, "Reason for declining must be 500 characters or less")
+        .Add(ErrorId.NoPostcode, "You need to enter a postcode")
+        .Add(ErrorId.InvalidPostcode, "Your postcode is not recognised - try another one")
+        .Add(ErrorId.PostcodeNotFound, "You need to enter a valid postcode")
         ;
 }

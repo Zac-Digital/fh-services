@@ -19,7 +19,13 @@ public enum ErrorId
     ChangeName_EnterAName,
     VcsRequestDetails_SelectAResponse,
     VcsRequestDetails_EnterReasonForDeclining,
-    VcsRequestDetails_ReasonForDecliningTooLong
+    VcsRequestDetails_ReasonForDecliningTooLong,
+    NoPostcode,
+    InvalidPostcode,
+    PostcodeNotFound,
+    Letter_AddressLine1,
+    Letter_TownOrCity,
+    Letter_Postcode,
 }
 
 public enum AdHocErrorId
