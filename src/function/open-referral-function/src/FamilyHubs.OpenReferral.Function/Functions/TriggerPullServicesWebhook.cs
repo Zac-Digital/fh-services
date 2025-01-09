@@ -38,6 +38,31 @@ public class TriggerPullServicesWebhook(
 
         return req.CreateResponse(HttpStatusCode.OK);
     }
+    
+    [Function("TestLaIngestion")]
+    public async Task<HttpResponseData> TestDataIngestionFromFile([HttpTrigger(AuthorizationLevel.Function, "POST")] HttpRequestData req)
+    {
+        logger.LogInformation("[ApiReceiver] HTTP Trigger Function Started");
+        
+        // For this prototype only, you will need to create a JSON array of single services and save it to '/data/single_services_as_list.json'
+        // You can get the data via internation spec API then get the id's and call '/services/{id}', copy and paste to file.
+        // Somerset for example is 'https://api-openreferral.azure-api.net/somersetcouncil/services'
+        var service = new DataFileService(); // Only used in this prototype. Production code will call LA API's
+        var services = service.GetSingleServicesFromListFile("single_services_as_list.json"); // Only used in this prototype. Production code will call LA API's
+
+        try
+        {
+            await ClearDatabase();
+            await UpdateDatabase(services);
+        }
+        catch (Exception e)
+        {
+            logger.LogError("{exception}", e.Message);
+            return req.CreateResponse(HttpStatusCode.InternalServerError);
+        }
+
+        return req.CreateResponse(HttpStatusCode.OK);
+    }
 
     /*
      * As clearing the Db is a temporary measure until we implement checking for existing IDs, I think this is OK even

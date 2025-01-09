@@ -29,6 +29,9 @@
         <None Update="appsettings.json">
           <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="data\single_services_as_list.json">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
     <ItemGroup>
         <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext"/>
