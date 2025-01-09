@@ -6,22 +6,23 @@ namespace FamilyHubs.SharedKernel.OpenReferral.Repository;
 
 public static class OpenReferralDbContextExtension
 {
-    private const string Deds = "deds";
-    private const string DedsMeta = "dedsmeta";
+    private const string Schema = "deds";
+    private const string Metadata = "dedsmeta";
 
     private static void CreateTableMapping(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Accessibility>(entity =>
         {
-            entity.ToTable("Accessibilities", schema: Deds);
+            entity.ToTable("Accessibilities", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Url).HasMaxLength(2048);
+            
         });
 
         modelBuilder.Entity<Address>(entity =>
         {
-            entity.ToTable("Addresses", schema: Deds);
+            entity.ToTable("Addresses", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Attention).HasMaxLength(255);
@@ -33,59 +34,65 @@ public static class OpenReferralDbContextExtension
             entity.Property(e => e.PostalCode).HasMaxLength(255);
             entity.Property(e => e.Country).HasMaxLength(255);
             entity.Property(e => e.AddressType).HasMaxLength(255);
+            
         });
 
         modelBuilder.Entity<Attribute>(entity =>
         {
-            entity.ToTable("Attributes", schema: Deds);
+            entity.ToTable("Attributes", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.LinkType).HasMaxLength(50);
             entity.Property(e => e.LinkEntity).HasMaxLength(50);
             entity.Property(e => e.Value).HasMaxLength(50);
+            
         });
 
         modelBuilder.Entity<Contact>(entity =>
         {
-            entity.ToTable("Contacts", schema: Deds);
+            entity.ToTable("Contacts", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Title).HasMaxLength(255);
             entity.Property(e => e.Department).HasMaxLength(255);
             entity.Property(e => e.Email).HasMaxLength(255);
+            
         });
 
         modelBuilder.Entity<CostOption>(entity =>
         {
-            entity.ToTable("CostOptions", schema: Deds);
+            entity.ToTable("CostOptions", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.ValidFrom).HasColumnType("date");
             entity.Property(e => e.ValidTo).HasColumnType("date");
             entity.Property(e => e.Currency).HasColumnType("nchar(3)");
             entity.Property(e => e.Amount).HasPrecision(18, 2);
+            
         });
 
         modelBuilder.Entity<Funding>(entity =>
         {
-            entity.ToTable("Fundings", schema: Deds);
+            entity.ToTable("Fundings", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            
         });
 
         modelBuilder.Entity<Language>(entity =>
         {
-            entity.ToTable("Languages", schema: Deds);
+            entity.ToTable("Languages", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Code).HasMaxLength(50);
+            
         });
 
         modelBuilder.Entity<Location>(entity =>
         {
-            entity.ToTable("Locations", schema: Deds);
+            entity.ToTable("Locations", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.LocationType).HasMaxLength(255);
@@ -97,11 +104,12 @@ public static class OpenReferralDbContextExtension
             entity.Property(e => e.Longitude).HasPrecision(18, 2);
             entity.Property(e => e.ExternalIdentifier).HasMaxLength(255);
             entity.Property(e => e.ExternalIdentifierType).HasMaxLength(255);
+            
         });
 
         modelBuilder.Entity<Metadata>(entity =>
         {
-            entity.ToTable("Metadata", schema: Deds);
+            entity.ToTable("Metadata", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.ResourceType).HasMaxLength(50);
@@ -109,21 +117,23 @@ public static class OpenReferralDbContextExtension
             entity.Property(e => e.LastActionType).HasMaxLength(255);
             entity.Property(e => e.FieldName).HasMaxLength(50);
             entity.Property(e => e.UpdatedBy).HasMaxLength(255);
+            
         });
 
         modelBuilder.Entity<MetaTableDescription>(entity =>
         {
-            entity.ToTable("MetaTableDescriptions", schema: Deds);
+            entity.ToTable("MetaTableDescriptions", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Language).HasMaxLength(50);
             entity.Property(e => e.CharacterSet).HasMaxLength(50);
+            
         });
 
         modelBuilder.Entity<Organization>(entity =>
         {
-            entity.ToTable("Organizations", schema: Deds);
+            entity.ToTable("Organizations", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
@@ -133,47 +143,52 @@ public static class OpenReferralDbContextExtension
             entity.Property(e => e.LegalStatus).HasMaxLength(255);
             entity.Property(e => e.Logo).HasMaxLength(2048);
             entity.Property(e => e.Uri).HasMaxLength(2048);
+            
         });
 
         modelBuilder.Entity<OrganizationIdentifier>(entity =>
         {
-            entity.ToTable("OrganizationIdentifiers", schema: Deds);
+            entity.ToTable("OrganizationIdentifiers", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.IdentifierScheme).HasMaxLength(50);
             entity.Property(e => e.IdentifierType).HasMaxLength(50);
             entity.Property(e => e.Identifier).HasMaxLength(255);
+            
         });
 
         modelBuilder.Entity<Phone>(entity =>
         {
-            entity.ToTable("Phones", schema: Deds);
+            entity.ToTable("Phones", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Number).HasMaxLength(50);
             entity.Property(e => e.Type).HasMaxLength(50);
+            
         });
 
         modelBuilder.Entity<Program>(entity =>
         {
-            entity.ToTable("Programs", schema: Deds);
+            entity.ToTable("Programs", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.AlternateName).HasMaxLength(255);
+            
         });
 
         modelBuilder.Entity<RequiredDocument>(entity =>
         {
-            entity.ToTable("RequiredDocuments", schema: Deds);
+            entity.ToTable("RequiredDocuments", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Uri).HasMaxLength(2048);
+            
         });
 
         modelBuilder.Entity<Schedule>(entity =>
         {
-            entity.ToTable("Schedules", schema: Deds);
+            entity.ToTable("Schedules", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.ValidFrom).HasColumnType("date");
@@ -189,11 +204,12 @@ public static class OpenReferralDbContextExtension
             entity.Property(e => e.OpensAt).HasColumnType("time");
             entity.Property(e => e.ClosesAt).HasColumnType("time");
             entity.Property(e => e.ScheduleLink).HasMaxLength(2048);
+            
         });
 
         modelBuilder.Entity<Service>(entity =>
         {
-            entity.ToTable("Services", schema: Deds);
+            entity.ToTable("Services", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
@@ -207,39 +223,43 @@ public static class OpenReferralDbContextExtension
             entity.Property(e => e.AssurerEmail).HasMaxLength(255);
             entity.Property(e => e.Alert).HasMaxLength(255);
             entity.Property(e => e.LastModified).HasPrecision(7);
+            
         });
 
         modelBuilder.Entity<ServiceArea>(entity =>
         {
-            entity.ToTable("ServiceAreas", schema: Deds);
+            entity.ToTable("ServiceAreas", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Extent).HasMaxLength(255);
             entity.Property(e => e.ExtentType).HasMaxLength(255);
             entity.Property(e => e.Uri).HasMaxLength(2048);
+            
         });
 
         modelBuilder.Entity<ServiceAtLocation>(entity =>
         {
-            entity.ToTable("ServiceAtLocations", schema: Deds);
+            entity.ToTable("ServiceAtLocations", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            
         });
 
         modelBuilder.Entity<Taxonomy>(entity =>
         {
-            entity.ToTable("Taxonomies", schema: Deds);
+            entity.ToTable("Taxonomies", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Uri).HasMaxLength(2048);
             entity.Property(e => e.Version).HasMaxLength(50);
+            
         });
 
         modelBuilder.Entity<TaxonomyTerm>(entity =>
         {
-            entity.ToTable("TaxonomyTerms", schema: Deds);
+            entity.ToTable("TaxonomyTerms", schema: Schema);
             entity.HasKey(e => e.Id).IsClustered(false);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Code).HasMaxLength(255);
@@ -247,6 +267,7 @@ public static class OpenReferralDbContextExtension
             entity.Property(e => e.Taxonomy).HasMaxLength(255);
             entity.Property(e => e.Language).HasMaxLength(50);
             entity.Property(e => e.TermUri).HasMaxLength(2048);
+            
         });
     }
 
@@ -258,7 +279,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Accessibility) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Address>()
@@ -267,7 +288,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Address) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Contact>()
@@ -276,7 +297,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Contact) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<CostOption>()
@@ -285,7 +306,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(CostOption) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Funding>()
@@ -294,7 +315,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Funding) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Language>()
@@ -303,7 +324,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Language) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Location>()
@@ -312,7 +333,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Location) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<MetaTableDescription>()
@@ -321,7 +342,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(MetaTableDescription) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Organization>()
@@ -330,7 +351,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Organization) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<OrganizationIdentifier>()
@@ -339,7 +360,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(OrganizationIdentifier) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Phone>()
@@ -348,7 +369,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Phone) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Program>()
@@ -357,7 +378,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Program) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<RequiredDocument>()
@@ -366,7 +387,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(RequiredDocument) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Schedule>()
@@ -375,7 +396,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Schedule) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Service>()
@@ -384,7 +405,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(Service) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<ServiceArea>()
@@ -393,7 +414,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(ServiceArea) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<ServiceAtLocation>()
@@ -402,7 +423,7 @@ public static class OpenReferralDbContextExtension
                 e =>
                 {
                     e.Metadata.SetTableName(nameof(ServiceAtLocation) + nameof(Attribute) + "s");
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetSchema(Metadata);
                 });
     }
 
@@ -413,8 +434,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Accessibility) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Accessibility) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Address>()
@@ -422,8 +443,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Address) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Address) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Attribute>()
@@ -431,8 +452,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Attribute) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Attribute) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Contact>()
@@ -440,8 +461,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Contact) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Contact) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<CostOption>()
@@ -449,8 +470,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(CostOption) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(CostOption) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Funding>()
@@ -458,8 +479,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Funding) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Funding) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Language>()
@@ -467,8 +488,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Language) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Language) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Location>()
@@ -476,8 +497,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Location) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Location) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<MetaTableDescription>()
@@ -485,8 +506,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(MetaTableDescription) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(MetaTableDescription) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Organization>()
@@ -494,8 +515,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Organization) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Organization) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<OrganizationIdentifier>()
@@ -503,8 +524,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(OrganizationIdentifier) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(OrganizationIdentifier) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Phone>()
@@ -512,8 +533,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Phone) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Phone) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Program>()
@@ -521,8 +542,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Program) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Program) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<RequiredDocument>()
@@ -530,8 +551,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(RequiredDocument) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(RequiredDocument) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Schedule>()
@@ -539,8 +560,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Schedule) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Schedule) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Service>()
@@ -548,8 +569,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Service) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Service) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<ServiceArea>()
@@ -557,8 +578,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(ServiceArea) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(ServiceArea) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<ServiceAtLocation>()
@@ -566,8 +587,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(ServiceAtLocation) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(ServiceAtLocation) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<Taxonomy>()
@@ -575,8 +596,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(Taxonomy) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(Taxonomy) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
 
         modelBuilder.Entity<TaxonomyTerm>()
@@ -584,8 +605,8 @@ public static class OpenReferralDbContextExtension
             .WithMany().UsingEntity<Dictionary<string, object>>(
                 e =>
                 {
-                    e.Metadata.SetTableName(nameof(TaxonomyTerm) + nameof(Metadata));
-                    e.Metadata.SetSchema(DedsMeta);
+                    e.Metadata.SetTableName(nameof(TaxonomyTerm) + nameof(Entities.Metadata));
+                    e.Metadata.SetSchema(Metadata);
                 });
     }
 

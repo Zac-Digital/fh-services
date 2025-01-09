@@ -1,11 +1,12 @@
 using System.Text.Json.Serialization;
+using FamilyHubs.SharedKernel.OpenReferral.Converters;
 
 namespace FamilyHubs.SharedKernel.OpenReferral.Entities;
 
 public class Location : BaseHsdsEntity
 {
     [JsonPropertyName("location_type")]
-    public required string LocationType { get; init; }
+    public required string LocationType { get; init; } // TODO: Does not exist in old UK schema so we will need a modified Schema
 
     [JsonPropertyName("url")]
     public string? Url { get; init; }
@@ -26,9 +27,11 @@ public class Location : BaseHsdsEntity
     public string? Transportation { get; init; }
 
     [JsonPropertyName("latitude")]
+    [JsonConverter(typeof(StringToNullableTypeConverter))]
     public decimal? Latitude { get; init; }
 
     [JsonPropertyName("longitude")]
+    [JsonConverter(typeof(StringToNullableTypeConverter))]
     public decimal? Longitude { get; init; }
 
     [JsonPropertyName("external_identifier")]
