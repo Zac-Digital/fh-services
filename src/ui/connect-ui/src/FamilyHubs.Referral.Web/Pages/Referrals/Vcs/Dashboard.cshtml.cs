@@ -9,6 +9,7 @@ using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using FamilyHubs.SharedKernel.Identity.Models;
 
 namespace FamilyHubs.Referral.Web.Pages.Referrals.Vcs;
 
@@ -26,26 +27,38 @@ public class DashboardModel : HeaderPageModel, IDashboard<ReferralDto>
     };
 
     private readonly IReferralDashboardClientService _referralClientService;
+    private readonly IOrganisationClientService _organisationClientService;
 
     string IDashboard<ReferralDto>.TableClass => "app-vcs-dashboard";
 
     public IPagination Pagination { get; set; }
-
+    public string Title => "My requests";
+    public string SubTitle => "Connection requests received";
+    public string? CaptionText { get; set; }
     public const int PageSize = 20;
 
-    private IEnumerable<IColumnHeader> _columnHeaders = Enumerable.Empty<IColumnHeader>();
-    private IEnumerable<IRow<ReferralDto>> _rows = Enumerable.Empty<IRow<ReferralDto>>();
+    private IEnumerable<IColumnHeader> _columnHeaders = [];
+    private IEnumerable<IRow<ReferralDto>> _rows = [];
     IEnumerable<IColumnHeader> IDashboard<ReferralDto>.ColumnHeaders => _columnHeaders;
     IEnumerable<IRow<ReferralDto>> IDashboard<ReferralDto>.Rows => _rows;
 
     public DashboardModel(
-        IReferralDashboardClientService referralClientService) : base(false, true)
+        IReferralDashboardClientService referralClientService,
+        IOrganisationClientService organisationClientService) : base(false, true)
     {
         _referralClientService = referralClientService;
+        _organisationClientService = organisationClientService;
         Pagination = IPagination.DontShow;
     }
 
-    public async Task OnGet(string? columnName, SortOrder sort, int? currentPage = 1)
+    public async Task OnGet(string? columnName, SortOrder sort, int currentPage = 1)
+    {
+        var user = HttpContext.GetFamilyHubsUser();
+        await SetPaginationResults(user, columnName, sort, currentPage);
+        CaptionText = await GetOrganisationName(user);
+    }
+
+    private async Task SetPaginationResults(FamilyHubsUser user, string? columnName, SortOrder sort, int currentPage)
     {
         if (columnName == null|| !Enum.TryParse(columnName, true, out Column column))
         {
@@ -58,13 +71,24 @@ public class DashboardModel : HeaderPageModel, IDashboard<ReferralDto>
 
         _columnHeaders = new ColumnHeaderFactory(_columnImmutables, vcsDashboardUrl, column.ToString(), sort)
             .CreateAll();
-
-        var user = HttpContext.GetFamilyHubsUser();
-        var searchResults = await GetConnections(user.OrganisationId, currentPage!.Value, column, sort);
+        
+        var searchResults = await GetConnections(user.OrganisationId, currentPage, column, sort);
 
         _rows = searchResults.Items.Select(r => new VcsDashboardRow(r, Url.Page("RequestDetails", values: new { id = r.Id })));
 
-        Pagination = new LargeSetLinkPagination<Column>(vcsDashboardUrl, searchResults.TotalPages, currentPage.Value, column, sort);
+        Pagination = new LargeSetLinkPagination<Column>(vcsDashboardUrl, searchResults.TotalPages, currentPage, column, sort);
+    }
+    
+    private async Task<string> GetOrganisationName(FamilyHubsUser familyHubsUser)
+    {
+        var parseOrgId = long.TryParse(familyHubsUser.OrganisationId, out var organisationId);
+        if (!parseOrgId)
+        {
+            throw new InvalidOperationException($"Could not parse OrganisationId from claim: {organisationId}");
+        }
+
+        var org = await _organisationClientService.GetOrganisationDtoByIdAsync(organisationId);
+        return org?.Name ?? "";
     }
 
     private async Task<PaginatedList<ReferralDto>> GetConnections(
