@@ -191,7 +191,7 @@ public class ServicePageModel<TInput> : HeaderPageModel, IHasErrorStatePageModel
 
     private ServiceJourneyPage NextJourneyPage()
     {
-        if (ChangeFlow != null)
+        if (ChangeFlow is not null)
         {
             if (ChangeFlow == ServiceJourneyChangeFlow.SinglePage)
             {
@@ -280,7 +280,7 @@ public class ServicePageModel<TInput> : HeaderPageModel, IHasErrorStatePageModel
     {
         ServiceJourneyPage? backUrlPage = null;
 
-        if (ChangeFlow != null)
+        if (ChangeFlow is not null)
         {
             if (ChangeFlow == ServiceJourneyChangeFlow.SinglePage ||
                 (ChangeFlow == ServiceJourneyChangeFlow.LocalAuthority && CurrentPage == ServiceJourneyPage.Local_Authority))
@@ -377,8 +377,8 @@ public class ServicePageModel<TInput> : HeaderPageModel, IHasErrorStatePageModel
     {
         ServiceModel!.SetUserInput(userInput);
 
-        if (ChangeFlow != null) queryCollection.Add("change", ChangeFlow.Value.ToUrlString());
-        if (BackParam != null) queryCollection.Add("back", BackParam.Value.GetSlug());
+        if (ChangeFlow is not null) queryCollection.Add("change", ChangeFlow.Value.ToUrlString());
+        if (BackParam is not null) queryCollection.Add("back", BackParam.Value.GetSlug());
 
         var redo = Request.Query["redo"].ToString();
         if (!string.IsNullOrEmpty(redo)) queryCollection.Add("redo", redo);
