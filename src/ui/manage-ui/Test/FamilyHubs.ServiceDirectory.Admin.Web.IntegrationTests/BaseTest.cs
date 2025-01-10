@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using AngleSharp;
+using AngleSharp.Html;
 using AngleSharp.Html.Dom;
 using AngleSharp.Io;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -62,6 +63,52 @@ public abstract class BaseTest : IDisposable
     protected async Task<IHtmlDocument> Navigate(string uri, Action<HttpResponseMessage>? responseValidation = null)
     {
         var response = await _client.GetAsync(uri);
+        responseValidation?.Invoke(response);
+        return await GetDocumentAsync(response);
+    }
+
+    protected IEnumerable<KeyValuePair<string, string>> GenerateFormValues(IHtmlFormElement formElement)
+    {
+        var formValues = new List<KeyValuePair<string, string>>();
+        foreach (var element in formElement.Elements)
+        {
+            switch (element)
+            {
+                case IHtmlInputElement inputElement:
+                    if (inputElement.Type is not ("checkbox" or "radio") || inputElement.IsChecked)
+                    {
+                        formValues.Add(KeyValuePair.Create(inputElement.Name!, inputElement.Value));
+                    }
+                    break;
+                case IHtmlTextAreaElement textAreaElement:
+                    formValues.Add(KeyValuePair.Create(textAreaElement.Name!, textAreaElement.Value));
+                    break;
+                case IHtmlSelectElement selectElement:
+                    formValues.Add(KeyValuePair.Create(selectElement.Name!, selectElement.SelectedOptions.Last().Value));
+                    break;
+                default:
+                    Console.WriteLine(element.ClassName);
+                    break;
+            }
+        }
+
+        return formValues;
+    }
+
+    protected IEnumerable<KeyValuePair<string, string>> GenerateFormValues(IHtmlButtonElement buttonElement)
+    {
+        var dict = GenerateFormValues(buttonElement.Form!);
+        return buttonElement.Name is not null ? dict.Append(KeyValuePair.Create(buttonElement.Name!, buttonElement.Value)) : dict;
+    }
+
+    protected async Task<IHtmlDocument> SubmitForm(IHtmlButtonElement buttonElement)
+    {
+        return await SubmitForm(buttonElement.Form!.Action, GenerateFormValues(buttonElement));
+    }
+
+    protected async Task<IHtmlDocument> SubmitForm(string uri, IEnumerable<KeyValuePair<string,string>> formData, Action<HttpResponseMessage>? responseValidation = null)
+    {
+        var response = await _client.PostAsync(uri, new FormUrlEncodedContent(formData));
         responseValidation?.Invoke(response);
         return await GetDocumentAsync(response);
     }

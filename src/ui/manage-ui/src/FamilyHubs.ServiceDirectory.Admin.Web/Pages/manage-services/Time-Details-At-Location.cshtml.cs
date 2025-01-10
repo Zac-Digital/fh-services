@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Admin.Core.Models.ServiceJourney;
 using FamilyHubs.ServiceDirectory.Admin.Web.Journeys;
 using FamilyHubs.ServiceDirectory.Admin.Web.Pages.Shared;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.Pages.manage_services;
 
@@ -51,16 +52,13 @@ public class Time_Details_At_LocationModel : ServicePageModel<TimeDetailsUserInp
 
     private ServiceLocationModel GetLocation()
     {
-        string locationIdString = Request.Query["locationId"].ToString();
-        if (locationIdString != "")
-        {
-            // user has asked to redo a specific location
-            long locationId = long.Parse(locationIdString);
+        var locationIdString = Request.Query["locationId"].ToString();
+        if (locationIdString == "") return ServiceModel!.CurrentLocation!;
 
-            return ServiceModel!.GetLocation(locationId);
-        }
+        // user has asked to redo a specific location
+        var locationId = long.Parse(locationIdString);
 
-        return ServiceModel!.CurrentLocation!;
+        return ServiceModel!.GetLocation(locationId);
     }
 
     private void SetTitle(ServiceLocationModel location)
@@ -70,19 +68,26 @@ public class Time_Details_At_LocationModel : ServicePageModel<TimeDetailsUserInp
 
     protected override IActionResult OnPostWithModel()
     {
+        var locationIdString = Request.Query["locationId"].ToString();
+        var queryCollection = new Dictionary<string, StringValues>();
+        if (locationIdString != "")
+        {
+            queryCollection.Add("locationId", locationIdString);
+        }
+
         if (!UserInput.HasDetails.HasValue)
         {
-            return RedirectToSelf(UserInput, ErrorId.Time_Details__MissingSelection);
+            return RedirectToSelf(UserInput, queryCollection, ErrorId.Time_Details__MissingSelection);
         }
 
         if (UserInput.HasDetails == true && string.IsNullOrWhiteSpace(UserInput.Description))
         {
-            return RedirectToSelf(UserInput, ErrorId.Time_Details_At_Location__MissingText);
+            return RedirectToSelf(UserInput, queryCollection, ErrorId.Time_Details_At_Location__MissingText);
         }
 
         if (UserInput.HasDetails == true && !string.IsNullOrWhiteSpace(UserInput.Description) && UserInput.Description.Replace("\r", "").Length > MaxLength)
         {
-            return RedirectToSelf(UserInput, ErrorId.Time_Details_At_Location__DescriptionTooLong);
+            return RedirectToSelf(UserInput, queryCollection, ErrorId.Time_Details_At_Location__DescriptionTooLong);
         }
 
         var location = GetLocation();
@@ -100,7 +105,7 @@ public class Time_Details_At_LocationModel : ServicePageModel<TimeDetailsUserInp
             location.TimeDescription = null;
         }
 
-        string redo = Request.Query["redo"].ToString();
+        var redo = Request.Query["redo"].ToString();
         if (redo != "")
         {
             return Redirect(GetServicePageUrl(ServiceJourneyPageExtensions.FromSlug(redo)));
