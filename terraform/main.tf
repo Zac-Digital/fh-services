@@ -64,5 +64,6 @@ module "fhinfrastructurestack" {
   connect_domain = var.connect_domain
   manage_domain = var.manage_domain
   find_domain = var.find_domain
+  log_retention_in_days = var.log_retention_in_days
   pvt_endp_report_stg_api_ip_address = var.pvt_endp_report_stg_api_ip_address
 }
