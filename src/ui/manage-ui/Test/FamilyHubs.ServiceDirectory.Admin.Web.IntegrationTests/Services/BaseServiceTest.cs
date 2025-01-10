@@ -16,6 +16,7 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.IntegrationTests.Services;
 public class BaseServiceTest : BaseTest
 {
     private readonly IDistributedCache _cache = Substitute.For<IDistributedCache>();
+    private readonly ITaxonomyService _taxonomyService = Substitute.For<ITaxonomyService>();
     private readonly IServiceDirectoryClient _serviceDirectoryClient = Substitute.For<IServiceDirectoryClient>();
     private readonly ServiceModel<object> _fakeService = new()
     {
@@ -35,7 +36,7 @@ public class BaseServiceTest : BaseTest
         HasCost = false,
         HasTimeDetails = false,
         LanguageCodes = ["en"],
-        SelectedSubCategories = [20],
+        SelectedSubCategories = [2],
         HowUse = [AttendingType.InPerson, AttendingType.Online],
         Locations = [
             new ServiceLocationModel(1, ["Address First Line", "Address Second Line"], "Location 1", false, "Location description")
@@ -68,6 +69,11 @@ public class BaseServiceTest : BaseTest
         var fakeServiceBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(_fakeService));
         _cache.GetAsync(Arg.Any<string>()).Returns(fakeServiceBytes);
 
+        _taxonomyService.GetCategories(Arg.Any<CancellationToken>())
+            .Returns([
+                KeyValuePair.Create(new TaxonomyDto { Id = 1, Name = "Base Taxonomy" }, new List<TaxonomyDto> { new() { Id = 2, Name = "Sub Taxonomy" } })
+            ]);
+
         _serviceDirectoryClient.GetOrganisations(Arg.Any<CancellationToken>(), Arg.Any<OrganisationType?>(), Arg.Any<long?>())
             .Returns(_organisationDetails.OfType<OrganisationDto>().ToList());
         foreach (var organisationDto in _organisationDetails)
@@ -87,5 +93,6 @@ public class BaseServiceTest : BaseTest
     {
         services.AddSingleton(_cache);
         services.AddSingleton(_serviceDirectoryClient);
+        services.AddSingleton(_taxonomyService);
     }
 }

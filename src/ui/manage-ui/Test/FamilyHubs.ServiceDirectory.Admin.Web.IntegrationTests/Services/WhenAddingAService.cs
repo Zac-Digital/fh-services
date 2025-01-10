@@ -1,17 +1,5 @@
-using System.Text;
-using System.Text.Json;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
-using FamilyHubs.ServiceDirectory.Admin.Core.ApiClient;
-using FamilyHubs.ServiceDirectory.Admin.Core.Models;
-using FamilyHubs.ServiceDirectory.Admin.Core.Models.ServiceJourney;
-using FamilyHubs.ServiceDirectory.Shared.Dto;
-using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.ServiceDirectory.Shared.Models;
-using FamilyHubs.SharedKernel.Razor.Dashboard;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
-using NSubstitute;
 using Xunit;
 
 namespace FamilyHubs.ServiceDirectory.Admin.Web.IntegrationTests.Services;

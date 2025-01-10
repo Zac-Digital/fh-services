@@ -30,12 +30,6 @@ public class Time_Details_At_LocationModel : ServicePageModel<TimeDetailsUserInp
 
     protected override void OnGetWithModel()
     {
-        string redo = Request.Query["redo"].ToString();
-        if (redo != "")
-        {
-            BackUrl = $"{ServiceJourneyPageExtensions.GetPagePath(redo)}?flow={Flow}";
-        }
-
         var location = GetLocation();
         SetTitle(location);
 
@@ -64,6 +58,12 @@ public class Time_Details_At_LocationModel : ServicePageModel<TimeDetailsUserInp
     private void SetTitle(ServiceLocationModel location)
     {
         Title = $"Can you provide more details about using this service at {location.DisplayName}?";
+
+        var redo = Request.Query["redo"].ToString();
+        if (!string.IsNullOrEmpty(redo))
+        {
+            BackUrl = GetServicePageUrl(ServiceJourneyPageExtensions.FromSlug(redo), ChangeFlow);
+        }
     }
 
     protected override IActionResult OnPostWithModel()
@@ -108,7 +108,7 @@ public class Time_Details_At_LocationModel : ServicePageModel<TimeDetailsUserInp
         var redo = Request.Query["redo"].ToString();
         if (redo != "")
         {
-            return Redirect(GetServicePageUrl(ServiceJourneyPageExtensions.FromSlug(redo)));
+            return Redirect(GetServicePageUrl(ServiceJourneyPageExtensions.FromSlug(redo), ChangeFlow));
         }
 
         return NextPage();

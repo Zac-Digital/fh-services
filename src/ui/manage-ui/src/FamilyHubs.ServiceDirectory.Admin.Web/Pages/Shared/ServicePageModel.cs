@@ -380,6 +380,9 @@ public class ServicePageModel<TInput> : HeaderPageModel, IHasErrorStatePageModel
         if (ChangeFlow != null) queryCollection.Add("change", ChangeFlow.Value.ToUrlString());
         if (BackParam != null) queryCollection.Add("back", BackParam.Value.GetSlug());
 
+        var redo = Request.Query["redo"].ToString();
+        if (!string.IsNullOrEmpty(redo)) queryCollection.Add("redo", redo);
+
         return RedirectToSelfInternal(queryCollection, errors);
     }
 
