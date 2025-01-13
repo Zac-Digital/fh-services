@@ -76,12 +76,6 @@ export default defineConfig<SerenityOptions>({
                 channel: 'chrome',
             },
         },
-        {
-            name: 'Mobile Chrome',
-            use: {
-                ...devices['Pixel 5'],
-            },
-        },
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
         // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
         {
@@ -98,13 +92,19 @@ export default defineConfig<SerenityOptions>({
                 ignoreHTTPSErrors: true
             },
         },
-        //TODO: Get tests running on mobile safari - need some custom code to scroll elements into view.
+        //TODO: Get tests running on mobile safari/chrome - need some custom code to scroll elements into view.
         // {
         //     name: 'Mobile Safari',
         //     use: {
         //         ...devices['iPhone 12'],
         //     },
-        // }
+        // },
+        // {
+        //     name: 'Mobile Chrome',
+        //     use: {
+        //         ...devices['Pixel 5'],
+        //     },
+        // },
     ],
 
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
