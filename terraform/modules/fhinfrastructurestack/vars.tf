@@ -170,6 +170,16 @@ variable "find_domain" {
   description = "Domain name for find."
 }
 
+variable "log_retention_in_days" {
+  type = number
+  description = "Length of time to retain logs in Log Analytics and App Insights."
+  default = 30 # GDS - https://gds-way.digital.cabinet-office.gov.uk/standards/logging.html#short-term-storage
+  validation {
+    condition = contains([30, 60, 90, 120, 180, 270, 365, 550, 730], var.log_retention_in_days)
+    error_message = "The log retention must be one of 30, 60, 90, 120, 180, 270, 365, 550, 730."
+  }
+}
+
 # Report Staging API Application - Variable Declaration - fh_report_stg_api
 
 # Private End Point - IP Address

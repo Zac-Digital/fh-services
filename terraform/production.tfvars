@@ -27,6 +27,8 @@ connect_domain = "connect-families-to-support.education.gov.uk"
 manage_domain = "manage-family-support-services-and-accounts.education.gov.uk"
 find_domain = "find-support-for-your-family.education.gov.uk"
 
+log_retention_in_days = 30
+
 private_endpoint_ip_address = {
   referral_api = "10.0.2.100"
   referral_ui = "10.0.2.101"
