@@ -30,6 +30,7 @@ terraform {
 
 module "fhinfrastructurestack" {
   source = "./modules/fhinfrastructurestack"
+  subscription_id = var.subscription_id
   location = var.location
   prefix = var.prefix
   environment = var.environment
