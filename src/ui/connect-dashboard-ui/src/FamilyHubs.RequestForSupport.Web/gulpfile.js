@@ -1,18 +1,17 @@
 /// <binding ProjectOpened='js:watch, sass-to-min-css:watch' />
 "use strict";
 
-var tsScriptsSrc = './scripts/**';
+const tsScriptsSrc = './scripts/**';
 
-var gulp = require("gulp"),
+let gulp = require("gulp"),
     sass = require('gulp-sass')(require('sass')),
     sourcemaps = require('gulp-sourcemaps'),
     csso = require('gulp-csso'),
     terser = require('gulp-terser'),
     ts = require("gulp-typescript"),
     //typescript = require('typescript'),
-    rollup = require('gulp-better-rollup'),
+    rollup = require('gulp-better-rollup');
     //concat = require('gulp-concat'),
-    del = require('del');
 
 gulp.task('sass-to-min-css', async function () {
     return gulp.src('./styles/application.scss')
@@ -24,14 +23,14 @@ gulp.task('sass-to-min-css', async function () {
 });
 
 gulp.task('sass-to-min-css:watch', function () {
-    gulp.watch('./styles/**', gulp.series('sass-to-min-css'));
+    gulp.watch(['./styles/**'], gulp.series('sass-to-min-css'));
 });
 
 // https://www.meziantou.net/compiling-typescript-using-gulp-in-visual-studio.htm
 
 //todo: clean to delete files in dest? & tmp folder
 
-var tsProject;
+let tsProject;
 
 gulp.task('transpile-ts', function () {
 
@@ -49,9 +48,9 @@ gulp.task('transpile-ts', function () {
 
     //console.log(`TypeScript version: ${typescript.version}`);
 
-    var reporter = ts.reporter.fullReporter();
+    const reporter = ts.reporter.fullReporter();
 
-    var tsResult = gulp.src(tsScriptsSrc)
+    const tsResult = gulp.src(tsScriptsSrc)
         .pipe(sourcemaps.init())
         .pipe(tsProject(reporter));
 
@@ -82,8 +81,9 @@ gulp.task('bundle-and-minify-js', () => {
         .pipe(gulp.dest('./wwwroot/js'));
 });
 
-gulp.task('clean', () => {
-    return del('./tmp/**');
+gulp.task('clean', async () => {
+    const { deleteSync } = await import('del');
+    return deleteSync(['./tmp/**']);
 });
 
 //gulp.task('js', gulp.series('clean', 'transpile-ts', 'naive-bundle-js', 'bundle-and-minify-js'));
