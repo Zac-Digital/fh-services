@@ -58,15 +58,9 @@ public static class SecurityHeaders
                             "https://c.bing.com"
                         });
 
-                    var scriptSrc = builder.AddScriptSrc()
-                        .Self()
-                        .From(new[]
-                        {
-                            "https://*.google-analytics.com/",
-                            "https://*.analytics.google.com",
-                            "https://*.googletagmanager.com",
-                            "https://*.clarity.ms"
-                        })
+                    builder.AddScriptSrc()
+                        .UnsafeInline()
+                        .StrictDynamic()
                         .WithNonce();
 
                     builder.AddStyleSrc()
@@ -86,8 +80,6 @@ public static class SecurityHeaders
                     {
                         // open up for browserlink
                         defaultSrc.From(new[] { "http://localhost:*", "ws://localhost:*" });
-
-                        scriptSrc.From("http://localhost:*");
 
                         connectSrc.From(new[] { "http://localhost:*", "https://localhost:*", "ws://localhost:*", "wss://localhost:*" });
                     }
