@@ -65,6 +65,75 @@
         }
       },
       "name": "query - 9"
+    },
+    {
+      "type": 10,
+      "content": {
+        "chartId": "workbook9b384420-e6df-47ef-912f-38fe25b95b4f",
+        "version": "MetricsItem/2.0",
+        "size": 0,
+        "chartType": 3,
+        "resourceType": "microsoft.datafactory/factories",
+        "metricScope": 0,
+        "resourceIds": [
+          "/subscriptions/56c128b8-5ca9-4328-bb24-a11c829f4af9/resourceGroups/s181d01-familyhubs/providers/Microsoft.DataFactory/factories/s181d01-dataf-default"
+        ],
+        "timeContext": {
+          "durationMs": 604800000
+        },
+        "metrics": [
+          {
+            "namespace": "microsoft.datafactory/factories",
+            "metric": "microsoft.datafactory/factories--PipelineFailedRuns",
+            "aggregation": 1,
+            "splitBy": null,
+            "columnName": "Failed runs"
+          },
+          {
+            "namespace": "microsoft.datafactory/factories",
+            "metric": "microsoft.datafactory/factories--PipelineSucceededRuns",
+            "aggregation": 1,
+            "columnName": "Successful runs"
+          }
+        ],
+        "title": "ADF Status",
+        "mapSettings": {
+          "locInfo": "AzureResource",
+          "sizeSettings": "microsoft.datafactory/factories--PipelineFailedRuns",
+          "sizeAggregation": "Sum",
+          "legendMetric": "microsoft.datafactory/factories--PipelineFailedRuns",
+          "legendAggregation": "Sum",
+          "itemColorSettings": {
+            "type": "heatmap",
+            "colorAggregation": "Sum",
+            "nodeColorField": "microsoft.datafactory/factories--PipelineFailedRuns",
+            "heatmapPalette": "greenRed"
+          },
+          "locInfoColumn": "Name"
+        },
+        "graphSettings": {
+          "type": 0,
+          "topContent": {
+            "columnMatch": "Subscription",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "microsoft.datafactory/factories--PipelineFailedRuns",
+            "formatter": 1,
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "maximumSignificantDigits": 3,
+                "maximumFractionDigits": 2
+              }
+            }
+          }
+        },
+        "gridSettings": {
+          "rowLimit": 10000
+        }
+      },
+      "name": "metric - 10"
     }
   ],
   "fallbackResourceIds": [
