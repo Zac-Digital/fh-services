@@ -23,6 +23,8 @@ connect_domain = "preprod.connect-families-to-support.education.gov.uk"
 manage_domain = "preprod.manage-family-support-services-and-accounts.education.gov.uk"
 find_domain = "preprod.find-support-for-your-family.education.gov.uk"
 
+log_retention_in_days = 30
+
 private_endpoint_ip_address = {
   referral_api = "10.0.4.100"
   referral_ui = "10.0.4.101"
