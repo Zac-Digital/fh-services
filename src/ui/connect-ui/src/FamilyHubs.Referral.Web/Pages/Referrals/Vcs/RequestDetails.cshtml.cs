@@ -7,6 +7,7 @@ using FamilyHubs.Referral.Infrastructure.Notifications;
 using FamilyHubs.Referral.Web.Errors;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ReferralService.Shared.Dto;
+using FamilyHubs.SharedKernel.FeatureManagement;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
@@ -14,6 +15,7 @@ using FamilyHubs.SharedKernel.Razor.Header;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Referrals.Vcs;
 
@@ -30,6 +32,7 @@ public enum AcceptDecline
 }
 
 [Authorize(Roles = $"{RoleGroups.VcsProfessionalOrDualRole}")]
+[FeatureGate(FeatureManagement.FeatureConnectDashboard)]
 public class VcsRequestDetailsPageModel : HeaderPageModel, IHasErrorStatePageModel
 {
     private readonly IReferralDashboardClientService _referralClientService;

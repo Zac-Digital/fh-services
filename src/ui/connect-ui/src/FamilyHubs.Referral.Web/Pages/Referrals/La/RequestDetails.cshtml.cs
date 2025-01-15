@@ -2,15 +2,18 @@ using System.Net;
 using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ReferralService.Shared.Dto;
+using FamilyHubs.SharedKernel.FeatureManagement;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Referrals.La;
 
 [Authorize(Roles = $"{RoleGroups.LaProfessionalOrDualRole}")]
+[FeatureGate(FeatureManagement.FeatureConnectDashboard)]
 public class RequestDetailsModel : HeaderPageModel
 {
     private readonly IReferralDashboardClientService _referralClientService;

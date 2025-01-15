@@ -4,18 +4,21 @@ using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ReferralService.Shared.Dto;
 using FamilyHubs.ReferralService.Shared.Enums;
 using FamilyHubs.ReferralService.Shared.Models;
+using FamilyHubs.SharedKernel.FeatureManagement;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.Dashboard;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using FamilyHubs.SharedKernel.Identity.Models;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.Referrals.Vcs;
 
 //todo: make back button remember dashboard state?
 //todo: most of this can go in a base class
 [Authorize(Roles = $"{RoleGroups.VcsProfessionalOrDualRole}")]
+[FeatureGate(FeatureManagement.FeatureConnectDashboard)]
 public class DashboardModel : HeaderPageModel, IDashboard<ReferralDto>
 {
     private static ColumnImmutable[] _columnImmutables = 
