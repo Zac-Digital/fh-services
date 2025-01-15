@@ -1,9 +1,8 @@
-import { defineConfig, devices } from '@playwright/test';
-import type { SerenityOptions } from '@serenity-js/playwright-test';
+import {defineConfig, devices} from '@playwright/test';
+import type {SerenityOptions} from '@serenity-js/playwright-test';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
 
 export default defineConfig<SerenityOptions>({
     testDir: './tests',
@@ -14,7 +13,7 @@ export default defineConfig<SerenityOptions>({
          * The maximum time, in milliseconds, that expect() should wait for a condition to be met.
          * For example in `await expect(locator).toHaveText();`
          */
-        timeout: 5000,
+        timeout: 5000
     },
     /* Run tests in files in parallel */
     fullyParallel: true,
@@ -25,7 +24,7 @@ export default defineConfig<SerenityOptions>({
     /* Specifies the reporter to use. For more information, see https://playwright.dev/docs/test-reporters */
     reporter: [
         ['line'],
-        ['html', { open: 'never' }],
+        ['html', {open: 'never'}],
         ['@serenity-js/playwright-test', {
             crew: [
                 '@serenity-js/console-reporter',
@@ -33,9 +32,9 @@ export default defineConfig<SerenityOptions>({
                     specDirectory: './tests',
                     reporter: {
                         includeAbilityDetails: true,
-                    },
+                    }
                 }],
-                ['@serenity-js/core:ArtifactArchiver', { outputDirectory: 'target/site/serenity' }],
+                ['@serenity-js/core:ArtifactArchiver', {outputDirectory: 'target/site/serenity'}],
                 // '@serenity-js/core:StreamReporter',  // uncomment to enable debugging output
             ],
         }],
@@ -56,60 +55,58 @@ export default defineConfig<SerenityOptions>({
 
         // Capture screenshot only on failure
         screenshot: 'only-on-failure',
+
+        httpCredentials: {
+            username: process.env.USER_NAME,
+            password: process.env.PASSWORD,
+        }
     },
 
     /* Configure projects for major browsers */
     projects: [
         {
-            name: 'chromium',
+            name: 'Microsoft Edge',
             use: {
-                ...devices['Desktop Chrome'],
+                channel: 'msedge',
             },
         },
-
         {
-            name: 'firefox',
+            name: 'Google Chrome',
+            use: {
+                channel: 'chrome',
+            },
+        },
+        // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
+        // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
+        {
+            name: 'Firefox',
             use: {
                 ...devices['Desktop Firefox'],
+                ignoreHTTPSErrors: true
             },
         },
-
         {
-            name: 'webkit',
+            name: 'Safari',
             use: {
                 ...devices['Desktop Safari'],
+                ignoreHTTPSErrors: true
             },
         },
-
-        /* Test against mobile viewports. */
-        {
-             name: 'Mobile Chrome',
-             use: {
-                 ...devices['Pixel 5'],
-             },
-         },
-        {
-             name: 'Mobile Safari',
-             use: {
-                 ...devices['iPhone 12'],
-             },
-        },
-
-        /* Test against branded browsers. */
-        {
-           name: 'Microsoft Edge',
-           use: {
-             channel: 'msedge',
-            },
-        },
-        {
-           name: 'Google Chrome',
-           use: {
-             channel: 'chrome',
-           },
-        },
+        //TODO: Get tests running on mobile safari/chrome - need some custom code to scroll elements into view.
+        // {
+        //     name: 'Mobile Safari',
+        //     use: {
+        //         ...devices['iPhone 12'],
+        //     },
+        // },
+        // {
+        //     name: 'Mobile Chrome',
+        //     use: {
+        //         ...devices['Pixel 5'],
+        //     },
+        // },
     ],
 
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-    outputDir: 'test-results/',
+    outputDir: 'test-results/'
 });
