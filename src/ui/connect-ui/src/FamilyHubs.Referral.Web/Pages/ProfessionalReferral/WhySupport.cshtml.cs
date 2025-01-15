@@ -2,11 +2,14 @@ using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.SharedKernel.FeatureManagement;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 //todo: could have new base class for TellTheService pages (this and ContactMethodsModel)
+[FeatureGate(FeatureManagement.FeatureConnectDashboard)]
 public class WhySupportModel : ProfessionalReferralCacheModel, ITellTheServicePageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/WhySupportContent.cshtml";

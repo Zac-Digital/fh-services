@@ -6,11 +6,14 @@ using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.ValidationAttributes;
 using System.Web;
+using FamilyHubs.SharedKernel.FeatureManagement;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using FamilyHubs.SharedKernel.Razor.FullPages.SingleTextbox;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+[FeatureGate(FeatureManagement.FeatureConnectDashboard)]
 public class TelephoneModel : ProfessionalReferralCacheModel, ISingleTelephoneTextboxPageModel
 {
     public string HeadingText { get; set; } = "";

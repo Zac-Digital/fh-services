@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
+using FamilyHubs.SharedKernel.FeatureManagement;
+using Microsoft.FeatureManagement;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -14,6 +16,7 @@ public class LocalOfferDetailModel : HeaderPageModel
 {
     private readonly IOrganisationClientService _organisationClientService;
     private readonly IIdamsClient _idamsClient;
+    private readonly IFeatureManager _featureManager;
     public ServiceDto LocalOffer { get; set; } = default!;
     public List<AttendingType>? ServiceScheduleAttendingTypes { get; set; }
     public ScheduleDto? ServiceSchedule { get; set; }
@@ -27,10 +30,12 @@ public class LocalOfferDetailModel : HeaderPageModel
 
     public LocalOfferDetailModel(
         IOrganisationClientService organisationClientService,
-        IIdamsClient idamsClient)
+        IIdamsClient idamsClient,
+        IFeatureManager featureManager)
     {
         _organisationClientService = organisationClientService;
         _idamsClient = idamsClient;
+        _featureManager = featureManager;
     }
 
     public async Task<IActionResult> OnGetAsync(string serviceId)
@@ -75,6 +80,11 @@ public class LocalOfferDetailModel : HeaderPageModel
 
     private async Task<bool> ShouldShowConnectionRequestButton()
     {
+        if (! await _featureManager.IsEnabledAsync(FeatureManagement.FeatureConnectDashboard))
+        {
+            return false;
+        }
+        
         bool showConnectionRequestButton = HttpContext.GetRole() is
             RoleTypes.LaProfessional or RoleTypes.LaDualRole;
         if (showConnectionRequestButton)

@@ -1,12 +1,15 @@
 using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.SharedKernel.FeatureManagement;
 using FamilyHubs.SharedKernel.Razor.FullPages.Radios;
 using FamilyHubs.SharedKernel.Razor.FullPages.Radios.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+[FeatureGate(FeatureManagement.FeatureConnectDashboard)]
 public class ConsentModel : ProfessionalReferralCacheModel, IRadiosPageModel
 {
     public string DescriptionPartial => "/Pages/ProfessionalReferral/ConsentContent.cshtml";

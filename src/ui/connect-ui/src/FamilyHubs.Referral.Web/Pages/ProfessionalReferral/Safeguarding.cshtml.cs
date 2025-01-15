@@ -1,10 +1,13 @@
 ﻿using FamilyHubs.Referral.Core.DistributedCache;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.SharedKernel.FeatureManagement;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
+[FeatureGate(FeatureManagement.FeatureConnectDashboard)]
 public class SafeguardingModel : ProfessionalReferralModel
 {
     public SafeguardingModel(IConnectionRequestDistributedCache connectionRequestDistributedCache)
