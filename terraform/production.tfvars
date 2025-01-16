@@ -46,3 +46,5 @@ private_endpoint_ip_address = {
 }
 
 pvt_endp_report_stg_api_ip_address = "10.0.2.109"
+
+slack_channel_email = "family-hubs-support-aaaaobh2nox4m4zjsmpbqfjlpa@ukgovernmentdfe.slack.com"

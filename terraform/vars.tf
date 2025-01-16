@@ -148,12 +148,6 @@ variable "autoscale_rule_maximum_capacity" {
   default = 10
 }
 
-variable "email_notify" {
-  type = string
-  description = "Email to send alert notifications to."
-  default = "growingupwell.lower@education.gov.uk"
-}
-
 variable "defender_app_services_tier" {
   type = string
   description = "Defender tier for app services"
@@ -220,4 +214,9 @@ variable "service_principals" {
     github_enterprise_object_id = string # Allows GitHub to deploy into the resource group
   })
   description = "Group and enterprise object Ids for service principals."
+}
+
+variable "slack_channel_email" {
+  type = string
+  description = "The Slack channel email to send alerts to."
 }

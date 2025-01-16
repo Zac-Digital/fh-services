@@ -2018,7 +2018,7 @@ resource "azurerm_mssql_server_vulnerability_assessment" "sqlserver_db_vulnerabi
     enabled                   = true
     email_subscription_admins = true
     emails = [
-      var.email_notify
+      var.slack_channel_email
     ]
   }
 }
@@ -3018,18 +3018,6 @@ resource "azurerm_subnet" "sqlserver" {
   private_endpoint_network_policies = "Disabled"
 }
 
-# Email Group for alert monitoring
-resource "azurerm_monitor_action_group" "email_grp" {
-  name                  = "${var.prefix}-email-alert-grp"
-  resource_group_name   = local.resource_group_name
-  short_name            = "shrnm"
-  email_receiver {
-    email_address       = "${var.email_notify}"
-    name                = "FamilyHub"
-  }
-  tags = local.tags
-}
-
 resource "azurerm_monitor_metric_alert" "cpu_alert01" {
   name                  = "${var.prefix}-fh-cpu-alert-referral-ui"
   resource_group_name   = local.resource_group_name
@@ -3038,7 +3026,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert01" {
   window_size           = "PT30M"
   frequency             = "PT5M"
   action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
+    action_group_id     =  azurerm_monitor_action_group.slack_channel_email_action_group.id
   }
   criteria {
     aggregation         = "Average"
@@ -3058,7 +3046,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert02" {
   window_size           = "PT15M"
   frequency             = "PT5M"  
   action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
+    action_group_id     =  azurerm_monitor_action_group.slack_channel_email_action_group.id
   }
   criteria {
     aggregation         = "Average"
@@ -3078,7 +3066,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert03" {
   window_size           = "PT15M"
   frequency             = "PT5M"  
   action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
+    action_group_id     =  azurerm_monitor_action_group.slack_channel_email_action_group.id
   }
   criteria {
     aggregation         = "Average"
@@ -3098,7 +3086,7 @@ resource "azurerm_monitor_metric_alert" "cpu_alert04" {
   window_size           = "PT15M"
   frequency             = "PT5M"  
   action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
+    action_group_id     =  azurerm_monitor_action_group.slack_channel_email_action_group.id
   }
   criteria {
     aggregation         = "Average"
@@ -3118,7 +3106,7 @@ resource "azurerm_monitor_metric_alert" "response-01" {
   window_size           = "PT15M"
   frequency             = "PT5M"  
   action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
+    action_group_id     =  azurerm_monitor_action_group.slack_channel_email_action_group.id
   }
   criteria {
     aggregation         = "Average"
@@ -3138,7 +3126,7 @@ resource "azurerm_monitor_metric_alert" "response-02" {
   window_size           = "PT15M"
   frequency             = "PT5M"  
   action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
+    action_group_id     =  azurerm_monitor_action_group.slack_channel_email_action_group.id
   }
   criteria {
     aggregation         = "Average"
@@ -3158,7 +3146,7 @@ resource "azurerm_monitor_metric_alert" "response-03" {
   window_size           = "PT15M"
   frequency             = "PT5M"  
   action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
+    action_group_id     =  azurerm_monitor_action_group.slack_channel_email_action_group.id
   }
   criteria {
     aggregation         = "Average"
@@ -3178,7 +3166,7 @@ resource "azurerm_monitor_metric_alert" "response-04" {
   window_size           = "PT15M"
   frequency             = "PT5M"  
   action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
+    action_group_id     =  azurerm_monitor_action_group.slack_channel_email_action_group.id
   }
   criteria {
     aggregation         = "Average"
@@ -3186,120 +3174,6 @@ resource "azurerm_monitor_metric_alert" "response-04" {
     metric_namespace    = "Microsoft.Insights/components"
     operator            = "GreaterThan"
     threshold           = 10000
-  }
-  tags = local.tags
-}
-
-resource "azurerm_monitor_metric_alert" "backend01" {
-  name                  = "${var.prefix}-fh-backend-appgtway-alert-ref-ui-app"
-  resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_gateway.ref_ui_app_gateway.id]
-  window_size           = "PT15M"
-  frequency             = "PT5M"  
-  action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
-  }
-  criteria {
-    aggregation      = "Average"
-    metric_name      = "BackendConnectTime"
-    metric_namespace = "Microsoft.Network/applicationGateways"
-    operator         = "GreaterThan"
-    threshold        = 30
-  }
-  tags = local.tags
-}
-
-resource "azurerm_monitor_metric_alert" "backend02" {
-  name                  = "${var.prefix}-fh-backend-appgtway-alert-sd-admin-ui-app"
-  resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_gateway.sd_admin_ui_app_gateway.id]
-  window_size           = "PT15M"
-  frequency             = "PT5M"
-  action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
-  }
-  criteria {
-    aggregation      = "Average"
-    metric_name      = "BackendConnectTime"
-    metric_namespace = "Microsoft.Network/applicationGateways"
-    operator         = "GreaterThan"
-    threshold        = 30
-  }
-  tags = local.tags
-}
-
-resource "azurerm_monitor_metric_alert" "backend03" {
-  name                  = "${var.prefix}-fh-backend-appgtway-alert-sd-ui-app"
-  resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_gateway.sd_ui_app_gateway.id]
-  window_size           = "PT15M"
-  frequency             = "PT5M"
-  action {
-    action_group_id     =  azurerm_monitor_action_group.email_grp.id
-  }
-  criteria {
-    aggregation         = "Average"
-    metric_name         = "BackendConnectTime"
-    metric_namespace    = "Microsoft.Network/applicationGateways"
-    operator            = "GreaterThan"
-    threshold           = 30
-  }
-  tags = local.tags
-}
-
-resource "azurerm_monitor_metric_alert" "failedalt-01" {
-  name                  = "${var.prefix}-fh-failedrequests-appgtway-alert-ref-ui-app"
-  resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_gateway.ref_ui_app_gateway.id]
-  window_size           = "PT15M"
-  frequency             = "PT5M"
-  action {
-    action_group_id     = azurerm_monitor_action_group.email_grp.id
-  }
-  criteria {
-    aggregation         = "Total"
-    metric_name         = "FailedRequests"
-    metric_namespace    = "Microsoft.Network/applicationGateways"
-    operator            = "GreaterThan"
-    threshold           = 5000
-  }
-  tags = local.tags
-}
-
-resource "azurerm_monitor_metric_alert" "failedalt-02" {
-  name                  = "${var.prefix}-fh-failedrequests-appgtway-alert-sd-admin-ui-app"
-  resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_gateway.sd_admin_ui_app_gateway.id]
-  window_size           = "PT15M"
-  frequency             = "PT5M"
-  action {
-    action_group_id     = azurerm_monitor_action_group.email_grp.id
-  }
-  criteria {
-    aggregation         = "Total"
-    metric_name         = "FailedRequests"
-    metric_namespace    = "Microsoft.Network/applicationGateways"
-    operator            = "GreaterThan"
-    threshold           = 5000
-  }
-  tags = local.tags
-}
-
-resource "azurerm_monitor_metric_alert" "failedalt-03" {
-  name                  = "${var.prefix}-fh-failedrequests-appgtway-alert-sd-ui-app"
-  resource_group_name   = local.resource_group_name
-  scopes                = [azurerm_application_gateway.sd_ui_app_gateway.id]
-  window_size           = "PT15M"
-  frequency             = "PT5M"
-  action {
-    action_group_id     = azurerm_monitor_action_group.email_grp.id
-  }
-  criteria {
-    aggregation         = "Total"
-    metric_name         = "FailedRequests"
-    metric_namespace    = "Microsoft.Network/applicationGateways"
-    operator            = "GreaterThan"
-    threshold           = 5000
   }
   tags = local.tags
 }

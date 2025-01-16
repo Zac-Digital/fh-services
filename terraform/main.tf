@@ -58,7 +58,6 @@ module "fhinfrastructurestack" {
   autoscale_rule_default_capacity = var.autoscale_rule_default_capacity
   autoscale_rule_minimum_capacity = var.autoscale_rule_minimum_capacity
   autoscale_rule_maximum_capacity = var.autoscale_rule_maximum_capacity
-  email_notify = var.email_notify
   asp_netcore_environment = var.asp_netcore_environment
   defender_app_services_tier = var.defender_app_services_tier
   private_endpoint_ip_address = var.private_endpoint_ip_address
@@ -67,4 +66,5 @@ module "fhinfrastructurestack" {
   find_domain = var.find_domain
   log_retention_in_days = var.log_retention_in_days
   pvt_endp_report_stg_api_ip_address = var.pvt_endp_report_stg_api_ip_address
+  slack_channel_email = var.slack_channel_email
 }

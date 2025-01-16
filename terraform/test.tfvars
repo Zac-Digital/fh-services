@@ -40,3 +40,6 @@ private_endpoint_ip_address = {
 }
 
 pvt_endp_report_stg_api_ip_address = "10.0.1.109"
+
+# TODO: Change to non-prod
+slack_channel_email = "family-hubs-support-aaaaobh2nox4m4zjsmpbqfjlpa@ukgovernmentdfe.slack.com"
