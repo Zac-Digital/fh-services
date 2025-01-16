@@ -35,18 +35,6 @@ public class HeaderPageModel : PageModel, IFamilyHubsHeader
         FhLinkOptions[] navigationLinks,
         IFamilyHubsUiOptions familyHubsUiOptions)
     {
-        // // Since 40-50 classes derive this class, using normal dependency injection would mean passing IFeatureManager
-        // // into all their constructors as most of them call base(..) to pass through stuff to this constructor.
-        // // So I'm fetching it in here :)
-        // IFeatureManager featureManager = HttpContext.RequestServices.GetRequiredService<IFeatureManager>();
-        //
-        // if (! await featureManager.IsEnabledAsync(FeatureManagement.FeatureConnectDashboard))
-        // {
-        //     // The navigation links are loaded from the appsettings.json at startup for some reason so the easiest thing to do is
-        //     // to just chop off the "My requests" tab from the array.
-        //     return [ navigationLinks[0] ];
-        // }
-        
         string role = HttpContext.GetRole();
 
         return role is RoleTypes.VcsProfessional or RoleTypes.VcsDualRole
