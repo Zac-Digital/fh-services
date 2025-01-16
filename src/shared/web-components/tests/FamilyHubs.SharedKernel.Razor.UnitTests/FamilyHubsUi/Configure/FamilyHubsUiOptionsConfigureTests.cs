@@ -3,6 +3,7 @@ using System.Text.Json;
 using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options.Configure;
 using FamilyHubs.SharedKernel.Razor.UnitTests.FamilyHubsUi.Configure.Helpers;
 using FluentAssertions;
+using Microsoft.FeatureManagement;
 using NSubstitute;
 
 namespace FamilyHubs.SharedKernel.Razor.UnitTests.FamilyHubsUi.Configure;
@@ -15,7 +16,7 @@ public class FamilyHubsUiOptionsConfigureTests : FamilyHubsUiOptionsTestBase
     public FamilyHubsUiOptionsConfigureTests()
     {
         _configuration = Substitute.For<IConfiguration>();
-        _familyHubsUiOptionsConfigure = new FamilyHubsUiOptionsConfigure(_configuration);
+        _familyHubsUiOptionsConfigure = new FamilyHubsUiOptionsConfigure(_configuration, Substitute.For<IFeatureManager>());
     }
 
     [Fact]

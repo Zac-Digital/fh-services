@@ -9,13 +9,13 @@ using FamilyHubs.SharedKernel.Identity.Models;
 using Microsoft.AspNetCore.Mvc;
 using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
 using FamilyHubs.ReferralService.Shared.Dto.Metrics;
-using FamilyHubs.SharedKernel.FeatureManagement;
+using FamilyHubs.SharedKernel.Razor.FeatureFlags;
 using Microsoft.FeatureManagement.Mvc;
 using ReferralOrganisationDto = FamilyHubs.ReferralService.Shared.Dto.OrganisationDto;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
-[FeatureGate(FeatureManagement.FeatureConnectDashboard)]
+[FeatureGate(FeatureFlag.ConnectDashboard)]
 public class CheckDetailsModel : ProfessionalReferralCacheModel
 {
     private readonly IReferralClientService _referralClientService;

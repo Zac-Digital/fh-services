@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
-using FamilyHubs.SharedKernel.FeatureManagement;
+using FamilyHubs.SharedKernel.Razor.FeatureFlags;
 using Microsoft.FeatureManagement;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
@@ -80,7 +80,7 @@ public class LocalOfferDetailModel : HeaderPageModel
 
     private async Task<bool> ShouldShowConnectionRequestButton()
     {
-        if (! await _featureManager.IsEnabledAsync(FeatureManagement.FeatureConnectDashboard))
+        if (! await _featureManager.IsEnabledAsync(FeatureFlag.ConnectDashboard))
         {
             return false;
         }

@@ -1,14 +1,18 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FamilyHubs.SharedKernel.Razor.FeatureFlags;
+using Microsoft.Extensions.Configuration;
+using Microsoft.FeatureManagement;
 
 namespace FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options.Configure;
 
 public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOptions>
 {
     private readonly IConfiguration _configuration;
+    private readonly IFeatureManager _featureManager;
 
-    public FamilyHubsUiOptionsConfigure(IConfiguration configuration)
+    public FamilyHubsUiOptionsConfigure(IConfiguration configuration, IFeatureManager featureManager)
     {
         _configuration = configuration;
+        _featureManager = featureManager;
     }
 
     public void Configure(FamilyHubsUiOptions options)
@@ -21,7 +25,7 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
         options.SetAlternative(altName, parent);
 
         ConfigureLink(options.Header.ServiceNameLink, options);
-        ConfigureLinks(options.Header.NavigationLinks, options);
+        ConfigureNavigationLinks(options.Header.NavigationLinks, options);
         ConfigureLinks(options.Header.ActionLinks, options);
         ConfigureLinks(options.Footer.Links, options);
 
@@ -33,6 +37,16 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
         foreach (var alt in enabledAlts)
         {
             Configure(alt.Value, alt.Key, options);
+        }
+    }
+
+    private void ConfigureNavigationLinks(FhLinkOptions[] linkOptions, FamilyHubsUiOptions options)
+    {
+        ConfigureLinks(linkOptions, options);
+        
+        if (!_featureManager.IsEnabledAsync(FeatureFlag.ConnectDashboard).Result)
+        {
+            options.Header.NavigationLinks = [ options.Header.NavigationLinks[0] ];
         }
     }
 
