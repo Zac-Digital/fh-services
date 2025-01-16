@@ -24,7 +24,7 @@ public class Time_Details_At_LocationModel : ServicePageModel<TimeDetailsUserInp
     protected override void OnGetWithError()
     {
         UserInput = ServiceModel!.UserInput!;
-        var location = ServiceModel!.CurrentLocation!;
+        var location = GetLocation();
         SetTitle(location);
     }
 
