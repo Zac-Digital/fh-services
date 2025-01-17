@@ -45,6 +45,13 @@ public class LocalOfferDetailModel : HeaderPageModel
         ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
 
+        if (!await _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices) 
+            &&
+            LocalOffer.ServiceType == ServiceType.InformationSharing)
+        {
+            return RedirectToPage("/Error/404");
+        }
+
         (ServiceScheduleAttendingTypes, ServiceSchedule) = GetServiceSchedule();
 
         ShowConnectionRequestButton = await ShouldShowConnectionRequestButton();
