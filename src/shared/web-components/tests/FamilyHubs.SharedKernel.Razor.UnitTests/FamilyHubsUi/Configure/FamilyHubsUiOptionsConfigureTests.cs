@@ -21,8 +21,16 @@ public class FamilyHubsUiOptionsConfigureTests : FamilyHubsUiOptionsTestBase
         _featureManager = Substitute.For<IFeatureManager>();
         
         _featureManager.IsEnabledAsync(FeatureFlag.ConnectDashboard).Returns(true);
+        _featureManager.GetFeatureNamesAsync().Returns(GetFeatureFlags());
         
         _familyHubsUiOptionsConfigure = new FamilyHubsUiOptionsConfigure(_configuration, _featureManager);
+    }
+
+    private static async IAsyncEnumerable<string> GetFeatureFlags()
+    {
+        yield return FeatureFlag.ConnectDashboard;
+
+        await Task.CompletedTask;
     }
 
     [Fact]
@@ -53,7 +61,7 @@ public class FamilyHubsUiOptionsConfigureTests : FamilyHubsUiOptionsTestBase
         
         _familyHubsUiOptionsConfigure.Configure(FamilyHubsUiOptions);
         
-        FamilyHubsUiOptions.Header.NavigationLinks.Should().HaveCount(1);
+        FamilyHubsUiOptions.Header.NavigationLinks.Should().ContainSingle();
         FamilyHubsUiOptions.Header.NavigationLinks[0].Text.Should().Be("Search for a Service");
     }
 
