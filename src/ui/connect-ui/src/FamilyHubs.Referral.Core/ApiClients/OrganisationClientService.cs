@@ -85,6 +85,15 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         HttpResponseMessage? response
     )> GetLocalOffers(LocalOfferFilter filter)
     {
+        if (!await _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices))
+        {
+            // TODO: When Connect is updated to support LA Services..
+            // TODO: Just manipulate filter.ServiceType here instead.
+            // TODO: E.g., Flag is ENABLED  -> filter.ServiceType = null (LA + VCFS returned)
+            // TODO:       Flag is DISABLED -> filter.ServiceType = ServiceType.FamilyExperience (LA only returned)
+            return (new PaginatedList<ServiceDto>(), new HttpResponseMessage(HttpStatusCode.OK));
+        }
+        
         if (string.IsNullOrEmpty(filter.Status))
             filter.Status = "Active";
 
