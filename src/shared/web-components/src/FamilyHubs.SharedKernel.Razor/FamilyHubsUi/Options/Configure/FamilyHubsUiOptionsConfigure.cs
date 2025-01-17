@@ -43,6 +43,13 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
     private void ConfigureNavigationLinks(FhLinkOptions[] linkOptions, FamilyHubsUiOptions options)
     {
         ConfigureLinks(linkOptions, options);
+
+        IEnumerable<string> featureFlags = _featureManager.GetFeatureNamesAsync().ToBlockingEnumerable();
+
+        if (!featureFlags.Contains(FeatureFlag.ConnectDashboard))
+        {
+            return;
+        }
         
         if (!_featureManager.IsEnabledAsync(FeatureFlag.ConnectDashboard).Result)
         {
