@@ -7,11 +7,21 @@ using FluentAssertions;
 using System.Text;
 using System.Text.Json;
 using FamilyHubs.ReferralUi.UnitTests.Helpers;
+using Microsoft.FeatureManagement;
+using NSubstitute;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Core.ApiClients;
 
 public class WhenUsingOrganisationClientService
 {
+    private readonly IFeatureManager _featureManager;
+
+    public WhenUsingOrganisationClientService()
+    {
+        _featureManager = Substitute.For<IFeatureManager>();
+        _featureManager.IsEnabledAsync(Arg.Any<string>()).Returns(true);
+    }
+
     [Fact]
     public async Task ThenGetCategoryList()
     {
@@ -22,7 +32,7 @@ public class WhenUsingOrganisationClientService
         
         var httpClient = TestHelpers.GetMockClient(jsonString);
 
-        var organisationClientService = new OrganisationClientService(httpClient);
+        var organisationClientService = new OrganisationClientService(httpClient, _featureManager);
 
         //Act
         var result = await organisationClientService.GetCategories();
@@ -41,7 +51,7 @@ public class WhenUsingOrganisationClientService
         var jsonString = JsonSerializer.Serialize(expectedPaginatedList);
         var httpClient = TestHelpers.GetMockClient(jsonString);
 
-        var organisationClientService = new OrganisationClientService(httpClient);
+        var organisationClientService = new OrganisationClientService(httpClient, _featureManager);
 
         var filter = new LocalOfferFilter
         { 
@@ -71,7 +81,7 @@ public class WhenUsingOrganisationClientService
         var jsonString = JsonSerializer.Serialize(expectedService);
         var httpClient = TestHelpers.GetMockClient(jsonString);
 
-        var organisationClientService = new OrganisationClientService(httpClient);
+        var organisationClientService = new OrganisationClientService(httpClient, _featureManager);
 
         //Act
         var result = await organisationClientService.GetLocalOfferById(expectedService.Id.ToString());
@@ -89,7 +99,7 @@ public class WhenUsingOrganisationClientService
         var jsonString = JsonSerializer.Serialize(expectedOrganisation);
         var httpClient = TestHelpers.GetMockClient(jsonString);
 
-        var organisationClientService = new OrganisationClientService(httpClient);
+        var organisationClientService = new OrganisationClientService(httpClient, _featureManager);
 
         //Act
         var result = await organisationClientService.GetOrganisationDtoByIdAsync(expectedOrganisation.Id);
@@ -104,7 +114,7 @@ public class WhenUsingOrganisationClientService
     {
         //Arrange
         const string expected = "&givenAge=18";
-        var organisationClientService = new OrganisationClientService(new HttpClient());
+        var organisationClientService = new OrganisationClientService(new HttpClient(), _featureManager);
         var url = new StringBuilder();
 
         //Act 
@@ -120,7 +130,7 @@ public class WhenUsingOrganisationClientService
     {
         //Arrange
         const string expected = "&text=Test";
-        var organisationClientService = new OrganisationClientService(new HttpClient());
+        var organisationClientService = new OrganisationClientService(new HttpClient(), _featureManager);
         var url = new StringBuilder();
 
         //Act 

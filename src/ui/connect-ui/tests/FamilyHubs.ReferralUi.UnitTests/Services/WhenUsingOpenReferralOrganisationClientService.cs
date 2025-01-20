@@ -4,7 +4,9 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
 using FluentAssertions;
+using Microsoft.FeatureManagement;
 using Newtonsoft.Json;
+using NSubstitute;
 
 namespace FamilyHubs.ReferralUi.UnitTests.Services;
 
@@ -24,7 +26,7 @@ public class WhenUsingOrganisationClientService
 
         var json = JsonConvert.SerializeObject(paginatedList);
         var mockClient = TestHelpers.GetMockClient(json);
-        var organisationClientService = new OrganisationClientService(mockClient);
+        var organisationClientService = new OrganisationClientService(mockClient, Substitute.For<IFeatureManager>());
 
         //Act
         var result = await organisationClientService.GetCategories();
