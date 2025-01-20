@@ -41,9 +41,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-NuGet-${{ hashFiles('inputs.working_directory/**.csproj') }}
+          key: ${{ runner.os }}-NuGet-${{ inputs.job_name }}-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
-            ${{ runner.os }}-NuGet-${{ hashFiles('inputs.working_directory/**.csproj') }}
+            ${{ runner.os }}-NuGet-${{ inputs.job_name }}-${{ hashFiles('**/*.csproj') }}
 
       - name: Install & Configure Spatialite
         if: ${{ inputs.working_directory == 'service/service-directory-api' || inputs.working_directory == 'service/referral-api' }}
