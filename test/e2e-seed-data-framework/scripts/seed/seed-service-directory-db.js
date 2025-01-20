@@ -25,4 +25,19 @@ export async function seed() {
         description: "Test Organisation based in Westminster",
         adminAreaCode: "E09000030",
     });
+
+      // Now let's create a Location for our Service & Organisation
+  await Database.addLocation({
+    id: 1,
+    locationTypeCategory: "NotSet",
+    name: "Test Location",
+    description: "Test Description",
+    latitude: 51.517612,
+    longitude: -0.056838,
+    address1: "100 Test Street",
+    city: "London",
+    postcode: "E1 2EN",
+    stateProvince: "City of London",
+  });
+  
 }
