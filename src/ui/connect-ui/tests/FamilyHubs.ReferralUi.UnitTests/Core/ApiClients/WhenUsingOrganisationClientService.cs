@@ -1,4 +1,5 @@
-﻿using FamilyHubs.Referral.Core.ApiClients;
+﻿using System.Net;
+using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.ReferralService.Shared.Models;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
@@ -7,6 +8,7 @@ using FluentAssertions;
 using System.Text;
 using System.Text.Json;
 using FamilyHubs.ReferralUi.UnitTests.Helpers;
+using FamilyHubs.SharedKernel.Razor.FeatureFlags;
 using Microsoft.FeatureManagement;
 using NSubstitute;
 
@@ -19,7 +21,7 @@ public class WhenUsingOrganisationClientService
     public WhenUsingOrganisationClientService()
     {
         _featureManager = Substitute.For<IFeatureManager>();
-        _featureManager.IsEnabledAsync(Arg.Any<string>()).Returns(true);
+        _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices).Returns(true);
     }
 
     [Fact]
@@ -71,6 +73,38 @@ public class WhenUsingOrganisationClientService
         result.Items.Count.Should().Be(1);
         result.Items[0].Should().BeEquivalentTo(expectedPaginatedList.Items[0]);
         response.Should().NotBeNull();
+    }
+    
+    [Fact]
+    public async Task ThenGetLocalOffers_WithFeatureFlag_VcfsServices_Disabled()
+    {
+        _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices).Returns(false);
+        
+        //Arrange
+        var expectedPaginatedList = new PaginatedList<ServiceDto>([], 0, 0, 0);
+        var jsonString = JsonSerializer.Serialize(expectedPaginatedList);
+        var httpClient = TestHelpers.GetMockClient(jsonString);
+
+        var organisationClientService = new OrganisationClientService(httpClient, _featureManager);
+
+        var filter = new LocalOfferFilter
+        { 
+            Status = "active",
+            ServiceDeliveries = AttendingType.Online.ToString(),
+            IsPaidFor = true,
+            TaxonomyIds = "1,2",
+            LanguageCode = "en",
+            CanFamilyChooseLocation = true,
+            DistrictCode = "ABC"
+        };
+
+        //Act
+        var (result, response) = await organisationClientService.GetLocalOffers(filter);
+
+        //Assert
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.Items.Count.Should().Be(0);
     }
 
     [Fact]
