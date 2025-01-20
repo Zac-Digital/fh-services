@@ -25,7 +25,7 @@ permissions:
 
 jobs:
   build-projects-upload-artifacts:
-    name: ${{ matrix.job_name }}
+    name: Build - ${{ matrix.job_name }}
     strategy:
       fail-fast: true
       matrix:
@@ -45,47 +45,48 @@ jobs:
         include:
           - project: src/service/idam-api/
             publish_project: FamilyHubs.Idam.Api
-            job_name: Build - IDAM API
+            job_name: IDAM API
           - project: src/service/notification-api/
             publish_project: FamilyHubs.Notification.Api
-            job_name: Build - Notification API
+            job_name: Notification API
           - project: src/service/referral-api/
             publish_project: FamilyHubs.Referral.Api
-            job_name: Build - Referral API
+            job_name: Referral API
           - project: src/service/report-api/
             publish_project: FamilyHubs.Report.Api
-            job_name: Build - Report API
+            job_name: Report API
           - project: src/service/service-directory-api/
             publish_project: FamilyHubs.ServiceDirectory.Api
-            job_name: Build - Service Directory API
+            job_name: Service Directory API
           - project: src/service/mock-hsda-api/
             publish_project: FamilyHubs.Mock-Hsda.Api
-            job_name: Build - Mock HSDA API
+            job_name: Mock HSDA API
             dotnet_version_override: "8.0.x"
           - project: src/function/open-referral-function/
             publish_project: FamilyHubs.OpenReferral.Function
-            job_name: Build - Open Referral Function
+            job_name: Open Referral Function
             dotnet_version_override: "8.0.x"
           - project: src/ui/connect-dashboard-ui/
             publish_project: FamilyHubs.RequestForSupport.Web
-            job_name: Build - Connect Dashboard UI
+            job_name: Connect Dashboard UI
           - project: src/ui/connect-ui/
             publish_project: FamilyHubs.Referral.Web
-            job_name: Build - Connect UI
+            job_name: Connect UI
           - project: src/ui/find-ui/
             publish_project: FamilyHubs.ServiceDirectory.Web
-            job_name: Build - Find UI
+            job_name: Find UI
           - project: src/ui/idam-maintenance-ui/
             publish_project: FamilyHubs.Idams.Maintenance.UI
-            job_name: Build - IDAM Maintenance UI
+            job_name: IDAM Maintenance UI
           - project: src/ui/manage-ui/
             publish_project: FamilyHubs.ServiceDirectory.Admin.Web
-            job_name: Build - Manage UI
+            job_name: Manage UI
     uses: ./.github/workflows/build-upload-artifact.yml
     with:
       project: ${{ matrix.project }}
       publish_project: ${{ matrix.publish_project }}
       dotnet_version: ${{ matrix.dotnet_version_override || vars.DOTNET_VERSION }}
+      job_name: ${{ matrix.job_name }}
     
   deploy-api-services:
     name: ${{ matrix.job_name }}
