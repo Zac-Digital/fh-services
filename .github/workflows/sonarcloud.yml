@@ -59,7 +59,7 @@ jobs:
         shell: bash
         run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
 
-      - name: Install & Configure Spatialite
+      - name: Install & Configure SpatiaLite
         shell: bash
         run: |
           sudo apt-get update
