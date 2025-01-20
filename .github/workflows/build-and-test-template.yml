@@ -36,7 +36,7 @@ jobs:
         shell: bash
         run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
 
-      - name: Package Cachee
+      - name: Package Cache
         id: cache
         uses: actions/cache@v4
         with:
@@ -45,7 +45,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-NuGet-${{ inputs.job_name }}-${{ hashFiles('**/*.csproj') }}
 
-      - name: Install & Configure Spatialite
+      - name: Install & Configure SpatiaLite
         if: ${{ inputs.working_directory == 'service/service-directory-api' || inputs.working_directory == 'service/referral-api' }}
         shell: bash
         run: |
@@ -54,7 +54,6 @@ jobs:
           sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
 
       - name: Restore Project
-        if: steps.cache.outputs.cache-hit != 'true'
         shell: bash
         run: dotnet restore
 
