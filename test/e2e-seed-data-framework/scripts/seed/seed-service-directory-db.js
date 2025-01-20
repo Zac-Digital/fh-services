@@ -7,26 +7,26 @@ import * as Database from "../../core/service-directory-db-context.js";
  */
 
 export async function seed() {
-    // Create an LA Organisation for our E2E tests
-    await Database.addOrganisation({
-        id: 1,
-        organisationType: "LA",
-        name: "Test LA",
-        description: "Test LA based in Westminster",
-        adminAreaCode: "E09000033",
-    });
+  // Create an LA Organisation for our E2E tests
+  await Database.addOrganisation({
+    id: 1,
+    organisationType: "LA",
+    name: "Test LA",
+    description: "Test LA based in Westminster",
+    adminAreaCode: "E09000033",
+  });
 
-    // Create an VCFS Organisation for our Service
-    await Database.addOrganisation({
-        id: 2,
-        associatedOrganisationId: 1,
-        organisationType: "VCFS",
-        name: "Test Organisation",
-        description: "Test Organisation based in Westminster",
-        adminAreaCode: "E09000030",
-    });
+  // Create an VCFS Organisation for our Service
+  await Database.addOrganisation({
+    id: 2,
+    associatedOrganisationId: 1,
+    organisationType: "VCFS",
+    name: "Test Organisation",
+    description: "Test Organisation based in Westminster",
+    adminAreaCode: "E09000030",
+  });
 
-      // Now let's create a Location for our Service & Organisation
+  // Add a Location for the LA Service & VCFS Organisation
   await Database.addLocation({
     id: 1,
     locationTypeCategory: "NotSet",
@@ -39,5 +39,5 @@ export async function seed() {
     postcode: "E1 2EN",
     stateProvince: "City of London",
   });
-  
+
 }
