@@ -1,5 +1,8 @@
 
 locals {
+  # All production alerts go into a separate silver monitor resource group otherwise add to the same resource group
+  alert_resource_group_name = var.environment == "Prod" ? "${var.prefix}-silverMonitor" : local.resource_group_name
+  
   gateway_details = {
     "referral-ui" = {
       gateway_id = azurerm_application_gateway.ref_ui_app_gateway.id
@@ -16,8 +19,8 @@ locals {
 # Alert action group
 
 resource "azurerm_monitor_action_group" "slack_channel_email_action_group" {
-  name = "${var.prefix}-slack-channel-email-act-grp"
-  resource_group_name = local.resource_group_name
+  name = "${var.prefix}-fh-ag-slack-channel-email"
+  resource_group_name = local.alert_resource_group_name
   short_name = "fhalert"
   email_receiver {
     email_address = var.slack_channel_email
@@ -31,7 +34,7 @@ resource "azurerm_monitor_action_group" "slack_channel_email_action_group" {
 resource "azurerm_monitor_metric_alert" "app-gateway-failed-requests" {
   for_each = local.gateway_details
   name = "${var.prefix}-fh-appgw-${each.key}-failed-requests-alert"
-  resource_group_name = local.resource_group_name
+  resource_group_name = local.alert_resource_group_name
   scopes = [each.value.gateway_id]
   window_size = "PT15M"
   frequency = "PT5M"
@@ -51,7 +54,7 @@ resource "azurerm_monitor_metric_alert" "app-gateway-failed-requests" {
 resource "azurerm_monitor_metric_alert" "app-gateway-backend-connect-time-alert" {
   for_each = local.gateway_details
   name = "${var.prefix}-fh-appgw-${each.key}-backend-connect-time-alert"
-  resource_group_name = local.resource_group_name
+  resource_group_name = local.alert_resource_group_name
   scopes = [each.value.gateway_id]
   window_size = "PT15M"
   frequency = "PT5M"
@@ -71,7 +74,7 @@ resource "azurerm_monitor_metric_alert" "app-gateway-backend-connect-time-alert"
 resource "azurerm_monitor_metric_alert" "app-gateway-backend-last-byte-response-time-alert" {
   for_each = local.gateway_details
   name = "${var.prefix}-fh-appgw-${each.key}-backend-last-byte-response-time-alert"
-  resource_group_name = local.resource_group_name
+  resource_group_name = local.alert_resource_group_name
   scopes = [each.value.gateway_id]
   window_size = "PT15M"
   frequency = "PT5M"
@@ -91,7 +94,7 @@ resource "azurerm_monitor_metric_alert" "app-gateway-backend-last-byte-response-
 resource "azurerm_monitor_metric_alert" "app-gateway-backend-response-status-alert" {
   for_each = local.gateway_details
   name = "${var.prefix}-fh-appgw-${each.key}-backend-response-status-alert"
-  resource_group_name = local.resource_group_name
+  resource_group_name = local.alert_resource_group_name
   scopes = [each.value.gateway_id]
   window_size = "PT15M"
   frequency = "PT5M"
@@ -111,7 +114,7 @@ resource "azurerm_monitor_metric_alert" "app-gateway-backend-response-status-ale
 resource "azurerm_monitor_metric_alert" "app-gateway-failed-requests-alert" {
   for_each = local.gateway_details
   name = "${var.prefix}-fh-appgw-${each.key}-failed-requests-alert"
-  resource_group_name = local.resource_group_name
+  resource_group_name = local.alert_resource_group_name
   scopes = [each.value.gateway_id]
   window_size = "PT15M"
   frequency = "PT5M"
@@ -131,7 +134,7 @@ resource "azurerm_monitor_metric_alert" "app-gateway-failed-requests-alert" {
 resource "azurerm_monitor_metric_alert" "app-gateway-unhealthy-host-count-alert" {
   for_each = local.gateway_details
   name = "${var.prefix}-fh-appgw-${each.key}-unhealthy-host-count-alert"
-  resource_group_name = local.resource_group_name
+  resource_group_name = local.alert_resource_group_name
   scopes = [each.value.gateway_id]
   window_size = "PT15M"
   frequency = "PT5M"
@@ -150,7 +153,7 @@ resource "azurerm_monitor_metric_alert" "app-gateway-unhealthy-host-count-alert"
 
 resource "azurerm_monitor_metric_alert" "app-gateway-storage-error-availability-alert" {
   name = "${var.prefix}-fh-appgw-saappgwerror-availability-alert"
-  resource_group_name = local.resource_group_name
+  resource_group_name = local.alert_resource_group_name
   scopes = [azurerm_storage_account.storage_appgw_errorpage.id]
   window_size = "PT15M"
   frequency = "PT5M"
