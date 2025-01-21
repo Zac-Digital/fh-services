@@ -15,7 +15,7 @@ on:
 
 jobs:
   build_and_test:
-    name: ${{ matrix.job_name }}
+    name: Test - ${{ matrix.job_name }}
     strategy:
       fail-fast: false
       matrix:
@@ -40,37 +40,37 @@ jobs:
           ]
         include:
           - working_directory: service/notification-api
-            job_name: "Test - Notification API"
+            job_name: "Notification API"
           - working_directory: service/idam-api
-            job_name: "Test - IDAM API"
+            job_name: "IDAM API"
           - working_directory: service/service-directory-api
-            job_name: "Test - Service Directory API"
+            job_name: "Service Directory API"
           - working_directory: service/referral-api
-            job_name: "Test - Referral API"
+            job_name: "Referral API"
           - working_directory: service/report-api
-            job_name: "Test - Report API"
+            job_name: "Report API"
           - working_directory: service/mock-hsda-api
-            job_name: "Test - Mock HSDA API"
+            job_name: "Mock HSDA API"
           - working_directory: function/open-referral-function
-            job_name: "Test - Open Referral Function"
+            job_name: "Open Referral Function"
           - working_directory: ui/connect-dashboard-ui
-            job_name: "Test - Connect Dashboard UI"
+            job_name: "Connect Dashboard UI"
           - working_directory: ui/connect-ui
-            job_name: "Test - Connect UI"
+            job_name: "Connect UI"
           - working_directory: ui/find-ui
-            job_name: "Test - Find UI"
+            job_name: "Find UI"
           - working_directory: ui/idam-maintenance-ui
-            job_name: "Test - IDAM Maintenance UI"
+            job_name: "IDAM Maintenance UI"
           - working_directory: ui/manage-ui
-            job_name: "Test - Manage UI"
+            job_name: "Manage UI"
           - working_directory: shared/referral-shared
-            job_name: "Test - Referral Shared"
+            job_name: "Referral Shared"
           - working_directory: shared/service-directory-shared
-            job_name: "Test - Service Directory Shared"
+            job_name: "Service Directory Shared"
           - working_directory: shared/shared-kernel
-            job_name: "Test - Kernel Shared"
+            job_name: "Kernel Shared"
           - working_directory: shared/web-components
-            job_name: "Test - Web Components Shared"
+            job_name: "Web Components Shared"
     uses: ./.github/workflows/build-and-test-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}
