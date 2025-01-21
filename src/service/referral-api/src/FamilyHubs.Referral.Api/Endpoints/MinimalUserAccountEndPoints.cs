@@ -1,7 +1,9 @@
-﻿using FamilyHubs.Referral.Core.Commands.CreateUserAccount;
+﻿using System.Net.Mime;
+using FamilyHubs.Referral.Core.Commands.CreateUserAccount;
 using FamilyHubs.Referral.Core.Commands.UpdateUserAccount;
 using FamilyHubs.Referral.Core.Queries.GetUserAccounts;
 using FamilyHubs.ReferralService.Shared.Dto;
+using FamilyHubs.ReferralService.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +52,8 @@ public class MinimalUserAccountEndPoints
             var result = await _mediator.Send(command, cancellationToken);
             return result;
 
-        }).WithMetadata(new SwaggerOperationAttribute("User Accounts", "Get User Accounts By Organisation Id") { Tags = new[] { "User Accounts" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("User Accounts", "Get User Accounts By Organisation Id") { Tags = new[] { "User Accounts" } })
+            .Produces<PaginatedList<UserAccountDto>>(contentType: MediaTypeNames.Application.Json);
     }
 }
