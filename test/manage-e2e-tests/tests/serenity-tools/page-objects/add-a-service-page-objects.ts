@@ -13,17 +13,10 @@ export class AddAServicePageObjects {
             .describedAs('the Add an LA service Link');
 
 
-
-
     static manageServicesLink = () =>
         PageElement
             .located(By.xpath("//div[@class='govuk-width-container']//div[2]//div[2]//h3[1]//a[1]"))
             .describedAs('the Manage services Link');
-
-
-
-
-
 
 
 
@@ -32,10 +25,6 @@ export class AddAServicePageObjects {
         PageElement
             .located(By.xpath("//a[@href='/manage-services/start-add-service?servicetype=Vcs']"))
             .describedAs('the Add a VCS service Link');
-
-
-
-
 
 
 
@@ -60,11 +49,6 @@ export class AddAServicePageObjects {
 
 
 
-
-
-
-
-
     ///***** */
     // Locator for the "Search and select the local authority area this service is in" field
     static searchAndSelectLaField = () =>
@@ -74,22 +58,11 @@ export class AddAServicePageObjects {
 
 
 
-
-
-
-
-
     //What is the service name? Page
     static whatIsTheServiceNameField = () =>
         PageElement
             .located(By.id("textbox"))
             .describedAs('the Enter a name of the service Field');
-
-
-
-
-
-
 
 
     //What support does the service offer?  Page
@@ -110,22 +83,10 @@ export class AddAServicePageObjects {
     };
 
 
-
-
-
-
-
-
     static whatSupportDoesTheServiceOfferSecondaryCategory = () =>
         PageElement
             .located(By.id("category-7"))
             .describedAs('What support does the service offer? Field-Activities sub group');
-
-
-
-
-
-
 
 
     //Give a description of the service
@@ -133,13 +94,6 @@ export class AddAServicePageObjects {
         PageElement
             .located(By.id("textarea"))
             .describedAs('Give a description of the service Field');
-
-
-
-
-
-
-
 
     //Is the support offered by this service related to children or young people?
     static isSupportRelatedToChildrenOrYoungPeopleField = (supportType) => {
@@ -159,21 +113,11 @@ export class AddAServicePageObjects {
     };
 
 
-
-
-
-
     // Which language is the service offered in? Page
     static getServiceOfferedLanguagesField = () =>
         PageElement
             .located(By.xpath("//input[@id='language-0']"))
             .describedAs('Which language is the service offered in Field');
-
-
-
-
-
-
 
 
     //Does the service cost money to use? Page
@@ -192,9 +136,6 @@ export class AddAServicePageObjects {
             throw new Error(`Selection does not exist.`);
         }
     };
-
-
-
 
 
 
@@ -221,12 +162,6 @@ export class AddAServicePageObjects {
     };
 
 
-
-
-
-
-
-
     //Do you want to add any locations for this service? Page
     static addServiceLocations = (supportType) => {
         if (supportType === "Yes") {
@@ -245,23 +180,11 @@ export class AddAServicePageObjects {
     };
 
 
-
-
-
-
-
-
     //Search and select an existing location to add to this service Page
     static searchAndSelectLocation = () =>
         PageElement
             .located(By.xpath("//input[@id='select']"))
             .describedAs('Search and select an existing location');
-
-
-
-
-
-
 
 
     //On which days can people use this service at ? Page
@@ -280,14 +203,8 @@ export class AddAServicePageObjects {
             throw new Error(`Option does not exist`);
         }
     };
+
     //Can you provide more details about using this service ? at a location Page
-
-
-
-
-
-
-
 
     static getServiceUsageDetails = (supportType) => {
         if (supportType === "Yes") {
@@ -306,22 +223,10 @@ export class AddAServicePageObjects {
     };
 
 
-
-
-
-
-
-
     static enterDetailAboutLocation = () =>
         PageElement
             .located(By.id("text-area"))
             .describedAs('Search and select an existing location');
-
-
-
-
-
-
 
 
     //Confirm Location page
@@ -329,11 +234,6 @@ export class AddAServicePageObjects {
         PageElement
             .located(By.css("button[value='add']"))
             .describedAs('Add another location button');
-
-
-
-
-
 
 
 
@@ -364,11 +264,6 @@ export class AddAServicePageObjects {
         }
     };
 
-
-
-
-
-
     static enterTextCorrespondenceToFindOutAboutService = (contactType) => {
         if (contactType === "Email") {
             return PageElement
@@ -396,12 +291,6 @@ export class AddAServicePageObjects {
     };
 
 
-
-
-
-
-
-
     //Give more details about this service
     static provideMoreServiceDetailsTextField = () =>
         PageElement
@@ -410,26 +299,11 @@ export class AddAServicePageObjects {
 
 
 
-
-
-
-
-
-
-
-
-
     //Check the details and add service
     static confirmAndAddAServiceButton = () =>
         PageElement
             .located(By.css("button[class='govuk-button']"))
             .describedAs('Confirm details and add a service Button');
-
-
-
-
-
-
 
 
     //continue buttons
@@ -450,17 +324,10 @@ export class AddAServicePageObjects {
 
 
 
-
-
-
     static continueButtonForAddALocationButton = () =>
         PageElement
             .located(By.css("button[value='continue']"))
             .describedAs('Continue Button');
-
-
-
-
 
 
     //Check the details and add service
@@ -468,7 +335,6 @@ export class AddAServicePageObjects {
         PageElement
             .located(By.xpath("//div[@class='moj-filter__selected']/div[2]/fieldset/input"))
             .describedAs('Enter a service Name into Text Area Field');
-
 
 
 
