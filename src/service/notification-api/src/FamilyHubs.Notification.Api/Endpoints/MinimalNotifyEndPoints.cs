@@ -1,4 +1,5 @@
-﻿using FamilyHubs.Notification.Core.Commands.CreateNotification;
+﻿using System.Net.Mime;
+using FamilyHubs.Notification.Core.Commands.CreateNotification;
 using FamilyHubs.Notification.Core.Queries.GetSentNotifications;
 using FamilyHubs.Notification.Api.Contracts;
 using MediatR;
@@ -26,7 +27,9 @@ public class MinimalNotifyEndPoints
             var result = await _mediator.Send(request, cancellationToken);
             return result;
 
-        }).WithMetadata(new SwaggerOperationAttribute("Get Notifications", "Get Paginated Notification List") { Tags = new[] { "Notifications" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Notifications", "Get Paginated Notification List") { Tags = new[] { "Notifications" } })
+            .Produces<PaginatedList<MessageDto>>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("api/notify/{id}", [Authorize] async (long id, CancellationToken cancellationToken, ISender _mediator) =>
         {
@@ -34,6 +37,8 @@ public class MinimalNotifyEndPoints
             var result = await _mediator.Send(request, cancellationToken);
             return result;
 
-        }).WithMetadata(new SwaggerOperationAttribute("Get Notification By Id", "Get Notification By Id") { Tags = new[] { "Notifications" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Notification By Id", "Get Notification By Id") { Tags = new[] { "Notifications" } })
+            .Produces<MessageDto>(contentType: MediaTypeNames.Application.Json);
     }
 }

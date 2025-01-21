@@ -10,13 +10,8 @@ let gulp = require("gulp"),
     terser = require('gulp-terser'),
     ts = require("gulp-typescript"),
     //typescript = require('typescript'),
-    rollup = require('gulp-better-rollup'),
+    rollup = require('gulp-better-rollup');
     //concat = require('gulp-concat'),
-    del;
-
-(async () => {
-    del = (await import('del')).default;
-})();
 
 gulp.task('sass-to-min-css', async function () {
     return gulp.src('./styles/application.scss')
@@ -86,8 +81,9 @@ gulp.task('bundle-and-minify-js', () => {
         .pipe(gulp.dest('./wwwroot/js'));
 });
 
-gulp.task('clean', () => {
-    return del('./tmp/**');
+gulp.task('clean', async () => {
+    const { deleteSync } = await import('del');
+    return deleteSync(['./tmp/**']);
 });
 
 //gulp.task('js', gulp.series('clean', 'transpile-ts', 'naive-bundle-js', 'bundle-and-minify-js'));
