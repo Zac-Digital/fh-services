@@ -50,8 +50,14 @@ locals {
   delete_retention_policy_days = 7
   container_delete_retention_policy_days = 7
   public_network_access_enabled_storage = true
-  data_protection_keys_public_network_access_enabled_storage = true
   infrastructure_encryption_enabled = true
+  
+  # SQL
+  sal_audit_actions_and_groups = [
+    "BATCH_COMPLETED_GROUP",
+    "SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP",
+    "FAILED_DATABASE_AUTHENTICATION_GROUP"
+  ]
   
   # Tags
   tags = {
@@ -245,7 +251,7 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = true
   identity {
     type                                        = "SystemAssigned"
   }
@@ -255,6 +261,7 @@ resource "azurerm_windows_web_app" "fh_idam_maintenance_ui" {
     health_check_path                           = "/api/health"
     health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled                      = "true"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -309,6 +316,7 @@ resource "azurerm_windows_web_app" "fh_referral_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
@@ -357,7 +365,7 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = false # SSL termination at GW
   identity {
     type                                        = "SystemAssigned"
   }
@@ -367,6 +375,7 @@ resource "azurerm_windows_web_app" "fh_referral_ui" {
     health_check_path                           = "/api/health"
     health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled                      = "true"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -428,6 +437,7 @@ resource "azurerm_windows_web_app" "fh_sd_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
@@ -474,7 +484,7 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = false # SSL termination at GW
   identity {
     type                                        = "SystemAssigned"
   }
@@ -484,9 +494,10 @@ resource "azurerm_windows_web_app" "fh_sd_ui" {
     health_check_path                           = "/api/health"
     health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled                      = "true"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
-      dotnet_version                              = "v7.0"
+      dotnet_version                              = var.dotnet_version_general
     }
     ip_restriction {
       name       = "AllowAppAccess"
@@ -530,7 +541,7 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = false # SSL termination at GW
   identity {
     type                                        = "SystemAssigned"
   }
@@ -540,6 +551,7 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
     health_check_path                           = "/api/health"
     health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled                      = "true"
+    http2_enabled                               = true
     application_stack {
       current_stack                               = var.current_stack
       dotnet_version                              = var.dotnet_version_general
@@ -586,7 +598,7 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
   location                                      = var.location
   service_plan_id                               = azurerm_service_plan.apps_plan.id
   client_affinity_enabled                       = false
-  https_only                                    = false
+  https_only                                    = false # SSL termination at GW
   identity {
     type                                        = "SystemAssigned"
   }
@@ -594,6 +606,7 @@ resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
@@ -649,6 +662,7 @@ resource "azurerm_windows_web_app" "fh_idam_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
@@ -704,6 +718,7 @@ resource "azurerm_windows_web_app" "fh_notification_api" {
     always_on                                   = true
     ftps_state                                  = "Disabled"
     health_check_path                           = "/api/health"
+    http2_enabled                               = true
     health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
     application_stack {
       current_stack                               = var.current_stack
@@ -751,7 +766,7 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
   location = var.location
   service_plan_id = azurerm_service_plan.apps_plan.id
   client_affinity_enabled = false
-  https_only = false
+  https_only = true
   identity {
     type = "SystemAssigned"
   }
@@ -761,6 +776,7 @@ resource "azurerm_windows_web_app" "open_referral_mock_api_web_app" {
     health_check_path = "/"
     health_check_eviction_time_in_min = 5 # How long to be removed from LB if unhealthy
     vnet_route_all_enabled = "true"
+    http2_enabled = true
     application_stack {
       current_stack = var.current_stack
       dotnet_version = "v8.0"
@@ -1640,46 +1656,6 @@ resource "azurerm_monitor_diagnostic_setting" "ref_ui_gw_law_logs" {
 
 # Key Vaults, Secrets, Certs & Keys
 data "azurerm_client_config" "current" {}
-resource "azurerm_key_vault" "kv1" {
-  depends_on = [local.resource_group_name]
-  name                        = "${var.prefix}-kv-fh-general"
-  resource_group_name         = local.resource_group_name
-  location                    = var.location
-  enabled_for_disk_encryption = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
-  sku_name                    = "standard"
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  tags = local.tags
-}
 
 resource "azurerm_key_vault" "kv2" {
   depends_on = [
@@ -1702,7 +1678,7 @@ resource "azurerm_key_vault" "kv2" {
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
+  purge_protection_enabled    = true
   sku_name                    = "standard"
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -1803,7 +1779,7 @@ resource "azurerm_key_vault" "kv3" {
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
+  purge_protection_enabled    = true
   sku_name                    = "standard"
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -1864,47 +1840,6 @@ resource "azurerm_key_vault_key" "kv3k1" {
   ]
 }
 
-resource "azurerm_key_vault" "kv4" {
-  depends_on = [ local.resource_group_name]
-  name                        = "${var.prefix}-kv-fh-servdir"
-  resource_group_name         = local.resource_group_name
-  location                    = var.location
-  enabled_for_disk_encryption = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
-  sku_name                    = "standard"
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  tags = local.tags
-}
-
 resource "azurerm_key_vault" "kv5" {
   depends_on = [ local.resource_group_name]
   name                        = "${var.prefix}-kv-fh-idam"
@@ -1913,7 +1848,7 @@ resource "azurerm_key_vault" "kv5" {
   enabled_for_disk_encryption = true
   tenant_id                   = data.azurerm_client_config.current.tenant_id
   soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
+  purge_protection_enabled    = true
   sku_name                    = "standard"
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -1950,47 +1885,6 @@ resource "azurerm_key_vault" "kv5" {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_web_app.fh_referral_ui.identity.0.principal_id
     key_permissions = local.referral_app_key_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.github_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  tags = local.tags
-}
-
-resource "azurerm_key_vault" "kv6" {
-  depends_on = [ local.resource_group_name]
-  name                        = "${var.prefix}-kv-fh-notify"
-  resource_group_name         = local.resource_group_name
-  location                    = var.location
-  enabled_for_disk_encryption = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  soft_delete_retention_days  = 90
-  purge_protection_enabled    = false
-  sku_name                    = "standard"
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.reader_usr_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.delivery_team_user_group_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = var.service_principals.ado_enterprise_object_id
-    certificate_permissions = local.principal_certificate_permissions
-    key_permissions = local.principal_key_permissions
-    secret_permissions = local.principal_secret_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -2039,6 +1933,33 @@ resource "azurerm_mssql_server" "sqlserver" {
   }
   
   tags = local.tags
+}
+
+resource "azurerm_mssql_server_extended_auditing_policy" "sql_server_auditing_policy" { 
+  server_id = azurerm_mssql_server.sqlserver.id
+  log_monitoring_enabled = true
+  audit_actions_and_groups = local.sal_audit_actions_and_groups
+}
+
+resource "azurerm_monitor_diagnostic_setting" "sql_server_diagnostics" {
+  name = "sql-server-diagnostics"
+  target_resource_id = "${azurerm_mssql_server.sqlserver.id}/databases/master"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.app_services.id
+  enabled_log {
+    category_group = "AllLogs"
+  }
+  metric {
+    category = "Basic"
+    enabled  = false
+  }
+  metric {
+    category = "InstanceAndAppAdvanced"
+    enabled  = false
+  }
+  metric {
+   category = "WorkloadManagement" 
+   enabled  = false
+  }
 }
 
 # SQL Server Databases
@@ -2815,8 +2736,12 @@ resource "azurerm_storage_account" "storage_appgw_errorpage" {
   min_tls_version           			    = local.min_tls_version
   public_network_access_enabled 		    = local.public_network_access_enabled_storage
   account_replication_type  			    = local.account_replication_type
-  infrastructure_encryption_enabled 	    = local.infrastructure_encryption_enabled
+  infrastructure_encryption_enabled 	= local.infrastructure_encryption_enabled
   cross_tenant_replication_enabled          = false
+  provisioner "local-exec" {
+    command = "az storage account update --name ${self.name} --resource-group ${self.resource_group_name} --key-exp-days 365"
+    interpreter = ["pwsh", "-Command"]
+  }
   blob_properties {
     versioning_enabled     				    = local.versioning_enabled
     change_feed_enabled    				    = local.change_feed_enabled
@@ -2911,6 +2836,10 @@ resource "azurerm_storage_account" "storage_db_logs" {
   account_replication_type = local.account_replication_type
   infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
   cross_tenant_replication_enabled = false
+  provisioner "local-exec" {
+    command = "az storage account update --name ${self.name} --resource-group ${self.resource_group_name} --key-exp-days 365"
+    interpreter = ["pwsh", "-Command"]
+  }
   blob_properties {
     versioning_enabled     = local.versioning_enabled
     change_feed_enabled    = local.change_feed_enabled
@@ -2927,38 +2856,6 @@ resource "azurerm_storage_account" "storage_db_logs" {
 resource "azurerm_storage_container" "container_db_va_logs" {
   name                  = "${var.prefix}sadbvalogs"
   storage_account_name  = azurerm_storage_account.storage_db_logs.name
-  container_access_type = "blob"
-}
-
-resource "azurerm_storage_account" "connect_data_protection_keys" {
-  name                = "${var.prefix}saconnectdpkeys"
-  resource_group_name = local.resource_group_name
-  location            = var.location
-  account_tier             = local.account_tier
-  account_kind             = local.account_kind
-  access_tier              = local.access_tier
-  min_tls_version          = local.min_tls_version
-  is_hns_enabled           = local.is_hns_enabled
-  public_network_access_enabled = local.data_protection_keys_public_network_access_enabled_storage
-  account_replication_type = local.account_replication_type
-  infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
-  cross_tenant_replication_enabled = false
-  blob_properties {
-    versioning_enabled     = local.versioning_enabled
-    change_feed_enabled    = local.change_feed_enabled
-    delete_retention_policy {
-      days                 = local.delete_retention_policy_days
-    }
-    container_delete_retention_policy {
-      days                 = local.container_delete_retention_policy_days
-    }
-  }
-  tags = local.tags
-}
-
-resource "azurerm_storage_container" "container_connect_data_protection_keys" {
-  name                  = "${var.prefix}saconnectdpkeys"
-  storage_account_name  = azurerm_storage_account.connect_data_protection_keys.name
   container_access_type = "blob"
 }
 

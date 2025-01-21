@@ -1,9 +1,12 @@
+using System.Net.Mime;
 using FamilyHubs.Report.Core.Queries.ConnectionRequestsSentFacts;
 using FamilyHubs.Report.Core.Queries.ConnectionRequestsSentFacts.Requests;
 using FamilyHubs.Report.Core.Queries.ServiceSearchFacts;
 using FamilyHubs.Report.Core.Queries.ServiceSearchFacts.Requests;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Reports.ConnectionRequests;
+using FamilyHubs.SharedKernel.Reports.WeeklyBreakdown;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 
@@ -43,7 +46,8 @@ public class MinimalOrgReportEndPoints
                 LaSearchBreakdownRequest request = new(date, serviceTypeId, laOrgId);
                 await validator.ValidateAndThrowAsync(request);
                 return await getFourWeekBreakdownQuery.GetFourWeekBreakdownForLa(request);
-            });
+            })
+            .Produces<WeeklyReportBreakdown>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("report/service-searches-total/organisation/{laOrgId:long}",
             [Authorize(Roles = AllowedRoles)] async (
@@ -69,7 +73,8 @@ public class MinimalOrgReportEndPoints
                 OrgConnectionRequestsRequest request = new(orgId, date, 7);
                 await validator.ValidateAndThrowAsync(request);
                 return await getConnectionRequestsSentFactQuery.GetConnectionRequestsForOrg(request);
-            });
+            })
+            .Produces<ConnectionRequests>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("report/connection-requests-4-week-breakdown/organisation/{orgId:long}",
             [Authorize(Roles = AllowedRoles)]
@@ -83,7 +88,8 @@ public class MinimalOrgReportEndPoints
                 OrgConnectionRequestsBreakdownRequest request = new(date, orgId);
                 await validator.ValidateAndThrowAsync(request);
                 return await getConnectionRequestsSentFactFourWeekBreakdownQuery.GetFourWeekBreakdownForOrg(request);
-            });
+            })
+            .Produces<ConnectionRequestsBreakdown>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("report/connection-requests-total/organisation/{orgId:long}",
             [Authorize(Roles = AllowedRoles)]
@@ -95,6 +101,7 @@ public class MinimalOrgReportEndPoints
                 OrgConnectionRequestsTotalRequest request = new(orgId);
                 await validator.ValidateAndThrowAsync(request);
                 return await getConnectionRequestsSentFactQuery.GetTotalConnectionRequestsForOrg(request);
-            });
+            })
+            .Produces<ConnectionRequests>(contentType: MediaTypeNames.Application.Json);
     }
 }

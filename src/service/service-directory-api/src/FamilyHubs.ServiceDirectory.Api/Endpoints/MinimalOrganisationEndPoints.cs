@@ -1,4 +1,5 @@
-﻿using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
+﻿using System.Net.Mime;
+using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.CreateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.DeleteOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Commands.Organisations.UpdateOrganisation;
 using FamilyHubs.ServiceDirectory.Core.Queries.Organisations.GetOrganisationAdminAreaById;
@@ -36,7 +37,9 @@ public class MinimalOrganisationEndPoints
                 
                 throw;
             }
-        }).WithMetadata(new SwaggerOperationAttribute("Get Organisation", "Get Organisation By Id") { Tags = new[] { "Organisations" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Organisation", "Get Organisation By Id") { Tags = new[] { "Organisations" } })
+            .Produces<OrganisationDetailsDto>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("api/organisationAdminCode/{id}", async (long id, CancellationToken cancellationToken, ISender mediator, ILogger<MinimalOrganisationEndPoints> logger) =>
         {
@@ -76,7 +79,8 @@ public class MinimalOrganisationEndPoints
                 
                 throw;
             }
-        }).WithMetadata(new SwaggerOperationAttribute("List Organisations", "List Organisations") { Tags = new[] { "Organisations" } });
+        }).WithMetadata(new SwaggerOperationAttribute("List Organisations", "List Organisations") { Tags = new[] { "Organisations" } })
+        .Produces<List<OrganisationDto>>(contentType: MediaTypeNames.Application.Json);
 
         app.MapPut("api/organisations/{id}",
             [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async 
@@ -134,11 +138,14 @@ public class MinimalOrganisationEndPoints
 
                 throw;
             }
-        }).WithMetadata(
-            new SwaggerOperationAttribute(
-                "List Organisations By Parent", 
-                "Lists Organisations associated with the parent id, also returns parent organisation"
-                ) { Tags = new[] { "Organisations" } });
+        })
+            .WithMetadata(
+                new SwaggerOperationAttribute(
+                    "List Organisations By Parent",
+                    "Lists Organisations associated with the parent id, also returns parent organisation"
+                    ) { Tags = new[] { "Organisations" } }
+            )
+            .Produces<List<OrganisationDto>>(contentType: MediaTypeNames.Application.Json);
 
         app.MapDelete("api/organisations/{id}",
             [Authorize(Roles = $"{RoleTypes.DfeAdmin},{RoleTypes.LaManager},{RoleTypes.LaDualRole}")] async

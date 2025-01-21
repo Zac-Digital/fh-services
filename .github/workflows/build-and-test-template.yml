@@ -16,7 +16,7 @@ on:
 jobs:
   build_and_test:
     name: Build Project & Run Tests
-    runs-on: 'ubuntu-22.04'
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: src/${{ inputs.working_directory }}
@@ -36,15 +36,15 @@ jobs:
         shell: bash
         run: dotnet tool install --global LiquidTestReports.Cli --version 2.0.0-beta.2
 
-      - name: Package Cache
+      - name: NuGet Package Cache
         uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          key: ${{ runner.os }}-NuGet-${{ inputs.job_name }}-${{ hashFiles('**/*.csproj') }}
           restore-keys: |
-            ${{ runner.os }}-nuget-
+            ${{ runner.os }}-NuGet-${{ inputs.job_name }}-${{ hashFiles('**/*.csproj') }}
 
-      - name: Install & Configure Spatialite
+      - name: Install & Configure SpatiaLite
         if: ${{ inputs.working_directory == 'service/service-directory-api' || inputs.working_directory == 'service/referral-api' }}
         shell: bash
         run: |

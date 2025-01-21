@@ -14,6 +14,7 @@ resource "azurerm_windows_function_app" "open_referral_function_app" {
   service_plan_id = azurerm_service_plan.apps_plan.id
   storage_account_name = module.open_referral_storage_account.storage_account_name
   storage_account_access_key = module.open_referral_storage_account.storage_account_primary_access_key
+  https_only = true
   app_settings = {
     "AppConfiguration:KeyVaultIdentifier" = "${var.prefix}-kv-fh-admin"
     "AppConfiguration:KeyVaultPrefix" = "OPEN-REFERRAL-FUNC"
@@ -28,6 +29,7 @@ resource "azurerm_windows_function_app" "open_referral_function_app" {
     minimum_tls_version = "1.2"
     always_on = true
     application_insights_connection_string = azurerm_application_insights.app_insights.connection_string
+    http2_enabled = true
     application_stack {
       dotnet_version = var.dotnet_version_general
       use_dotnet_isolated_runtime = true
