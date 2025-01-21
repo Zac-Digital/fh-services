@@ -64,7 +64,7 @@ export default defineConfig<SerenityOptions>({
 
     /* Configure projects for major browsers */
     projects: [
-    // Jira Ticket: https://dfedigital.atlassian.net/browse/FHB-1246
+    //Due to authentication issues when logging into the service when using with multiple Browsers, the browsers have been commented out till fixed by ticket FHB-1246
         // {
         //     name: 'Microsoft Edge',
         //     use: {
