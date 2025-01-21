@@ -21,3 +21,39 @@ export const getRandomFullName = () => {
 
     return firstName + " " + surname;
 }
+const generateRandomText = (length = 3, possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") => {
+    let text = "";
+    for (let i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+};
+
+
+
+
+const getFormattedDate = () => {
+    return new Date().toLocaleDateString('en-GB', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+};
+
+
+
+
+export const getRandomServiceName = () => {
+    const text = generateRandomText();
+    const date = getFormattedDate();
+    return `Automated Test LA Service ${text} ${date}`;
+};
+
+
+
+
+export const getRandomVCFServiceName = () => {
+    const text = generateRandomText();
+    const date = getFormattedDate();
+    return `Automated Test VCS Service ${text} ${date}`;
+};
