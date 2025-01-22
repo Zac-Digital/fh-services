@@ -112,7 +112,7 @@ jobs:
           
       - name: Run Playwright Test Suite
         shell: bash
-        run: npx playwright test --workers `nproc`
+        run: npx playwright test --workers 1
         
       - name: Upload Report
         uses: actions/upload-artifact@v4
