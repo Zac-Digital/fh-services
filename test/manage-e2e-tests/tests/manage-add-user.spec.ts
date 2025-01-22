@@ -5,7 +5,6 @@ import {
     clickAddUserLink,
     clickConfirmDetails,
     clickContinue,
-    clickOnTheStartButton,
     clickSecondContinue,
     enterFullName,
     enterTestEmail,
@@ -14,7 +13,6 @@ import {
     isTheManageHomepageDisplayed,
     isUserCreatedPageDisplayed,
     isUserFoundInUserList,
-    loginToManage,
     navigateToManage,
     searchForUserByName,
     selectLocalAuthority, 
@@ -32,8 +30,6 @@ describe('Add a User - Manage Tests', () => {
     test.beforeEach('Setup', async ({actor}) => {
         await actor.attemptsTo(
             navigateToManage(),
-            clickOnTheStartButton(),
-            loginToManage(),
             acceptManageTermsAndConditions(),
             acceptCookies(),
             isTheManageHomepageDisplayed());
