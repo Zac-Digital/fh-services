@@ -1,6 +1,5 @@
 ﻿using FamilyHubs.Notification.Api.Client.Extensions;
 using FamilyHubs.Notification.Api.Client.Templates;
-using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Web.Pages.Vcs;
 using FamilyHubs.SharedKernel.GovLogin.AppStart;
 using FamilyHubs.SharedKernel.Identity;
@@ -9,8 +8,11 @@ using Microsoft.ApplicationInsights.Extensibility;
 using Serilog;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
+using FamilyHubs.RequestForSupport.Core.ApiClients;
 using FamilyHubs.RequestForSupport.Infrastructure.Health;
 using FamilyHubs.SharedKernel.Health;
+using IReferralClientService = FamilyHubs.RequestForSupport.Core.ApiClients.IReferralClientService;
+using ReferralClientService = FamilyHubs.RequestForSupport.Core.ApiClients.ReferralClientService;
 
 namespace FamilyHubs.RequestForSupport.Web;
 
@@ -57,11 +59,6 @@ public static class StartupExtensions
         // handle API failures as Degraded, so that App Services doesn't remove or replace the instance (all instances!) due to an API being down
         //services.AddHealthChecks();
 
-        // enable strict-transport-security header on localhost
-#if hsts_localhost
-        services.AddHsts(o => o.ExcludedHosts.Clear());
-#endif
-
         services.AddSiteHealthChecks(configuration);
 
         services.AddFamilyHubs(configuration);
@@ -69,9 +66,14 @@ public static class StartupExtensions
 
     public static void AddHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSecuredTypedHttpClient<IReferralClientService, ReferralClientService>((serviceProvider, httpClient) =>
+        services.AddSecuredTypedHttpClient<IReferralClientService, ReferralClientService>((_, httpClient) =>
         {
             httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralApiUrl")!);
+        });
+        
+        services.AddSecuredTypedHttpClient<IOrganisationClientService, OrganisationClientService>((_, httpClient) =>
+        {
+            httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ServiceDirectoryUrl")!);
         });
     }
 
@@ -101,17 +103,8 @@ public static class StartupExtensions
         app.UseFamilyHubsDataProtection();
 
         app.UseFamilyHubs();
-
-        // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
-        {
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
-        }
-
-#if use_https
-        app.UseHttpsRedirection();
-#endif
+        
+        app.UseHsts();
         app.UseStaticFiles();
 
         app.UseRouting();

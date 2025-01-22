@@ -13,7 +13,7 @@
 }
 
 @section Scripts {
-    <script src="~/js/accessible-autocomplete.min.js" asp-append-version="true"></script>
+    <script src="~/js/accessible-autocomplete.min.js" asp-add-nonce asp-append-version="true"></script>
 }
 
 <h1 class="govuk-heading-l app-wrap-anywhere">Set Claims / Permissions for @Model.Name</h1>
@@ -97,7 +97,7 @@
 
     <p><a href="/UserClaims?accountId=@Model.AccountId&username=@Model.Name">List all user claims</a></p>
 
-    <button type="submit" class="govuk-button" data-module="govuk-button">
+    <button type="submit" class="govuk-button" data-module="govuk-button" data-testid="continue-button">
         Continue
     </button>
 </form>

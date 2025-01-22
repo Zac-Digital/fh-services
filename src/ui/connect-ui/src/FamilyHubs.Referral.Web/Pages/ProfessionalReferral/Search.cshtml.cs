@@ -1,22 +1,23 @@
+using FamilyHubs.Referral.Core.Models;
+using FamilyHubs.Referral.Web.Errors;
 using FamilyHubs.Referral.Web.Pages.Shared;
-using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Razor.ErrorNext;
+using FamilyHubs.SharedKernel.Razor.Header;
 using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
 using FamilyHubs.SharedKernel.Services.Postcode.Model;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 //todo: it would be better to look up and store the postcode once here, rather than each time on the results page
 
-public class SearchModel : HeaderPageModel
+public class SearchModel : HeaderPageModel, IHasErrorStatePageModel
 {
     private readonly IPostcodeLookup _postcodeLookup;
+    public IErrorState Errors { get; private set;  } = ErrorState.Empty;
 
     [BindProperty]
     public string? Postcode { get; set; }
-
-    public bool PostcodeValid { get; set; } = true;
 
     public SearchModel(IPostcodeLookup postcodeLookup)
     {
@@ -35,7 +36,14 @@ public class SearchModel : HeaderPageModel
             });
         }
 
-        PostcodeValid = false;
+        var errorId = postcodeError switch
+        {
+            PostcodeError.NoPostcode => ErrorId.NoPostcode,
+            PostcodeError.InvalidPostcode => ErrorId.InvalidPostcode,
+            PostcodeError.PostcodeNotFound => ErrorId.PostcodeNotFound,
+            _ => ErrorId.PostcodeNotFound
+        };
+        Errors = ErrorState.Create(PossibleErrors.All, errorId);
         return Page();
     }
 }

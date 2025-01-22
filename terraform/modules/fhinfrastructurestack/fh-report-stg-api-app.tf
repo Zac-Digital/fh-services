@@ -17,6 +17,33 @@ resource "azurerm_mssql_server" "reporting_sql_server" {
   tags = local.tags
 }
 
+resource "azurerm_mssql_server_extended_auditing_policy" "reporting_sql_server_auditing_policy" {
+  server_id = azurerm_mssql_server.reporting_sql_server.id
+  log_monitoring_enabled = true
+  audit_actions_and_groups = local.sal_audit_actions_and_groups
+}
+
+resource "azurerm_monitor_diagnostic_setting" "reporting_sql_server_diagnostics" {
+  name = "reporting-sql-server-diagnostics"
+  target_resource_id = "${azurerm_mssql_server.reporting_sql_server.id}/databases/master"
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.app_services.id
+  enabled_log {
+    category_group = "AllLogs"
+  }
+  metric {
+    category = "Basic"
+    enabled  = false
+  }
+  metric {
+    category = "InstanceAndAppAdvanced"
+    enabled  = false
+  }
+  metric {
+    category = "WorkloadManagement"
+    enabled  = false
+  }
+}
+
 # SQL Server Database for Report Staging API
 resource "azurerm_mssql_database" "report_staging_db" {
   name = "${var.prefix}-fh-report-staging-db"
@@ -71,42 +98,4 @@ resource "azurerm_private_dns_a_record" "sql_report_stg_api_scm" {
   lifecycle {
     ignore_changes = [tags]
   }
-}
-
-# Storage Accounts for Report Staging API Logging
-resource "azurerm_storage_account" "storage_rep_stg_api_logs" {
-  name                = "${var.prefix}sarepstgapilogs"
-  resource_group_name = local.resource_group_name
-  location            = var.location
-  account_tier             = local.account_tier
-  account_kind             = local.account_kind
-  access_tier              = local.access_tier
-  min_tls_version          = local.min_tls_version
-  is_hns_enabled           = local.is_hns_enabled
-  public_network_access_enabled = local.public_network_access_enabled_storage
-  account_replication_type = local.account_replication_type
-  infrastructure_encryption_enabled = local.infrastructure_encryption_enabled
-  blob_properties {
-    versioning_enabled     = local.versioning_enabled
-    change_feed_enabled    = local.change_feed_enabled
-    delete_retention_policy {
-      days                 = local.delete_retention_policy_days
-    }
-    container_delete_retention_policy {
-      days                 = local.container_delete_retention_policy_days
-    }
-  }
-  tags = local.tags
-}
-
-resource "azurerm_storage_container" "container_rep_stg_api_app_logs" {
-  name                  = "${var.prefix}sarepstgapilogsapplogs"
-  storage_account_name  = azurerm_storage_account.storage_rep_stg_api_logs.name
-  container_access_type = "blob"
-}
-
-resource "azurerm_storage_container" "container_rep_stg_api_web_logs" {
-  name                  = "${var.prefix}sarepstgapilogswebserverlogs"
-  storage_account_name  = azurerm_storage_account.storage_rep_stg_api_logs.name
-  container_access_type = "blob"
 }

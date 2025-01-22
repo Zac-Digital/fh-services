@@ -198,6 +198,7 @@ public static class StartupExtensions
         webApplication.UseSwaggerUI();
 
         webApplication.UseHttpsRedirection();
+        webApplication.UseHsts();
 
         webApplication.MapControllers();
 
