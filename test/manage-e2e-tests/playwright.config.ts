@@ -45,7 +45,7 @@ export default defineConfig<SerenityOptions>({
         baseURL: process.env.BASE_URL,
 
         /* Set headless: false to see the browser window */
-        headless: false,
+        headless: true,
 
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
         actionTimeout: 0,
