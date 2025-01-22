@@ -74,10 +74,6 @@ jobs:
       - name: Install NPM Packages
         shell: bash
         run: npm i
-        
-      - name: Install Playwright Dependencies
-        shell: bash
-        run: npx playwright install-deps
       
       - name: Get Playwright Version
         id: playwright-version
