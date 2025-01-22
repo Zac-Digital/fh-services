@@ -1,20 +1,16 @@
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Errors;
 using FamilyHubs.Referral.Web.Pages.Shared;
-using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using FamilyHubs.SharedKernel.Razor.Header;
 using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
 using FamilyHubs.SharedKernel.Services.Postcode.Model;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StackExchange.Redis;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 //todo: it would be better to look up and store the postcode once here, rather than each time on the results page
 
-[Authorize(Roles = RoleGroups.LaOrVcsProfessionalOrDualRole)]
 public class SearchModel : HeaderPageModel, IHasErrorStatePageModel
 {
     private readonly IPostcodeLookup _postcodeLookup;
