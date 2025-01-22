@@ -244,7 +244,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         var localOfferFilter = new LocalOfferFilter
         {
             CanFamilyChooseLocation = CanFamilyChooseLocation,
-            ServiceType = null,
+            ServiceType = "InformationSharing",
             Status = "Active",
             PageSize = PageSize,
             IsPaidFor = isPaidFor,
