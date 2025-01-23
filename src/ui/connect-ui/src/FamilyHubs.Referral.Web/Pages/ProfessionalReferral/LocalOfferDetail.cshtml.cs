@@ -2,7 +2,6 @@ using FamilyHubs.Referral.Core.ApiClients;
 using FamilyHubs.ServiceDirectory.Shared.Dto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Microsoft.AspNetCore.Authorization;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
@@ -44,9 +43,7 @@ public class LocalOfferDetailModel : HeaderPageModel
         ReturnUrl = StringValues.IsNullOrEmpty(referer) ? Url.Page("Search") : referer.ToString();
         LocalOffer = await _organisationClientService.GetLocalOfferById(serviceId);
 
-        if (!await _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices) 
-            &&
-            LocalOffer.ServiceType == ServiceType.InformationSharing)
+        if (await ShouldDisableServiceDetailPage())
         {
             return RedirectToPage("/Error/404");
         }
@@ -83,6 +80,9 @@ public class LocalOfferDetailModel : HeaderPageModel
 
         return (serviceScheduleAttendingTypes, LocalOffer.Schedules.FirstOrDefault());
     }
+
+    private async Task<bool> ShouldDisableServiceDetailPage() => 
+        !await _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices) && LocalOffer.ServiceType == ServiceType.InformationSharing;
 
     private async Task<bool> ShouldShowConnectionRequestButton()
     {
