@@ -45,7 +45,7 @@ public class SearchModel : HeaderPageModel, IHasErrorStatePageModel
                 currentPage = 1
             });
         }
-
+        
         var errorId = postcodeError switch
         {
             PostcodeError.NoPostcode => ErrorId.NoPostcode,
@@ -54,6 +54,7 @@ public class SearchModel : HeaderPageModel, IHasErrorStatePageModel
             _ => ErrorId.PostcodeNotFound
         };
         Errors = ErrorState.Create(PossibleErrors.All, errorId);
-        return Page();
+        
+        return OnGet();
     }
 }
