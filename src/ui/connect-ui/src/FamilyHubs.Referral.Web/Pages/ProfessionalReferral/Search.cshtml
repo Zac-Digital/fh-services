@@ -11,11 +11,16 @@
         <partial name="_ErrorSummaryNext" for="@Model.Errors"/>
 
         @{Error? error = Model.Errors.GetErrorIfTriggered(); }
-
-        <h1 class="govuk-heading-l">Search for services by postcode</h1>
-        <p class="govuk-details">
-            Use the postcode of the people who need support to find services local to them.
-        </p>
+        
+        @if (Model.IsNotLoggedIn)
+        {
+            @await Html.PartialAsync("_SearchPublicUser")
+        }
+        else
+        {
+            @await Html.PartialAsync("_SearchPractitionerUser")
+        }
+        
         <form method="post" novalidate>
             <div class="govuk-form-group @(error?.FormGroupClass)" id="search-options">
                 <label class="govuk-label govuk-label--s" for="Postcode">
