@@ -1,6 +1,10 @@
 name: Seed Database with E2E Test Data
 run-name: Seed ${{ inputs.environment }} Database with E2E Test Data (${{ inputs.action }})
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}-${{ inputs.environment }}-E2E"
+  cancel-in-progress: true
+
 on:
   workflow_dispatch: 
     inputs:
