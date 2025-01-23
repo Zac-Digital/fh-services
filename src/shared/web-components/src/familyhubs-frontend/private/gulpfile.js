@@ -27,9 +27,9 @@ let sassPaths = [
 gulp.task('sass-to-min-css', async function () {
     return gulp.src('../styles/all.scss')
         .pipe(sourcemaps.init())
-          .pipe(sass({
-              includePaths: sassPaths
-          }).on('error', sass.logError))
+        .pipe(sass({
+            includePaths: sassPaths
+        }).on('error', sass.logError))
         .pipe(csso())
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./wwwroot/css'));
