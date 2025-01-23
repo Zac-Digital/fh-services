@@ -5,6 +5,13 @@
     Model.Errors.ErrorIdToHtmlElementId = _ => "postcode";
 }
 
+@if (Model.IsNotLoggedIn)
+{
+    @section Back {
+        <a href="/" class="govuk-back-link">Back</a>
+    } 
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
