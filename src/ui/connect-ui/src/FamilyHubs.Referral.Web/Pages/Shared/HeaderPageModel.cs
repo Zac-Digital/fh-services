@@ -3,7 +3,6 @@ using FamilyHubs.SharedKernel.Razor.FamilyHubsUi.Options;
 using FamilyHubs.SharedKernel.Razor.Header;
 using FamilyHubs.SharedKernel.Razor.Links;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.FeatureManagement;
 
 namespace FamilyHubs.Referral.Web.Pages.Shared;
 
