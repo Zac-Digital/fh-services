@@ -87,7 +87,8 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
     {
         if (!await _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices))
         {
-            // TODO: Will need to be adjusted once we implement LA Services in Connect 
+            // TODO: Will need to be adjusted once we implement LA Services in Connect
+            // TODO: Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1245
             return (new PaginatedList<ServiceDto>(), new HttpResponseMessage(HttpStatusCode.OK));
         }
         
