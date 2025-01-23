@@ -1,6 +1,4 @@
-import { By, PageElement } from '@serenity-js/web';
-
-
+import {By, PageElement} from '@serenity-js/web';
 
 
 export class AddAServicePageObjects {
@@ -19,7 +17,6 @@ export class AddAServicePageObjects {
             .describedAs('the Manage services Link');
 
 
-
     // ******Locator for the "Add a VCSService" link
     static addAVCSServiceLink = () =>
         PageElement
@@ -27,18 +24,10 @@ export class AddAServicePageObjects {
             .describedAs('the Add a VCS service Link');
 
 
-
-
     static manageVcfsServicesLink = () =>
         PageElement
             .located(By.xpath("//a[@href='/manage-services?servicetype=Vcs']"))
             .describedAs('the Manage VCFS services Link');
-
-
-
-
-
-
 
 
     // Locator for the "Search and select the VCS authority area this service is in" field
@@ -48,14 +37,12 @@ export class AddAServicePageObjects {
             .describedAs('Search and select the VCS organisation Field');
 
 
-
     ///***** */
     // Locator for the "Search and select the local authority area this service is in" field
     static searchAndSelectLaField = () =>
         PageElement
             .located(By.xpath("//input[@id='select']"))
             .describedAs('Search and select the LA organisation Field');
-
 
 
     //What is the service name? Page
@@ -71,13 +58,11 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("category-1"))
                 .describedAs('What support does the service offer? Activities Taxonomy');
-        }
-        else if (categoryType === "Health") {
+        } else if (categoryType === "Health") {
             return PageElement
                 .located(By.id("category-3"))
                 .describedAs('What support does the service offer? Health Taxonomy');
-        }
-        else {
+        } else {
             throw new Error(`The primary category "Activities" could not be found.`);
         }
     };
@@ -101,13 +86,11 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("ViewModel_Children_Yes"))
                 .describedAs('yes Support is given');
-        }
-        else if (supportType === "No") {
+        } else if (supportType === "No") {
             return PageElement
                 .located(By.id("ViewModel_Children_No"))
                 .describedAs('No support is given');
-        }
-        else {
+        } else {
             throw new Error(`The selection does not exist`);
         }
     };
@@ -126,17 +109,14 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("UserInput_HasCost_Yes"))
                 .describedAs('Yes, this service requires a cost option');
-        }
-        else if (serviceCost === "No") {
+        } else if (serviceCost === "No") {
             return PageElement
                 .located(By.id("UserInput_HasCost_No"))
                 .describedAs('No, this service does not require payment option');
-        }
-        else {
+        } else {
             throw new Error(`Selection does not exist.`);
         }
     };
-
 
 
     //How can people use this service?
@@ -145,18 +125,15 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("checkbox-InPerson"))
                 .describedAs('Service can be accessed via In Person Option');
-        }
-        else if (accessType === "Online") {
+        } else if (accessType === "Online") {
             return PageElement
                 .located(By.id("checkbox-Online"))
                 .describedAs('Service can be accessed via Online Option');
-        }
-        else if (accessType === "Telephone") {
+        } else if (accessType === "Telephone") {
             return PageElement
                 .located(By.id("checkbox-Telephone"))
                 .describedAs('Service can be accessed via Telephone Option');
-        }
-        else {
+        } else {
             throw new Error(`The selection does not exist`);
         }
     };
@@ -168,13 +145,11 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("radio-True"))
                 .describedAs('Yes, add a location option');
-        }
-        else if (supportType === "No") {
+        } else if (supportType === "No") {
             return PageElement
                 .located(By.id("radio-False"))
                 .describedAs('No, do not add a location option');
-        }
-        else {
+        } else {
             throw new Error(`The selection does not exist`);
         }
     };
@@ -193,13 +168,11 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("checkbox-MO"))
                 .describedAs('Selecting Monday');
-        }
-        else if (serviceDay === "Tuesday") {
+        } else if (serviceDay === "Tuesday") {
             return PageElement
                 .located(By.id("checkbox-TU"))
                 .describedAs('Selecting Tuesday');
-        }
-        else {
+        } else {
             throw new Error(`Option does not exist`);
         }
     };
@@ -211,13 +184,11 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("UserInput_HasDetails_Yes"))
                 .describedAs('yes Support is given');
-        }
-        else if (supportType === "No") {
+        } else if (supportType === "No") {
             return PageElement
                 .located(By.id("#UserInput_HasDetails_No"))
                 .describedAs('No support is given option');
-        }
-        else {
+        } else {
             throw new Error(`Option does not exist`);
         }
     };
@@ -236,30 +207,25 @@ export class AddAServicePageObjects {
             .describedAs('Add another location button');
 
 
-
     //How can people find out more about this service? Page
     static selectOptionToFindOutAboutService = (supportType) => {
         if (supportType === "Email") {
             return PageElement
                 .located(By.id("contact-email"))
                 .describedAs('Email option');
-        }
-        else if (supportType === "Telephone") {
+        } else if (supportType === "Telephone") {
             return PageElement
                 .located(By.id("#contact-telephone"))
                 .describedAs('Telephone option');
-        }
-        else if (supportType === "Website") {
+        } else if (supportType === "Website") {
             return PageElement
                 .located(By.id("#contact-website"))
                 .describedAs('website option');
-        }
-        else if (supportType === "Text message") {
+        } else if (supportType === "Text message") {
             return PageElement
                 .located(By.id("#contact-text-message"))
                 .describedAs('Text option');
-        }
-        else {
+        } else {
             throw new Error(`The primary category "Activities" could not be found.`);
         }
     };
@@ -269,23 +235,19 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("email-text-box"))
                 .describedAs('Email correspondence option');
-        }
-        else if (contactType === "Telephone") {
+        } else if (contactType === "Telephone") {
             return PageElement
                 .located(By.id("telephone-text-box"))
                 .describedAs('Telephone Correspondence option');
-        }
-        else if (contactType === "Website") {
+        } else if (contactType === "Website") {
             return PageElement
                 .located(By.id("website-text-box"))
                 .describedAs('Website corresspondence option');
-        }
-        else if (contactType === "Text message") {
+        } else if (contactType === "Text message") {
             return PageElement
                 .located(By.id("text-message-text-box"))
                 .describedAs('Text Corresspondence option');
-        }
-        else {
+        } else {
             throw new Error(`Option does not exist`);
         }
     };
@@ -296,7 +258,6 @@ export class AddAServicePageObjects {
         PageElement
             .located(By.id("textarea"))
             .describedAs('Give more details about this service Text Field');
-
 
 
     //Check the details and add service
@@ -313,15 +274,10 @@ export class AddAServicePageObjects {
             .describedAs('Continue Button');
 
 
-
-
-
-
     static continueButtonForCreateServiceupdate = () =>
         PageElement
             .located(By.css("button[type='submit']"))
             .describedAs('Continue Button');
-
 
 
     static continueButtonForAddALocationButton = () =>
@@ -337,21 +293,16 @@ export class AddAServicePageObjects {
             .describedAs('Enter a service Name into Text Area Field');
 
 
-
     static ApplyfilterInManageService = () =>
         PageElement
             .located(By.css("button[class='govuk-button']"))
             .describedAs('Apply filter button');
 
 
-
-
     static firstServiceNameTableEntryInManageService = () =>
         PageElement
             .located(By.xpath("//tbody/tr/td[1]"))
             .describedAs('First entry in the List of Services Table');
-
-
 
 
     static showFiltersButtonAddAService = () =>

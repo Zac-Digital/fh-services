@@ -1,10 +1,7 @@
-import { Answerable, Task, Wait, Check } from '@serenity-js/core';
-import { Click, Enter, Press, Key, isVisible, isClickable, Scroll } from '@serenity-js/web';
-import { AddAServicePageObjects } from "../page-objects/add-a-service-page-objects";
-import { homeButton } from "../page-objects/manage-page-objects";
-
-
-
+import {Answerable, Task, Wait, Check} from '@serenity-js/core';
+import {Click, Enter, Press, Key, isVisible, isClickable, Scroll} from '@serenity-js/web';
+import {AddAServicePageObjects} from "../page-objects/add-a-service-page-objects";
+import {homeButton} from "../page-objects/manage-page-objects";
 
 
 export const addAnLAService = (serviceName: Answerable<string>): Task =>
@@ -55,8 +52,6 @@ export const addAnLAService = (serviceName: Answerable<string>): Task =>
     );
 
 
-
-
 export const searchForService = (serviceName: Answerable<string>): Task =>
     Task.where(
         `#actor navigates to the find services page from the home page and seacrhes for the service`,
@@ -69,10 +64,6 @@ export const searchForService = (serviceName: Answerable<string>): Task =>
         Enter.theValue(serviceName).into(AddAServicePageObjects.enterServiceNameTextAreaInManageService()),
         Click.on(AddAServicePageObjects.ApplyfilterInManageService()),
     );
-
-
-
-
 
 
 export const addAnVCSService = (serviceName: Answerable<string>): Task =>
@@ -123,8 +114,6 @@ export const addAnVCSService = (serviceName: Answerable<string>): Task =>
         Wait.until((AddAServicePageObjects.confirmAndAddAServiceButton()), isClickable()),
         Click.on(AddAServicePageObjects.confirmAndAddAServiceButton()),
     );
-
-
 
 
 export const searchForVCFSService = (serviceName: Answerable<string>): Task =>

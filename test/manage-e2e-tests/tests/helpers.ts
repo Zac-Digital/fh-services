@@ -30,8 +30,6 @@ const generateRandomText = (length = 3, possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZab
 };
 
 
-
-
 const getFormattedDate = () => {
     return new Date().toLocaleDateString('en-GB', {
         year: 'numeric',
@@ -41,15 +39,11 @@ const getFormattedDate = () => {
 };
 
 
-
-
 export const getRandomServiceName = () => {
     const text = generateRandomText();
     const date = getFormattedDate();
     return `Automated Test LA Service ${text} ${date}`;
 };
-
-
 
 
 export const getRandomVCFServiceName = () => {
