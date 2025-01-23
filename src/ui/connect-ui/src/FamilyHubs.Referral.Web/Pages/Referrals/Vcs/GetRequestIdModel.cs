@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace FamilyHubs.Referral.Web.Pages.Referrals.Vcs;
 
 [Authorize(Roles = $"{RoleGroups.VcsProfessionalOrDualRole}")]
-public class GetRequestIdModel : HeaderPageModel
+public class GetRequestIdModel() : HeaderPageModel(false, true)
 {
     public int? RequestId { get; private set; }
 
