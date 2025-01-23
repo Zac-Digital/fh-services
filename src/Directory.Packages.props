@@ -8,8 +8,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <NuGetAuditMode>direct</NuGetAuditMode>
-	<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-	<NoWarn>S1135</NoWarn>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <NoWarn>S1135</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="AngleSharp" Version="1.1.2" />
@@ -50,13 +50,15 @@
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
     <PackageVersion Include="GeoCoordinate.NetCore" Version="1.0.0.1" />
     <PackageVersion Include="GovukNotify" Version="7.2.0" />
+    <PackageVersion Include="HtmlAgilityPack" Version="1.11.72" />
+    <PackageVersion Include="HtmlSanitizer" Version="8.1.870" />
     <PackageVersion Include="libphonenumber-csharp" Version="8.13.45" />
     <PackageVersion Include="LinqKit.Core" Version="1.2.5" />
     <PackageVersion Include="MediatR" Version="12.2.0" />
     <PackageVersion Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights" Version="2.22.0" />
     <PackageVersion Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
-    <PackageVersion Include="Microsoft.ApplicationInsights.WorkerService" Version="2.22.0"/>
+    <PackageVersion Include="Microsoft.ApplicationInsights.WorkerService" Version="2.22.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="8.0.8" />
@@ -80,7 +82,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.8" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite.NetTopologySuite" Version="8.0.8" />
-    <PackageVersion Include="SQLitePCLRaw.bundle_sqlite3" Version="2.1.10" >
+    <PackageVersion Include="SQLitePCLRaw.bundle_sqlite3" Version="2.1.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
