@@ -1,6 +1,7 @@
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Errors;
 using FamilyHubs.Referral.Web.Pages.Shared;
+using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Razor.ErrorNext;
 using FamilyHubs.SharedKernel.Razor.Header;
 using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
@@ -18,10 +19,19 @@ public class SearchModel : HeaderPageModel, IHasErrorStatePageModel
 
     [BindProperty]
     public string? Postcode { get; set; }
+    
+    public bool IsNotLoggedIn { get; private set; }
 
     public SearchModel(IPostcodeLookup postcodeLookup)
     {
         _postcodeLookup = postcodeLookup;
+    }
+
+    public IActionResult OnGet()
+    {
+        IsNotLoggedIn = string.IsNullOrWhiteSpace(HttpContext.GetRole());
+        
+        return Page();
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -35,7 +45,7 @@ public class SearchModel : HeaderPageModel, IHasErrorStatePageModel
                 currentPage = 1
             });
         }
-
+        
         var errorId = postcodeError switch
         {
             PostcodeError.NoPostcode => ErrorId.NoPostcode,
@@ -44,6 +54,7 @@ public class SearchModel : HeaderPageModel, IHasErrorStatePageModel
             _ => ErrorId.PostcodeNotFound
         };
         Errors = ErrorState.Create(PossibleErrors.All, errorId);
-        return Page();
+        
+        return OnGet();
     }
 }
