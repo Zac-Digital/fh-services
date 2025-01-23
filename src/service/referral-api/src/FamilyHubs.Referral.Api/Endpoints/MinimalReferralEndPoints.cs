@@ -1,4 +1,5 @@
-﻿using FamilyHubs.Referral.Core.Commands.CreateReferral;
+﻿using System.Net.Mime;
+using FamilyHubs.Referral.Core.Commands.CreateReferral;
 using FamilyHubs.Referral.Core.Commands.SetReferralStatus;
 using FamilyHubs.Referral.Core.Commands.UpdateReferral;
 using FamilyHubs.Referral.Core.Queries.GetReferrals;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
 using FamilyHubs.ReferralService.Shared.Dto.CreateUpdate;
+using FamilyHubs.ReferralService.Shared.Models;
 
 namespace FamilyHubs.Referral.Api.Endpoints;
 
@@ -32,8 +34,10 @@ public class MinimalReferralEndPoints
                 var result = await mediator.Send(command, cancellationToken);
                 return result;
 
-            }).WithMetadata(new SwaggerOperationAttribute("Referrals", "Create Referral")
-            { Tags = new[] { "Referrals" } });
+            })
+            .WithMetadata(new SwaggerOperationAttribute("Referrals", "Create Referral")
+                { Tags = new[] { "Referrals" } })
+            .Produces<ReferralResponse>(contentType: MediaTypeNames.Application.Json);
 
         app.MapPut("api/referrals/{id}", [Authorize(Policy = "ReferralUser")] async (long id, [FromBody] ReferralDto request, CancellationToken cancellationToken, ISender _mediator, ILogger<MinimalReferralEndPoints> logger) =>
         {
@@ -50,7 +54,9 @@ public class MinimalReferralEndPoints
             var result = await _mediator.Send(request, cancellationToken);
             return result;
 
-        }).WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referrals By Referrer") { Tags = new[] { "Referrals" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referrals By Referrer") { Tags = new[] { "Referrals" } })
+            .Produces<PaginatedList<ReferralDto>>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("api/referralsByReferrer/{referrerId}", [Authorize(Roles = RoleGroups.LaProfessionalOrDualRole)] async (long referrerId, ReferralOrderBy? orderBy, bool? isAssending, bool? includeDeclined, int? pageNumber, int? pageSize, CancellationToken cancellationToken, ISender _mediator) =>
         {
@@ -58,7 +64,9 @@ public class MinimalReferralEndPoints
             var result = await _mediator.Send(request, cancellationToken);
             return result;
 
-        }).WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referrals By Referrer Id") { Tags = new[] { "Referrals" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referrals By Referrer Id") { Tags = new[] { "Referrals" } })
+            .Produces<PaginatedList<ReferralDto>>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("api/organisationreferrals/{organisationId}", [Authorize(Roles = RoleGroups.VcsProfessionalOrDualRole)] async (long organisationId, ReferralOrderBy? orderBy, bool? isAssending, bool? includeDeclined, int? pageNumber, int? pageSize, CancellationToken cancellationToken, ISender _mediator) =>
         {
@@ -66,7 +74,9 @@ public class MinimalReferralEndPoints
             var result = await _mediator.Send(request, cancellationToken);
             return result;
 
-        }).WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referrals By Organisation Id") { Tags = new[] { "Referrals" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referrals By Organisation Id") { Tags = new[] { "Referrals" } })
+            .Produces<PaginatedList<ReferralDto>>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("api/referral/{id}", [Authorize(Roles = RoleGroups.LaProfessionalOrDualRole+","+RoleGroups.VcsProfessionalOrDualRole+","+ RoleTypes.LaManager)] async (long id, CancellationToken cancellationToken, ISender _mediator, HttpContext httpContext) =>
         {
@@ -92,7 +102,9 @@ public class MinimalReferralEndPoints
 
             return result;
 
-        }).WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referral By Id") { Tags = new[] { "Referrals" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referral By Id") { Tags = new[] { "Referrals" } })
+            .Produces<ReferralDto>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("api/referral/compositekeys", [Authorize(Policy = "ReferralUser")] async (long? serviceId, long? statusId, long? recipientId, long? referralId, ReferralOrderBy? orderBy, bool? isAssending, bool? includeDeclined, int? pageNumber, int? pageSize, CancellationToken cancellationToken, ISender _mediator) =>
         {
@@ -100,7 +112,9 @@ public class MinimalReferralEndPoints
             var result = await _mediator.Send(request, cancellationToken);
             return result;
 
-        }).WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referral By Composite Keys") { Tags = new[] { "Referrals" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referral By Composite Keys") { Tags = new[] { "Referrals" } })
+            .Produces<PaginatedList<ReferralDto>>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("api/referral/count",
             [Authorize(Roles = RoleGroups.AdminRole)]
@@ -144,8 +158,9 @@ public class MinimalReferralEndPoints
             GetReferralStatusesCommand request = new();
             var result = await _mediator.Send(request, cancellationToken);
             return result;
-
-        }).WithMetadata(new SwaggerOperationAttribute("Get Referral Statuses", "Get Referral Statuses") { Tags = new[] { "Referrals" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Referral Statuses", "Get Referral Statuses") { Tags = new[] { "Referrals" } })
+            .Produces<List<ReferralStatusDto>>(contentType: MediaTypeNames.Application.Json);
 #pragma warning disable S1481
         app.MapGet("api/referral/recipient", [Authorize(Roles = $"{RoleTypes.LaManager},{RoleTypes.LaProfessional},{RoleTypes.LaDualRole}")] async (string? email, string? telephone, string? textphone, string? name, string? postcode, CancellationToken cancellationToken, ISender _mediator, HttpContext httpContext) =>
         {
@@ -160,7 +175,9 @@ public class MinimalReferralEndPoints
 
             return await SetForbidden<List<ReferralDto>>(httpContext);    
 
-        }).WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referral By Recipient") { Tags = new[] { "Referrals" } });
+        })
+            .WithMetadata(new SwaggerOperationAttribute("Get Referrals", "Get Referral By Recipient") { Tags = new[] { "Referrals" } })
+            .Produces<List<ReferralDto>>(contentType: MediaTypeNames.Application.Json);
 #pragma warning restore S1481
     }
 
