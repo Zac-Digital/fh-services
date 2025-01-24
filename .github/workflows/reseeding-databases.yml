@@ -15,7 +15,6 @@ on:
         options:
           - 'Test'
           - 'Test2'
-          - 'Pre-production'
           
 permissions:
   id-token: write
@@ -148,23 +147,23 @@ jobs:
           - databases: idam-database
             display_name: IDAM
             keyvault_db_prefix: IDAM-DB
-            sql_file_path: ./test/seed-scripts/pre-prod/idam-data.sql
+            sql_file_path: ./test/seed-scripts/test/idam-data.sql
           - databases: notification-database
             display_name: Notification
             keyvault_db_prefix: NOTIFICATIONS-DB
-            sql_file_path: ./test/seed-scripts/pre-prod/notification-data.sql
+            sql_file_path: ./test/seed-scripts/test/notification-data.sql
           - databases: open-referral-mock-database
             display_name: Open Referral Mock
             keyvault_db_prefix: MOCK-HSDA-DB
-            sql_file_path: ./test/seed-scripts/pre-prod/open-referral-mock-data.sql
+            sql_file_path: ./test/seed-scripts/test/open-referral-mock-data.sql
           - databases: referral-database
             display_name: Referral
             keyvault_db_prefix: REFERRAL-DB
-            sql_file_path: ./test/seed-scripts/pre-prod/referral-data.sql
+            sql_file_path: ./test/seed-scripts/test/referral-data.sql
           - databases: service-directory-database
             display_name: Service Directory
             keyvault_db_prefix: SD-DB
-            sql_file_path: ./test/seed-scripts/pre-prod/service-directory-data.sql
+            sql_file_path: ./test/seed-scripts/test/service-directory-data.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
