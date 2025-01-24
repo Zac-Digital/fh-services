@@ -65,15 +65,10 @@ export default defineConfig<SerenityOptions>({
     /* Configure projects for major browsers */
     projects: [
         {
-            name: 'Microsoft Edge',
+            name: 'chromium',
             use: {
-                channel: 'msedge',
-            },
-        },
-        {
-            name: 'Google Chrome',
-            use: {
-                channel: 'chrome',
+                ...devices['Desktop Chrome'],
+                channel: 'chromium',
             },
         },
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
