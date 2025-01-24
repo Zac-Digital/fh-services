@@ -97,8 +97,8 @@ jobs:
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         shell: bash
-        run: npx playwright install
-          
+        run: npx playwright install --no-shell      
+      
       - name: Create Environment Variables
         shell: bash
         run: |
