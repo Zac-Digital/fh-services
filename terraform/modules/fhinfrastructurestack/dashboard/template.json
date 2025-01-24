@@ -139,8 +139,9 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "AppPerformanceCounters \r\n| where Name == '% Processor Time'\r\n| where Category == \"Process\"\r\n| summarize Value = avg(Value) by AppRoleName\r\n| extend DisplayName = replace_string(AppRoleName, \"s181d01-as-fh-\", \"\")\r\n",
+        "query": "AppPerformanceCounters \r\n| where Name == '% Processor Time'\r\n| where Category == \"Process\"\r\n| summarize Value = avg(Value) by AppRoleName\r\n| extend DisplayName = replace_string(AppRoleName, \"s181d01-as-fh-\", \"\")\r\n| extend DisplayName = replace_string(DisplayName, \"s181d01-fa-fh-\", \"\")\r\n",
         "size": 0,
+        "title": "Average CPU over last 30 minutes",
         "timeContext": {
           "durationMs": 1800000
         },
