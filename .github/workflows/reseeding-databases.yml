@@ -15,6 +15,7 @@ on:
         options:
           - 'Test'
           - 'Test2'
+          - 'Pre-production'
           
 permissions:
   id-token: write
@@ -62,7 +63,7 @@ jobs:
           - databases: report-staging-database
             display_name: Report Staging
             keyvault_db_prefix: REPORT-STAGING-DB
-            sql_file_path: ./test/reset-scripts/reset-report-staging-database.sql
+            sql_file_path: ./pre-prod/reset-scripts/reset-report-staging-database.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
@@ -163,7 +164,7 @@ jobs:
           - databases: service-directory-database
             display_name: Service Directory
             keyvault_db_prefix: SD-DB
-            sql_file_path: ./test/seed-scripts/test/service-directory-data.sql
+            sql_file_path: ./pre-prod/seed-scripts/test/service-directory-data.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
