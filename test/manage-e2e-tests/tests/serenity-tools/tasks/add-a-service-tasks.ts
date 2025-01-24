@@ -4,7 +4,7 @@ import {AddAServicePageObjects} from "../page-objects/add-a-service-page-objects
 import {homeButton} from "../page-objects/manage-page-objects";
 
 
-export const addAnLAService = (serviceName: Answerable<string>): Task =>
+export const addAnLAService = (serviceName: Answerable<string>,emailAddress: Answerable<string>,): Task =>
     Task.where(
         `#actor creates a LA service named ${serviceName}`,
         Click.on(AddAServicePageObjects.addAServiceLink()),
@@ -15,7 +15,7 @@ export const addAnLAService = (serviceName: Answerable<string>): Task =>
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),
         Enter.theValue(serviceName).into(AddAServicePageObjects.whatIsTheServiceNameField()),
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),
-        Click.on(AddAServicePageObjects.whatSupportDoesTheServiceOfferPrimaryCategory('Activities')),
+        Click.on(AddAServicePageObjects.whatSupportDoesTheServiceOfferHealthCategory()),
         Click.on(AddAServicePageObjects.whatSupportDoesTheServiceOfferSecondaryCategory()),
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),
         Enter.theValue('This is an automated Test').into(AddAServicePageObjects.giveADescriptionOfTheServiceField()),
@@ -43,7 +43,7 @@ export const addAnLAService = (serviceName: Answerable<string>): Task =>
         Wait.until((AddAServicePageObjects.addAnotherLocationButton()), isClickable()),
         Click.on(AddAServicePageObjects.continueButtonForAddALocationButton()),
         Click.on(AddAServicePageObjects.selectOptionToFindOutAboutService('Email')),
-        Enter.theValue('dami@a.com').into(AddAServicePageObjects.enterTextCorrespondenceToFindOutAboutService('Email')),
+        Enter.theValue(emailAddress).into(AddAServicePageObjects.enterTextCorrespondenceToFindOutAboutService('Email')),
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),
         Enter.theValue('This is a Test Description').into(AddAServicePageObjects.provideMoreServiceDetailsTextField()),
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),
@@ -66,7 +66,7 @@ export const searchForService = (serviceName: Answerable<string>): Task =>
     );
 
 
-export const addAnVCSService = (serviceName: Answerable<string>): Task =>
+export const addAnVCSService = (serviceName: Answerable<string>,emailAddress: Answerable<string>,): Task =>
     Task.where(
         `#actor creates a VCFS service named ${serviceName}`,
         Click.on(AddAServicePageObjects.addAVCSServiceLink()),
@@ -79,7 +79,7 @@ export const addAnVCSService = (serviceName: Answerable<string>): Task =>
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),
         Enter.theValue(serviceName).into(AddAServicePageObjects.whatIsTheServiceNameField()),
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),
-        Click.on(AddAServicePageObjects.whatSupportDoesTheServiceOfferPrimaryCategory('Activities')),
+        Click.on(AddAServicePageObjects.whatSupportDoesTheServiceOfferHealthCategory()),
         Click.on(AddAServicePageObjects.whatSupportDoesTheServiceOfferSecondaryCategory()),
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),
         Enter.theValue('This is an automated Test').into(AddAServicePageObjects.giveADescriptionOfTheServiceField()),
@@ -107,7 +107,7 @@ export const addAnVCSService = (serviceName: Answerable<string>): Task =>
         Wait.until((AddAServicePageObjects.addAnotherLocationButton()), isClickable()),
         Click.on(AddAServicePageObjects.continueButtonForAddALocationButton()),
         Click.on(AddAServicePageObjects.selectOptionToFindOutAboutService('Email')),
-        Enter.theValue('dami@a.com').into(AddAServicePageObjects.enterTextCorrespondenceToFindOutAboutService('Email')),
+        Enter.theValue(emailAddress).into(AddAServicePageObjects.enterTextCorrespondenceToFindOutAboutService('Email')),
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),
         Enter.theValue('This is a Test Description').into(AddAServicePageObjects.provideMoreServiceDetailsTextField()),
         Click.on(AddAServicePageObjects.continueButtonForCreateService()),

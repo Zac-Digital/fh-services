@@ -6,7 +6,7 @@ import {AddAServicePageObjects} from "../page-objects/add-a-service-page-objects
 
 export const isServiceCreatedPageDisplayed = () =>
     Ensure.that(
-        Page.current().title().describedAs('User created page'),
+        Page.current().title().describedAs('Service created page'),
         equals('Service added - Manage family support services and accounts - GOV.UK')
     )
 

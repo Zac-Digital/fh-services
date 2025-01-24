@@ -16,5 +16,5 @@ export const isTheAgreeButtonDisplayed = () =>
 export const isTheManageHomepageDisplayed = () =>
     Ensure.that(
         Page.current().title().describedAs('Manage Homepage'),
-        equals('Dfe Admin - Manage family support services and accounts - GOV.UK')
+        equals('DfE Admin - Manage family support services and accounts - GOV.UK')
     )  

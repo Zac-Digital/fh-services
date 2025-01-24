@@ -1,4 +1,4 @@
-import {By, PageElement} from '@serenity-js/web';
+import { By, PageElement } from '@serenity-js/web';
 
 
 export class AddAServicePageObjects {
@@ -17,7 +17,7 @@ export class AddAServicePageObjects {
             .describedAs('the Manage services Link');
 
 
-    // ******Locator for the "Add a VCSService" link
+    // Locator for the "Add a VCSService" link
     static addAVCSServiceLink = () =>
         PageElement
             .located(By.xpath("//a[@href='/manage-services/start-add-service?servicetype=Vcs']"))
@@ -51,22 +51,11 @@ export class AddAServicePageObjects {
             .located(By.id("textbox"))
             .describedAs('the Enter a name of the service Field');
 
-
-    //What support does the service offer?  Page
-    static whatSupportDoesTheServiceOfferPrimaryCategory = (categoryType) => {
-        if (categoryType === "Activities") {
-            return PageElement
-                .located(By.id("category-1"))
-                .describedAs('What support does the service offer? Activities Taxonomy');
-        } else if (categoryType === "Health") {
-            return PageElement
-                .located(By.id("category-3"))
-                .describedAs('What support does the service offer? Health Taxonomy');
-        } else {
-            throw new Error(`The primary category "Activities" could not be found.`);
-        }
-    };
-
+    
+    static whatSupportDoesTheServiceOfferHealthCategory = () =>
+        PageElement
+            .located(By.id("category-1"))
+            .describedAs('What support does the service offer? Activities Taxonomy');
 
     static whatSupportDoesTheServiceOfferSecondaryCategory = () =>
         PageElement
@@ -90,8 +79,6 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("ViewModel_Children_No"))
                 .describedAs('No support is given');
-        } else {
-            throw new Error(`The selection does not exist`);
         }
     };
 
@@ -113,8 +100,6 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("UserInput_HasCost_No"))
                 .describedAs('No, this service does not require payment option');
-        } else {
-            throw new Error(`Selection does not exist.`);
         }
     };
 
@@ -133,8 +118,6 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("checkbox-Telephone"))
                 .describedAs('Service can be accessed via Telephone Option');
-        } else {
-            throw new Error(`The selection does not exist`);
         }
     };
 
@@ -145,12 +128,11 @@ export class AddAServicePageObjects {
             return PageElement
                 .located(By.id("radio-True"))
                 .describedAs('Yes, add a location option');
-        } else if (supportType === "No") {
+        }
+        if (supportType === "No") {
             return PageElement
                 .located(By.id("radio-False"))
                 .describedAs('No, do not add a location option');
-        } else {
-            throw new Error(`The selection does not exist`);
         }
     };
 
@@ -220,7 +202,7 @@ export class AddAServicePageObjects {
         } else if (supportType === "Website") {
             return PageElement
                 .located(By.id("#contact-website"))
-                .describedAs('website option');
+                .describedAs('Website option');
         } else if (supportType === "Text message") {
             return PageElement
                 .located(By.id("#contact-text-message"))
