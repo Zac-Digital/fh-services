@@ -7,6 +7,8 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.SharedKernel.Razor.FeatureFlags;
+using Microsoft.FeatureManagement;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
 
@@ -37,8 +39,11 @@ public interface IOrganisationClientService
 
 public class OrganisationClientService : ApiService, IOrganisationClientService
 {
-    public OrganisationClientService(HttpClient client) : base(client)
+    private readonly IFeatureManager _featureManager;
+    
+    public OrganisationClientService(HttpClient client, IFeatureManager featureManager) : base(client)
     {
+        _featureManager = featureManager;
     }
 
     public async Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories()
@@ -80,6 +85,13 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         HttpResponseMessage? response
     )> GetLocalOffers(LocalOfferFilter filter)
     {
+        if (!await _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices))
+        {
+            // TODO: Will need to be adjusted once we implement LA Services in Connect
+            // TODO: Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1245
+            return (new PaginatedList<ServiceDto>(), new HttpResponseMessage(HttpStatusCode.OK));
+        }
+        
         if (string.IsNullOrEmpty(filter.Status))
             filter.Status = "Active";
 
