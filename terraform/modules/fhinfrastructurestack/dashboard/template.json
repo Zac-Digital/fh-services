@@ -134,6 +134,61 @@
         }
       },
       "name": "metric - 10"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "AppPerformanceCounters \r\n| where Name == '% Processor Time'\r\n| where Category == \"Process\"\r\n| summarize Value = avg(Value) by AppRoleName\r\n| extend DisplayName = replace_string(AppRoleName, \"s181d01-as-fh-\", \"\")\r\n",
+        "size": 0,
+        "timeContext": {
+          "durationMs": 1800000
+        },
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "/subscriptions/56c128b8-5ca9-4328-bb24-a11c829f4af9/resourceGroups/s181d01-familyhubs/providers/Microsoft.OperationalInsights/workspaces/s181d01-la-as-familyhubs"
+        ],
+        "visualization": "graph",
+        "graphSettings": {
+          "type": 2,
+          "topContent": {
+            "columnMatch": "DisplayName",
+            "formatter": 1
+          },
+          "centerContent": {
+            "columnMatch": "Value",
+            "formatter": 12,
+            "formatOptions": {
+              "palette": "blue"
+            },
+            "numberFormat": {
+              "unit": 17,
+              "options": {
+                "style": "decimal",
+                "maximumFractionDigits": 2,
+                "maximumSignificantDigits": 3
+              }
+            }
+          },
+          "nodeIdField": "AppRoleName",
+          "graphOrientation": 3,
+          "showOrientationToggles": false,
+          "nodeSize": null,
+          "staticNodeSize": 100,
+          "colorSettings": {
+            "nodeColorField": "Value",
+            "type": 4,
+            "heatmapPalette": "greenRed",
+            "heatmapMin": 50,
+            "heatmapMax": 80,
+            "emptyValueColor": "blue"
+          },
+          "hivesMargin": 5,
+          "edgeColorSettings": null
+        }
+      },
+      "name": "query - 1"
     }
   ],
   "fallbackResourceIds": [
