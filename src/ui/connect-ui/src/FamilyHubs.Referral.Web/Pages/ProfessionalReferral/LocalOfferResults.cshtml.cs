@@ -35,36 +35,47 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     private bool _isInitialSearch = true;
 
-    public List<SelectListItem> AgeRange { get; set; } = new()
-    {
-        new() { Value="-1", Text="All ages" , Selected = true},
-        new() { Value="0", Text="0 to 12 months" },
-        new() { Value="1", Text="1 year old"},
-        new() { Value="2", Text="2 years old"},
-        new() { Value="3", Text="3 years old"},
-        new() { Value="4", Text="4 years old"},
-        new() { Value="5", Text="5 years old"},
-        new() { Value="6", Text="6 years old"},
-        new() { Value="7", Text="7 years old"},
-        new() { Value="8", Text="8 years old"},
-        new() { Value="9", Text="9 years old"},
-        new() { Value="10", Text="10 years old"},
-        new() { Value="11", Text="11 years old"},
-        new() { Value="12", Text="12 years old"},
-        new() { Value="13", Text="13 years old"},
-        new() { Value="14", Text="14 years old"},
-        new() { Value="15", Text="15 years old"},
-        new() { Value="16", Text="16 years old"},
-        new() { Value="17", Text="17 years old"},
-        new() { Value="18", Text="18 years old"},
-        new() { Value="19", Text="19 years old"},
-        new() { Value="20", Text="20 years old"},
-        new() { Value="21", Text="21 years old"},
-        new() { Value="22", Text="22 years old"},
-        new() { Value="23", Text="23 years old"},
-        new() { Value="24", Text="24 years old"},
-        new() { Value="25", Text="25 years old"},
-    };
+    // TODO: Remove
+    // public List<SelectListItem> AgeRange { get; set; } = new()
+    // {
+    //     new() { Value="-1", Text="All ages" , Selected = true},
+    //     new() { Value="0", Text="0 to 12 months" },
+    //     new() { Value="1", Text="1 year old"},
+    //     new() { Value="2", Text="2 years old"},
+    //     new() { Value="3", Text="3 years old"},
+    //     new() { Value="4", Text="4 years old"},
+    //     new() { Value="5", Text="5 years old"},
+    //     new() { Value="6", Text="6 years old"},
+    //     new() { Value="7", Text="7 years old"},
+    //     new() { Value="8", Text="8 years old"},
+    //     new() { Value="9", Text="9 years old"},
+    //     new() { Value="10", Text="10 years old"},
+    //     new() { Value="11", Text="11 years old"},
+    //     new() { Value="12", Text="12 years old"},
+    //     new() { Value="13", Text="13 years old"},
+    //     new() { Value="14", Text="14 years old"},
+    //     new() { Value="15", Text="15 years old"},
+    //     new() { Value="16", Text="16 years old"},
+    //     new() { Value="17", Text="17 years old"},
+    //     new() { Value="18", Text="18 years old"},
+    //     new() { Value="19", Text="19 years old"},
+    //     new() { Value="20", Text="20 years old"},
+    //     new() { Value="21", Text="21 years old"},
+    //     new() { Value="22", Text="22 years old"},
+    //     new() { Value="23", Text="23 years old"},
+    //     new() { Value="24", Text="24 years old"},
+    //     new() { Value="25", Text="25 years old"},
+    // };
+
+    public static List<SelectListItem> AgeRange { get; } = 
+    [
+        new() { Value = "0", Text = "0 to 2 years"},
+        new() { Value = "1", Text = "3 to 5 years"},
+        new() { Value = "2", Text = "6 to 11 years"},
+        new() { Value = "3", Text = "12 to 15 years"},
+        new() { Value = "4", Text = "16 to 18 years"},
+        new() { Value = "5", Text = "19 to 24 years with SEND"}
+    ];
 
     public const string AllLanguagesValue = "all";
 
