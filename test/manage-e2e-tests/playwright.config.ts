@@ -78,7 +78,7 @@ export default defineConfig<SerenityOptions>({
             },
         },
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
-        // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
+        // TODOJira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
         // {
         //     name: 'Firefox',
         //     use: {
