@@ -1,4 +1,4 @@
-import { By, PageElement } from '@serenity-js/web';
+import {By, PageElement} from '@serenity-js/web';
 
 
 export class AddAServicePageObjects {
@@ -51,7 +51,7 @@ export class AddAServicePageObjects {
             .located(By.id("textbox"))
             .describedAs('the Enter a name of the service Field');
 
-    
+
     static whatSupportDoesTheServiceOfferHealthCategory = () =>
         PageElement
             .located(By.id("category-1"))
@@ -69,18 +69,12 @@ export class AddAServicePageObjects {
             .located(By.id("textarea"))
             .describedAs('Give a description of the service Field');
 
-    //Is the support offered by this service related to children or young people?
-    static isSupportRelatedToChildrenOrYoungPeopleField = (supportType) => {
-        if (supportType === "Yes") {
-            return PageElement
-                .located(By.id("ViewModel_Children_Yes"))
-                .describedAs('yes Support is given');
-        } else if (supportType === "No") {
-            return PageElement
-                .located(By.id("ViewModel_Children_No"))
-                .describedAs('No support is given');
-        }
-    };
+
+    //Is support offered
+    static SupportRelatedToChildrenOrYoungPeopleFieldNo = () =>
+        PageElement
+            .located(By.id("ViewModel_Children_No"))
+            .describedAs('No support is given');
 
 
     // Which language is the service offered in? Page
@@ -91,50 +85,24 @@ export class AddAServicePageObjects {
 
 
     //Does the service cost money to use? Page
-    static isServicePaid = (serviceCost) => {
-        if (serviceCost === "Yes") {
-            return PageElement
-                .located(By.id("UserInput_HasCost_Yes"))
-                .describedAs('Yes, this service requires a cost option');
-        } else if (serviceCost === "No") {
-            return PageElement
-                .located(By.id("UserInput_HasCost_No"))
-                .describedAs('No, this service does not require payment option');
-        }
-    };
+    static ServicePaidForOptionNo = () =>
+        PageElement
+            .located(By.id("UserInput_HasCost_No"))
+            .describedAs('No, this service does not require payment option');
 
 
     //How can people use this service?
-    static selectServiceAccessDetails = (accessType) => {
-        if (accessType === "In person") {
-            return PageElement
-                .located(By.id("checkbox-InPerson"))
-                .describedAs('Service can be accessed via In Person Option');
-        } else if (accessType === "Online") {
-            return PageElement
-                .located(By.id("checkbox-Online"))
-                .describedAs('Service can be accessed via Online Option');
-        } else if (accessType === "Telephone") {
-            return PageElement
-                .located(By.id("checkbox-Telephone"))
-                .describedAs('Service can be accessed via Telephone Option');
-        }
-    };
+    static inPersonServiceAccessDetails = () =>
+        PageElement
+            .located(By.id("checkbox-InPerson"))
+            .describedAs('Service can be accessed via In Person Option');
 
 
     //Do you want to add any locations for this service? Page
-    static addServiceLocations = (supportType) => {
-        if (supportType === "Yes") {
-            return PageElement
-                .located(By.id("radio-True"))
-                .describedAs('Yes, add a location option');
-        }
-        if (supportType === "No") {
-            return PageElement
-                .located(By.id("radio-False"))
-                .describedAs('No, do not add a location option');
-        }
-    };
+    static addServiceLocation = () =>
+        PageElement
+            .located(By.id("radio-True"))
+            .describedAs('Yes, add a location option');
 
 
     //Search and select an existing location to add to this service Page
@@ -145,35 +113,23 @@ export class AddAServicePageObjects {
 
 
     //On which days can people use this service at ? Page
-    static selectServiceAvailableDays = (serviceDay) => {
-        if (serviceDay === "Monday") {
-            return PageElement
-                .located(By.id("checkbox-MO"))
-                .describedAs('Selecting Monday');
-        } else if (serviceDay === "Tuesday") {
-            return PageElement
-                .located(By.id("checkbox-TU"))
-                .describedAs('Selecting Tuesday');
-        } else {
-            throw new Error(`Option does not exist`);
-        }
-    };
+    static selectServiceAvailableMonday = () =>
+        PageElement
+            .located(By.id("checkbox-MO"))
+            .describedAs('Selecting Monday');
+
+    static selectServiceAvailableTuesday = () =>
+        PageElement
+            .located(By.id("checkbox-TU"))
+            .describedAs('Selecting Tuesday');
+
 
     //Can you provide more details about using this service ? at a location Page
 
-    static getServiceUsageDetails = (supportType) => {
-        if (supportType === "Yes") {
-            return PageElement
-                .located(By.id("UserInput_HasDetails_Yes"))
-                .describedAs('yes Support is given');
-        } else if (supportType === "No") {
-            return PageElement
-                .located(By.id("#UserInput_HasDetails_No"))
-                .describedAs('No support is given option');
-        } else {
-            throw new Error(`Option does not exist`);
-        }
-    };
+    static getServiceUsageDetailsYes = () =>
+        PageElement
+            .located(By.id("UserInput_HasDetails_Yes"))
+            .describedAs('yes Support is given');
 
 
     static enterDetailAboutLocation = () =>
@@ -190,49 +146,15 @@ export class AddAServicePageObjects {
 
 
     //How can people find out more about this service? Page
-    static selectOptionToFindOutAboutService = (supportType) => {
-        if (supportType === "Email") {
-            return PageElement
-                .located(By.id("contact-email"))
-                .describedAs('Email option');
-        } else if (supportType === "Telephone") {
-            return PageElement
-                .located(By.id("#contact-telephone"))
-                .describedAs('Telephone option');
-        } else if (supportType === "Website") {
-            return PageElement
-                .located(By.id("#contact-website"))
-                .describedAs('Website option');
-        } else if (supportType === "Text message") {
-            return PageElement
-                .located(By.id("#contact-text-message"))
-                .describedAs('Text option');
-        } else {
-            throw new Error(`The primary category "Activities" could not be found.`);
-        }
-    };
+    static emailOptionToFindOutAboutService = () =>
+        PageElement
+            .located(By.id("contact-email"))
+            .describedAs('Email option');
 
-    static enterTextCorrespondenceToFindOutAboutService = (contactType) => {
-        if (contactType === "Email") {
-            return PageElement
-                .located(By.id("email-text-box"))
-                .describedAs('Email correspondence option');
-        } else if (contactType === "Telephone") {
-            return PageElement
-                .located(By.id("telephone-text-box"))
-                .describedAs('Telephone Correspondence option');
-        } else if (contactType === "Website") {
-            return PageElement
-                .located(By.id("website-text-box"))
-                .describedAs('Website corresspondence option');
-        } else if (contactType === "Text message") {
-            return PageElement
-                .located(By.id("text-message-text-box"))
-                .describedAs('Text Corresspondence option');
-        } else {
-            throw new Error(`Option does not exist`);
-        }
-    };
+    static emailCorrespondenceToFindOutAboutService = () =>
+        PageElement
+            .located(By.id("email-text-box"))
+            .describedAs('Email correspondence option');
 
 
     //Give more details about this service
