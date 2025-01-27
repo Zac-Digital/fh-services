@@ -30,6 +30,18 @@ public static class Program
 
             var app = builder.Build();
 
+            app.MapGet("/PostcodeSearch", context =>
+            {
+                context.Response.Redirect("/ProfessionalReferral/Search", true);
+                return Task.CompletedTask;
+            });
+            
+            app.MapGet("/ServiceDetail", context =>
+            {
+                context.Response.Redirect("/ProfessionalReferral/LocalOfferDetail", true);
+                return Task.CompletedTask;
+            });
+            
             ServiceProvider = app.ConfigureWebApplication();
 
             await app.RunAsync();
