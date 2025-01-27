@@ -41,6 +41,12 @@ public static class Program
                 context.Response.Redirect("/ProfessionalReferral/LocalOfferDetail", true);
                 return Task.CompletedTask;
             });
+
+            app.MapGet("/ServiceFilter", context =>
+            {
+                context.Response.Redirect("/ProfessionalReferral/LocalOfferResults" + context.Request.QueryString, true);
+                return Task.CompletedTask;
+            });
             
             ServiceProvider = app.ConfigureWebApplication();
 
