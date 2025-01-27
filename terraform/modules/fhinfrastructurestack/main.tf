@@ -1473,15 +1473,23 @@ resource "azurerm_application_gateway" "sd_ui_app_gateway" {
     target_listener_name = "${var.prefix}-${local.appgw_listener_https_sd_ui_name}"
   }
 
+  redirect_configuration {
+    name                 = "${var.prefix}-fh-redirect-to-connect-config"
+    redirect_type        = "Permanent"
+    target_url           = "https://${var.connect_domain}/"
+    include_path         = true
+    include_query_string = true
+  }
+  
   request_routing_rule {
     name                       = "${var.prefix}-fh-routing-https-sd-ui"
-    backend_address_pool_name  = "${var.prefix}-${local.appgw_bep_sd_ui_name}"
-    backend_http_settings_name = "${var.prefix}-${local.appgw_backend_sd_ui_name}"
+    redirect_configuration_name = "${var.prefix}-fh-redirect-to-connect-config"
     http_listener_name         = "${var.prefix}-${local.appgw_listener_https_sd_ui_name}"
     priority                   = 1
     rule_type                  = "Basic"
     rewrite_rule_set_name      = "${var.prefix}-${local.appgw_rewrites_sd_ui_name}"
   }
+
 
   request_routing_rule {
     name                       = "${var.prefix}-fh-routing-http-sd-ui"

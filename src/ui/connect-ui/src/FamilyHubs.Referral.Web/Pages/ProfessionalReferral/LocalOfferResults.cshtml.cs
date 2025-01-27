@@ -195,7 +195,7 @@ public class LocalOfferResultsModel : HeaderPageModel
                 await _organisationClientService.RecordServiceSearch(
                     eventType,
                     Postcode!,
-                    long.Parse(familyHusUser.AccountId),
+                    long.TryParse(familyHusUser.AccountId, out var familyHusUserId) ? familyHusUserId : 0,
                     SearchResults.Items,
                     requestTimestamp,
                     responseTimestamp,
