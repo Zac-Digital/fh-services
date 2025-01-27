@@ -37,7 +37,6 @@ export class AddAServicePageObjects {
             .describedAs('Search and select the VCS organisation Field');
 
 
-    ///***** */
     // Locator for the "Search and select the local authority area this service is in" field
     static searchAndSelectLaField = () =>
         PageElement
@@ -174,19 +173,18 @@ export class AddAServicePageObjects {
     //continue buttons
     static continueButtonForCreateService = () =>
         PageElement
-            .located(By.css("button[type='Submit']"))
+            .located(By.id("textarea"))
             .describedAs('Continue Button');
-
-
-    static continueButtonForCreateServiceupdate = () =>
-        PageElement
-            .located(By.css("button[type='submit']"))
-            .describedAs('Continue Button');
-
 
     static continueButtonForAddALocationButton = () =>
         PageElement
             .located(By.css("button[value='continue']"))
+            .describedAs('Continue Button');
+
+    //confirm button to create a service
+    static confirmAddAServiceButton = () =>
+        PageElement
+            .located(By.css("button[type='submit']"))
             .describedAs('Continue Button');
 
 
