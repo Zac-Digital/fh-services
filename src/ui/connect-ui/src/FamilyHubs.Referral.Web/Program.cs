@@ -38,13 +38,15 @@ public static class Program
             
             app.MapGet("/ServiceDetail", context =>
             {
-                context.Response.Redirect($"/ProfessionalReferral/LocalOfferDetail/{context.Request.QueryString}", true);
+                var serviceId = context.Request.Query["serviceId"][0];
+                context.Response.Redirect($"/ProfessionalReferral/LocalOfferDetail/?serviceid={serviceId}", true);
                 return Task.CompletedTask;
             });
 
             app.MapGet("/ServiceFilter", context =>
             {
-                context.Response.Redirect($"/ProfessionalReferral/LocalOfferResults/{context.Request.QueryString}", true);
+                var postcode = context.Request.Query["postcode"][0];
+                context.Response.Redirect($"/ProfessionalReferral/LocalOfferResults/?postcode={postcode}", true);
                 return Task.CompletedTask;
             });
             
