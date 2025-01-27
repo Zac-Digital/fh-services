@@ -30,26 +30,6 @@ public static class Program
 
             var app = builder.Build();
 
-            app.MapGet("/PostcodeSearch", context =>
-            {
-                context.Response.Redirect("/ProfessionalReferral/Search", true);
-                return Task.CompletedTask;
-            });
-            
-            app.MapGet("/ServiceDetail", context =>
-            {
-                var serviceId = context.Request.Query["serviceId"][0];
-                context.Response.Redirect($"/ProfessionalReferral/LocalOfferDetail/?serviceid={serviceId}", true);
-                return Task.CompletedTask;
-            });
-
-            app.MapGet("/ServiceFilter", context =>
-            {
-                var postcode = context.Request.Query["postcode"][0];
-                context.Response.Redirect($"/ProfessionalReferral/LocalOfferResults/?postcode={postcode}&currentPage=1", true);
-                return Task.CompletedTask;
-            });
-            
             ServiceProvider = app.ConfigureWebApplication();
 
             await app.RunAsync();
