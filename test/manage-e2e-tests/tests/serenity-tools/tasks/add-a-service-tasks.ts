@@ -4,7 +4,7 @@ import {AddAServicePageObjects} from "../page-objects/add-a-service-page-objects
 import {homeButton} from "../page-objects/manage-page-objects";
 
 
-export const addAnLAService = (serviceName: Answerable<string>, emailAddress: Answerable<string>,): Task =>
+export const addAnLAService = (serviceName: Answerable<string>, emailAddress: Answerable<string>): Task =>
     Task.where(
         `#actor creates a LA service named ${serviceName}`,
         Click.on(AddAServicePageObjects.addAServiceLink()),
@@ -66,7 +66,7 @@ export const searchForService = (serviceName: Answerable<string>): Task =>
     );
 
 
-export const addAnVCSService = (serviceName: Answerable<string>, emailAddress: Answerable<string>,): Task =>
+export const addAnVCSService = (serviceName: Answerable<string>, emailAddress: Answerable<string>): Task =>
     Task.where(
         `#actor creates a VCFS service named ${serviceName}`,
         Click.on(AddAServicePageObjects.addAVCSServiceLink()),
