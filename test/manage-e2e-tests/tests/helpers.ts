@@ -20,8 +20,8 @@ const generateRandomText = () => {
 };
 
 export const getRandomFullName = () => {
-    const firstName = generateRandomText(); 
-    const surname = generateRandomText();  
+    const firstName = generateRandomText();
+    const surname = generateRandomText();
     return `${firstName} ${surname}`;
 };
 

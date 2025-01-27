@@ -43,7 +43,7 @@ describe('Add a Service - Manage Tests', () => {
         const emailAddress = getRandomEmail();
 
         await actor.attemptsTo(
-            addAnLAService(serviceName,emailAddress),
+            addAnLAService(serviceName, emailAddress),
             isServiceCreatedPageDisplayed(),
             searchForService(serviceName),
             isServiceFoundInUserList(serviceName),
@@ -56,7 +56,7 @@ describe('Add a Service - Manage Tests', () => {
         const emailAddress = getRandomEmail();
 
         await actor.attemptsTo(
-            addAnVCSService(serviceNameVCFS,emailAddress),
+            addAnVCSService(serviceNameVCFS, emailAddress),
             isServiceCreatedPageDisplayed(),
             searchForVCFSService(serviceNameVCFS),
             isServiceFoundInUserList(serviceNameVCFS),
