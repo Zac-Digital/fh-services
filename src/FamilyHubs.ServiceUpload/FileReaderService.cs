@@ -1,3 +1,4 @@
+using ClosedXML.Excel;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.ServiceUpload;
@@ -5,11 +6,21 @@ namespace FamilyHubs.ServiceUpload;
 public interface IFileReaderService
 {
     MinimalDataDto[] GetDataFromCsv(string fileName);
+    MinimalDataDto[] GetDataFromXlsx(string fileName);
 }
 
 public class FileReaderService : IFileReaderService
 {
     private readonly ILogger<FileReaderService> _logger;
+
+    private const string IdHeader = "Id";
+    private const string NameHeader = "Name";
+    private const string DescriptionHeader = "Description";
+    private const string PhoneHeader = "Phone";
+    private const string EmailHeader = "Email";
+    private const string UrlHeader = "Url";
+    private const string OrganisationNameHeader = "Organisation Name";
+    private const string LaHeader = "La";
 
     public FileReaderService(ILogger<FileReaderService> logger)
     {
@@ -34,18 +45,9 @@ public class FileReaderService : IFileReaderService
         var headerDictionary = headerRow
             .Select((header, index) => new { header, index })
             .ToDictionary(x => x.header, x => x.index, StringComparer.OrdinalIgnoreCase);
-        
-        const string idHeader = "Id";
-        const string nameHeader = "Name";
-        const string descriptionHeader = "Description";
-        const string phoneHeader = "Phone";
-        const string emailHeader = "Email";
-        const string urlHeader = "Url";
-        const string organisationNameHeader = "Organisation Name";
-        const string laHeader = "La";
 
 
-        var requiredHeaders = new[] { idHeader, nameHeader, descriptionHeader, phoneHeader, emailHeader, urlHeader, organisationNameHeader, laHeader };
+        var requiredHeaders = new[] { IdHeader, NameHeader, DescriptionHeader, PhoneHeader, EmailHeader, UrlHeader, OrganisationNameHeader, LaHeader };
 
         foreach (var header in requiredHeaders)
         {
@@ -60,15 +62,57 @@ public class FileReaderService : IFileReaderService
             var columns = d.Split(',');
             return new MinimalDataDto
             {
-                Id = Guid.Parse(columns[headerDictionary[idHeader]].Trim()),
-                OrganisationName = columns[headerDictionary[organisationNameHeader]].Trim(),
-                La = columns[headerDictionary[laHeader]].Trim(),
-                Name = columns[headerDictionary[nameHeader]].Trim(),
-                Description = columns[headerDictionary[descriptionHeader]].Trim(),
-                Phone = columns[headerDictionary[phoneHeader]].Trim(),
-                Email = columns[headerDictionary[emailHeader]].Trim(),
-                Url = columns[headerDictionary[urlHeader]].Trim(),
+                Id = Guid.Parse(columns[headerDictionary[IdHeader]].Trim()),
+                OrganisationName = columns[headerDictionary[OrganisationNameHeader]].Trim(),
+                La = columns[headerDictionary[LaHeader]].Trim(),
+                Name = columns[headerDictionary[NameHeader]].Trim(),
+                Description = columns[headerDictionary[DescriptionHeader]].Trim(),
+                Phone = columns[headerDictionary[PhoneHeader]].Trim(),
+                Email = columns[headerDictionary[EmailHeader]].Trim(),
+                Url = columns[headerDictionary[UrlHeader]].Trim(),
             };
+        }).ToArray();
+
+        return data;
+    }
+
+    public MinimalDataDto[] GetDataFromXlsx(string fileName)
+    {
+        // check file is xlsx
+        var fileExtension = Path.GetExtension(fileName);
+        if (fileExtension != ".xlsx")
+        {
+            throw new Exception("File is not an XLSX");
+        }
+
+        var requiredHeaders = new[] { IdHeader, NameHeader, DescriptionHeader, PhoneHeader, EmailHeader, UrlHeader, OrganisationNameHeader, LaHeader };
+        using var workbook = new XLWorkbook(fileName);
+        var worksheet = workbook.Worksheet(1);
+            
+        // check first row is headers and correct number
+        var headerRow = worksheet.Row(1).Cells().Select(c => c.Value.ToString()).ToArray();
+        _logger.LogInformation("Headers found: {HeaderCount}", headerRow.Length);
+        var headerDictionary = headerRow
+            .Select((header, index) => new { header, index })
+            .ToDictionary(x => x.header, x => x.index, StringComparer.OrdinalIgnoreCase);
+        if (headerRow.Length != requiredHeaders.Length || requiredHeaders.Any(h => !headerDictionary.ContainsKey(h)))
+        {
+            throw new Exception("Headers do not match");
+        }
+            
+        // All except headers
+        var rows = worksheet.RowsUsed().Skip(1);
+
+        var data = rows.Select(r => new MinimalDataDto
+        {
+            Id = Guid.Parse(r.Cell(1).Value.ToString()),
+            OrganisationName = r.Cell(7).Value.ToString(),
+            La = r.Cell(8).Value.ToString(),
+            Name = r.Cell(2).Value.ToString(),
+            Description = r.Cell(3).Value.ToString(),
+            Phone = r.Cell(4).Value.ToString(),
+            Email = r.Cell(5).Value.ToString(),
+            Url = r.Cell(6).Value.ToString(),
         }).ToArray();
 
         return data;

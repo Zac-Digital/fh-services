@@ -38,7 +38,7 @@ var serviceProvider = services.BuildServiceProvider();
 
 // Read the file to get services
 var fileService = serviceProvider.GetRequiredService<IFileReaderService>();
-var data = fileService.GetDataFromCsv(fileName);
+var data = fileService.GetDataFromXlsx(fileName);
 
 // Upload the services to the database
 var uploadService = serviceProvider.GetRequiredService<IUploadService>();

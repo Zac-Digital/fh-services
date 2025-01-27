@@ -57,9 +57,16 @@ public class UploadService : IUploadService
 
     private async Task<Organization?> GetOrCreateOrganization(string organisationName)
     {
+        if (string.IsNullOrEmpty(organisationName))
+        {
+            _logger.LogWarning("Organisation name is empty");
+            return null;
+        }
+        
         var org = await _context.OrganizationsDbSet.AsNoTracking().IgnoreAutoIncludes().FirstOrDefaultAsync(x => x.Name == organisationName);
         if (org != null)
         {
+            _logger.LogWarning("Organisation already exists: {OrganisationName}", organisationName);
             return org;
         }
 
@@ -98,6 +105,14 @@ public class UploadService : IUploadService
 
     private async Task UpsertService(MinimalDataDto minimalDataDto, Organization org)
     {
+        // check that service does not already exist
+        var existingService = await _context.ServicesDbSet.AsNoTracking().IgnoreAutoIncludes().FirstOrDefaultAsync(x => x.Id == minimalDataDto.Id);
+        if (existingService != null)
+        {
+            _logger.LogWarning("Service already exists: {ServiceName}", minimalDataDto.Name);
+            return;
+        }
+        
         var service = new Service
         {
             Id = minimalDataDto.Id,
