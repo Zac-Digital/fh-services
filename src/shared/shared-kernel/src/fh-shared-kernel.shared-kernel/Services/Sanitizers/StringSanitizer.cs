@@ -1,61 +1,87 @@
-using Ganss.Xss;
-using HtmlAgilityPack;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace FamilyHubs.SharedKernel.Services.Sanitizers;
+
+
+
+public interface IStringSanitizer
+{
+    T Sanitize<T>(T input);
+    string Sanitize(string input);
+}
 
 /// <summary>
 /// Builder class for sanitizing strings and all string properties of a class 
 /// </summary>
-public class StringSanitizerBuilder
+public partial class StringSanitizer : IStringSanitizer
 {
     private bool _removeHtml;
     private bool _removeJs;
-    private readonly HtmlSanitizer _htmlSanitizer = new();
 
-    public StringSanitizerBuilder RemoveHtml()
+    internal StringSanitizer RemoveHtml()
     {
         _removeHtml = true;
         return this;
     }
     
-    public StringSanitizerBuilder RemoveJs()
+    internal StringSanitizer RemoveJs()
     {
         _removeJs = true;
         return this;
     }
 
-    public T Build<T>(T input)
+    public T Sanitize<T>(T input)
     {
-        return Sanitize(input);
+        return SanitizeStringGeneric(input);
     }
 
-    public string Build(string input)
+    public string Sanitize(string input)
     {
-        return Sanitize(input);
+        return SanitizeString(input);
     }
     
-    private string Sanitize(string input)
+    private string SanitizeString(string input)
     {
         var sanitizedHtml = input;
         
-        // Js removal
         if (_removeJs)
         {
-            sanitizedHtml = _htmlSanitizer.Sanitize(input);
+            sanitizedHtml = RemoveJavascript(sanitizedHtml);
         }
         
-        // Agility
         if (_removeHtml)
-        {
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(sanitizedHtml);
-            sanitizedHtml = htmlDoc.DocumentNode.InnerText; // <- the magic of taking away all html tags
+        { 
+            sanitizedHtml = RemoveHtml(sanitizedHtml);
+            return sanitizedHtml;
         }
 
         return sanitizedHtml;
     }
     
-    private T Sanitize<T>(T input)
+    private static string RemoveJavascript(string input)
+    {
+        // Remove <script> tags and their content
+        var stripTags = RegexJsScript().Replace(input, string.Empty);
+
+        // Remove event handler attributes (e.g., onclick, onmouseover)
+        stripTags = RegexEventHandlers().Replace(stripTags, string.Empty);
+
+        // Remove javascript: URIs
+        stripTags = RegexJavascriptUri().Replace(stripTags, string.Empty);
+
+        return stripTags;
+    }
+    
+    private static string RemoveHtml(string input)
+    {
+        var stripTags = RegexHtmlTags().Replace(input, string.Empty);
+        stripTags = WebUtility.HtmlDecode(stripTags);
+        stripTags = stripTags.Replace("\u00A0", " "); // Replace non-breaking space with regular space
+        return stripTags;
+    }
+    
+    private T SanitizeStringGeneric<T>(T input)
     {
         if (input is null)
         {
@@ -103,4 +129,15 @@ public class StringSanitizerBuilder
         }
         return input;
     }
+
+    [GeneratedRegex("<script.*?</script>", RegexOptions.IgnoreCase | RegexOptions.Singleline)]
+    private static partial Regex RegexJsScript();
+
+    [GeneratedRegex(@"\s*on\w+\s*=\s*(['""]).*?\1", RegexOptions.IgnoreCase)]
+    private static partial Regex RegexEventHandlers();
+
+    [GeneratedRegex(@"javascript\s*:\s*[^""]+", RegexOptions.IgnoreCase)]
+    private static partial Regex RegexJavascriptUri();
+    [GeneratedRegex("<.*?>")]
+    private static partial Regex RegexHtmlTags();
 }

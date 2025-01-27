@@ -1,29 +1,38 @@
+using FamilyHubs.SharedKernel.Factories;
 using FamilyHubs.SharedKernel.Services.Sanitizers;
 
 namespace FamilyHubs.SharedKernel.UnitTests.Services;
 
 public class SanitizerTests
 {
-    private readonly StringSanitizerBuilder _sanitizer = new();
+    private readonly StringSanitizer _sanitizer = new();
 
     [Theory]
     [InlineData("<br />Test", "Test")]
+    [InlineData("<br />Test&nbsp;", "Test ")]
     [InlineData("<div>Test</div>", "Test")]
     [InlineData("<div><p>Test</p></div>", "Test")]
     [InlineData("<div><p><span>Test<span></p> and test</div>", "Test and test")]
     public void ShouldRemoveHtml(string input, string expected)
     {
-        var result = _sanitizer.RemoveHtml().Build(input);
+        var result = SanitizerFactory.CreateDedsTextSanitizer().Sanitize(input);
         
         Assert.Equal(expected, result);
     }
     
     [Theory]
     [InlineData("<script>alert('Test')</script>", "")]
+    [InlineData("<div onclick='alert(\"Test\")'>Click me</div>", "Click me")]
+    [InlineData("<a href='javascript:alert(\"Test\")'>Link</a>", "Link")]
+    [InlineData("<img src='image.jpg' onload='alert(\"Test\")' />", "")]
+    [InlineData("<div onmouseover='alert(\"Test\")'>Hover over me</div>", "Hover over me")]
+    [InlineData("<button onclick='alert(\"Test\")'>Click me</button>", "Click me")]
+    [InlineData("<div><script>alert('Nested')</script> script</div>", " script")]
+    [InlineData("<div><a href='javascript:alert(\"Test\")'>Link</a> with script</div>", "Link with script")]
     
     public void ShouldRemoveJavascript(string input, string expected)
     {
-        var result = _sanitizer.RemoveJs().Build(input);
+        var result = SanitizerFactory.CreateDedsTextSanitizer().Sanitize(input);
         
         Assert.Equal(expected, result);
     }
@@ -31,6 +40,7 @@ public class SanitizerTests
     [Fact]
     public void ShouldSanitizeClass_RemovingtmlAndJavascriptOnStringProperties()
     {
+        // Arrange
         var guid = Guid.NewGuid().ToString();
         var service = new MockClass()
         {
@@ -46,13 +56,16 @@ public class SanitizerTests
                 }}
         };
         
-        var result = _sanitizer.RemoveHtml().RemoveJs().Build(service);
+        // Act
+        var sanitizer = SanitizerFactory.CreateDedsTextSanitizer();
+        var result = sanitizer.Sanitize(service);
         
+        // Assert
         Assert.Equal("Test", result.Name);
         Assert.Equal("Test this description with no js", result.Description);
         Assert.Equal("www.testexample.com", result.Url);
         Assert.Equal("test@example.com", result.Email);
-        Assert.Equal(20, result.Age);
+        Assert.Equal(20.ToString(), result.Age.ToString());
         Assert.Equal(guid, result.MockClassTwo!.Id);
         Assert.Equal("Test from mock three", result.MockClassTwo!.MockClassThree!.Name);
         
