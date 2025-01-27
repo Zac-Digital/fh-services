@@ -46,7 +46,7 @@ public static class Program
             app.MapGet("/ServiceFilter", context =>
             {
                 var postcode = context.Request.Query["postcode"][0];
-                context.Response.Redirect($"/ProfessionalReferral/LocalOfferResults/?postcode={postcode}", true);
+                context.Response.Redirect($"/ProfessionalReferral/Search/?postcode={postcode}", true);
                 return Task.CompletedTask;
             });
             
