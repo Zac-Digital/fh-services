@@ -173,7 +173,7 @@ export class AddAServicePageObjects {
     //continue buttons
     static continueButtonForCreateService = () =>
         PageElement
-            .located(By.id("textarea"))
+            .located(By.css("button[type='submit']"))
             .describedAs('Continue Button');
 
     static continueButtonForAddALocationButton = () =>
