@@ -187,21 +187,21 @@ public class LocalOfferResultsModel : HeaderPageModel
                 // If the user is coming from the initial postcode search page,
                 // FromPostCodeSearch will be true, and we can use this to differentiate
                 // between initial searches, and subsequent search query changes.
-                var eventType = _isInitialSearch ? ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch
-                    : ServiceDirectorySearchEventType.ServiceDirectorySearchFilter;
+                //var eventType = _isInitialSearch ? ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch
+                //    : ServiceDirectorySearchEventType.ServiceDirectorySearchFilter;
 
-                FamilyHubsUser familyHusUser = HttpContext.GetFamilyHubsUser();
+                //FamilyHubsUser familyHusUser = HttpContext.GetFamilyHubsUser();
                 
-                await _organisationClientService.RecordServiceSearch(
-                    eventType,
-                    Postcode!,
-                    long.Parse(familyHusUser.AccountId),
-                    SearchResults.Items,
-                    requestTimestamp,
-                    responseTimestamp,
-                    response?.StatusCode,
-                    CorrelationId
-                );
+                // await _organisationClientService.RecordServiceSearch(
+                //     eventType,
+                //     Postcode!,
+                //     long.Parse(familyHusUser.AccountId),
+                //     SearchResults.Items,
+                //     requestTimestamp,
+                //     responseTimestamp,
+                //     response?.StatusCode,
+                //     CorrelationId
+                // );
             }
         }
         catch (Exception ex)
