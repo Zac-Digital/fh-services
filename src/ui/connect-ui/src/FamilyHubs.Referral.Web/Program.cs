@@ -38,13 +38,13 @@ public static class Program
             
             app.MapGet("/ServiceDetail", context =>
             {
-                context.Response.Redirect("/ProfessionalReferral/LocalOfferDetail", true);
+                context.Response.Redirect($"/ProfessionalReferral/LocalOfferDetail/{context.Request.QueryString}", true);
                 return Task.CompletedTask;
             });
 
             app.MapGet("/ServiceFilter", context =>
             {
-                context.Response.Redirect("/ProfessionalReferral/LocalOfferResults" + context.Request.QueryString, true);
+                context.Response.Redirect($"/ProfessionalReferral/LocalOfferResults/{context.Request.QueryString}", true);
                 return Task.CompletedTask;
             });
             
