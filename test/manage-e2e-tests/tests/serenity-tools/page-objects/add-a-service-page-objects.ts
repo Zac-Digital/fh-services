@@ -170,7 +170,7 @@ export class AddAServicePageObjects {
             .describedAs('Confirm details and add a service Button');
 
 
-    //continue buttons
+    //continue button
     static continueButtonForCreateService = () =>
         PageElement
             .located(By.css("button[type='submit']"))
