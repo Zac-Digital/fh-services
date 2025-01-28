@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250123142248_minAndMaxAgeToNullable")]
+    partial class minAndMaxAgeToNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2191,7 +2194,8 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "alternate_name");
 
                     b.Property<string>("ApplicationProcess")
-                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)")
                         .HasAnnotation("Relational:JsonPropertyName", "application_process");
 
                     b.Property<DateTime?>("AssuredDate")
