@@ -3,7 +3,7 @@ import path from 'path';
 
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
-setup('Authenticate', async ({ page }) => {
+setup('Login to Manage', async ({ page }) => {
 
     await page.goto(process.env.BASE_URL);
     await page.getByText('Start Now').click();

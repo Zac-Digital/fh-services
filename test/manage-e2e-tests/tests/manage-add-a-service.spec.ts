@@ -2,10 +2,8 @@ import {describe, it, test} from '@serenity-js/playwright-test';
 import {
     acceptCookies,
     acceptManageTermsAndConditions,
-    clickOnTheStartButton,
     getRandomServiceName,
     isTheManageHomepageDisplayed,
-    loginToManage,
     navigateToManage,
     addAnLAService,
     isServiceCreatedPageDisplayed,
@@ -16,14 +14,11 @@ import {
     searchForVCFSService, getRandomEmail
 } from './serenity-tools/manage-index';
 
-
 describe('Add a Service - Manage Tests', () => {
-
 
     test.use({
         defaultActorName: 'DFE_ADMIN_USER'
     })
-
 
     test.beforeEach('Setup', async ({actor}) => {
         await actor.attemptsTo(
@@ -31,10 +26,7 @@ describe('Add a Service - Manage Tests', () => {
             acceptManageTermsAndConditions(),
             acceptCookies(),
             isTheManageHomepageDisplayed());
-
-
     });
-
 
     it('should check a DfE Admin User is able to create a LA service', async ({actor}) => {
         const serviceName = getRandomServiceName();
@@ -47,7 +39,6 @@ describe('Add a Service - Manage Tests', () => {
             isServiceFoundInUserList(serviceName),
         );
     });
-
 
     it('should check a DfE Admin User is able to create a VCFS service', async ({actor}) => {
         const serviceNameVCFS = getRandomVCFServiceName();
