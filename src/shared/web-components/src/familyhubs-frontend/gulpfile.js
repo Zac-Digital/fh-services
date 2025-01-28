@@ -27,7 +27,6 @@ gulp.task('copy-wwwroot', function () {
 
 gulp.task('copy-wwwroot-remote', function () {
     let baseDir = getWwwRootDir(true);
-    fs.writeFileSync('/tmp/test.txt', baseDir);
     return gulp.src('wwwroot/**/*')
       .pipe(gulp.dest(baseDir));
 });
