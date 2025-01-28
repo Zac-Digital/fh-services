@@ -2,10 +2,11 @@
 
 const gulp = require("gulp"),
     rename = require('gulp-rename'),
+    path = require('path'),
     fs = require('fs');
 
 function remotelyInstalled() {
-    return process.cwd().endsWith('node_modules\familyhubs-frontend');
+    return process.cwd().endsWith(`node_modules${path.sep}familyhubs-frontend`);
 }
 
 function getWwwRootDir() {
