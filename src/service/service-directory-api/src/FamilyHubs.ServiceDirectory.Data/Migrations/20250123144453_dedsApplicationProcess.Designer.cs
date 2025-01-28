@@ -4,6 +4,7 @@ using FamilyHubs.ServiceDirectory.Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace FamilyHubs.ServiceDirectory.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250123144453_dedsApplicationProcess")]
+    partial class dedsApplicationProcess
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2230,11 +2233,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2(7)")
                         .HasAnnotation("Relational:JsonPropertyName", "last_modified");
 
-                    b.Property<byte?>("MaximumAge")
+                    b.Property<byte>("MaximumAge")
                         .HasColumnType("tinyint")
                         .HasAnnotation("Relational:JsonPropertyName", "maximum_age");
 
-                    b.Property<byte?>("MinimumAge")
+                    b.Property<byte>("MinimumAge")
                         .HasColumnType("tinyint")
                         .HasAnnotation("Relational:JsonPropertyName", "minimum_age");
 
