@@ -111,6 +111,11 @@ public static class StartupExtensions
         {
             httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralApiUrl")!);
         });
+        
+        services.AddSecuredTypedHttpClient<IReferralDashboardClientService, ReferralClientService>((serviceProvider, httpClient) =>
+        {
+            httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralApiUrl")!);
+        });
     }
 
     public static IServiceCollection AddSecuredTypedHttpClient<TClient, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(
@@ -139,18 +144,8 @@ public static class StartupExtensions
         app.UseFamilyHubsDataProtection();
 
         app.UseFamilyHubs();
-
-        // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
-        {
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
-        }
-
-#if use_https
-        app.UseHttpsRedirection();
-#endif
-
+        
+        app.UseHsts();
         app.UseStaticFiles();
 
         app.UseRouting();

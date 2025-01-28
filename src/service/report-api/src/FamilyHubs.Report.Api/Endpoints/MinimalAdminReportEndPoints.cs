@@ -1,9 +1,12 @@
+using System.Net.Mime;
 using FamilyHubs.Report.Core.Queries.ConnectionRequestsSentFacts;
 using FamilyHubs.Report.Core.Queries.ConnectionRequestsSentFacts.Requests;
 using FamilyHubs.Report.Core.Queries.ServiceSearchFacts;
 using FamilyHubs.Report.Core.Queries.ServiceSearchFacts.Requests;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.SharedKernel.Identity;
+using FamilyHubs.SharedKernel.Reports.ConnectionRequests;
+using FamilyHubs.SharedKernel.Reports.WeeklyBreakdown;
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 
@@ -41,7 +44,8 @@ public class MinimalAdminReportEndPoints
                 SearchBreakdownRequest request = new(date, serviceTypeId);
                 await validator.ValidateAndThrowAsync(request);
                 return await getFourWeekBreakdownQuery.GetFourWeekBreakdownForAdmin(request);
-            });
+            })
+            .Produces<WeeklyReportBreakdown>(contentType: MediaTypeNames.Application.Json);
 
         app.MapGet("report/service-searches-total",
             [Authorize(Roles = RoleTypes.DfeAdmin)]
@@ -66,7 +70,8 @@ public class MinimalAdminReportEndPoints
                 ConnectionRequestsRequest request = new(date, 7);
                 await validator.ValidateAndThrowAsync(request);
                 return await getConnectionRequestsSentFactQuery.GetConnectionRequestsForAdmin(request);
-            });
+            })
+            .Produces<ConnectionRequests>(contentType: MediaTypeNames.Application.Json);
 
 
         app.MapGet("report/connection-requests-4-week-breakdown",
@@ -79,12 +84,14 @@ public class MinimalAdminReportEndPoints
                 ConnectionRequestsBreakdownRequest request = new(date);
                 await validator.ValidateAndThrowAsync(request);
                 return await getConnectionRequestsSentFactFourWeekBreakdownQuery.GetFourWeekBreakdownForAdmin(request);
-            });
+            })
+            .Produces<ConnectionRequestsBreakdown>(contentType: MediaTypeNames.Application.Json);
 
 
         app.MapGet("report/connection-requests-total",
             [Authorize(Roles = RoleTypes.DfeAdmin)]
             async (IGetConnectionRequestsSentFactQuery getConnectionRequestsSentFactQuery) =>
-                await getConnectionRequestsSentFactQuery.GetTotalConnectionRequestsForAdmin());
+                await getConnectionRequestsSentFactQuery.GetTotalConnectionRequestsForAdmin())
+            .Produces<ConnectionRequests>(contentType: MediaTypeNames.Application.Json);
     }
 }

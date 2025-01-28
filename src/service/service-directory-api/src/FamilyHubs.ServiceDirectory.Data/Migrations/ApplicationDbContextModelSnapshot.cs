@@ -2190,8 +2190,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "alternate_name");
 
                     b.Property<string>("ApplicationProcess")
-                        .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)")
+                        .HasColumnType("nvarchar(max)")
                         .HasAnnotation("Relational:JsonPropertyName", "application_process");
 
                     b.Property<DateTime?>("AssuredDate")
@@ -2230,11 +2229,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2(7)")
                         .HasAnnotation("Relational:JsonPropertyName", "last_modified");
 
-                    b.Property<byte>("MaximumAge")
+                    b.Property<byte?>("MaximumAge")
                         .HasColumnType("tinyint")
                         .HasAnnotation("Relational:JsonPropertyName", "maximum_age");
 
-                    b.Property<byte>("MinimumAge")
+                    b.Property<byte?>("MinimumAge")
                         .HasColumnType("tinyint")
                         .HasAnnotation("Relational:JsonPropertyName", "minimum_age");
 
@@ -2251,7 +2250,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                     b.Property<Guid?>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ProgramId")
+                    b.Property<Guid?>("ProgramId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Status")
@@ -3344,9 +3343,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
 
                     b.HasOne("FamilyHubs.SharedKernel.OpenReferral.Entities.Program", "Program")
                         .WithMany()
-                        .HasForeignKey("ProgramId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProgramId");
 
                     b.Navigation("Organization");
 
