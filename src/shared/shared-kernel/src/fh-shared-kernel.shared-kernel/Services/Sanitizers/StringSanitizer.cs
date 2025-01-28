@@ -65,7 +65,7 @@ public partial class StringSanitizer : IStringSanitizer
         var stripTags = RegexJsScript().Replace(input, string.Empty);
 
         // Remove event handler attributes (e.g., onclick, onmouseover)
-        stripTags = RegexEventHandlers().Replace(stripTags, string.Empty);
+        stripTags = RegexJsEvents().Replace(stripTags, string.Empty);
 
         // Remove javascript: URIs
         stripTags = RegexJavascriptUri().Replace(stripTags, string.Empty);
@@ -134,7 +134,7 @@ public partial class StringSanitizer : IStringSanitizer
     private static partial Regex RegexJsScript();
 
     [GeneratedRegex(@"\s*on\w+\s*=\s*(['""]).*?\1", RegexOptions.IgnoreCase)]
-    private static partial Regex RegexEventHandlers();
+    private static partial Regex RegexJsEvents();
 
     [GeneratedRegex(@"javascript\s*:\s*[^""]+", RegexOptions.IgnoreCase)]
     private static partial Regex RegexJavascriptUri();
