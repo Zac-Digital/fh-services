@@ -9,7 +9,7 @@ function remotelyInstalled() {
 }
 
 function getWwwRootDir() {
-    let baseDir = remotelyInstalled() ? '../..' : process.env.npm_config_local_prefix;
+    let baseDir = remotelyInstalled() ? '../..' : '.';
 
     // Check if this is a NPM link situation
     //if (process.env.npm_lifecycle_event === 'link') {}
@@ -30,8 +30,10 @@ gulp.task('copy-wwwroot', function () {
 
 //todo: map files also need to be copied
 function copyPackageJsToWwwroot(packageName, srcFilename) {
+    let nodeModules = remotelyInstalled() ? '..' : 'node_modules';
+
     // Read the package.json file to get the package version
-    const packageJson = JSON.parse(fs.readFileSync(`../${packageName}/package.json`));
+    const packageJson = JSON.parse(fs.readFileSync(`${nodeModules}/${packageName}/package.json`));
     const packageVersion = packageJson.version;
 
     // Set the destination file name
@@ -43,7 +45,7 @@ function copyPackageJsToWwwroot(packageName, srcFilename) {
     //console.log(process.cwd());
     //console.log(baseDir);
     // Copy and rename the file
-    return gulp.src(`../${packageName}/${srcFilename}`)
+    return gulp.src(`${nodeModules}/${packageName}/${srcFilename}`)
         .pipe(rename(destFileName))
         .pipe(gulp.dest(baseDir + '/js'));
 }
