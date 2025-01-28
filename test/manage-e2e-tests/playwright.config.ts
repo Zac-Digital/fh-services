@@ -64,12 +64,13 @@ export default defineConfig<SerenityOptions>({
 
     /* Configure projects for major browsers */
     projects: [
-        {
-            name: 'Microsoft Edge',
-            use: {
-                channel: 'msedge',
-            },
-        },
+    //Due to authentication issues when logging into the service when using with multiple Browsers, the browsers have been commented out till fixed by ticket FHB-1246
+        // {
+        //     name: 'Microsoft Edge',
+        //     use: {
+        //         channel: 'msedge',
+        //     },
+        // },
         {
             name: 'Google Chrome',
             use: {
@@ -77,21 +78,21 @@ export default defineConfig<SerenityOptions>({
             },
         },
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
-        // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
-        {
-            name: 'Firefox',
-            use: {
-                ...devices['Desktop Firefox'],
-                ignoreHTTPSErrors: true
-            },
-        },
-        {
-            name: 'Safari',
-            use: {
-                ...devices['Desktop Safari'],
-                ignoreHTTPSErrors: true
-            },
-        },
+        // TODO: Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
+        // {
+        //     name: 'Firefox',
+        //     use: {
+        //         ...devices['Desktop Firefox'],
+        //         ignoreHTTPSErrors: true
+        //     },
+        // },
+        // {
+        //     name: 'Safari',
+        //     use: {
+        //         ...devices['Desktop Safari'],
+        //         ignoreHTTPSErrors: true
+        //     },
+        // },
         //TODO: Get tests running on mobile safari/chrome - need some custom code to scroll elements into view.
         // {
         //     name: 'Mobile Safari',
