@@ -5,12 +5,8 @@ const gulp = require("gulp"),
     path = require('path'),
     fs = require('fs');
 
-function remotelyInstalled() {
-    return process.cwd().endsWith(`node_modules${path.sep}familyhubs-frontend`);
-}
-
-function getWwwRootDir() {
-    let baseDir = remotelyInstalled() ? '../..' : '.';
+function getWwwRootDir(remotelyInstalled) {
+    let baseDir = remotelyInstalled ? process.env.npm_config_local_prefix : '.';
 
     // Check if this is a NPM link situation
     //if (process.env.npm_lifecycle_event === 'link') {}
@@ -24,14 +20,21 @@ gulp.task('assets', function () {
 });
 
 gulp.task('copy-wwwroot', function () {
-    let baseDir = getWwwRootDir();
+    let baseDir = getWwwRootDir(false);
     return gulp.src('wwwroot/**/*')
         .pipe(gulp.dest(baseDir));
 });
 
+gulp.task('copy-wwwroot-remote', function () {
+    let baseDir = getWwwRootDir(true);
+    fs.writeFileSync('/tmp/test.txt', baseDir);
+    return gulp.src('wwwroot/**/*')
+      .pipe(gulp.dest(baseDir));
+});
+
 //todo: map files also need to be copied
 function copyPackageJsToWwwroot(packageName, srcFilename) {
-    let nodeModules = remotelyInstalled() ? '..' : 'node_modules';
+    let nodeModules = 'node_modules';
 
     // Read the package.json file to get the package version
     const packageJson = JSON.parse(fs.readFileSync(`${nodeModules}/${packageName}/package.json`));
@@ -67,12 +70,8 @@ gulp.task('copy-moj-frontend-js', function () {
     return copyPackageJsToWwwroot('@ministryofjustice/frontend', 'moj/all.js');
 });
 
-gulp.task('copy-familyhubs-frontend-js', function () {
-    return copyPackageJsToWwwroot('familyhubs-frontend', 'all.min.js');
-});
+gulp.task('copy-js', gulp.series('copy-accessible-autocomplete-js', 'copy-govuk-frontend-js', 'copy-dfe-frontend-js', 'copy-moj-frontend-js'));
 
-gulp.task('copy-js', gulp.series('copy-accessible-autocomplete-js', 'copy-govuk-frontend-js', 'copy-dfe-frontend-js', 'copy-moj-frontend-js', 'copy-familyhubs-frontend-js'));
-
-gulp.task('populate-wwwroot', gulp.series('copy-wwwroot'));
+gulp.task('populate-wwwroot', gulp.series('copy-wwwroot-remote'));
 
 //todo: delegate from consumer gulp to this gulp?
