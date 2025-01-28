@@ -65,10 +65,9 @@ export default defineConfig<SerenityOptions>({
     /* Configure projects for major browsers */
     projects: [
         {
-            name: 'chromium',
+            name: 'Chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                channel: 'chromium',
             },
         },
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.

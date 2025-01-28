@@ -60,10 +60,9 @@ export default defineConfig<SerenityOptions>({
     /* Configure projects for major browsers */
     projects: [
         {
-            name: 'chromium',
+            name: 'Chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                channel: 'chromium',
             },
         },
         {
