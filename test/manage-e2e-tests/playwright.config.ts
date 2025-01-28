@@ -101,7 +101,7 @@ export default defineConfig<SerenityOptions>({
                 storageState: 'playwright/.auth/user.json'
             },
             dependencies: ['setup']
-        },
+        }
         //TODO: Get tests running on mobile safari/chrome - need some custom code to scroll elements into view.
         // {
         //     name: 'Mobile Safari',

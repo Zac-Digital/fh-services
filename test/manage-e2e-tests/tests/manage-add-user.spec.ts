@@ -24,7 +24,7 @@ import {
 describe('Add a User - Manage Tests', () => {
 
     test.use({
-        defaultActorName: 'DFE_ADMIN_user'
+        defaultActorName: 'DFE_ADMIN_USER'
     })
 
     test.beforeEach('Setup', async ({actor}) => {

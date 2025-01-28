@@ -8,29 +8,22 @@ export const getRandomEmail = () => {
     return text + "@" + text + '.com';
 }
 
-export const getRandomFullName = () => {
-    let firstName = "";
-    let surname = "";
+
+const generateRandomText = () => {
+    let text = "";
     let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for (let i = 0; i < 5; i++)
-        firstName += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    for (let i = 0; i < 5; i++)
-        surname += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return firstName + " " + surname;
-}
-const generateRandomText = (length = 3, possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") => {
-    let text = "";
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < 6; i++) // Generates a 6-character string as per the function's logic
         text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
+
     return text;
 };
 
-
-
+export const getRandomFullName = () => {
+    const firstName = generateRandomText();
+    const surname = generateRandomText();
+    return `${firstName} ${surname}`;
+};
 
 const getFormattedDate = () => {
     return new Date().toLocaleDateString('en-GB', {
@@ -41,15 +34,11 @@ const getFormattedDate = () => {
 };
 
 
-
-
 export const getRandomServiceName = () => {
     const text = generateRandomText();
     const date = getFormattedDate();
     return `Automated Test LA Service ${text} ${date}`;
 };
-
-
 
 
 export const getRandomVCFServiceName = () => {
