@@ -1,4 +1,3 @@
-export * from './page-objects/gov-login-page-objects'
 export * from './page-objects/add-a-service-page-objects'
 export * from './tasks/login-tasks'
 export * from './tasks/user-account-tasks'
