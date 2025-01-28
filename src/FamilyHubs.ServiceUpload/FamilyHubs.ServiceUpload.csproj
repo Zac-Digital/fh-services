@@ -14,13 +14,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="manual_data_load_test.csv">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
       <None Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Manual_data_load.xlsx">
+      <None Update="data/*">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

@@ -1,21 +1,20 @@
 using FamilyHubs.ServiceUpload;
+using FamilyHubs.ServiceUpload.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.Extensions;
 
 namespace FamilyHubs.ServiceUploadTests;
 
 public class UploadServiceTests
 {
-    private readonly ILogger<UploadService> _loggerMock;
     private readonly DedsDbContext _context;
     private readonly UploadService _uploadService;
 
     public UploadServiceTests()
     {
-        _loggerMock = Substitute.For<ILogger<UploadService>>();
+        ILogger<UploadService> loggerMock = Substitute.For<ILogger<UploadService>>();
 
         var options = new DbContextOptionsBuilder<DedsDbContext>()
             .ConfigureWarnings(warning =>
@@ -26,7 +25,7 @@ public class UploadServiceTests
             .Options;
 
         _context = new DedsDbContext(options);
-        _uploadService = new UploadService(_loggerMock, _context);
+        _uploadService = new UploadService(loggerMock, _context);
     }
 
     [Fact]

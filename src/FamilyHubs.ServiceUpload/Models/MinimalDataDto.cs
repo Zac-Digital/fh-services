@@ -1,4 +1,4 @@
-namespace FamilyHubs.ServiceUpload;
+namespace FamilyHubs.ServiceUpload.Models;
 
 public class MinimalDataDto
 {

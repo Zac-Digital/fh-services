@@ -22,7 +22,7 @@ namespace FamilyHubs.ServiceUploadTests
             const string fileName = "./data/notACsv.txt";
 
             // Act & Assert
-            var exception = Assert.Throws<Exception>(() => _fileReaderService.GetDataFromCsv(fileName));
+            var exception = Assert.Throws<Exception>(() => _fileReaderService.GetServicesFromCsv(fileName));
             Assert.Equal("File is not a CSV", exception.Message);
         }
 
@@ -33,7 +33,7 @@ namespace FamilyHubs.ServiceUploadTests
             const string fileName = "./data/missingHeader.csv";
 
             // Act & Assert
-            var exception = Assert.Throws<Exception>(() => _fileReaderService.GetDataFromCsv(fileName));
+            var exception = Assert.Throws<Exception>(() => _fileReaderService.GetServicesFromCsv(fileName));
             Assert.Equal("Missing Header: Id", exception.Message);
         }
 
@@ -44,7 +44,7 @@ namespace FamilyHubs.ServiceUploadTests
             var fileName = "./data/goodData.csv";
 
             // Act
-            var result = _fileReaderService.GetDataFromCsv(fileName);
+            var result = _fileReaderService.GetServicesFromCsv(fileName);
 
             // Assert
             Assert.Single(result);

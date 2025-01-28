@@ -1,12 +1,15 @@
 using ClosedXML.Excel;
+using FamilyHubs.ServiceUpload.Models;
 using Microsoft.Extensions.Logging;
 
 namespace FamilyHubs.ServiceUpload;
 
 public interface IFileReaderService
 {
-    MinimalDataDto[] GetDataFromCsv(string fileName);
-    MinimalDataDto[] GetDataFromXlsx(string fileName);
+    MinimalDataDto[] GetServicesFromCsv(string fileName);
+    MinimalDataDto[] GetServicesFromXlsx(string fileName);
+    
+    OrgSeedDataDto[] GetSeedOrganisationsFromCsv(string fileName);
 }
 
 public class FileReaderService : IFileReaderService
@@ -27,7 +30,7 @@ public class FileReaderService : IFileReaderService
         _logger = logger;
     }
     
-    public MinimalDataDto[] GetDataFromCsv(string fileName)
+    public MinimalDataDto[] GetServicesFromCsv(string fileName)
     {
         var fileExtension = Path.GetExtension(fileName);
         if (fileExtension != ".csv")
@@ -76,7 +79,7 @@ public class FileReaderService : IFileReaderService
         return data;
     }
 
-    public MinimalDataDto[] GetDataFromXlsx(string fileName)
+    public MinimalDataDto[] GetServicesFromXlsx(string fileName)
     {
         // check file is xlsx
         var fileExtension = Path.GetExtension(fileName);
@@ -116,5 +119,51 @@ public class FileReaderService : IFileReaderService
         }).ToArray();
 
         return data;
+    }
+
+    public OrgSeedDataDto[] GetSeedOrganisationsFromCsv(string fileName)
+    {
+        var fileExtension = Path.GetExtension(fileName);
+        if (fileExtension != ".csv")
+        {
+            throw new Exception("File is not a CSV");
+        }
+        
+        var fileData = File.ReadAllLines(fileName);
+        
+        var headerRow = fileData[0].Split(',');
+        _logger.LogInformation("Headers found: {HeaderCount}", headerRow.Length);
+        
+        var headerDictionary = headerRow
+            .Select((header, index) => new { header, index })
+            .ToDictionary(x => x.header, x => x.index, StringComparer.OrdinalIgnoreCase);
+        
+        var requiredHeaders = new[] { "Name", "Address1", "City", "PostalCode", "Country", "StateProvince" };
+        
+        foreach (var header in requiredHeaders)
+        {
+            if (!headerDictionary.ContainsKey(header))
+            {
+                throw new Exception($"Missing Header: {header}");
+            }
+        }
+        
+        var data = fileData.Skip(1).Select(d =>
+        {
+            var columns = d.Split(',');
+            return new OrgSeedDataDto
+            {
+                Name = columns[headerDictionary["Name"]].Trim(),
+                Address1 = columns[headerDictionary["Address1"]].Trim(),
+                City = columns[headerDictionary["City"]].Trim(),
+                PostalCode = columns[headerDictionary["PostalCode"]].Trim(),
+                Country = columns[headerDictionary["Country"]].Trim(),
+                StateProvince = columns[headerDictionary["StateProvince"]].Trim(),
+            };
+        }).ToArray();
+        
+        return data;
+        
+        
     }
 }

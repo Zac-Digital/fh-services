@@ -13,17 +13,23 @@ var configuration = new ConfigurationBuilder()
     .Build();
 
 var connectionString = configuration.GetConnectionString("DefaultConnection");
-var fileName = configuration["FilePath"];
+var servicesPath = configuration["FilePath"];
+var seedOrgsPath = configuration["SeedOrgsFilePath"];
 
 // Check that we have the required values
-if (string.IsNullOrEmpty(fileName))
+if (string.IsNullOrEmpty(servicesPath))
 {
-    throw new ArgumentNullException(nameof(fileName));
+    throw new ArgumentNullException(nameof(servicesPath));
 }
 
 if (string.IsNullOrEmpty(connectionString))
 {
     throw new ArgumentNullException(nameof(connectionString));
+}
+
+if(string.IsNullOrEmpty(seedOrgsPath))
+{
+    throw new ArgumentNullException(nameof(seedOrgsPath));
 }
 
 // Add the DbContext
@@ -36,10 +42,15 @@ services.AddTransient<IUploadService, UploadService>();
 
 var serviceProvider = services.BuildServiceProvider();
 
-// Read the file to get services
 var fileService = serviceProvider.GetRequiredService<IFileReaderService>();
-var data = fileService.GetDataFromXlsx(fileName);
-
-// Upload the services to the database
 var uploadService = serviceProvider.GetRequiredService<IUploadService>();
-await uploadService.UploadServicesAsync(data);
+
+
+// Seed the organisations
+var orgsData = fileService.GetSeedOrganisationsFromCsv(seedOrgsPath);
+await uploadService.SeedOrganisationsAsync(orgsData);
+
+// Read the file to get services
+var servicesData = fileService.GetServicesFromXlsx(servicesPath);
+await uploadService.UploadServicesAsync(servicesData);
+
