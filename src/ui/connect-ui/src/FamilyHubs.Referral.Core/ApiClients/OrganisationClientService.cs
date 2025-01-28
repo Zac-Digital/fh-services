@@ -28,7 +28,7 @@ public interface IOrganisationClientService
     Task RecordServiceSearch(
         ServiceDirectorySearchEventType eventType,
         string postcode,
-        long userId,
+        long? userId,
         IEnumerable<ServiceDto> services,
         DateTime requestTimestamp,
         DateTime? responseTimestamp,
@@ -227,7 +227,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         return await JsonSerializer.DeserializeAsync<OrganisationDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 
-    public async Task RecordServiceSearch(ServiceDirectorySearchEventType eventType, string postcode, long userId,
+    public async Task RecordServiceSearch(ServiceDirectorySearchEventType eventType, string postcode, long? userId,
         IEnumerable<ServiceDto> services, DateTime requestTimestamp, DateTime? responseTimestamp, HttpStatusCode? responseStatusCode,
         Guid correlationId)
     {
