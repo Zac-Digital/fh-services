@@ -2,6 +2,7 @@ using System.Net;
 using System.Text.Json;
 using FamilyHubs.OpenReferral.Function.ClientServices;
 using FamilyHubs.OpenReferral.Function.Repository;
+using FamilyHubs.SharedKernel.Factories;
 using FamilyHubs.SharedKernel.OpenReferral.Entities;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -62,8 +63,12 @@ public class TriggerPullServicesWebhook(
     {
         foreach (Service service in serviceListFromApi)
         {
+            var factory = SanitizerFactory.CreateDedsTextSanitizer();
+            logger.LogInformation("Sanitizing service with ID {serviceId}", service.OrId);
+            var sanitizedService = factory.Sanitize(service);
+            
             logger.LogInformation("Adding service with ID {serviceId} to the database", service.OrId);
-            functionDbContext.AddService(service);
+            functionDbContext.AddService(sanitizedService);
         }
 
         logger.LogInformation("Saving changes to the database");
