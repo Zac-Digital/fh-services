@@ -51,11 +51,16 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
         {
             return;
         }
-        
-        if (!_featureManager.IsEnabledAsync(FeatureFlag.ConnectDashboard).Result)
+
+        if (_featureManager.IsEnabledAsync(FeatureFlag.ConnectDashboard).Result)
         {
-            options.Header.NavigationLinks = [ options.Header.NavigationLinks[0] ];
+            return;
         }
+        
+        FhLinkOptions serviceSearchHeaderLink = 
+            options.Header.NavigationLinks.First(headerLink => headerLink.Text.Equals("Search for service"));
+            
+        options.Header.NavigationLinks = [ serviceSearchHeaderLink ];
     }
 
     private void ConfigureLinks(FhLinkOptions[] linkOptions, FamilyHubsUiOptions options)
