@@ -50,7 +50,7 @@ public class FamilyHubsUiOptionsConfigureTests : FamilyHubsUiOptionsTestBase
         _familyHubsUiOptionsConfigure.Configure(FamilyHubsUiOptions);
         
         FamilyHubsUiOptions.Header.NavigationLinks.Should().HaveCount(2);
-        FamilyHubsUiOptions.Header.NavigationLinks[0].Text.Should().Be("Search for a Service");
+        FamilyHubsUiOptions.Header.NavigationLinks[0].Text.Should().Be("Search for service");
         FamilyHubsUiOptions.Header.NavigationLinks[1].Text.Should().Be("My Requests");
     }
     
@@ -62,7 +62,7 @@ public class FamilyHubsUiOptionsConfigureTests : FamilyHubsUiOptionsTestBase
         _familyHubsUiOptionsConfigure.Configure(FamilyHubsUiOptions);
         
         FamilyHubsUiOptions.Header.NavigationLinks.Should().ContainSingle();
-        FamilyHubsUiOptions.Header.NavigationLinks[0].Text.Should().Be("Search for a Service");
+        FamilyHubsUiOptions.Header.NavigationLinks[0].Text.Should().Be("Search for service");
     }
 
     [Theory]
