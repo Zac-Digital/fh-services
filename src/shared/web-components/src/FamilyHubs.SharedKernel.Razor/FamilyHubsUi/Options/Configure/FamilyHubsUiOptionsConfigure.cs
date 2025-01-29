@@ -33,7 +33,8 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
             .Where(kvp => kvp.Value.Enabled)
             .Select(kvp => kvp);
 
-        // turtles all the way down
+        // Recursively generates header permutations for each section defined in "AlternativeFamilyHubsUi" ..
+        // .. in appsettings.json
         foreach (var alt in enabledAlts)
         {
             Configure(alt.Value, alt.Key, options);
