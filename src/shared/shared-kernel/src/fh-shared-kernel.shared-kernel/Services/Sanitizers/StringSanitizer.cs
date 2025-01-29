@@ -1,4 +1,6 @@
+using System.Collections.Concurrent;
 using System.Net;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace FamilyHubs.SharedKernel.Services.Sanitizers;
@@ -7,7 +9,7 @@ namespace FamilyHubs.SharedKernel.Services.Sanitizers;
 
 public interface IStringSanitizer
 {
-    T Sanitize<T>(T input);
+    T Sanitize<T>(T input) where T : class;
     string Sanitize(string input);
 }
 
@@ -18,6 +20,7 @@ public partial class StringSanitizer : IStringSanitizer
 {
     private bool _removeHtml;
     private bool _removeJs;
+    private static readonly ConcurrentDictionary<string, PropertyInfo[]> _propertyInfoCache = new();
 
     internal StringSanitizer RemoveHtml()
     {
@@ -31,7 +34,7 @@ public partial class StringSanitizer : IStringSanitizer
         return this;
     }
 
-    public T Sanitize<T>(T input)
+    public T Sanitize<T>(T input) where T : class
     {
         return SanitizeStringGeneric(input);
     }
@@ -88,14 +91,19 @@ public partial class StringSanitizer : IStringSanitizer
             return input;
         }
 
-        var properties = input.GetType().GetProperties();
+        var properties = _propertyInfoCache.GetOrAdd(
+            input.GetType().FullName!, 
+            _ => input.GetType().GetProperties().Where(p => p.CanWrite).ToArray());
+        
         foreach (var property in properties)
         {
+            /*
             // Ensure property is writable and has a setter
             if (!property.CanWrite)
             {
                 continue;
             }
+            */
 
             try
             {

@@ -70,6 +70,63 @@ public class SanitizerTests
         Assert.Equal("Test from mock three", result.MockClassTwo!.MockClassThree!.Name);
         
     }
+    
+    [Fact]
+    public void ShouldSanitizeClass_RemovingtmlAndJavascriptOnStringPropertiesWithCache()
+    {
+        // Arrange
+        var guid = Guid.NewGuid().ToString();
+        var service1 = new MockClass
+        {
+            Name = "<div>Test</div>",
+            Description = "<div><p>Test this</p> description <button onClick={someFunction()}>with no<script>alert('bad actor')</script> js</button></div>",
+            Url = "<div>www.testexample.com</div>",
+            Email = "test@example.com",
+            Age = 20,
+            MockClassTwo = new MockClassTwo {Id = $"<div>{guid}</div>", 
+                MockClassThree = new MockClassThree
+                {
+                    Name = "<div>Test from mock three</div>"
+                }}
+        };
+        
+        var service2 = new MockClass
+        {
+            Name = "<div>Test2</div>",
+            Description = "<div><p>Test2 this</p> description <button onClick={someFunction()}>with no<script>alert('bad actor')</script> js</button></div>",
+            Url = "<div>www.test2example.com</div>",
+            Email = "test2@example.com",
+            Age = 20,
+            MockClassTwo = new MockClassTwo {Id = $"<div>{guid}</div>", 
+                MockClassThree = new MockClassThree
+                {
+                    Name = "<div>Test2 from mock three</div>"
+                }}
+        };
+        
+        // Act
+        var sanitizer = SanitizerFactory.CreateDedsTextSanitizer();
+        var result1 = sanitizer.Sanitize(service1);
+        var result2 = sanitizer.Sanitize(service2);
+        
+        // Assert
+        Assert.Equal("Test", result1.Name);
+        Assert.Equal("Test this description with no js", result1.Description);
+        Assert.Equal("www.testexample.com", result1.Url);
+        Assert.Equal("test@example.com", result1.Email);
+        Assert.Equal(20.ToString(), result1.Age.ToString());
+        Assert.Equal(guid, result1.MockClassTwo!.Id);
+        Assert.Equal("Test from mock three", result1.MockClassTwo!.MockClassThree!.Name);
+        
+        Assert.Equal("Test2", result2.Name);
+        Assert.Equal("Test2 this description with no js", result2.Description);
+        Assert.Equal("www.test2example.com", result2.Url);
+        Assert.Equal("test2@example.com", result2.Email);
+        Assert.Equal(20.ToString(), result2.Age.ToString());
+        Assert.Equal(guid, result2.MockClassTwo!.Id);
+        Assert.Equal("Test2 from mock three", result2.MockClassTwo!.MockClassThree!.Name);
+        
+    }
 
     private class MockClass
     {
