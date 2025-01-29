@@ -30,14 +30,14 @@
         
         <form method="post" novalidate>
             <div class="govuk-form-group @(error?.FormGroupClass)" id="search-options">
-                <label class="govuk-label govuk-label--s" for="Postcode">
+                <label class="govuk-label govuk-label--s" for="postcode">
                     Enter a postcode
                 </label>
-                <div id="account-number-hint" class="govuk-hint">
+                <div id="postcode-services-hint" class="govuk-hint">
                     For example SW1A 2AA
                 </div>
                 <partial name="_ErrorMessageNext" model="error"/>
-                <input class="govuk-input govuk-input--width-10 @(error?.InputClass)" id="postcode" name="Postcode" type="text" spellcheck="false" value="@Model.Postcode" data-testid="postcode-value">
+                <input class="govuk-input govuk-input--width-10 @(error?.InputClass)" aria-describedby="postcode-services-hint" id="postcode" name="Postcode" type="text" spellcheck="false" value="@Model.Postcode" data-testid="postcode-value">
             </div>
             <button type="submit" class="govuk-button govuk-!-padding-left-3 govuk-!-padding-right-3" data-testid="button-search">
                 Search
