@@ -1,6 +1,10 @@
 name: Run E2E Test Suite
 run-name: Run E2E Test Suite on ${{ inputs.environment }}
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}-${{ inputs.environment }}-E2E"
+  cancel-in-progress: true
+
 on:
   workflow_dispatch: 
     inputs:
@@ -110,9 +114,10 @@ jobs:
           GOV_LOGIN_PASSWORD='${{ secrets.PLAYWRIGHT_GOVLOGIN_PASSWORD }}'
           EOF
           
+      # Forced 1 Worker as Manage falls over in parallel execution in its current implementation.
       - name: Run Playwright Test Suite
         shell: bash
-        run: npx playwright test --workers `nproc`
+        run: npx playwright test --workers 1
         
       - name: Upload Report
         uses: actions/upload-artifact@v4

@@ -64,35 +64,37 @@ export default defineConfig<SerenityOptions>({
 
     /* Configure projects for major browsers */
     projects: [
-    //Due to authentication issues when logging into the service when using with multiple Browsers, the browsers have been commented out till fixed by ticket FHB-1246
-        // {
-        //     name: 'Microsoft Edge',
-        //     use: {
-        //         channel: 'msedge',
-        //     },
-        // },
+        { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
         {
-            name: 'Google Chrome',
+            name: 'Chromium',
             use: {
-                channel: 'chrome',
+                ...devices['Desktop Chrome'],
+                storageState: 'playwright/.auth/user.json'
             },
+            dependencies: ['setup']
         },
+        
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
-        // TODO: Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
-        // {
-        //     name: 'Firefox',
-        //     use: {
-        //         ...devices['Desktop Firefox'],
-        //         ignoreHTTPSErrors: true
-        //     },
-        // },
-        // {
-        //     name: 'Safari',
-        //     use: {
-        //         ...devices['Desktop Safari'],
-        //         ignoreHTTPSErrors: true
-        //     },
-        // },
+        // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
+        {
+            name: 'Firefox',
+            use: {
+                ...devices['Desktop Firefox'],
+                ignoreHTTPSErrors: true,
+                storageState: 'playwright/.auth/user.json'
+            },
+            dependencies: ['setup']
+        },
+        {
+            name: 'Safari',
+            use: {
+                ...devices['Desktop Safari'],
+                ignoreHTTPSErrors: true,
+                storageState: 'playwright/.auth/user.json'
+            },
+            dependencies: ['setup']
+        }
         //TODO: Get tests running on mobile safari/chrome - need some custom code to scroll elements into view.
         // {
         //     name: 'Mobile Safari',
