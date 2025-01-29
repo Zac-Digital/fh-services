@@ -33,7 +33,8 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
             .Where(kvp => kvp.Value.Enabled)
             .Select(kvp => kvp);
 
-        // turtles all the way down
+        // Recursively generates header permutations for each section defined in "AlternativeFamilyHubsUi" ..
+        // .. in appsettings.json
         foreach (var alt in enabledAlts)
         {
             Configure(alt.Value, alt.Key, options);
@@ -50,11 +51,16 @@ public class FamilyHubsUiOptionsConfigure : IConfigureOptions<FamilyHubsUiOption
         {
             return;
         }
-        
-        if (!_featureManager.IsEnabledAsync(FeatureFlag.ConnectDashboard).Result)
+
+        if (_featureManager.IsEnabledAsync(FeatureFlag.ConnectDashboard).Result)
         {
-            options.Header.NavigationLinks = [ options.Header.NavigationLinks[0] ];
+            return;
         }
+        
+        FhLinkOptions serviceSearchHeaderLink = 
+            options.Header.NavigationLinks.First(headerLink => headerLink.Text.Equals("Search for service"));
+            
+        options.Header.NavigationLinks = [ serviceSearchHeaderLink ];
     }
 
     private void ConfigureLinks(FhLinkOptions[] linkOptions, FamilyHubsUiOptions options)

@@ -26,7 +26,7 @@ public class FamilyHubsUiOptionsTestBase
                 {
                     new FhLinkOptions
                     {
-                        Text = "Search for a Service",
+                        Text = "Search for service",
                         Url = "https://example.com/first",
                         ConfigUrl = null
                     },
