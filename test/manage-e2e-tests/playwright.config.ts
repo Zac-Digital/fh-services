@@ -65,23 +65,16 @@ export default defineConfig<SerenityOptions>({
     /* Configure projects for major browsers */
     projects: [
         { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
+        {
+            name: 'Chromium',
+            use: {
+                ...devices['Desktop Chrome'],
+                storageState: 'playwright/.auth/user.json'
+            },
+            dependencies: ['setup']
+        },
         
-        {
-            name: 'Microsoft Edge',
-            use: {
-                channel: 'msedge',
-                storageState: 'playwright/.auth/user.json'
-            },
-            dependencies: ['setup']
-        },
-        {
-            name: 'Google Chrome',
-            use: {
-                channel: 'chrome',
-                storageState: 'playwright/.auth/user.json'
-            },
-            dependencies: ['setup']
-        },
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
         // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
         {
