@@ -31,7 +31,8 @@ jobs:
           open-referral-mock-database,
           referral-database,
           report-database,
-          service-directory-database
+          service-directory-database,
+          report-staging-database
         ]
         include:
           - databases: idam-database
@@ -53,11 +54,15 @@ jobs:
           - databases: report-database
             display_name: Report
             keyvault_db_prefix: REPORT-DB
-            sql_file_path: ./test/reset-scripts/reset-database.sql
+            sql_file_path: ./test/reset-scripts/reset-report-database.sql
           - databases: service-directory-database
             display_name: Service Directory
             keyvault_db_prefix: SD-DB
             sql_file_path: ./test/reset-scripts/reset-database.sql
+          - databases: report-staging-database
+            display_name: Report Staging
+            keyvault_db_prefix: REPORT-STAGING-DB
+            sql_file_path: ./test/reset-scripts/reset-report-staging-database.sql
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
@@ -75,7 +80,6 @@ jobs:
           idam-api,
           notification-api,
           referral-api,
-          report-api,
           service-directory-api,
           mock-hsda-api
         ]
@@ -101,13 +105,6 @@ jobs:
             project_name: FamilyHubs.Referral.Api
             data_project_name: FamilyHubs.Referral.Data
             database_context: ApplicationDbContext
-          - artifact_name: report-api
-            job_name: Migrate the Report Database
-            keyvault_app_prefix: REPORT-API
-            keyvault_db_prefix: REPORT-DB
-            project_name: FamilyHubs.Report.Api
-            data_project_name: FamilyHubs.Report.Data
-            database_context: ReportDbContext
           - artifact_name: service-directory-api
             job_name: Migrate the Service Directory Database
             keyvault_app_prefix: SD-API
@@ -144,7 +141,6 @@ jobs:
           notification-database, 
           open-referral-mock-database, 
           referral-database, 
-          report-database, 
           service-directory-database 
         ]
         include:
@@ -164,10 +160,6 @@ jobs:
             display_name: Referral
             keyvault_db_prefix: REFERRAL-DB
             sql_file_path: ./test/seed-scripts/test/referral-data.sql
-          - databases: report-database
-            display_name: Report
-            keyvault_db_prefix: REPORT-DB
-            sql_file_path: ./test/seed-scripts/test/report-data.sql
           - databases: service-directory-database
             display_name: Service Directory
             keyvault_db_prefix: SD-DB
