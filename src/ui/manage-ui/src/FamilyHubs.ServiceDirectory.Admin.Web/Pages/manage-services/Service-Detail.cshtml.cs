@@ -44,7 +44,7 @@ public class Service_DetailModel : ServicePageModel
 
     protected override string GenerateBackUrl()
     {
-        if (Flow == JourneyFlow.Edit && ChangeFlow == null)
+        if (Flow == JourneyFlow.Edit)
         {
             var serviceType = ServiceModel?.ServiceType!.Value;
 
@@ -59,12 +59,8 @@ public class Service_DetailModel : ServicePageModel
             };
         }
 
-        ServiceJourneyPage? back = BackParam;
-        if (back == null)
-        {
-            throw new InvalidOperationException("Back page not supplied as param");
-        }
-        return GetServicePageUrl(back.Value);
+        ServiceJourneyPage back = BackParam ?? ServiceJourneyPage.Service_More_Details;
+        return GetServicePageUrl(back);
     }
 
     protected override async Task OnGetWithModelAsync(CancellationToken cancellationToken)

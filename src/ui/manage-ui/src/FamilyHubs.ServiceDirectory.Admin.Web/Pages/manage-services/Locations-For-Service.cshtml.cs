@@ -58,7 +58,7 @@ public class Locations_For_ServiceModel : ServicePageModel
         {
             ServiceModel!.MoveCurrentLocationToLocations();
 
-            return Redirect(GetServicePageUrl(ServiceJourneyPage.Select_Location, backPage: CurrentPage));
+            return Redirect(GetServicePageUrl(ServiceJourneyPage.Select_Location, ChangeFlow, CurrentPage));
         }
         return NextPage();
     }
