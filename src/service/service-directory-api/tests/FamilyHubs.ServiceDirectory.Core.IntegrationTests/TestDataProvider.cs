@@ -58,6 +58,7 @@ public static class TestDataProvider
         bool isServiceFree = false) => new()
     {
         OrganisationId = organisationId,
+        OrganisationName = "Unit Test County Council",
         ServiceType = ServiceType.InformationSharing,
         Status = ServiceStatusType.Active,
         Name = updated == false ? "Unit Test Service" : "Unit Test Service Updated",
