@@ -53,7 +53,18 @@ public class SanitizerTests
                 MockClassThree = new MockClassThree()
                 {
                     Name = "<div>Test from mock three</div>"
-                }}
+                }},
+            MockClassTwos = new MockClassTwo[]
+            {
+                new MockClassTwo()
+                {
+                    Id = "<div>Test</div>",
+                    MockClassThree = new MockClassThree()
+                    {
+                        Name = "<div>Test</div>"
+                    }
+                }
+            }
         };
         
         // Act
@@ -68,6 +79,7 @@ public class SanitizerTests
         Assert.Equal(20.ToString(), result.Age.ToString());
         Assert.Equal(guid, result.MockClassTwo!.Id);
         Assert.Equal("Test from mock three", result.MockClassTwo!.MockClassThree!.Name);
+        Assert.Equal("Test", result.MockClassTwos.First().Id);
         
     }
 
@@ -81,6 +93,8 @@ public class SanitizerTests
         public string NotStandard => Name; // Checks that sanitizer handles non settable properties
         
         public MockClassTwo? MockClassTwo { get; set; }
+        
+        public MockClassTwo[] MockClassTwos { get; set; } = Array.Empty<MockClassTwo>();
     }
 
     private class MockClassTwo
