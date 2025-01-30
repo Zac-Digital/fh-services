@@ -99,7 +99,7 @@ public class WhenEditingAService : BaseServiceTest
         new("lang", "continue-button"),
         new("cost"),
         new("how"),
-        new("locations", "continue-button", false),
+        new("locations", canFail: false),
         new("days-1", canFail: false),
         new("extra-1"),
         new("days", canFail: false),
