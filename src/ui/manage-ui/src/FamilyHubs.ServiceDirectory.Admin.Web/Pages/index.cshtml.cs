@@ -20,7 +20,11 @@ public class IndexModel : HeaderPageModel
     }
     public IActionResult OnGet()
     {
-        if (HttpContext.IsUserLoggedIn())
+        var role = HttpContext.GetRole();
+
+        // Prevent infinite 403 loop
+        var canUseManage = role is RoleTypes.DfeAdmin or RoleTypes.LaManager or RoleTypes.LaDualRole or RoleTypes.VcsManager or RoleTypes.VcsDualRole;
+        if (canUseManage)
         {
             return RedirectToPage("/Welcome");
         }
