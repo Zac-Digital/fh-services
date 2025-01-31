@@ -63,9 +63,7 @@ export default defineConfig<SerenityOptions>({
             name: 'Chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                storageState: 'playwright/.auth/user.json'
-            },
-            dependencies: ['setup']
+            }
         },
         
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
