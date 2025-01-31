@@ -85,16 +85,11 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         HttpResponseMessage? response
     )> GetLocalOffers(LocalOfferFilter filter)
     {
-        if (!await _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices))
-        {
-            // TODO: Will need to be adjusted once we implement LA Services in Connect
-            // TODO: Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1245
-            return (new PaginatedList<ServiceDto>(), new HttpResponseMessage(HttpStatusCode.OK));
-        }
-        
         if (string.IsNullOrEmpty(filter.Status))
             filter.Status = "Active";
 
+        var isVcfsServicesEnabled = await _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices);
+        filter.ServiceType = !isVcfsServicesEnabled ? ServiceType.FamilyExperience.ToString() : null!;
         var urlBuilder = new StringBuilder(
             GetPositionUrl(filter.ServiceType, filter.Latitude, filter.Longitude, filter.Proximity,
                 filter.Status, filter.PageNumber, filter.PageSize));

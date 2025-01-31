@@ -97,6 +97,8 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
 
         filteredServices = SortServicesDto(request, filteredServices);
 
+        filteredServices = ResolveOrganisations(filteredServices);
+        
         var result = new PaginatedList<ServiceDto>(filteredServices, total, request.PageNumber, request.PageSize);
 
         return result;
@@ -269,6 +271,18 @@ public class GetServicesCommandHandler : IRequestHandler<GetServicesCommand, Pag
                 .ToList();
         }
 
+        return services;
+    }
+
+    private List<ServiceDto> ResolveOrganisations(List<ServiceDto> services)
+    {
+        var organisationIds = services.Select(x => x.OrganisationId);
+        var organisations = _context.Organisations.Where(x => organisationIds.Contains(x.Id)).Select(o => new { o.Id, o.Name }).ToList();
+        services.ForEach(s =>
+        {
+            var organisation = organisations.Find(x => x.Id == s.OrganisationId);
+            s.OrganisationName = organisation?.Name ?? string.Empty;
+        });
         return services;
     }
 }

@@ -75,7 +75,17 @@ public abstract class DataIntegrationTestBase : IDisposable, IAsyncDisposable
 
         await TestDbContext.SaveChangesAsync();
 
-        return Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisation);
+        var orgName = organisationDto?.Name ?? TestOrganisation.Name;
+        var orgDetailsDto = Mapper.Map(organisationWithServices, organisationDto ?? TestOrganisation);
+
+        // The organisation service name is a calculated property on the ServiceDto so we need to set it after mapping
+        foreach (var serviceDto in orgDetailsDto.Services)
+        {
+            serviceDto.OrganisationName = orgName;
+        }
+        
+        return orgDetailsDto;
+
     }
 
     protected async Task<OrganisationDto> CreateOrganisation(OrganisationDto? organisationDto = null)
