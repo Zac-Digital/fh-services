@@ -10,14 +10,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="coverlet.collector"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
         <PackageReference Include="NSubstitute" />
-        <PackageReference Include="NSubstitute.Analyzers.CSharp">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit"/>
         <PackageReference Include="xunit.runner.visualstudio" />
     </ItemGroup>
 
@@ -26,7 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\FamilyHubs.OpenReferral.Function\FamilyHubs.OpenReferral.Function.csproj" />
+        <ProjectReference Include="..\..\src\FamilyHubs.OpenReferral.Function\FamilyHubs.OpenReferral.Function.csproj" />
+      <ProjectReference Include="..\..\..\..\shared\shared-kernel\src\fh-shared-kernel.shared-kernel\FamilyHubs.SharedKernel.csproj" />
     </ItemGroup>
 
     <ItemGroup>
