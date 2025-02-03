@@ -17,6 +17,13 @@ using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+/*
+ * TODO: "Search Within" Filter
+ * TODO: Selected Filters in the Gray Area
+ * TODO: Removing Filters on POST
+ * TODO: Unit Testing
+ */
+
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class LocalOfferResultsModel : HeaderPageModel
