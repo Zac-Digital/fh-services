@@ -10,7 +10,8 @@ namespace FamilyHubs.ServiceDirectory.Shared.ReferenceData;
 public static class Languages
 {
     public static readonly ReadOnlyCollection<string> FilterCodes
-        = new([
+        = new(new List<string>
+        {
             "af", "sq", "ar", "hy", "eu", "bn", "bg", "ca", "km", "zh",
             "hr", "cs", "da", "nl", "en", "et", "fj", "fi", "fr", "ka",
             "de", "el", "gu", "he", "hi", "hu", "is", "id", "ga", "it",
@@ -19,12 +20,11 @@ public static class Languages
             "ro", "ru", "sm", "sr", "sk", "sl", "so", "es", "sw", "sv",
             "ta", "tt", "te", "th", "bo", "to", "tr", "uk", "ur", "uz",
             "vi", "cy", "xh"
-        ]);
+        });
 
     // list taken from https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes#References
     public static readonly IReadOnlyDictionary<string, string> CodeToName
-        = new ReadOnlyDictionary<string, string>(new Dictionary<string, string>
-        {
+        = new ReadOnlyDictionary<string, string>(new Dictionary<string, string> {
             { "ab", "Abkhazian" },
             { "aa", "Afar" },
             { "af", "Afrikaans" },
@@ -149,12 +149,12 @@ public static class Languages
             { "os", "Ossetian; Ossetic" },
             { "pi", "Pali" },
             { "ps", "Pashto; Pushto" },
-            { "fa", "Persian/Farsi" },
+            { "fa", "Persian" },
             { "pl", "Polish" },
             { "pt", "Portuguese" },
-            { "pa", "Punjabi" },
+            { "pa", "Punjabi; Panjabi" },
             { "qu", "Quechua" },
-            { "ro", "Romanian" },
+            { "ro", "Romanian; Moldavian; Moldovan" },
             { "rm", "Romansh" },
             { "rn", "Rundi" },
             { "ru", "Russian" },
@@ -172,12 +172,12 @@ public static class Languages
             { "so", "Somali" },
             { "nr", "South Ndebele" },
             { "st", "Southern Sotho" },
-            { "es", "Spanish" },
+            { "es", "Spanish; Castilian" },
             { "su", "Sundanese" },
             { "sw", "Swahili" },
             { "ss", "Swati" },
             { "sv", "Swedish" },
-            { "tl", "Tagalog/Filipino" },
+            { "tl", "Tagalog" },
             { "ty", "Tahitian" },
             { "tg", "Tajik" },
             { "ta", "Tamil" },
