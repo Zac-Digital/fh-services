@@ -51,14 +51,11 @@ public class WhenUsingLocalOfferResultsPage
         var searchResults = await _pageModel.OnGetAsync(
             postCode!,
             "",
-            "",
-            "",
-            "",
+            false,
             "",
             "",
             "",
             1,
-            false,
             Guid.NewGuid()
         ) as PageResult;
 
@@ -124,14 +121,11 @@ public class WhenUsingLocalOfferResultsPage
         var searchResults = await _pageModel.OnGetAsync(
             "BS2 0SP",
             "1",
-            "127",
-            "",
-            "",
+            false,
             "",
             "",
             "",
             1,
-            false,
             Guid.NewGuid()
         ) as PageResult;
 
@@ -140,9 +134,9 @@ public class WhenUsingLocalOfferResultsPage
     }
 
     [Theory]
-    [InlineData("paid")]
-    [InlineData("free")]
-    public void ThenOnPostAsync_LocalOfferResults(string costSelection)
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ThenOnPostAsync_LocalOfferResults(bool onlyShowFreeServices)
     {
         //Arrange
         var json = @"{
@@ -191,11 +185,7 @@ public class WhenUsingLocalOfferResultsPage
     }
 }";
 
-        _pageModel.CostSelection = new List<string>
-        {
-            costSelection
-        };
-        _pageModel.ServiceDeliverySelection = new List<string>();
+        _pageModel.OnlyShowFreeServices = onlyShowFreeServices;
         _pageModel.CategorySelection = new List<string>();
         _pageModel.SubcategorySelection = new List<string>();
 
@@ -217,12 +207,10 @@ public class WhenUsingLocalOfferResultsPage
 
         // Act
         var searchResults = _pageModel.OnPostAsync(
-            removeCostSelection: "yes",
+            // TODO: removeOnlyShowFreeServices
+            // TODO: Remove SelectedAges
             removeFilter: true,
-            removeServiceDeliverySelection: "yes",
             removeSelectedLanguage: "yes",
-            removeForChildrenAndYoungPeople: "yes",
-            removeSearchAge: "yes",
             removecategorySelection: "yes",
             removesubcategorySelection: "yes",
             removeDaysAvailable: "yes"
@@ -234,9 +222,9 @@ public class WhenUsingLocalOfferResultsPage
     }
 
     [Theory]
-    [InlineData("paid")]
-    [InlineData("free")]
-    public void ThenOnPostAsync_LocalOfferResults_WithModelStateError(string costSelection)
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ThenOnPostAsync_LocalOfferResults_WithModelStateError(bool onlyShowFreeServices)
     {
         //Arrange
         var json = @"{
@@ -285,11 +273,7 @@ public class WhenUsingLocalOfferResultsPage
     }
 }";
 
-        _pageModel.CostSelection = new List<string>
-        {
-            costSelection
-        };
-        _pageModel.ServiceDeliverySelection = new List<string>();
+        _pageModel.OnlyShowFreeServices = onlyShowFreeServices;
         _pageModel.CategorySelection = new List<string>();
         _pageModel.SubcategorySelection = new List<string>();
         _pageModel.Pagination = new DontShowPagination();
@@ -318,12 +302,10 @@ public class WhenUsingLocalOfferResultsPage
 
         // Act
         var searchResults = _pageModel.OnPostAsync(
-            removeCostSelection: "yes",
+            // TODO: removeOnlyShowFreeServices
+            // TODO: Remove SelectedAges
             removeFilter: true,
-            removeServiceDeliverySelection: "yes",
             removeSelectedLanguage: "yes",
-            removeForChildrenAndYoungPeople: "yes",
-            removeSearchAge: "yes",
             removecategorySelection: "yes",
             removesubcategorySelection: "yes",
             removeDaysAvailable: "yes"

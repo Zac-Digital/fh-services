@@ -107,11 +107,14 @@ public class LocalOfferResultsModel : HeaderPageModel
     }
 
     public async Task<IActionResult> OnGetAsync(
+        string postcode,
+        string? subcategorySelection,
         bool onlyShowFreeServices,
+        string? daysAvailable,
         string? selectedAges,
-        string postcode, string? searchText, string? selectedLanguage,
-        string? subcategorySelection, string? daysAvailable,
-        string? serviceDeliverySelection, int? pageNum, Guid? correlationId
+        string? selectedLanguage,
+        int? pageNum,
+        Guid? correlationId
         )
     {
         Postcode = postcode;
