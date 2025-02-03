@@ -19,6 +19,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
 
+/*
+ * TODO: "Search Within" Filter
+ * TODO: Selected Filters in the Gray Area
+ * TODO: Removing Filters on POST
+ * TODO: Unit Testing
+ */
+
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class LocalOfferResultsModel : HeaderPageModel
