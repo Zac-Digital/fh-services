@@ -14,7 +14,6 @@ using FamilyHubs.SharedKernel.Identity.Models;
 using FamilyHubs.SharedKernel.Razor.Pagination;
 using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
 using FamilyHubs.SharedKernel.Services.Postcode.Model;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -34,38 +33,6 @@ public class LocalOfferResultsModel : HeaderPageModel
     public string SelectedDistance { get; set; } = "212892";
 
     private bool _isInitialSearch = true;
-
-    // TODO: Remove
-    // public List<SelectListItem> AgeRange { get; set; } = new()
-    // {
-    //     new() { Value="-1", Text="All ages" , Selected = true},
-    //     new() { Value="0", Text="0 to 12 months" },
-    //     new() { Value="1", Text="1 year old"},
-    //     new() { Value="2", Text="2 years old"},
-    //     new() { Value="3", Text="3 years old"},
-    //     new() { Value="4", Text="4 years old"},
-    //     new() { Value="5", Text="5 years old"},
-    //     new() { Value="6", Text="6 years old"},
-    //     new() { Value="7", Text="7 years old"},
-    //     new() { Value="8", Text="8 years old"},
-    //     new() { Value="9", Text="9 years old"},
-    //     new() { Value="10", Text="10 years old"},
-    //     new() { Value="11", Text="11 years old"},
-    //     new() { Value="12", Text="12 years old"},
-    //     new() { Value="13", Text="13 years old"},
-    //     new() { Value="14", Text="14 years old"},
-    //     new() { Value="15", Text="15 years old"},
-    //     new() { Value="16", Text="16 years old"},
-    //     new() { Value="17", Text="17 years old"},
-    //     new() { Value="18", Text="18 years old"},
-    //     new() { Value="19", Text="19 years old"},
-    //     new() { Value="20", Text="20 years old"},
-    //     new() { Value="21", Text="21 years old"},
-    //     new() { Value="22", Text="22 years old"},
-    //     new() { Value="23", Text="23 years old"},
-    //     new() { Value="24", Text="24 years old"},
-    //     new() { Value="25", Text="25 years old"},
-    // };
 
     public static List<SelectListItem> AgeRange { get; } = 
     [
@@ -95,10 +62,6 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     [BindProperty]
     public List<string>? ServiceDeliverySelection { get; set; }
-
-    // TODO: Remove
-    [BindProperty]
-    public List<string>? CostSelection { get; set; }
     
     [BindProperty]
     public bool OnlyShowFreeServices { get; set; }
@@ -111,13 +74,6 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     [BindProperty]
     public List<string>? SubcategorySelection { get; set; }
-
-    [BindProperty]
-    public bool ForChildrenAndYoungPeople { get; set; }
-
-    // TODO: Remove
-    [BindProperty]
-    public string? SearchAge { get; set; }
     
     [BindProperty]
     public List<string>? SelectedAges { get; set; }
@@ -162,9 +118,9 @@ public class LocalOfferResultsModel : HeaderPageModel
     public async Task<IActionResult> OnGetAsync(
         bool onlyShowFreeServices,
         string? selectedAges,
-        string postcode, string? searchText, string? searchAge, string? selectedLanguage,
-        string? subcategorySelection, string? costSelection, string? daysAvailable,
-        string? serviceDeliverySelection, int? pageNum, bool forChildrenAndYoungPeople, Guid? correlationId
+        string postcode, string? searchText, string? selectedLanguage,
+        string? subcategorySelection, string? daysAvailable,
+        string? serviceDeliverySelection, int? pageNum, Guid? correlationId
         )
     {
         Postcode = postcode;
@@ -185,12 +141,9 @@ public class LocalOfferResultsModel : HeaderPageModel
         OnlyShowFreeServices = onlyShowFreeServices;
         SelectedAges = selectedAges?.Split(",").ToList();
         SearchText = searchText;
-        SearchAge = searchAge;
         SelectedLanguage = selectedLanguage == AllLanguagesValue ? null : selectedLanguage;
         PageNum = pageNum ?? 1;
-        ForChildrenAndYoungPeople = forChildrenAndYoungPeople;
         SubcategorySelection = subcategorySelection?.Split(",").ToList();
-        CostSelection = costSelection?.Split(",").ToList();
         DaysAvailable = daysAvailable?.Split(",").Where(x => Enum.TryParse(x, out DayCode _)).ToList();
         ServiceDeliverySelection = serviceDeliverySelection?.Split(",").Where(x => Enum.TryParse(x, out AttendingType _)).ToList();
 
@@ -238,46 +191,20 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     private async Task<HttpResponseMessage?> SearchServices()
     {
-        bool? isPaidFor = null;
-
-        if (CostSelection is not null && CostSelection.Count == 1)
-        {
-            isPaidFor = CostSelection[0] switch
-            {
-                "paid" => true,
-                "free" => false,
-                _ => null
-            };
-        }
-
-        bool? allChildrenYoungPeople = null;
-        int? givenAge = null;
-        if (int.TryParse(SearchAge, out int searchAge))
-        {
-            if (searchAge == -1)
-            {
-                allChildrenYoungPeople = ForChildrenAndYoungPeople;
-            }
-            else
-            {
-                givenAge = searchAge;
-            }
-        }
-        
         var localOfferFilter = new LocalOfferFilter
         {
             CanFamilyChooseLocation = CanFamilyChooseLocation,
             ServiceType = "InformationSharing",
             Status = "Active",
             PageSize = PageSize,
-            IsPaidFor = isPaidFor,
+            IsPaidFor = OnlyShowFreeServices ? false : null,
             PageNumber = PageNum,
             Text = SearchText ?? null,
             DistrictCode = DistrictCode ?? null,
             Latitude = CurrentLatitude,
             Longitude = CurrentLongitude,
-            AllChildrenYoungPeople = allChildrenYoungPeople,
-            GivenAge = givenAge,
+            AllChildrenYoungPeople = null, // TODO: This was when you ticked the checkbox AND selected "All ages" - figure out equivalent with the ranges now
+            GivenAge = null,               // TODO: Functionality needs to change in SD API as we now select age ranges
             Proximity = double.TryParse(SelectedDistance, out var distanceParsed) && distanceParsed > 0.00d ? distanceParsed : null,
             ServiceDeliveries = ServiceDeliverySelection?.Any() == true ? string.Join(',', ServiceDeliverySelection) : null,
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
@@ -293,15 +220,11 @@ public class LocalOfferResultsModel : HeaderPageModel
     }
 
     public IActionResult OnPostAsync(
-        bool removeFilter,
-        string? removeCostSelection, string? removeDaysAvailable, string? removeServiceDeliverySelection, string? removeSelectedLanguage,
-        string? removeForChildrenAndYoungPeople, string? removeSearchAge, string? removecategorySelection, string? removesubcategorySelection)
+        bool removeFilter, string? removeDaysAvailable, string? removeServiceDeliverySelection, string? removeSelectedLanguage, string? removecategorySelection, string? removesubcategorySelection)
     {
         var routeValues = ToRouteValuesWithRemovedFilters(
-            removeFilter,
-            removeCostSelection, removeDaysAvailable, removeServiceDeliverySelection,
-            removeSelectedLanguage, removeForChildrenAndYoungPeople,
-            removeSearchAge, removecategorySelection, removesubcategorySelection);
+            removeFilter, removeDaysAvailable, removeServiceDeliverySelection,
+            removeSelectedLanguage, removecategorySelection, removesubcategorySelection);
 
         InitialLoad = false;
         ModelState.Clear();
@@ -310,8 +233,8 @@ public class LocalOfferResultsModel : HeaderPageModel
     }
 
     private dynamic ToRouteValuesWithRemovedFilters(
-        bool removeFilter, string? removeCostSelection, string? removeDaysAvailable, string? removeServiceDeliverySelection,
-        string? removeSelectedLanguage, string? removeForChildrenAndYoungPeople, string? removeSearchAge, string? removecategorySelection,
+        bool removeFilter, string? removeDaysAvailable, string? removeServiceDeliverySelection,
+        string? removeSelectedLanguage, string? removecategorySelection,
         string? removesubcategorySelection)
     {
         dynamic routeValues = new ExpandoObject();
@@ -323,24 +246,6 @@ public class LocalOfferResultsModel : HeaderPageModel
             {
                 if (removeSelectedLanguage != null && keyValuePair.Key is nameof(SelectedLanguage))
                 {
-                    continue;
-                }
-
-                if (removeForChildrenAndYoungPeople != null && keyValuePair.Key is nameof(ForChildrenAndYoungPeople))
-                {
-                    continue;
-                }
-
-                if ((removeSearchAge != null || removeForChildrenAndYoungPeople != null)
-                    && keyValuePair.Key is nameof(SearchAge))
-                {
-                    continue;
-                }
-
-                if (removeCostSelection != null && keyValuePair.Key is nameof(CostSelection))
-                {
-                    routeValuesDictionary[keyValuePair.Key] = string.Join(",", keyValuePair.Value.ToString()
-                        .Split(",").Where(s => s != removeCostSelection));
                     continue;
                 }
 
