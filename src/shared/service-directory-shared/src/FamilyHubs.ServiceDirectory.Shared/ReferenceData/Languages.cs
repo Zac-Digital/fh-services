@@ -9,26 +9,17 @@ namespace FamilyHubs.ServiceDirectory.Shared.ReferenceData;
 
 public static class Languages
 {
-    // TODO: Remove?
-#pragma warning disable S125
-    // public static readonly ReadOnlyCollection<string> FilterCodes
-    //     = new(new List<string>
-    //     {
-    //         "af", "sq", "ar", "hy", "eu", "bn", "bg", "ca", "km", "zh",
-    //         "hr", "cs", "da", "nl", "en", "et", "fj", "fi", "fr", "ka",
-    //         "de", "el", "gu", "he", "hi", "hu", "is", "id", "ga", "it",
-    //         "ja", "jv", "ko", "la", "lv", "lt", "mk", "ms", "ml", "mt",
-    //         "mi", "mr", "mn", "ne", "no", "fa", "pl", "pt", "pa", "qu",
-    //         "ro", "ru", "sm", "sr", "sk", "sl", "so", "es", "sw", "sv",
-    //         "ta", "tt", "te", "th", "bo", "to", "tr", "uk", "ur", "uz",
-    //         "vi", "cy", "xh"
-    //     });
-#pragma warning restore S125
-
-    public static readonly ReadOnlyCollection<string> FilterCodes = new([
-        "ar", "bn", "zh", "en", "fr", "de", "gu", "it", "lt", "fa", "pl", "pt", "pa", "ro", "ru", "so", "es", "tl",
-        "ta", "tr", "uk", "ur"
-    ]);
+    public static readonly ReadOnlyCollection<string> FilterCodes
+        = new([
+            "af", "sq", "ar", "hy", "eu", "bn", "bg", "ca", "km", "zh",
+            "hr", "cs", "da", "nl", "en", "et", "fj", "fi", "fr", "ka",
+            "de", "el", "gu", "he", "hi", "hu", "is", "id", "ga", "it",
+            "ja", "jv", "ko", "la", "lv", "lt", "mk", "ms", "ml", "mt",
+            "mi", "mr", "mn", "ne", "no", "fa", "pl", "pt", "pa", "qu",
+            "ro", "ru", "sm", "sr", "sk", "sl", "so", "es", "sw", "sv",
+            "ta", "tt", "te", "th", "bo", "to", "tr", "uk", "ur", "uz",
+            "vi", "cy", "xh"
+        ]);
 
     // list taken from https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes#References
     public static readonly IReadOnlyDictionary<string, string> CodeToName
