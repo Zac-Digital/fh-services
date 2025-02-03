@@ -37,8 +37,7 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-column-full">
                 <h1 class="govuk-heading-l govuk-!-margin-bottom-2">Services, groups and activities in this area</h1>
-                <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a
-                                                                                                                    asp-page="/ProfessionalReferral/Search">@Model.Postcode</a></span>
+                <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.Postcode</a></span>
             </div>
             
             @await Html.PartialAsync("LocalOfferResultsPartialViews/_FiltersSection", Model)
