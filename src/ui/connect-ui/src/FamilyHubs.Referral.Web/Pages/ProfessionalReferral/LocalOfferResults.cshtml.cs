@@ -96,8 +96,12 @@ public class LocalOfferResultsModel : HeaderPageModel
     [BindProperty]
     public List<string>? ServiceDeliverySelection { get; set; }
 
+    // TODO: Remove
     [BindProperty]
     public List<string>? CostSelection { get; set; }
+    
+    [BindProperty]
+    public bool OnlyShowFreeServices { get; set; }
 
     [BindProperty]
     public List<string>? DaysAvailable { get; set; }
@@ -111,8 +115,12 @@ public class LocalOfferResultsModel : HeaderPageModel
     [BindProperty]
     public bool ForChildrenAndYoungPeople { get; set; }
 
+    // TODO: Remove
     [BindProperty]
     public string? SearchAge { get; set; }
+    
+    [BindProperty]
+    public List<string>? SelectedAges { get; set; }
 
     [BindProperty]
     public string? SelectedLanguage { get; set; }
@@ -152,6 +160,8 @@ public class LocalOfferResultsModel : HeaderPageModel
     }
 
     public async Task<IActionResult> OnGetAsync(
+        bool onlyShowFreeServices,
+        string? selectedAges,
         string postcode, string? searchText, string? searchAge, string? selectedLanguage,
         string? subcategorySelection, string? costSelection, string? daysAvailable,
         string? serviceDeliverySelection, int? pageNum, bool forChildrenAndYoungPeople, Guid? correlationId
@@ -172,6 +182,8 @@ public class LocalOfferResultsModel : HeaderPageModel
             _isInitialSearch = false;
         }
 
+        OnlyShowFreeServices = onlyShowFreeServices;
+        SelectedAges = selectedAges?.Split(",").ToList();
         SearchText = searchText;
         SearchAge = searchAge;
         SelectedLanguage = selectedLanguage == AllLanguagesValue ? null : selectedLanguage;
