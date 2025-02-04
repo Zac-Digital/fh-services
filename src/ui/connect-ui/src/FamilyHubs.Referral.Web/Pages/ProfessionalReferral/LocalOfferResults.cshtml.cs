@@ -19,9 +19,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 /*
- * TODO: Removing Filters on POST
  * TODO: Unit Testing
  * TODO: Data Test IDs everywhere!
+ * TODO: Partial views for the remove filters bits
  */
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;

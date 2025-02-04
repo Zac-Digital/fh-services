@@ -9,8 +9,9 @@
                 </legend>
                 <div class="filters-component__groups__group">
                     @foreach (var categoryPair in Model.NestedCategories)
-                    { 
-                        <details class="govuk-details custom-filter border-bottom govuk-!-padding-bottom-2 govuk-!-padding-top-1">
+                    {
+                        string categoryId = $"accordion-category-{categoryPair.Key.Name}";
+                        <details data-testid=@categoryId class="govuk-details custom-filter border-bottom govuk-!-padding-bottom-2 govuk-!-padding-top-1">
                             <summary class="govuk-details__summary">
                                 <span
                                     class="govuk-details__summary-text govuk-fieldset__legend--s">

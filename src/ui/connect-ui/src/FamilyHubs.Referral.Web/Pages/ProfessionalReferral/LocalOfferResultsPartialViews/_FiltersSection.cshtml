@@ -16,7 +16,7 @@
                         <h2 class="govuk-heading-m">Filter results</h2>
                     </div>
                     <div class="moj-filter__heading-action">
-                        <p class="govuk-!-font-size-16"><a class="govuk-link govuk-link--no-visited-state" href="">Clear filters</a></p>
+                        <a asp-page="/ProfessionalReferral/LocalOfferResults" asp-route-postcode="@Model.Postcode" asp-route-correlationid="@Model.CorrelationId" class="govuk-link govuk-link--no-visited-state" data-testid="clear-all-filters">Clear filters</a>
                     </div>
                 </div>
             </div>
@@ -28,8 +28,9 @@
                 <ul class="moj-filter-tags">
                     @foreach (var selectedCategory in Model.SubcategorySelection.Select(int.Parse))
                     {
+                        string dataTestId = $"clear-filter-category-{selectedCategory}";
                         <li>
-                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeCategories" value=@selectedCategory>
+                            <button data-testid=@dataTestId type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeCategories" value=@selectedCategory>
                                 <span class="govuk-visually-hidden">Remove this filter</span>
                                 @Model.Categories.First(category => category.Id == selectedCategory).Name
                             </button>
@@ -46,7 +47,7 @@
                 <ul class="moj-filter-tags">
                     <li>
                         <span class="govuk-visually-hidden">Remove this filter</span>
-                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeCost" value="true">
+                        <button data-testid="clear-filter-cost" type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeCost" value="true">
                             Only show free services
                         </button>
                     </li>
@@ -61,9 +62,10 @@
                 <ul class="moj-filter-tags">
                     @foreach (var daySelected in Model.DaysAvailable)
                     {
+                        string dataTestId = $"clear-filter-days_available-{daySelected}";
                         <li>
                             <span class="govuk-visually-hidden">Remove this filter</span>
-                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeDaysAvailable" value=@daySelected>
+                            <button data-testid=@dataTestId type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeDaysAvailable" value=@daySelected>
                                 @Calendar.DayCodeToName[daySelected]
                             </button>
                         </li>
@@ -79,9 +81,10 @@
                 <ul class="moj-filter-tags">
                     @foreach (var selectedAge in Model.SelectedAges)
                     {
+                        string dataTestId = $"clear-filter-age-{selectedAge}";
                         <li>
                             <span class="govuk-visually-hidden">Remove this filter</span>
-                            <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeAge" value=@selectedAge>
+                            <button data-testid=@dataTestId type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeAge" value=@selectedAge>
                                 @LocalOfferResultsModel.AgeRange.First(age => age.Value.Equals(selectedAge)).Text
                             </button>
                         </li>
@@ -97,7 +100,7 @@
                 <ul class="moj-filter-tags">
                     <li>
                         <span class="govuk-visually-hidden">Remove this filter</span>
-                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeLanguage" value=@Model.SelectedLanguage>
+                        <button data-testid="clear-filter-language" type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeLanguage" value=@Model.SelectedLanguage>
                             @Languages.CodeToName[Model.SelectedLanguage]
                         </button>
                     </li>
@@ -112,7 +115,7 @@
                 <ul class="moj-filter-tags">
                     <li>
                         <span class="govuk-visually-hidden">Remove this filter</span>
-                        <button type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSearchWithin" value=@Model.SelectedDistance>
+                        <button data-test-id="clear-filter-search_within" type="submit" class="moj-filter__tag fh-icon-cross" asp-route-removeFilter=true name="removeSearchWithin" value=@Model.SelectedDistance>
                             @LocalOfferResultsModel.DistanceRange.First(distance => distance.Value.Equals(Model.SelectedDistance)).Text
                         </button>
                     </li>
