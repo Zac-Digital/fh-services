@@ -20,6 +20,7 @@
 
 - [High Level Design Document](/docs/hld.md)
 - [HSDS v3.0 entity relationships](/docs/hsds-3_0-er-diagram.md)
+- [Architecture Decision Records](/docs/arch)
 
 **Note:** Specific documentation on each lib, service, API and others can be found within the `src/` folder.
 

@@ -9,7 +9,6 @@ using FamilyHubs.SharedKernel.Identity;
 using FamilyHubs.SharedKernel.Services.PostcodesIo.Extensions;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Distributed;
 using Serilog;
 using Serilog.Events;
@@ -106,13 +105,10 @@ public static class StartupExtensions
         }
         else
         {
-            //todo: use centralised code for this
-            var tableName = "AdminUiCache";
-            CheckCreateCacheTable(tableName, cacheConnection);
             services.AddDistributedSqlServerCache(options =>
             {
                 options.ConnectionString = cacheConnection;
-                options.TableName = tableName;
+                options.TableName = "AdminUiCache";
                 options.SchemaName = "dbo";
             });
         }
@@ -128,38 +124,6 @@ public static class StartupExtensions
         });
 
         return services;
-    }
-
-    private static void CheckCreateCacheTable(string tableNam, string cacheConnectionString)
-    {
-        using var sqlConnection = new SqlConnection(cacheConnectionString);
-        sqlConnection.Open();
-
-        var checkTableExistsCommandText = $"IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='{tableNam}') SELECT 1 ELSE SELECT 0";
-        var checkCmd = new SqlCommand(checkTableExistsCommandText, sqlConnection);
-
-        // IF EXISTS returns the SELECT 1 if the table exists or SELECT 0 if not
-        var tableExists = Convert.ToInt32(checkCmd.ExecuteScalar());
-        if (tableExists == 1) return;
-
-        var createTableExistsCommandText = @$"
-        CREATE TABLE [dbo].[{tableNam}](
-            [Id] [nvarchar](449) NOT NULL,
-            [Value] [varbinary](max) NOT NULL,
-            [ExpiresAtTime] [datetimeoffset] NOT NULL,
-            [SlidingExpirationInSeconds] [bigint] NULL,
-            [AbsoluteExpiration] [datetimeoffset] NULL,
-            INDEX Ix_{tableNam}_ExpiresAtTime NONCLUSTERED ([ExpiresAtTime]),
-            CONSTRAINT Pk_{tableNam}_Id PRIMARY KEY CLUSTERED ([Id] ASC) WITH 
-                (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF,
-                 IGNORE_DUP_KEY = OFF,
-                 ALLOW_ROW_LOCKS = ON,
-                 ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-        ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY];";
-
-        var createCmd = new SqlCommand(createTableExistsCommandText, sqlConnection);
-        createCmd.ExecuteNonQuery();
-        sqlConnection.Close();
     }
 
     private static void AddWebUiServices(this IServiceCollection services)
