@@ -1,6 +1,7 @@
 using System.Dynamic;
 using EnumsNET;
 using FamilyHubs.Referral.Core.ApiClients;
+using FamilyHubs.Referral.Core.Helper;
 using FamilyHubs.Referral.Core.Models;
 using FamilyHubs.Referral.Web.Pages.Shared;
 using FamilyHubs.ServiceDirectory.Shared.Display;
@@ -37,7 +38,9 @@ public class LocalOfferResultsModel : HeaderPageModel
     public double? CurrentLatitude { get; set; }
     public double? CurrentLongitude { get; set; }
     public PaginatedList<ServiceDto> SearchResults { get; set; } = new();
-    public string SelectedDistance { get; set; } = "212892";
+    
+    [BindProperty]
+    public string? SelectedDistance { get; set; }
 
     private bool _isInitialSearch = true;
 
@@ -49,6 +52,15 @@ public class LocalOfferResultsModel : HeaderPageModel
         new() { Value = "3", Text = "12 to 15 years"},
         new() { Value = "4", Text = "16 to 18 years"},
         new() { Value = "5", Text = "19 to 24 years with SEND"}
+    ];
+
+    public static List<SelectListItem> DistanceRange { get; } = 
+    [
+        new() { Value = "1", Text = "1 mile"},
+        new() { Value = "2", Text = "2 miles"},
+        new() { Value = "5", Text = "5 miles"},
+        new() { Value = "10", Text = "10 miles"},
+        new() { Value = "20", Text = "20 miles"}
     ];
 
     public const string AllLanguagesValue = "all";
@@ -120,6 +132,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         string? daysAvailable,
         string? selectedAges,
         string? selectedLanguage,
+        string? selectedDistance,
         int? pageNum,
         Guid? correlationId
         )
@@ -142,6 +155,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         OnlyShowFreeServices = onlyShowFreeServices;
         SelectedAges = selectedAges?.Split(",").ToList();
         SelectedLanguage = selectedLanguage == AllLanguagesValue ? null : selectedLanguage;
+        SelectedDistance = selectedDistance ?? DistanceRange[^1].Value;
         PageNum = pageNum ?? 1;
         SubcategorySelection = subcategorySelection?.Split(",").ToList();
         DaysAvailable = daysAvailable?.Split(",").Where(x => Enum.TryParse(x, out DayCode _)).ToList();
@@ -188,6 +202,13 @@ public class LocalOfferResultsModel : HeaderPageModel
         return Page();
     }
 
+    private double? ConvertSelectedDistanceToMeters()
+    {
+        bool isInteger = int.TryParse(SelectedDistance, out int distanceInMeters);
+        if (!isInteger || distanceInMeters <= 0) return null;
+        return DistanceConverter.MilesToMeters(distanceInMeters);
+    }
+
     private async Task<HttpResponseMessage?> SearchServices()
     {
         var localOfferFilter = new LocalOfferFilter
@@ -204,12 +225,12 @@ public class LocalOfferResultsModel : HeaderPageModel
             Longitude = CurrentLongitude,
             AllChildrenYoungPeople = null, // TODO: This was when you ticked the checkbox AND selected "All ages" - figure out equivalent with the ranges now
             GivenAge = null,               // TODO: Functionality needs to change in SD API as we now select age ranges
-            Proximity = double.TryParse(SelectedDistance, out var distanceParsed) && distanceParsed > 0.00d ? distanceParsed : null,
+            Proximity = ConvertSelectedDistanceToMeters(),
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
             LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null,
             DaysAvailable = DaysAvailable?.Any() == true ? string.Join(",", DaysAvailable) : null
         };
-
+        
         (SearchResults, HttpResponseMessage? response) = await _organisationClientService.GetLocalOffers(localOfferFilter);
         Pagination = new LargeSetPagination(SearchResults.TotalPages, PageNum);
         TotalResults = SearchResults.TotalCount;
