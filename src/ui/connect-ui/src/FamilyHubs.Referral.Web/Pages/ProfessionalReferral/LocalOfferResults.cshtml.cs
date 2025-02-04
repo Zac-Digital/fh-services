@@ -202,7 +202,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         return Page();
     }
 
-    private double? ConvertSelectedDistanceToMeters()
+    private int? ConvertSelectedDistanceToMeters()
     {
         bool isInteger = int.TryParse(SelectedDistance, out int distanceInMeters);
         if (!isInteger || distanceInMeters <= 0) return null;
