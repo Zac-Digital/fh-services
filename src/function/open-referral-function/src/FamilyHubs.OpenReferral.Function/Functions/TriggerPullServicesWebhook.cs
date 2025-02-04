@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using FamilyHubs.OpenReferral.Function.ClientServices;
-using FamilyHubs.OpenReferral.Function.Repository;
+using FamilyHubs.OpenReferral.Function.Services;
 using FamilyHubs.SharedKernel.OpenReferral.Entities;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ namespace FamilyHubs.OpenReferral.Function.Functions;
 public class TriggerPullServicesWebhook(
     ILogger<TriggerPullServicesWebhook> logger,
     IHsdaApiService hsdaApiService,
-    IFunctionDbContext functionDbContext)
+    IDedsService dedsService)
 {
     [Function("TriggerPullServicesWebhook")]
     public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "POST")] HttpRequestData req)
@@ -27,8 +27,11 @@ public class TriggerPullServicesWebhook(
 
         try
         {
-            await ClearDatabase();
-            await UpdateDatabase(servicesById.Result);
+            await dedsService.ClearDatabase();
+            foreach (var service in servicesById.Result)
+            {
+                await dedsService.AddService(service);
+            }
         }
         catch (Exception e)
         {
@@ -47,13 +50,16 @@ public class TriggerPullServicesWebhook(
         // For this prototype only, you will need to create a JSON array of single services and save it to '/data/single_services_as_list.json'
         // You can get the data via internation spec API then get the id's and call '/services/{id}', copy and paste to file.
         // Somerset for example is 'https://api-openreferral.azure-api.net/somersetcouncil/services'
-        var service = new DataFileService(); // Only used in this prototype. Production code will call LA API's
-        var services = service.GetSingleServicesFromListFile("single_services_as_list.json"); // Only used in this prototype. Production code will call LA API's
+        var fileService = new DataFileService(); // Only used in this prototype. Production code will call LA API's
+        var services = fileService.GetSingleServicesFromListFile("single_services_as_list.json"); // Only used in this prototype. Production code will call LA API's
 
         try
         {
-            await ClearDatabase();
-            await UpdateDatabase(services);
+            await dedsService.ClearDatabase();
+            foreach (var service in services)
+            {
+                await dedsService.AddService(service);
+            }
         }
         catch (Exception e)
         {
@@ -62,36 +68,5 @@ public class TriggerPullServicesWebhook(
         }
 
         return req.CreateResponse(HttpStatusCode.OK);
-    }
-
-    /*
-     * As clearing the Db is a temporary measure until we implement checking for existing IDs, I think this is OK even
-     * if it's the slower way of doing it.
-     */
-    private async Task ClearDatabase()
-    {
-        logger.LogInformation("Removing all services from the database");
-        List<Service> serviceListFromDb = await functionDbContext.ToListAsync(functionDbContext.Services());
-
-        foreach (Service service in serviceListFromDb)
-        {
-            logger.LogInformation("Removing service from the database, Internal ID = {iId} | Open Referral ID = {oId}",
-                service.Id, service.OrId);
-            functionDbContext.DeleteService(service);
-        }
-
-        await functionDbContext.SaveChangesAsync();
-    }
-
-    private async Task UpdateDatabase(List<Service> serviceListFromApi)
-    {
-        foreach (Service service in serviceListFromApi)
-        {
-            logger.LogInformation("Adding service with ID {serviceId} to the database", service.OrId);
-            functionDbContext.AddService(service);
-        }
-
-        logger.LogInformation("Saving changes to the database");
-        await functionDbContext.SaveChangesAsync();
     }
 }

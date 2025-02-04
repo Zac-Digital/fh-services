@@ -268,7 +268,7 @@ public class LocationPageModel<TInput> : HeaderPageModel, IHasErrorStatePageMode
                     return GenerateBackUrlToJourneyInitiatorPage();
                 }
 
-                return $"{ServiceJourneyPage.Select_Location.GetPagePath(ParentJourneyFlow)}&changeFlow={ParentServiceJourneyChangeFlow}";
+                return $"{ServiceJourneyPage.Select_Location.GetPagePath(ParentJourneyFlow)}&change={ParentServiceJourneyChangeFlow}";
             }
         }
 

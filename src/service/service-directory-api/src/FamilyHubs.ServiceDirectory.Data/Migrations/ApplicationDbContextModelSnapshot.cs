@@ -794,6 +794,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("CreatedBy")
