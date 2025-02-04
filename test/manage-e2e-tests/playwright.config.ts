@@ -64,34 +64,37 @@ export default defineConfig<SerenityOptions>({
 
     /* Configure projects for major browsers */
     projects: [
+        { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
         {
-            name: 'Microsoft Edge',
+            name: 'Chromium',
             use: {
-                channel: 'msedge',
+                ...devices['Desktop Chrome'],
+                storageState: 'playwright/.auth/user.json'
             },
+            dependencies: ['setup']
         },
-        {
-            name: 'Google Chrome',
-            use: {
-                channel: 'chrome',
-            },
-        },
+        
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
         // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
         {
             name: 'Firefox',
             use: {
                 ...devices['Desktop Firefox'],
-                ignoreHTTPSErrors: true
+                ignoreHTTPSErrors: true,
+                storageState: 'playwright/.auth/user.json'
             },
+            dependencies: ['setup']
         },
         {
             name: 'Safari',
             use: {
                 ...devices['Desktop Safari'],
-                ignoreHTTPSErrors: true
+                ignoreHTTPSErrors: true,
+                storageState: 'playwright/.auth/user.json'
             },
-        },
+            dependencies: ['setup']
+        }
         //TODO: Get tests running on mobile safari/chrome - need some custom code to scroll elements into view.
         // {
         //     name: 'Mobile Safari',

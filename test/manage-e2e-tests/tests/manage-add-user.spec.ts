@@ -5,7 +5,6 @@ import {
     clickAddUserLink,
     clickConfirmDetails,
     clickContinue,
-    clickOnTheStartButton,
     clickSecondContinue,
     enterFullName,
     enterTestEmail,
@@ -14,7 +13,6 @@ import {
     isTheManageHomepageDisplayed,
     isUserCreatedPageDisplayed,
     isUserFoundInUserList,
-    loginToManage,
     navigateToManage,
     searchForUserByName,
     selectLocalAuthority, 
@@ -26,14 +24,12 @@ import {
 describe('Add a User - Manage Tests', () => {
 
     test.use({
-        defaultActorName: 'DFE_ADMIN_user'
+        defaultActorName: 'DFE_ADMIN_USER'
     })
 
     test.beforeEach('Setup', async ({actor}) => {
         await actor.attemptsTo(
             navigateToManage(),
-            clickOnTheStartButton(),
-            loginToManage(),
             acceptManageTermsAndConditions(),
             acceptCookies(),
             isTheManageHomepageDisplayed());
