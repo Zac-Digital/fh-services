@@ -19,10 +19,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 /*
- * TODO: "Search Within" Filter
- * TODO: Selected Filters in the Gray Area
  * TODO: Removing Filters on POST
  * TODO: Unit Testing
+ * TODO: Data Test IDs everywhere!
  */
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
@@ -121,7 +120,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         _postcodeLookup = postcodeLookup;
         _organisationClientService = organisationClientService;
         _logger = logger;
-
+        
         Pagination = new DontShowPagination();
     }
 
@@ -155,7 +154,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         OnlyShowFreeServices = onlyShowFreeServices;
         SelectedAges = selectedAges?.Split(",").ToList();
         SelectedLanguage = selectedLanguage == AllLanguagesValue ? null : selectedLanguage;
-        SelectedDistance = selectedDistance ?? DistanceRange[^1].Value;
+        SelectedDistance = _isInitialSearch ? DistanceRange[^1].Value : selectedDistance;
         PageNum = pageNum ?? 1;
         SubcategorySelection = subcategorySelection?.Split(",").ToList();
         DaysAvailable = daysAvailable?.Split(",").Where(x => Enum.TryParse(x, out DayCode _)).ToList();
@@ -239,11 +238,17 @@ public class LocalOfferResultsModel : HeaderPageModel
     }
 
     public IActionResult OnPostAsync(
-        bool removeFilter, string? removeDaysAvailable, string? removeSelectedLanguage, string? removecategorySelection, string? removesubcategorySelection)
+        bool removeFilter,
+        string? removeCategories, 
+        string? removeCost, 
+        string? removeDaysAvailable, 
+        string? removeAge,
+        string? removeLanguage,
+        string? removeSearchWithin)
     {
         var routeValues = ToRouteValuesWithRemovedFilters(
-            removeFilter, removeDaysAvailable,
-            removeSelectedLanguage, removecategorySelection, removesubcategorySelection);
+            removeFilter, removeCategories,
+            removeCost, removeDaysAvailable, removeAge, removeLanguage, removeSearchWithin);
 
         InitialLoad = false;
         ModelState.Clear();
@@ -252,9 +257,13 @@ public class LocalOfferResultsModel : HeaderPageModel
     }
 
     private dynamic ToRouteValuesWithRemovedFilters(
-        bool removeFilter, string? removeDaysAvailable,
-        string? removeSelectedLanguage, string? removecategorySelection,
-        string? removesubcategorySelection)
+        bool removeFilter,
+        string? removeCategories, 
+        string? removeCost, 
+        string? removeDaysAvailable, 
+        string? removeAge,
+        string? removeLanguage,
+        string? removeSearchWithin)
     {
         dynamic routeValues = new ExpandoObject();
         var routeValuesDictionary = (IDictionary<string, object>)routeValues;
@@ -263,29 +272,39 @@ public class LocalOfferResultsModel : HeaderPageModel
         {
             if (removeFilter)
             {
-                if (removeSelectedLanguage != null && keyValuePair.Key is nameof(SelectedLanguage))
+                if (removeCategories is not null && keyValuePair.Key is nameof(SubcategorySelection))
                 {
+                    routeValuesDictionary[keyValuePair.Key] = string.Join(",", keyValuePair.Value.ToString()
+                        .Split(",").Where(s => s != removeCategories));
                     continue;
                 }
 
-                if (removeDaysAvailable != null && keyValuePair.Key is nameof(DaysAvailable))
+                if (removeCost is not null && keyValuePair.Key is nameof(OnlyShowFreeServices))
+                {
+                    continue;
+                }
+                
+                if (removeDaysAvailable is not null && keyValuePair.Key is nameof(DaysAvailable))
                 {
                     routeValuesDictionary[keyValuePair.Key] = string.Join(",", keyValuePair.Value.ToString()
                         .Split(",").Where(s => s != removeDaysAvailable));
                     continue;
                 }
-
-                if (removecategorySelection != null && keyValuePair.Key is nameof(CategorySelection))
+                
+                if (removeAge is not null && keyValuePair.Key is nameof(SelectedAges))
                 {
                     routeValuesDictionary[keyValuePair.Key] = string.Join(",", keyValuePair.Value.ToString()
-                        .Split(",").Where(s => s != removecategorySelection));
+                        .Split(",").Where(s => s != removeAge));
                     continue;
                 }
-
-                if (removesubcategorySelection != null && keyValuePair.Key is nameof(SubcategorySelection))
+                
+                if (removeLanguage is not null && keyValuePair.Key is nameof(SelectedLanguage))
                 {
-                    routeValuesDictionary[keyValuePair.Key] = string.Join(",", keyValuePair.Value.ToString()
-                        .Split(",").Where(s => s != removesubcategorySelection));
+                    continue;
+                }
+                
+                if (removeSearchWithin is not null && keyValuePair.Key is nameof(SelectedDistance))
+                {
                     continue;
                 }
             }
