@@ -32,7 +32,8 @@
                                                        data-testid=@subCategoryId
                                                        name="SubcategorySelection"
                                                        type="checkbox"
-                                                       value=@subCategory.Id @(Model.SubcategorySelection is not null && Model.SubcategorySelection.Any(x => x == subCategory.Id.ToString()) ? "checked" : "")>
+                                                       value=@subCategory.Id 
+                                                       @(Model.SubcategorySelection is not null && Model.SubcategorySelection.Any(x => x == subCategory.Id.ToString()) ? "checked" : "")>
                                                 <label
                                                     class="govuk-label govuk-checkboxes__label"
                                                     for=@subCategoryId>

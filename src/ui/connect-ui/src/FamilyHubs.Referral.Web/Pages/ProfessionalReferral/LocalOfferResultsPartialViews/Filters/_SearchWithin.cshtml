@@ -16,7 +16,8 @@
                                data-testid=@searchWithinId
                                name="SelectedDistance" 
                                type="radio"
-                               value=@distanceRange.Value @(Model.SelectedDistance?.Equals(distanceRange.Value) == true ? "checked" : "")>
+                               value=@distanceRange.Value 
+                               @(Model.SelectedDistance?.Equals(distanceRange.Value) == true ? "checked" : "")>
                         <label class="govuk-label govuk-radios__label" for=@searchWithinId>
                             @distanceRange.Text
                         </label>

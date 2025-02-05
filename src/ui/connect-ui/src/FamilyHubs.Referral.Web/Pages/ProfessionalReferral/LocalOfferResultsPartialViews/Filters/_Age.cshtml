@@ -21,7 +21,8 @@
                                            data-testid=@ageRangeId
                                            name="SelectedAges" 
                                            type="checkbox"
-                                           value=@ageRange.Value @(Model.SelectedAges?.Any(x => x == ageRange.Value) == true ? "checked" : "")>
+                                           value=@ageRange.Value 
+                                           @(Model.SelectedAges?.Any(x => x == ageRange.Value) == true ? "checked" : "")>
                                     <label class="govuk-label govuk-checkboxes__label"
                                            for=@ageRangeId>
                                         @ageRange.Text

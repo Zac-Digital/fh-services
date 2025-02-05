@@ -20,7 +20,8 @@
                                    data-testid=@dayOfWeekId
                                    name="DaysAvailable"
                                    type="checkbox"
-                                   value=@dayOfWeek @(Model.DaysAvailable?.Any(x => x == dayOfWeek.ToString()) == true ? "checked" : "")>
+                                   value=@dayOfWeek 
+                                   @(Model.DaysAvailable?.Any(x => x == dayOfWeek.ToString()) == true ? "checked" : "")>
                             <label class="govuk-label govuk-checkboxes__label"
                                    for=@dayOfWeekId>
                                 @Calendar.DayCodeToName[dayOfWeek.ToString()]
