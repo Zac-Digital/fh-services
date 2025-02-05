@@ -197,9 +197,9 @@ public class LocalOfferResultsModel : HeaderPageModel
 
     private int? ConvertSelectedDistanceToMeters()
     {
-        bool isInteger = int.TryParse(SelectedDistance, out int distanceInMeters);
-        if (!isInteger || distanceInMeters <= 0) return null;
-        return DistanceConverter.MilesToMeters(distanceInMeters);
+        bool isInteger = int.TryParse(SelectedDistance, out int distanceInMiles);
+        if (!isInteger || distanceInMiles <= 0) return null;
+        return DistanceConverter.MilesToMeters(distanceInMiles);
     }
 
     private async Task<HttpResponseMessage?> SearchServices()
