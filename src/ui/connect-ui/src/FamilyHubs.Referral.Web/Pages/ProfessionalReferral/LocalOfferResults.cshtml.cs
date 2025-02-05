@@ -224,7 +224,7 @@ public class LocalOfferResultsModel : HeaderPageModel
             Longitude = CurrentLongitude,
             AllChildrenYoungPeople = null, // TODO: This was when you ticked the checkbox AND selected "All ages" - figure out equivalent with the ranges now
             GivenAge = null,               // TODO: Functionality needs to change in SD API as we now select age ranges
-            Proximity = ConvertSelectedDistanceToMeters(),
+            Proximity = ConvertSelectedDistanceToMeters() ?? 212892,
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
             LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null,
             DaysAvailable = DaysAvailable?.Any() == true ? string.Join(",", DaysAvailable) : null
