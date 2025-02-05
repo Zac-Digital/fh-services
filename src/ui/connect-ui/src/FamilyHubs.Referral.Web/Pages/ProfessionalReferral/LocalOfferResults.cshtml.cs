@@ -154,7 +154,7 @@ public class LocalOfferResultsModel : HeaderPageModel
         OnlyShowFreeServices = onlyShowFreeServices;
         SelectedAges = selectedAges?.Split(",").ToList();
         SelectedLanguage = selectedLanguage == AllLanguagesValue ? null : selectedLanguage;
-        SelectedDistance = _isInitialSearch ? DistanceRange[^1].Value : selectedDistance;
+        SelectedDistance = selectedDistance;
         PageNum = pageNum ?? 1;
         SubcategorySelection = subcategorySelection?.Split(",").ToList();
         DaysAvailable = daysAvailable?.Split(",").Where(x => Enum.TryParse(x, out DayCode _)).ToList();

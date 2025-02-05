@@ -35,13 +35,16 @@
     else
     {
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-column-full">
+            <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-l govuk-!-margin-bottom-2">Services, groups and activities in this area</h1>
-                <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a asp-page="/ProfessionalReferral/Search">@Model.Postcode</a></span>
+                <span class="govuk-caption-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">Showing results for: <a
+                                                                                                                    asp-page="/ProfessionalReferral/Search">@Model.Postcode</a></span>
             </div>
-            
+        </div>
+        
+        <div class="govuk-grid-row">
             @await Html.PartialAsync("LocalOfferResultsPartialViews/_FiltersSection", Model)
-
+            
             <div class="govuk-grid-column-two-thirds vacancies_index">
                 @if (Model.SearchResults.TotalCount == 0)
                 {
