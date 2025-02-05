@@ -51,9 +51,5 @@
     <ProjectReference Include="..\FamilyHubs.Referral.Infrastructure\FamilyHubs.Referral.Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\..\service\notification-api\src\FamilyHubs.Notification.Api.Client\FamilyHubs.Notification.Api.Client.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\css\" />
-  </ItemGroup>
-
+  
 </Project>
