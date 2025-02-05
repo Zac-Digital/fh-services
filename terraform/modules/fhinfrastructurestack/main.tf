@@ -1420,7 +1420,7 @@ resource "azurerm_application_gateway" "sd_ui_app_gateway" {
   redirect_configuration {
     name                 = "${var.prefix}-fh-redirect-to-connect-config"
     redirect_type        = "Permanent"
-    target_url           = "https://${var.connect_domain}/"
+    target_url           = "https://${var.connect_domain}"
     include_path         = true
     include_query_string = true
   }
