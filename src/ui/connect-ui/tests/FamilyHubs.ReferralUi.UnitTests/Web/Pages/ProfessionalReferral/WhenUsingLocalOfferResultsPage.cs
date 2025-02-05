@@ -55,6 +55,7 @@ public class WhenUsingLocalOfferResultsPage
             "",
             "",
             "",
+            "",
             1,
             Guid.NewGuid()
         ) as PageResult;
@@ -122,6 +123,7 @@ public class WhenUsingLocalOfferResultsPage
             "BS2 0SP",
             "1",
             false,
+            "",
             "",
             "",
             "",
@@ -207,13 +209,13 @@ public class WhenUsingLocalOfferResultsPage
 
         // Act
         var searchResults = _pageModel.OnPostAsync(
-            // TODO: removeOnlyShowFreeServices
-            // TODO: Remove SelectedAges
             removeFilter: true,
-            removeSelectedLanguage: "yes",
-            removecategorySelection: "yes",
-            removesubcategorySelection: "yes",
-            removeDaysAvailable: "yes"
+            removeCategories: "yes",
+            removeCost: "yes",
+            removeDaysAvailable: "yes",
+            removeAge: "yes",
+            removeLanguage: "yes",
+            removeSearchWithin: "yes"
         ) as RedirectToPageResult;
 
         // Assert
@@ -302,13 +304,13 @@ public class WhenUsingLocalOfferResultsPage
 
         // Act
         var searchResults = _pageModel.OnPostAsync(
-            // TODO: removeOnlyShowFreeServices
-            // TODO: Remove SelectedAges
             removeFilter: true,
-            removeSelectedLanguage: "yes",
-            removecategorySelection: "yes",
-            removesubcategorySelection: "yes",
-            removeDaysAvailable: "yes"
+            removeCategories: "yes",
+            removeCost: "yes",
+            removeDaysAvailable: "yes",
+            removeAge: "yes",
+            removeLanguage: "yes",
+            removeSearchWithin: "yes"
         ) as RedirectToPageResult;
 
         // Assert
