@@ -111,6 +111,11 @@ public static class StartupExtensions
         {
             httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralApiUrl")!);
         });
+        
+        services.AddSecuredTypedHttpClient<IReferralDashboardClientService, ReferralClientService>((serviceProvider, httpClient) =>
+        {
+            httpClient.BaseAddress = new Uri(configuration.GetValue<string>("ReferralApiUrl")!);
+        });
     }
 
     public static IServiceCollection AddSecuredTypedHttpClient<TClient, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TImplementation>(
@@ -151,6 +156,43 @@ public static class StartupExtensions
 
         app.MapFamilyHubsHealthChecks(typeof(StartupExtensions).Assembly);
 
+        app.RedirectFindRequests();
+        
         return app.Services;
+    }
+
+    private static void RedirectFindRequests(this WebApplication app)
+    {
+        app.MapGet("/PostcodeSearch", context =>
+        {
+            context.Response.Redirect("/ProfessionalReferral/Search", true);
+            return Task.CompletedTask;
+        });
+            
+        app.MapGet("/ServiceDetail", context =>
+        {
+            var serviceId = context.Request.Query.ContainsKey("serviceId") ? context.Request.Query["serviceId"][0] : null;
+
+            // Redirect to the search page if we cannot resolve the service Id
+            context.Response.Redirect(
+                serviceId is not null
+                    ? $"/ProfessionalReferral/LocalOfferDetail/?serviceid={serviceId}"
+                    : "/ProfessionalReferral/Search", true);
+
+            return Task.CompletedTask;
+        });
+
+        app.MapGet("/ServiceFilter", context =>
+        {
+            var postcode = context.Request.Query.ContainsKey("postcode") ? context.Request.Query["postcode"][0] : null;
+
+            // Redirect to the search page if we cannot resolve the postcode to search
+            context.Response.Redirect(
+                postcode is not null
+                    ? $"/ProfessionalReferral/LocalOfferResults/?postcode={postcode}&currentPage=1"
+                    : "/ProfessionalReferral/Search", true);
+
+            return Task.CompletedTask;
+        });
     }
 }

@@ -28,9 +28,7 @@ jobs:
             service/report-api,
             service/mock-hsda-api,
             function/open-referral-function,
-            ui/connect-dashboard-ui,
             ui/connect-ui,
-            ui/find-ui,
             ui/idam-maintenance-ui,
             ui/manage-ui,
             shared/referral-shared,
@@ -53,12 +51,8 @@ jobs:
             job_name: "Mock HSDA API"
           - working_directory: function/open-referral-function
             job_name: "Open Referral Function"
-          - working_directory: ui/connect-dashboard-ui
-            job_name: "Connect Dashboard UI"
           - working_directory: ui/connect-ui
             job_name: "Connect UI"
-          - working_directory: ui/find-ui
-            job_name: "Find UI"
           - working_directory: ui/idam-maintenance-ui
             job_name: "IDAM Maintenance UI"
           - working_directory: ui/manage-ui

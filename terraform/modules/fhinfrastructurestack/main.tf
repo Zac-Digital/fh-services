@@ -12,7 +12,6 @@ locals {
   appgw_listener_http_referral_ui_name     = "fh-listener-http-referral-ui"
   appgw_listener_https_referral_ui_name    = "fh-listener-https-referral-ui"
   appgw_redirect_referral_ui_name = "fh-redirect-referral-ui"
-  appgw_routing_https_referral_ui_name = "fh-routing-https-referral-ui"
   
   appgw_probe_sd_admin_ui_name = "fh-health-probe-sd-admin-ui"
   appgw_rewrites_sd_admin_ui_name = "fh-appgw-sd-admin-ui-rewrites"
@@ -29,9 +28,6 @@ locals {
   appgw_listener_http_sd_ui_name = "fh-listener-http-sd-ui"
   appgw_listener_https_sd_ui_name = "fh-listener-https-sd-ui"
   appgw_redirect_sd_ui_name = "fh-redirect-sd-ui"
-  appgw_probe_referral_dashboard_ui_name = "fh-health-probe-ref-dash-ui"
-  appgw_bep_referral_dashboard_ui_name = "fh-bep-ref-dash-ui"
-  appgw_backend_referral_dashboard_ui_name = "fh-backend-ref-dash-ui"
 
   appgw_ssl_cert_sd_admin_ui_name= "sd-admin-ui-${lower(var.environment)}-cert"
   appgw_ssl_cert_sd_ui_name = "sd-ui-${lower(var.environment)}-cert"
@@ -468,62 +464,6 @@ resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_api" {
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
-# Create App Service for Service Directory UI
-resource "azurerm_windows_web_app" "fh_sd_ui" {
-  app_settings = {
-    ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
-    XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
-    ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
-    WEBSITE_RUN_FROM_PACKAGE                    = "1"
-    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
-    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "FIND-UI"
-  }
-  name                                          = "${var.prefix}-as-fh-sd-ui"
-  resource_group_name                           = local.resource_group_name
-  location                                      = var.location
-  service_plan_id                               = azurerm_service_plan.apps_plan.id
-  client_affinity_enabled                       = false
-  https_only                                    = false # SSL termination at GW
-  identity {
-    type                                        = "SystemAssigned"
-  }
-  site_config {
-    always_on                                   = true
-    ftps_state                                  = "Disabled"
-    health_check_path                           = "/api/health"
-    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
-    vnet_route_all_enabled                      = "true"
-    http2_enabled                               = true
-    application_stack {
-      current_stack                               = var.current_stack
-      dotnet_version                              = var.dotnet_version_general
-    }
-    ip_restriction {
-      name       = "AllowAppAccess"
-      priority   = 1
-      action     = "Allow"
-      ip_address = var.vnetint_address_space[0]
-    }
-    ip_restriction {
-      name       = "DenyPublicAccess"
-      priority   = 200
-      action     = "Deny"
-      ip_address = "0.0.0.0/0"
-    }
-  }
-  tags = local.tags
-  lifecycle {
-    ignore_changes = [virtual_network_subnet_id, logs]
-  }
-}
-
-# Swift Connection for Service Directory UI
-resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_ui" {
-  app_service_id = azurerm_windows_web_app.fh_sd_ui.id
-  subnet_id      = azurerm_subnet.vnetint.id
-}
-
 # Create App Service for Service Directory Admin UI
 resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
   app_settings = {
@@ -578,62 +518,6 @@ resource "azurerm_windows_web_app" "fh_sd_admin_ui" {
 # Swift Connection for Service Directory Admin UI
 resource "azurerm_app_service_virtual_network_swift_connection" "fh_sd_admin_ui" {
   app_service_id = azurerm_windows_web_app.fh_sd_admin_ui.id
-  subnet_id      = azurerm_subnet.vnetint.id
-}
-
-# Create App Service for Referrals Dashboard UI
-resource "azurerm_windows_web_app" "fh_referral_dashboard_ui" {
-  app_settings = {
-    ApplicationInsightsAgent_EXTENSION_VERSION  = "~3"
-    XDT_MicrosoftApplicationInsights_Mode       = "Recommended"
-    ASPNETCORE_ENVIRONMENT                      = var.asp_netcore_environment
-    WEBSITE_RUN_FROM_PACKAGE                    = "1"
-    APPLICATIONINSIGHTS_CONNECTION_STRING       = azurerm_application_insights.app_insights.connection_string
-    "AppConfiguration:KeyVaultIdentifier"       = "${var.prefix}-kv-fh-admin"
-    "AppConfiguration:KeyVaultPrefix"           = "CONNECT-DASHBOARD-UI"
-    "ConnectionStrings:SharedKernelConnection"  = local.referral_db_connection
-  }
-  name                                          = "${var.prefix}-as-fh-ref-dash-ui"
-  resource_group_name                           = local.resource_group_name
-  location                                      = var.location
-  service_plan_id                               = azurerm_service_plan.apps_plan.id
-  client_affinity_enabled                       = false
-  https_only                                    = false # SSL termination at GW
-  identity {
-    type                                        = "SystemAssigned"
-  }
-  site_config {
-    always_on                                   = true
-    ftps_state                                  = "Disabled"
-    health_check_path                           = "/api/health"
-    http2_enabled                               = true
-    health_check_eviction_time_in_min           = 5 # How long to be removed from LB if unhealthy
-    application_stack {
-      current_stack                               = var.current_stack
-      dotnet_version                              = var.dotnet_version_general
-    }
-    ip_restriction {
-      name       = "AllowAppAccess"
-      priority   = 1
-      action     = "Allow"
-      ip_address = var.vnetint_address_space[0]
-    }
-    ip_restriction {
-      name       = "DenyPublicAccess"
-      priority   = 200
-      action     = "Deny"
-      ip_address = "0.0.0.0/0"
-    }
-  }
-  tags = local.tags
-  lifecycle {
-    ignore_changes = [virtual_network_subnet_id, logs]
-  }
-}
-
-# Swift Connection for Referral Dashboard UI
-resource "azurerm_app_service_virtual_network_swift_connection" "fh_referral_dashboard_ui" {
-  app_service_id = azurerm_windows_web_app.fh_referral_dashboard_ui.id
   subnet_id      = azurerm_subnet.vnetint.id
 }
 
@@ -1107,19 +991,6 @@ resource "azurerm_application_gateway" "ref_ui_app_gateway" {
     }
   }
 
-  probe {
-    name                        = "${var.prefix}-${local.appgw_probe_referral_dashboard_ui_name}"
-    protocol                    = "Http"
-    interval                    = "30"
-    timeout                     = "30"
-    unhealthy_threshold         = "3"
-    pick_host_name_from_backend_http_settings = true
-    path                        = "/api/health"
-    match {
-      status_code               = [ "200-399" ]
-    }
-  }
-
   ssl_policy {
     policy_type           = "Predefined"
     policy_name           = "AppGwSslPolicy20220101"
@@ -1154,11 +1025,6 @@ resource "azurerm_application_gateway" "ref_ui_app_gateway" {
       fqdns               = [ azurerm_windows_web_app.fh_referral_ui.default_hostname ]
   }
 
-  backend_address_pool {
-      name                = "${var.prefix}-${local.appgw_bep_referral_dashboard_ui_name}"
-      fqdns               = [ azurerm_windows_web_app.fh_referral_dashboard_ui.default_hostname ]
-  }
-
   backend_http_settings {
     name                = "${var.prefix}-${local.appgw_backend_referral_ui_name}"
     cookie_based_affinity = "Disabled"
@@ -1171,21 +1037,6 @@ resource "azurerm_application_gateway" "ref_ui_app_gateway" {
       enabled           = true
     }
     probe_name          = "${var.prefix}-${local.appgw_probe_referral_ui_name}"
-    pick_host_name_from_backend_address = true
-  }
-
-  backend_http_settings {
-    name                = "${var.prefix}-${local.appgw_backend_referral_dashboard_ui_name}"
-    cookie_based_affinity = "Disabled"
-    port                  = 80
-    protocol              = "Http"
-    request_timeout       = 30
-    path                  = "/"
-    connection_draining {
-      drain_timeout_sec = 60
-      enabled           = true
-    }
-    probe_name          = "${var.prefix}-${local.appgw_probe_referral_dashboard_ui_name}"
     pick_host_name_from_backend_address = true
   }
 
@@ -1240,29 +1091,14 @@ resource "azurerm_application_gateway" "ref_ui_app_gateway" {
     target_listener_name = "${var.prefix}-${local.appgw_listener_https_referral_ui_name}"
   }
 
-  url_path_map {
-    name                 = "${var.prefix}-${local.appgw_routing_https_referral_ui_name}"
-    default_backend_address_pool_name = "${var.prefix}-${local.appgw_bep_referral_ui_name}"
-    default_backend_http_settings_name = "${var.prefix}-${local.appgw_backend_referral_ui_name}"
-    default_rewrite_rule_set_name  = "${var.prefix}-${local.appgw_rewrites_referral_ui_name}"
-    path_rule {
-      name           = "Referrals"
-      paths          = ["/referrals/*"]
-      backend_address_pool_name = "${var.prefix}-${local.appgw_bep_referral_dashboard_ui_name}"
-      backend_http_settings_name = "${var.prefix}-${local.appgw_backend_referral_dashboard_ui_name}"
-      rewrite_rule_set_name      = "${var.prefix}-${local.appgw_rewrites_referral_ui_name}"
-    }
-  }
-
   request_routing_rule {
-    name                       = "${var.prefix}-${local.appgw_routing_https_referral_ui_name}"
+    name                       = "${var.prefix}-fh-routing-https-referral-ui"
     backend_address_pool_name  = "${var.prefix}-${local.appgw_bep_referral_ui_name}"
     backend_http_settings_name = "${var.prefix}-${local.appgw_backend_referral_ui_name}"
     http_listener_name         = "${var.prefix}-${local.appgw_listener_https_referral_ui_name}"
     priority                   = 1
-    rule_type                  = "PathBasedRouting"
+    rule_type                  = "Basic"
     rewrite_rule_set_name      = "${var.prefix}-${local.appgw_rewrites_referral_ui_name}"
-    url_path_map_name          = "${var.prefix}-${local.appgw_routing_https_referral_ui_name}"
   }
 
   request_routing_rule {
@@ -1515,10 +1351,10 @@ resource "azurerm_application_gateway" "sd_ui_app_gateway" {
    }
 
   backend_address_pool {
-      name                = "${var.prefix}-${local.appgw_bep_sd_ui_name}"
-      fqdns               = [ azurerm_windows_web_app.fh_sd_ui.default_hostname ]
+    name                = "${var.prefix}-${local.appgw_bep_sd_ui_name}"
+    ip_addresses = [var.private_endpoint_ip_address.service_directory_ui]
   }
-
+  
   backend_http_settings {
     name                = "${var.prefix}-${local.appgw_backend_sd_ui_name}"
     cookie_based_affinity = "Disabled"
@@ -1581,15 +1417,23 @@ resource "azurerm_application_gateway" "sd_ui_app_gateway" {
     target_listener_name = "${var.prefix}-${local.appgw_listener_https_sd_ui_name}"
   }
 
+  redirect_configuration {
+    name                 = "${var.prefix}-fh-redirect-to-connect-config"
+    redirect_type        = "Permanent"
+    target_url           = "https://${var.connect_domain}"
+    include_path         = true
+    include_query_string = true
+  }
+  
   request_routing_rule {
     name                       = "${var.prefix}-fh-routing-https-sd-ui"
-    backend_address_pool_name  = "${var.prefix}-${local.appgw_bep_sd_ui_name}"
-    backend_http_settings_name = "${var.prefix}-${local.appgw_backend_sd_ui_name}"
+    redirect_configuration_name = "${var.prefix}-fh-redirect-to-connect-config"
     http_listener_name         = "${var.prefix}-${local.appgw_listener_https_sd_ui_name}"
     priority                   = 1
     rule_type                  = "Basic"
     rewrite_rule_set_name      = "${var.prefix}-${local.appgw_rewrites_sd_ui_name}"
   }
+
 
   request_routing_rule {
     name                       = "${var.prefix}-fh-routing-http-sd-ui"
@@ -1660,7 +1504,6 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_key_vault" "kv2" {
   depends_on = [
     azurerm_windows_web_app.fh_referral_api,
-    azurerm_windows_web_app.fh_referral_dashboard_ui,
     azurerm_windows_web_app.open_referral_mock_api_web_app,
     azurerm_windows_web_app.fh_notification_api,
     azurerm_windows_web_app.fh_idam_api,
@@ -1669,7 +1512,6 @@ resource "azurerm_key_vault" "kv2" {
     azurerm_windows_web_app.fh_report_api,
     azurerm_windows_web_app.fh_sd_api,
     azurerm_windows_web_app.fh_sd_admin_ui,
-    azurerm_windows_web_app.fh_sd_ui,
     azurerm_windows_function_app.open_referral_function_app
   ]
   name                        = "${var.prefix}-kv-fh-admin"
@@ -1715,11 +1557,6 @@ resource "azurerm_key_vault" "kv2" {
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_windows_web_app.fh_referral_dashboard_ui.identity.0.principal_id
-    secret_permissions = local.app_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_web_app.open_referral_mock_api_web_app.identity.0.principal_id
     secret_permissions = local.app_secret_permissions
   }
@@ -1760,11 +1597,6 @@ resource "azurerm_key_vault" "kv2" {
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_windows_web_app.fh_sd_ui.identity.0.principal_id
-    secret_permissions = local.app_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_function_app.open_referral_function_app.identity.0.principal_id
     secret_permissions = local.app_secret_permissions
   }
@@ -1801,11 +1633,6 @@ resource "azurerm_key_vault" "kv3" {
     certificate_permissions = local.principal_certificate_permissions
     key_permissions = local.principal_key_permissions
     secret_permissions = local.principal_secret_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_windows_web_app.fh_referral_dashboard_ui.identity.0.principal_id
-    key_permissions = local.app_key_permissions
   }
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
@@ -1874,11 +1701,6 @@ resource "azurerm_key_vault" "kv5" {
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = azurerm_windows_web_app.fh_sd_admin_ui.identity.0.principal_id
-    key_permissions = local.referral_app_key_permissions
-  }
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_windows_web_app.fh_referral_dashboard_ui.identity.0.principal_id
     key_permissions = local.referral_app_key_permissions
   }
   access_policy {
@@ -2186,18 +2008,6 @@ resource "azurerm_private_dns_a_record" "as_sqlserver" {
 }
 
 # Private DNS Zone - SQL Server A Records
-resource "azurerm_private_dns_a_record" "sql_referral_dashboard_ui" {
-  name                = "${var.prefix}-as-fh-ref-dash-ui"
-  zone_name           = azurerm_private_dns_zone.sqlserver.name
-  resource_group_name = local.resource_group_name
-  ttl                 = "10"
-  records             = [var.private_endpoint_ip_address.referral_dashboard_ui]
-  tags = local.tags
-  lifecycle {
-    ignore_changes = [tags]
-  }
-}
-
 resource "azurerm_private_dns_a_record" "sql_idam_api" {
   name                = "${var.prefix}-as-fh-idam-api"
   zone_name           = azurerm_private_dns_zone.sqlserver.name
@@ -2222,18 +2032,6 @@ resource "azurerm_private_dns_a_record" "sql_referral_api" {
   }
 }
 
-
-resource "azurerm_private_dns_a_record" "sql_referral_dashboard_ui_scm" {
-  name                = "${var.prefix}-as-fh-ref-dash-ui.scm"
-  zone_name           = azurerm_private_dns_zone.sqlserver.name
-  resource_group_name = local.resource_group_name
-  ttl                 = "10"
-  records             = [var.private_endpoint_ip_address.referral_dashboard_ui]
-  tags = local.tags
-  lifecycle {
-    ignore_changes = [tags]
-  }
-}
 
 resource "azurerm_private_dns_a_record" "sql_idam_api_scm" {
   name                = "${var.prefix}-as-fh-idam-api.scm"
@@ -2301,30 +2099,6 @@ resource "azurerm_private_dns_a_record" "sql_sd_api_scm" {
   resource_group_name = local.resource_group_name
   ttl                 = "10"
   records             = [var.private_endpoint_ip_address.service_directory_api]
-  tags = local.tags
-  lifecycle {
-    ignore_changes = [tags]
-  }
-}
-
-resource "azurerm_private_dns_a_record" "sql_sd_ui" {
-  name                = "${var.prefix}-as-fh-sd-ui"
-  zone_name           = azurerm_private_dns_zone.sqlserver.name
-  resource_group_name = local.resource_group_name
-  ttl                 = "10"
-  records             = [var.private_endpoint_ip_address.service_directory_ui]
-  tags = local.tags
-  lifecycle {
-    ignore_changes = [tags]
-  }
-}
-
-resource "azurerm_private_dns_a_record" "sql_sd_ui_scm" {
-  name                = "${var.prefix}-as-fh-sd-ui.scm"
-  zone_name           = azurerm_private_dns_zone.sqlserver.name
-  resource_group_name = local.resource_group_name
-  ttl                 = "10"
-  records             = [var.private_endpoint_ip_address.service_directory_ui]
   tags = local.tags
   lifecycle {
     ignore_changes = [tags]
@@ -2512,34 +2286,6 @@ resource "azurerm_private_endpoint" "sdapi" {
   tags = local.tags
 }
 
-# Private Endpoint 4: ServiceDirectoryUI
-resource "azurerm_private_endpoint" "sdui" {
-  name                = "${var.prefix}-as-fh-sd-ui"
-  location            = var.location
-  resource_group_name = local.resource_group_name
-  subnet_id           = azurerm_subnet.pvtendpoint.id
-  custom_network_interface_name = "${var.prefix}-as-fh-sd-ui-nic"
-
-   ip_configuration {
-    name                       = "${var.prefix}-as-fh-sd-ui"
-    private_ip_address         = "${var.private_endpoint_ip_address.service_directory_ui}"
-    subresource_name           = "sites" 
-  }
-
-  private_service_connection {
-    name                           = "${var.prefix}-pvtendpt-sd-ui"
-    private_connection_resource_id = azurerm_windows_web_app.fh_sd_ui.id
-    is_manual_connection           = false
-    subresource_names              = [ "sites" ]
-  }
-
-  private_dns_zone_group {
-    name                 = azurerm_private_dns_zone.appservices.name
-    private_dns_zone_ids = [ azurerm_private_dns_zone.appservices.id ]
-  }
-  tags = local.tags
-}
-
 # Private Endpoint 5: ServiceDirectoryAdminUI
 resource "azurerm_private_endpoint" "sdadminui" {
   name                = "${var.prefix}-as-fh-sd-admin-ui"
@@ -2597,32 +2343,7 @@ resource "azurerm_private_endpoint" "notificationapi" {
 }
 
 # Private Endpoint 8: Referrals Dashboard UI
-resource "azurerm_private_endpoint" "referraldashboardui" {
-  name                = "${var.prefix}-as-fh-ref-dash-ui"
-  location            = var.location
-  resource_group_name = local.resource_group_name
-  subnet_id           = azurerm_subnet.pvtendpoint.id
-  custom_network_interface_name = "${var.prefix}-as-fh-ref-dash-ui-nic"
-
-  ip_configuration {
-    name                       = "${var.prefix}-as-fh-ref-dash-ui"
-    private_ip_address         = "${var.private_endpoint_ip_address.referral_dashboard_ui}"
-    subresource_name           = "sites" 
-  }
-
- private_service_connection {
-    name                           = "${var.prefix}-pvtendpt-ref-dash-ui"
-    private_connection_resource_id = azurerm_windows_web_app.fh_referral_dashboard_ui.id
-    is_manual_connection           = false
-    subresource_names              = [ "sites" ]
-  }
-
-  private_dns_zone_group {
-    name                 = azurerm_private_dns_zone.appservices.name
-    private_dns_zone_ids = [ azurerm_private_dns_zone.appservices.id ]
-  }
-  tags = local.tags
-}
+# REMOVED
 
 # Private Endpoint 9: IDAM API
 resource "azurerm_private_endpoint" "idamapi" {

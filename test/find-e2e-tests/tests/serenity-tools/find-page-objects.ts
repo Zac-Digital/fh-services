@@ -2,7 +2,7 @@ import { By, PageElement, } from '@serenity-js/web';
 
 export const startButton = () =>
     PageElement
-        .located(By.css("a[role='button']"))
+        .located(By.css("[data-testid='start-button']"))
         .describedAs('start Now Button');
 
 export const postcodeSearchBox = () =>
@@ -13,5 +13,5 @@ export const postcodeSearchBox = () =>
 
 export const postcodeSearchButton = () =>
     PageElement
-        .located(By.css("button[class='govuk-button']"))
+        .located(By.css("[data-testid='button-search']"))
         .describedAs('the search button');

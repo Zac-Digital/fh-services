@@ -103,12 +103,12 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
 
         //Act
         var results = await handler.Handle(command, CancellationToken.None);
-
+        
         //Assert
         results.Should().NotBeNull();
         results.Items[0].Should().BeEquivalentTo(TestOrganisationFreeService.Services.ElementAt(0));
     }
-
+    
     [Fact]
     public async Task ThenDeleteService()
     {

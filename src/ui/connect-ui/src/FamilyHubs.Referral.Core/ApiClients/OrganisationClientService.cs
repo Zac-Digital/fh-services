@@ -7,6 +7,8 @@ using FamilyHubs.ServiceDirectory.Shared.Dto;
 using FamilyHubs.ServiceDirectory.Shared.Dto.Metrics;
 using FamilyHubs.ServiceDirectory.Shared.Enums;
 using FamilyHubs.ServiceDirectory.Shared.Models;
+using FamilyHubs.SharedKernel.Razor.FeatureFlags;
+using Microsoft.FeatureManagement;
 
 namespace FamilyHubs.Referral.Core.ApiClients;
 
@@ -26,7 +28,7 @@ public interface IOrganisationClientService
     Task RecordServiceSearch(
         ServiceDirectorySearchEventType eventType,
         string postcode,
-        long userId,
+        long? userId,
         IEnumerable<ServiceDto> services,
         DateTime requestTimestamp,
         DateTime? responseTimestamp,
@@ -37,8 +39,11 @@ public interface IOrganisationClientService
 
 public class OrganisationClientService : ApiService, IOrganisationClientService
 {
-    public OrganisationClientService(HttpClient client) : base(client)
+    private readonly IFeatureManager _featureManager;
+    
+    public OrganisationClientService(HttpClient client, IFeatureManager featureManager) : base(client)
     {
+        _featureManager = featureManager;
     }
 
     public async Task<List<KeyValuePair<TaxonomyDto, List<TaxonomyDto>>>> GetCategories()
@@ -83,6 +88,8 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         if (string.IsNullOrEmpty(filter.Status))
             filter.Status = "Active";
 
+        var isVcfsServicesEnabled = await _featureManager.IsEnabledAsync(FeatureFlag.VcfsServices);
+        filter.ServiceType = !isVcfsServicesEnabled ? ServiceType.FamilyExperience.ToString() : null!;
         var urlBuilder = new StringBuilder(
             GetPositionUrl(filter.ServiceType, filter.Latitude, filter.Longitude, filter.Proximity,
                 filter.Status, filter.PageNumber, filter.PageSize));
@@ -215,7 +222,7 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
         return await JsonSerializer.DeserializeAsync<OrganisationDto>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
     }
 
-    public async Task RecordServiceSearch(ServiceDirectorySearchEventType eventType, string postcode, long userId,
+    public async Task RecordServiceSearch(ServiceDirectorySearchEventType eventType, string postcode, long? userId,
         IEnumerable<ServiceDto> services, DateTime requestTimestamp, DateTime? responseTimestamp, HttpStatusCode? responseStatusCode,
         Guid correlationId)
     {

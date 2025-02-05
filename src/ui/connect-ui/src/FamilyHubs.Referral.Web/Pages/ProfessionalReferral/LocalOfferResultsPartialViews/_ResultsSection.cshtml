@@ -7,10 +7,16 @@
 
         <li tab-index="0">
             <h2 class="govuk-heading-s govuk-!-margin-bottom-3">
-                <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail"
-                   asp-route-serviceid="@item.Id"
-                   data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>
+                <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id"
+                   data-testid=@item.Name.ToLower().Replace(" ", "")>@item.DisplayServiceName</a>
             </h2>
+            @if (!string.IsNullOrWhiteSpace(item.OrganisationName))
+            {
+                <dl class="govuk-body-s">
+                    <dt class="govuk-!-font-weight-bold">Organisation</dt>
+                    <dd>@(item.OrganisationName)</dd>
+                </dl>
+            }
             @if (item.Taxonomies.Any())
             {
                 <dl class="govuk-body-s">
@@ -37,8 +43,7 @@
 
             <dl class="govuk-body-s">
                 <dt class="govuk-!-font-weight-bold">Where</dt>
-                <dd class="fh-pre-wrap">
-                    @if (item.Locations.Any())
+                <dd class="fh-pre-wrap">@if (item.Locations.Any())
                     {
                         @(LocalOfferResultsModel.GetAddressAsString(item))
                     }

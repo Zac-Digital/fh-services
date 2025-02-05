@@ -178,12 +178,12 @@ public class LocalOfferResultsModel : HeaderPageModel
                 var eventType = _isInitialSearch ? ServiceDirectorySearchEventType.ServiceDirectoryInitialSearch
                     : ServiceDirectorySearchEventType.ServiceDirectorySearchFilter;
 
-                FamilyHubsUser familyHusUser = HttpContext.GetFamilyHubsUser();
+                FamilyHubsUser familyHubsUser = HttpContext.GetFamilyHubsUser();
                 
                 await _organisationClientService.RecordServiceSearch(
                     eventType,
-                    Postcode!,
-                    long.Parse(familyHusUser.AccountId),
+                    Postcode,
+                    long.TryParse(familyHubsUser.AccountId, out var familyHubsUserId) ? familyHubsUserId : null,
                     SearchResults.Items,
                     requestTimestamp,
                     responseTimestamp,
