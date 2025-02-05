@@ -18,12 +18,6 @@ using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-/*
- * TODO: Unit Testing
- * TODO: Data Test IDs everywhere!
- * TODO: Partial views for the remove filters bits
- */
-
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
 public class LocalOfferResultsModel : HeaderPageModel
@@ -222,8 +216,8 @@ public class LocalOfferResultsModel : HeaderPageModel
             DistrictCode = DistrictCode ?? null,
             Latitude = CurrentLatitude,
             Longitude = CurrentLongitude,
-            AllChildrenYoungPeople = null, // TODO: This was when you ticked the checkbox AND selected "All ages" - figure out equivalent with the ranges now
-            GivenAge = null,               // TODO: Functionality needs to change in SD API as we now select age ranges
+            AllChildrenYoungPeople = null, // TODO: FHB-1307 - Part of Age Range Refactor
+            GivenAge = null,               // TODO: FHB-1307 - Part of Age Range Refactor
             Proximity = ConvertSelectedDistanceToMeters() ?? 212892,
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
             LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null,
