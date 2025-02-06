@@ -195,10 +195,20 @@ public class LocalOfferResultsModel : HeaderPageModel
         return Page();
     }
 
-    private int? ConvertSelectedDistanceToMeters()
+    private int ConvertSelectedDistanceToMeters()
     {
         bool isInteger = int.TryParse(SelectedDistance, out int distanceInMiles);
-        if (!isInteger || distanceInMiles <= 0) return null;
+        
+        if (!isInteger || distanceInMiles <= 0)
+        {
+            _logger.LogWarning("Selected distance has an unexpected value: {SelectedDistance}", SelectedDistance);
+            
+            SelectedDistance = null;
+            
+            const int maxPracticalDistanceInMeters = 212892;
+            return maxPracticalDistanceInMeters;
+        }
+        
         return DistanceConverter.MilesToMeters(distanceInMiles);
     }
 
@@ -218,7 +228,7 @@ public class LocalOfferResultsModel : HeaderPageModel
             Longitude = CurrentLongitude,
             AllChildrenYoungPeople = null, // TODO: FHB-1307 - Part of Age Range Refactor
             GivenAge = null,               // TODO: FHB-1307 - Part of Age Range Refactor
-            Proximity = ConvertSelectedDistanceToMeters() ?? 212892,
+            Proximity = ConvertSelectedDistanceToMeters(),
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
             LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null,
             DaysAvailable = DaysAvailable?.Any() == true ? string.Join(",", DaysAvailable) : null
