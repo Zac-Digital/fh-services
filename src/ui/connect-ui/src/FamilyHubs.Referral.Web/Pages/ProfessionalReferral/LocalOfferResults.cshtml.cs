@@ -56,6 +56,9 @@ public class LocalOfferResultsModel : HeaderPageModel
         new() { Value = "20", Text = "20 miles"}
     ];
 
+    private static readonly int MinimumValidDistance = int.Parse(DistanceRange[0].Value);
+    private static readonly int MaximumValidDistance = int.Parse(DistanceRange[^1].Value);
+
     public const string AllLanguagesValue = "all";
 
     public static SelectListItem[] LanguageOptions { get; set; }
@@ -198,18 +201,16 @@ public class LocalOfferResultsModel : HeaderPageModel
     private int ConvertSelectedDistanceToMeters()
     {
         bool isInteger = int.TryParse(SelectedDistance, out int distanceInMiles);
+        bool isWithinValidRange = distanceInMiles >= MinimumValidDistance && distanceInMiles <= MaximumValidDistance;
         
-        if (!isInteger || distanceInMiles <= 0)
-        {
-            _logger.LogWarning("Selected distance has an unexpected value: {SelectedDistance}", SelectedDistance);
-            
-            SelectedDistance = null;
-            
-            const int maxPracticalDistanceInMeters = 212892;
-            return maxPracticalDistanceInMeters;
-        }
+        if (isInteger && isWithinValidRange) return DistanceConverter.MilesToMeters(distanceInMiles);
         
-        return DistanceConverter.MilesToMeters(distanceInMiles);
+        _logger.LogWarning("Selected distance has an unexpected value: {SelectedDistance}", SelectedDistance);
+        
+        SelectedDistance = null;
+        
+        const int maxPracticalDistanceInMeters = 212892;
+        return maxPracticalDistanceInMeters;
     }
 
     private async Task<HttpResponseMessage?> SearchServices()
