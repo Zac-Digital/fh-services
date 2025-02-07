@@ -148,6 +148,11 @@ variable "autoscale_rule_maximum_capacity" {
   default = 10
 }
 
+variable "slack_support_channel_email" {
+  type = string
+  description = "The Slack channel email to send alerts to."
+}
+
 variable "defender_app_services_tier" {
   type = string
   description = "Defender tier for app services"
