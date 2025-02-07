@@ -1788,7 +1788,7 @@ resource "azurerm_mssql_server_vulnerability_assessment" "sqlserver_db_vulnerabi
     enabled                   = true
     email_subscription_admins = true
     emails = [
-      var.email_notify
+      var.slack_support_channel_email
     ]
   }
 }
@@ -2748,7 +2748,7 @@ resource "azurerm_monitor_action_group" "email_grp" {
   resource_group_name   = local.resource_group_name
   short_name            = "shrnm"
   email_receiver {
-    email_address       = "${var.email_notify}"
+    email_address       = "${var.slack_channel_email}"
     name                = "FamilyHub"
   }
   tags = local.tags
