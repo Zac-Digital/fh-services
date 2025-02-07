@@ -63,6 +63,11 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
             {
                 await _cacheService.ResetString(CacheKeyNames.LaOrganisationId); 
             }
+            else
+            {
+                await _cacheService.StoreString(CacheKeyNames.LaOrganisationId, 
+                    HttpContext.GetFamilyHubsUser().OrganisationId);
+            }
             
             await _cacheService.ResetString(CacheKeyNames.AddOrganisationName);
 
