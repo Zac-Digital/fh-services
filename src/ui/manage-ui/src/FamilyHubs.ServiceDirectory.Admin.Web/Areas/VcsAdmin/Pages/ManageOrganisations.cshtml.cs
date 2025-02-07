@@ -61,10 +61,12 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
             
             if (HttpContext.IsUserDfeAdmin())
             {
+                // DfE Admin gets asked to pick an LA on their next page, so clear it here
                 await _cacheService.ResetString(CacheKeyNames.LaOrganisationId); 
             }
             else
             {
+                // LA Admins can't pick an LA, so make sure the cache contains their ID before they go to their next page
                 await _cacheService.StoreString(CacheKeyNames.LaOrganisationId, 
                     HttpContext.GetFamilyHubsUser().OrganisationId);
             }
