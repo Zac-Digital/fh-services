@@ -148,12 +148,6 @@ variable "autoscale_rule_maximum_capacity" {
   default = 10
 }
 
-variable "email_notify" {
-  type = string
-  description = "Email to send alert notifications to."
-  default = "growingupwell.lower@education.gov.uk"
-}
-
 variable "defender_app_services_tier" {
   type = string
   description = "Defender tier for app services"

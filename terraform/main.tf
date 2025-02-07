@@ -28,7 +28,7 @@ module "fhinfrastructurestack" {
   autoscale_rule_default_capacity = var.autoscale_rule_default_capacity
   autoscale_rule_minimum_capacity = var.autoscale_rule_minimum_capacity
   autoscale_rule_maximum_capacity = var.autoscale_rule_maximum_capacity
-  email_notify = var.email_notify
+  slack_support_channel_email = var.slack_support_channel_email
   asp_netcore_environment = var.asp_netcore_environment
   defender_app_services_tier = var.defender_app_services_tier
   private_endpoint_ip_address = var.private_endpoint_ip_address

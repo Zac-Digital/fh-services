@@ -1,7 +1,6 @@
 subscription_id = "ee94c326-6d5d-4cc3-b439-4e39dfde6ebc"
 prefix = "s181p01"
 environment = "Prod"
-email_notify = "growingupwell.live@education.gov.uk"
 defender_app_services_tier = "Standard"
 autoscale_rule_default_capacity = 4
 autoscale_rule_minimum_capacity = 4
