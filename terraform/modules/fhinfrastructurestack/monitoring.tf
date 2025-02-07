@@ -1,7 +1,7 @@
 locals {
   # The template is designed in the development environment so we need to replace the prefix and subscription
   # with appropriate environment values
-  dashboard_json1 = file("modules/fhinfrastructurestack/dashboard/template.json")
+  dashboard_json1 = file("files/dashboard/template.json")
   dashboard_json2 = replace(local.dashboard_json1, "s181d01", var.prefix)
   dashboard_json = replace(local.dashboard_json2, "56c128b8-5ca9-4328-bb24-a11c829f4af9", var.subscription_id)
 }
