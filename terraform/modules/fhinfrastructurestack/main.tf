@@ -2642,7 +2642,7 @@ resource "azurerm_monitor_action_group" "email_grp" {
   resource_group_name   = local.resource_group_name
   short_name            = "shrnm"
   email_receiver {
-    email_address       = "${var.slack_channel_email}"
+    email_address       = "${var.slack_support_channel_email}"
     name                = "FamilyHub"
   }
   tags = local.tags
