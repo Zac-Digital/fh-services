@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
 using FamilyHubs.SharedKernel.OpenReferral.Converters;
 
-namespace FamilyHubs.SharedKernel.OpenReferral.Entities;
+namespace FamilyHubs.OpenReferral.Function.Models;
 
-public class Organization : BaseHsdsEntity
+public class OrganizationDto  : BaseHsdsDto
 {
     [JsonPropertyName("name")]
-    public required string Name { get; init; }
+    public required string Name { get; set; }
 
     [JsonPropertyName("alternate_name")]
     public string? AlternateName { get; init; }
@@ -38,26 +38,20 @@ public class Organization : BaseHsdsEntity
     public Guid? ParentOrganizationId { get; init; }
 
     [JsonPropertyName("funding")]
-    public List<Funding> Funding { get; init; } = new();
+    public List<FundingDto> Funding { get; init; } = new();
 
     [JsonPropertyName("contacts")]
-    public List<Contact> Contacts { get; init; } = new();
+    public List<ContactDto> Contacts { get; init; } = new();
 
     [JsonPropertyName("phones")]
-    public List<Phone> Phones { get; init; } = new();
+    public List<PhoneDto> Phones { get; init; } = new();
 
     [JsonPropertyName("locations")]
-    public List<Location> Locations { get; init; } = new();
+    public List<LocationDto> Locations { get; set; } = new();
 
     [JsonPropertyName("programs")]
-    public List<Program> Programs { get; init; } = new();
+    public List<ProgramDto> Programs { get; init; } = new();
 
     [JsonPropertyName("organization_identifiers")]
-    public List<OrganizationIdentifier> OrganizationIdentifiers { get; set; } = new();
-
-    [JsonPropertyName("attributes")]
-    public List<Attribute> Attributes { get; init; } = new();
-
-    [JsonPropertyName("metadata")]
-    public List<Metadata> Metadata { get; init; } = new();
+    public List<OrganizationIdentifierDto> OrganizationIdentifiers { get; init; } = new();
 }

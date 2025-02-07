@@ -24,10 +24,13 @@ IHost host = new HostBuilder()
     {
         IConfiguration config = services.BuildServiceProvider().GetService<IConfiguration>()!;
 
+        services.AddAutoMapper(typeof(Program).Assembly);
+
         services.AddApplicationInsightsTelemetryWorkerService(config);
         services.ConfigureFunctionsApplicationInsights();
 
         services.AddTransient<IDedsService, DedsService>();
+        services.AddTransient<IApiService, ApiService>();
 
         services.AddHttpClient<IHsdaApiService, HsdaApiService>(httpClient =>
             httpClient.BaseAddress = new Uri(config["ApiConnection"]!));
