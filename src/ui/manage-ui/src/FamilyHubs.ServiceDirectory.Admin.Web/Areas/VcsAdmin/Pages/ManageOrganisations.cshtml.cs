@@ -58,7 +58,12 @@ namespace FamilyHubs.ServiceDirectory.Admin.Web.Areas.VcsAdmin.Pages
         public async Task<IActionResult> OnGetAddOrganisation()
         {
             await _cacheService.StoreUserFlow("AddOrganisation");
-            await _cacheService.ResetString(CacheKeyNames.LaOrganisationId);
+            
+            if (HttpContext.IsUserDfeAdmin())
+            {
+                await _cacheService.ResetString(CacheKeyNames.LaOrganisationId); 
+            }
+            
             await _cacheService.ResetString(CacheKeyNames.AddOrganisationName);
 
             return RedirectToPage(HttpContext.IsUserDfeAdmin() ? "/AddOrganisationWhichLocalAuthority" : "/AddOrganisation", new { area = "vcsAdmin" });
