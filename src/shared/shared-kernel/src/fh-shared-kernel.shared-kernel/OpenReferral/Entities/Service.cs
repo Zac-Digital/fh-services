@@ -99,4 +99,7 @@ public class Service : BaseHsdsEntity
 
     [JsonPropertyName("metadata")]
     public List<Metadata> Metadata { get; init; } = new();
+    
+    [JsonIgnore] 
+    public long Checksum { get; set; }
 }
