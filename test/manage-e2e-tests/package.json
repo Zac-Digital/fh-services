@@ -10,17 +10,17 @@
   "keywords": [],
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.48.1",
-    "@serenity-js/assertions": "^3.29.4",
-    "@serenity-js/console-reporter": "^3.29.4",
-    "@serenity-js/core": "^3.29.4",
-    "@serenity-js/playwright": "^3.29.4",
-    "@serenity-js/playwright-test": "^3.29.4",
-    "@serenity-js/serenity-bdd": "^3.29.4",
-    "@serenity-js/web": "^3.29.4",
-    "@types/node": "^22.8.0"
+    "@playwright/test": "^1.0.0",
+    "@serenity-js/assertions": "^3.0.0",
+    "@serenity-js/console-reporter": "^3.0.0",
+    "@serenity-js/core": "^3.0.0",
+    "@serenity-js/playwright": "^3.0.0",
+    "@serenity-js/playwright-test": "^3.0.0",
+    "@serenity-js/serenity-bdd": "^3.0.0",
+    "@serenity-js/web": "^3.0.0",
+    "@types/node": "^22.0.0"
   },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.0.0"
   }
 }

@@ -45,26 +45,26 @@
 
             @if (Model.FamilyHubsUser.Role == RoleTypes.DfeAdmin)
             {
-                <summary-row key="Local authority"
+                <summary-row data-testid="la-row" key="Local authority"
                              action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Local_Authority, ServiceJourneyChangeFlow.LocalAuthority)">
                     @Model.LaOrganisationName
                 </summary-row>
 
                 @if (service.ServiceType == ServiceTypeArg.Vcs)
                 {
-                    <summary-row key="Organisation"
+                    <summary-row data-testid="org-row" key="Organisation"
                                  action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Vcs_Organisation, ServiceJourneyChangeFlow.SinglePage)">
                         @Model.OrganisationName
                     </summary-row>
                 }
             }
 
-            <summary-row key="Name"
+            <summary-row data-testid="name-row" key="Name"
                          action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Service_Name, ServiceJourneyChangeFlow.SinglePage)">
                 @service.Name
             </summary-row>
 
-            <summary-row key="Support it offers"
+            <summary-row data-testid="support-row" key="Support it offers"
                          action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Support_Offered, ServiceJourneyChangeFlow.SinglePage)">
                 @foreach (var categoryId in service.SelectedSubCategories)
                 {
@@ -77,10 +77,10 @@
                 }
             </summary-row>
 
-            <summary-row key="Description" show-empty class="fh-pre-wrap" action1="@changeLink"
+            <summary-row data-testid="description-row" key="Description" show-empty class="fh-pre-wrap" action1="@changeLink"
                          action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Service_Description, ServiceJourneyChangeFlow.SinglePage)">@service.Description</summary-row>
 
-            <summary-row key="Does support relate to children or young people?"
+            <summary-row data-testid="who-row" key="Does support relate to children or young people?"
                          action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Who_For, ServiceJourneyChangeFlow.SinglePage)">
                 @if (service.ForChildren == false)
                 {
@@ -93,10 +93,10 @@
                 }
             </summary-row>
 
-            <summary-row key="Languages" show-empty
+            <summary-row data-testid="lang-row" key="Languages" show-empty
                          action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.What_Language, ServiceJourneyChangeFlow.SinglePage)">
                 @string.Join(", ", service.LanguageCodes!
-                    .Select(lc => ServiceDirectory.Shared.ReferenceData.Languages.CodeToName[lc])
+                    .Select(lc => ServiceDirectory.Shared.ReferenceData.Languages.CodeToName[lc.ToLower()])
                     .OrderBy(name => name))
 
                 @if (service.BritishSignLanguage == true || service.TranslationServices == true)
@@ -119,7 +119,7 @@
                 }
             </summary-row>
 
-            <summary-row key="Cost"
+            <summary-row data-testid="cost-row" key="Cost"
                          action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Service_Cost, ServiceJourneyChangeFlow.SinglePage)">
                 @if (service.HasCost == true)
                 {
@@ -135,7 +135,7 @@
         <h2 class="govuk-heading-m">Using this service</h2>
         <summary-list class="govuk-!-margin-bottom-9">
 
-            <summary-row key="How this service is provided" show-empty
+            <summary-row data-testid="how-row" key="How this service is provided" show-empty
                          action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.How_Use, ServiceJourneyChangeFlow.HowUse)">
                 @string.Join(", ", service.HowUse.Select(hu => hu.ToDescription()))
             </summary-row>
@@ -162,7 +162,7 @@
                 }
                 var redoLocationUrl = Model.ReadOnly ? "" : Model.GetServicePageUrl(locationPage!.Value, ServiceJourneyChangeFlow.Location, backPage);
 
-                <summary-row key="Locations" show-empty action1="@locationAction" action1-href="@redoLocationUrl">
+                <summary-row data-testid="locations-row" key="Locations" show-empty action1="@locationAction" action1-href="@redoLocationUrl">
                     @switch (locationsCount)
                     {
                         case 0:
@@ -199,12 +199,12 @@
 
                     <summary-row key="Location details" show-empty class="fh-pre-wrap">@location.Description.GetDisplay()</summary-row>
                     
-                    <summary-row key="Days service is available" show-empty
+                    <summary-row data-testid=@($"days-{locationNumber}-row") key="Days service is available" show-empty
                                  action1="@changeLink" action1-href="@(Model.GetServicePageUrl(ServiceJourneyPage.Times_At_Location, ServiceJourneyChangeFlow.SinglePage))&locationId=@location.Id&redo=@redo">
                         @location.Times.GetDayNames()
                     </summary-row>
                     @*todo: same data, different key to location-for-service page*@
-                    <summary-row key="Extra availability details" show-empty class="fh-pre-wrap"
+                    <summary-row data-testid=@($"extra-{locationNumber}-row") key="Extra availability details" show-empty class="fh-pre-wrap"
                                  action1="@changeLink" action1-href="@(Model.GetServicePageUrl(ServiceJourneyPage.Time_Details_At_Location, ServiceJourneyChangeFlow.SinglePage))&locationId=@location.Id&redo=@redo">@location.TimeDescription.GetDisplay()</summary-row>
 
                 </summary-list>
@@ -224,19 +224,19 @@
         {
             <h3 class="govuk-heading-m">@string.Join(", ", howUse.Select(h => h.ToDescription()))</h3>
             <summary-list class="govuk-!-margin-bottom-9">
-                <summary-row key="Days service is available" show-empty
+                <summary-row data-testid="days-row" key="Days service is available" show-empty
                              action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Times, ServiceJourneyChangeFlow.SinglePage)">
                     @service.Times.GetDayNames()
                 </summary-row>
 
-                <summary-row key="Extra availability details" show-empty class="fh-pre-wrap"
+                <summary-row data-testid="extra-row" key="Extra availability details" show-empty class="fh-pre-wrap"
                              action1="@changeLink" action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Time_Details, ServiceJourneyChangeFlow.SinglePage)">@service.TimeDescription.GetDisplay()</summary-row>
             </summary-list>
         }
 
         <h2 class="govuk-heading-m">Further information</h2>
         <summary-list class="govuk-!-margin-bottom-9">
-            <summary-row key="Contact details" show-empty action1="@changeLink"
+            <summary-row data-testid="contact-row" key="Contact details" show-empty action1="@changeLink"
                          action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Contact, ServiceJourneyChangeFlow.SinglePage)">
                 @if (service.HasEmail)
                 {
@@ -257,7 +257,7 @@
 
             </summary-row>
 
-            <summary-row key="More details" show-empty class="fh-pre-wrap" action1="@changeLink"
+            <summary-row data-testid="more-row" key="More details" show-empty class="fh-pre-wrap" action1="@changeLink"
                          action1-href="@Model.GetServicePageUrl(ServiceJourneyPage.Service_More_Details, ServiceJourneyChangeFlow.SinglePage)">@service.MoreDetails.GetDisplay()</summary-row>
         </summary-list>
         
