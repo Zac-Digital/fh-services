@@ -326,7 +326,7 @@ resource "azurerm_monitor_metric_alert" "app-gateway-storage-error-availability-
   criteria {
     aggregation = "Average"
     metric_name = "Availability"
-    metric_namespace = "Microsoft.Insights/metricAlerts"
+    metric_namespace = "Microsoft.Storage/storageAccounts"
     operator = "LessThan"
     threshold = 90
   }
