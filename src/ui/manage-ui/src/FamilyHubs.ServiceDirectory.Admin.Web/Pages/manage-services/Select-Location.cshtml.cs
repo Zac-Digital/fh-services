@@ -65,13 +65,8 @@ public class Select_LocationModel : ServicePageModel, ISingleAutocompletePageMod
     /// </summary>
     protected override string GenerateBackUrl()
     {
-        // get an optional ServiceJourneyPage from the query params:
-        // passed from the service details page when in person and 0 locations
-        // passed from the 'locations at service' page
-
-        ServiceJourneyPage? backPage = BackParam ?? ServiceJourneyPage.Add_Location;
-
-        return GetServicePageUrl(backPage.Value);
+        ServiceJourneyPage backPage = Flow == JourneyFlow.Edit ? ServiceJourneyPage.Locations_For_Service : ServiceJourneyPage.Add_Location;
+        return GetServicePageUrl(backPage, ChangeFlow);
     }
 
     protected override async Task OnGetWithModelAsync(CancellationToken cancellationToken)

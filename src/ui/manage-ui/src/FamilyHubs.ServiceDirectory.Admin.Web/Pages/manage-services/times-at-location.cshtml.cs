@@ -35,16 +35,6 @@ public class times_at_locationModel : ServicePageModel, ICheckboxesPageModel
 
     protected override void OnGetWithModel()
     {
-        //todo: redo mode will take user back to locations at service page
-        //todo: how does redo work from details page?
-        //todo: look for location id in url, if not there, work on current location
-
-        string redo = Request.Query["redo"].ToString();
-        if (redo != "")
-        {
-            BackUrl = $"{ServiceJourneyPageExtensions.GetPagePath(redo)}?flow={Flow}";
-        }
-
         var location = GetLocation();
 
         SetTitle(location);
@@ -69,6 +59,12 @@ public class times_at_locationModel : ServicePageModel, ICheckboxesPageModel
     private void SetTitle(ServiceLocationModel location)
     {
         Title = $"On which days can people use this service at {location.DisplayName}?";
+
+        var redo = Request.Query["redo"].ToString();
+        if (!string.IsNullOrEmpty(redo))
+        {
+            BackUrl = GetServicePageUrl(ServiceJourneyPageExtensions.FromSlug(redo), ChangeFlow);
+        }
     }
 
     protected override IActionResult OnPostWithModel()
@@ -82,7 +78,7 @@ public class times_at_locationModel : ServicePageModel, ICheckboxesPageModel
         string redo = Request.Query["redo"].ToString();
         if (redo != "")
         {
-            return Redirect(GetServicePageUrl(ServiceJourneyPageExtensions.FromSlug(redo)));
+            return Redirect(GetServicePageUrl(ServiceJourneyPageExtensions.FromSlug(redo), ChangeFlow));
         }
 
         return NextPage();
