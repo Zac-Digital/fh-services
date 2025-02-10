@@ -794,6 +794,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("Created")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("CreatedBy")
@@ -1831,7 +1832,6 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasAnnotation("Relational:JsonPropertyName", "email");
 
                     b.Property<string>("LegalStatus")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
                         .HasAnnotation("Relational:JsonPropertyName", "legal_status");
@@ -1865,7 +1865,7 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("nvarchar(2048)")
                         .HasAnnotation("Relational:JsonPropertyName", "website");
 
-                    b.Property<short>("YearIncorporated")
+                    b.Property<short?>("YearIncorporated")
                         .HasColumnType("smallint")
                         .HasAnnotation("Relational:JsonPropertyName", "year_incorporated");
 
@@ -2231,11 +2231,11 @@ namespace FamilyHubs.ServiceDirectory.Data.Migrations
                         .HasColumnType("datetime2(7)")
                         .HasAnnotation("Relational:JsonPropertyName", "last_modified");
 
-                    b.Property<byte>("MaximumAge")
+                    b.Property<byte?>("MaximumAge")
                         .HasColumnType("tinyint")
                         .HasAnnotation("Relational:JsonPropertyName", "maximum_age");
 
-                    b.Property<byte>("MinimumAge")
+                    b.Property<byte?>("MinimumAge")
                         .HasColumnType("tinyint")
                         .HasAnnotation("Relational:JsonPropertyName", "minimum_age");
 

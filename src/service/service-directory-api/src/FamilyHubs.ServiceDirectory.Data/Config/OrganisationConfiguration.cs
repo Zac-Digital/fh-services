@@ -46,5 +46,8 @@ public class OrganisationConfiguration : EntityBaseConfiguration<Organisation>
             .HasForeignKey(l => l.OrganisationId)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        builder.Property(t => t.Created)
+            .IsRequired();
     }
 }

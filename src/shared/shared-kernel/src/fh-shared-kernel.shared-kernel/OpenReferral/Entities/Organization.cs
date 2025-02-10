@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using FamilyHubs.SharedKernel.OpenReferral.Converters;
 
 namespace FamilyHubs.SharedKernel.OpenReferral.Entities;
 
@@ -20,10 +21,11 @@ public class Organization : BaseHsdsEntity
     public string? Website { get; init; }
 
     [JsonPropertyName("year_incorporated")]
-    public required short YearIncorporated { get; init; }
+    [JsonConverter(typeof(StringToNullableTypeConverter))]
+    public short? YearIncorporated { get; init; }
 
     [JsonPropertyName("legal_status")]
-    public required string LegalStatus { get; init; }
+    public string? LegalStatus { get; init; }
 
     [JsonPropertyName("logo")]
     public string? Logo { get; init; }
@@ -32,6 +34,7 @@ public class Organization : BaseHsdsEntity
     public string? Uri { get; init; }
 
     [JsonPropertyName("parent_organization_id")]
+    [JsonConverter(typeof(StringToNullableTypeConverter))]
     public Guid? ParentOrganizationId { get; init; }
 
     [JsonPropertyName("funding")]
