@@ -148,10 +148,9 @@ variable "autoscale_rule_maximum_capacity" {
   default = 10
 }
 
-variable "email_notify" {
+variable "slack_support_channel_email" {
   type = string
-  description = "Email to send alert notifications to."
-  default = "growingupwell.lower@education.gov.uk"
+  description = "The Slack channel email to send alerts to."
 }
 
 variable "defender_app_services_tier" {
