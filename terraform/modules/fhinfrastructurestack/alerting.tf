@@ -13,6 +13,12 @@ locals {
       gateway_id = azurerm_application_gateway.sd_ui_app_gateway.id
     }
   }
+
+  service_plan_details = {
+    "primary" = {
+      service_plan_id = azurerm_service_plan.apps_plan.id
+    }
+  }
 }
 
 # Alert action group
@@ -329,6 +335,68 @@ resource "azurerm_monitor_metric_alert" "app-gateway-storage-error-availability-
     metric_namespace = "Microsoft.Storage/storageAccounts"
     operator = "LessThan"
     threshold = 90
+  }
+  tags = local.tags
+}
+
+# App service plan alerts
+
+resource "azurerm_monitor_metric_alert" "app-service-plan-cpu-percentage-alert" {
+  for_each = local.service_plan_details
+  name = "${var.prefix}-fh-srvplan-${each.key}-cpu-percentage-alert"
+  resource_group_name = local.alert_resource_group_name
+  scopes = [each.value.service_plan_id]
+  window_size = "PT15M"
+  frequency = "PT5M"
+  action {
+    action_group_id = azurerm_monitor_action_group.slack_channel_email_action_group.id
+  }
+  criteria {
+    aggregation = "Average"
+    metric_name = "CpuPercentage"
+    metric_namespace = "Microsoft.Web/serverfarms"
+    operator = "GreaterThan"
+    threshold = 80
+  }
+  tags = local.tags
+}
+
+resource "azurerm_monitor_metric_alert" "app-service-plan-http-queue-length-alert" {
+  for_each = local.service_plan_details
+  name = "${var.prefix}-fh-srvplan-${each.key}-http-queue-length-alert"
+  resource_group_name = local.alert_resource_group_name
+  scopes = [each.value.service_plan_id]
+  window_size = "PT15M"
+  frequency = "PT5M"
+  action {
+    action_group_id = azurerm_monitor_action_group.slack_channel_email_action_group.id
+  }
+  criteria {
+    aggregation = "Average"
+    metric_name = "HttpQueueLength"
+    metric_namespace = "Microsoft.Web/serverfarms"
+    operator = "GreaterThan"
+    threshold = 20
+  }
+  tags = local.tags
+}
+
+resource "azurerm_monitor_metric_alert" "app-service-plan-memory-percentage-alert" {
+  for_each = local.service_plan_details
+  name = "${var.prefix}-fh-srvplan-${each.key}-memory-percentage-alert"
+  resource_group_name = local.alert_resource_group_name
+  scopes = [each.value.service_plan_id]
+  window_size = "PT15M"
+  frequency = "PT5M"
+  action {
+    action_group_id = azurerm_monitor_action_group.slack_channel_email_action_group.id
+  }
+  criteria {
+    aggregation = "Average"
+    metric_name = "MemoryPercentage"
+    metric_namespace = "Microsoft.Web/serverfarms"
+    operator = "GreaterThan"
+    threshold = 80
   }
   tags = local.tags
 }
