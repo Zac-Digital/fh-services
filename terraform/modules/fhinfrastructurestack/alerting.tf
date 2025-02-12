@@ -464,7 +464,7 @@ resource "azurerm_monitor_metric_alert" "app-service-cpu-time-alert" {
   # Function apps do not support the CpuTime metric, so don't create this alert for function apps
   for_each = { 
     for key, app in local.app_service_details :
-    key => app if !coalesce(app.is_function_app, false)
+    key => app if !lookup(app, "is_function_app", false)
   }  
   name = "${var.prefix}-fh-appplan-${each.key}-cpu-time-alert"
   resource_group_name = local.alert_resource_group_name
