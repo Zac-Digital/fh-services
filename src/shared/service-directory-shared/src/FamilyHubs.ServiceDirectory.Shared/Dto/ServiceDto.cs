@@ -33,13 +33,13 @@ public record ServiceDto : DtoBase
     // Calculated properties
     
     public string OrganisationName { get; set; } = string.Empty;
-    
-    public string DisplayServiceName
+
+    public string DistanceText
     {
         get
         {
             const double metersInMiles = 1609.34;
-            return Distance.HasValue ? $"{Name} ({Distance.Value / metersInMiles:0.0} miles)" : Name;
+            return Distance.HasValue ? $" ({Distance.Value / metersInMiles:0.0} miles)" : "";
         }
     }
 }
