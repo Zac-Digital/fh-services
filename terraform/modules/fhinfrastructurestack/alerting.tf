@@ -470,7 +470,7 @@ resource "azurerm_monitor_metric_alert" "app-service-cpu-time-alert" {
     action_group_id = azurerm_monitor_action_group.slack_channel_email_action_group.id
   }
   dynamic_criteria {
-    aggregation = "Average"
+    aggregation = "Total"
     alert_sensitivity = "Medium"
     metric_name = "CpuTime"
     metric_namespace = "Microsoft.Web/sites"
