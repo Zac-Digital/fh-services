@@ -53,6 +53,7 @@ locals {
     },
     "open_referral_function_app" = {
       app_service_id = azurerm_windows_function_app.open_referral_function_app.id
+      is_function_app = true
     }
   }
 }
@@ -460,7 +461,11 @@ resource "azurerm_monitor_metric_alert" "app-service-server-errors-alert" {
 }
 
 resource "azurerm_monitor_metric_alert" "app-service-cpu-time-alert" {
-  for_each = local.app_service_details
+  # Function apps do not support the CpuTime metric, so don't create this alert for function apps
+  for_each = { 
+    for key, app in local.app_service_details :
+    key => app if !coalesce(app.is_function_app, false)
+  }  
   name = "${var.prefix}-fh-appplan-${each.key}-cpu-time-alert"
   resource_group_name = local.alert_resource_group_name
   scopes = [each.value.app_service_id]
