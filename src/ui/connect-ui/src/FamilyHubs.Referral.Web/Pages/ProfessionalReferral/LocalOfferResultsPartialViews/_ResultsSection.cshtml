@@ -8,7 +8,7 @@
         <li tab-index="0">
             <h2 class="govuk-heading-s govuk-!-margin-bottom-3">
                 <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id"
-                   data-testid=@item.Name.ToLower().Replace(" ", "")>@item.DisplayServiceName</a>
+                   data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>@item.DistanceText
             </h2>
             @if (!string.IsNullOrWhiteSpace(item.OrganisationName))
             {
@@ -22,7 +22,7 @@
                 <dl class="govuk-body-s">
                     <dt class="govuk-!-font-weight-bold">Category</dt>
                     <dd>
-                        <ul class="govuk-list govuk-body-s">
+                        <ul class="govuk-list govuk-body-s govuk-!-margin-bottom-0">
                             @foreach (var serviceTaxonomy in item.Taxonomies)
                             {
                                 <li>@serviceTaxonomy.Name</li>
@@ -50,13 +50,6 @@
                 </dd>
             </dl>
 
-            @if (item.ServiceDeliveries.Count > 0)
-            {
-                <dl class="govuk-body-s">
-                    <dt class="govuk-!-font-weight-bold">Delivery method</dt>
-                    <dd class="fh-pre-wrap">@LocalOfferResultsModel.GetDeliveryMethodsAsString(item.ServiceDeliveries)</dd>
-                </dl>
-            }
             <dl class="govuk-body-s">
                 <dt class="govuk-!-font-weight-bold">Cost</dt>
                 @if (item.CostOptions.Count > 0)
