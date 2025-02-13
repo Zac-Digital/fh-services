@@ -19,6 +19,43 @@ locals {
       service_plan_id = azurerm_service_plan.apps_plan.id
     }
   }
+
+  app_service_details = {
+    "fh_referral_api" = {
+      app_service_id = azurerm_windows_web_app.fh_referral_api.id
+    },
+    "open_referral_mock_api_web_app" = {
+      app_service_id = azurerm_windows_web_app.open_referral_mock_api_web_app.id
+    },
+    "fh_notification_api" = {
+      app_service_id = azurerm_windows_web_app.fh_notification_api.id
+    },
+    "fh_idam_api" = {
+      app_service_id = azurerm_windows_web_app.fh_idam_api.id
+    },
+    "fh_idam_maintenance_ui" = {
+      app_service_id = azurerm_windows_web_app.fh_idam_maintenance_ui.id
+    },
+    "fh_referral_ui" = {
+      app_service_id = azurerm_windows_web_app.fh_referral_ui.id
+    },
+    "fh_report_api" = {
+      app_service_id = azurerm_windows_web_app.fh_report_api.id
+    },
+    "fh_sd_api" = {
+      app_service_id = azurerm_windows_web_app.fh_sd_api.id
+    },
+    "fh_sd_admin_ui" = {
+      app_service_id = azurerm_windows_web_app.fh_sd_admin_ui.id
+    },
+    "fh_sd_ui" = {
+      app_service_id = azurerm_windows_web_app.fh_sd_ui.id
+    },
+    "open_referral_function_app" = {
+      app_service_id = azurerm_windows_function_app.open_referral_function_app.id
+      is_function_app = true
+    }
+  }
 }
 
 # Alert action group
@@ -397,6 +434,72 @@ resource "azurerm_monitor_metric_alert" "app-service-plan-memory-percentage-aler
     metric_namespace = "Microsoft.Web/serverfarms"
     operator = "GreaterThan"
     threshold = 80
+  }
+  tags = local.tags
+}
+
+# App service alerts
+
+resource "azurerm_monitor_metric_alert" "app-service-server-errors-alert" {
+  for_each = local.app_service_details
+  name = "${var.prefix}-fh-appplan-${each.key}-server-errors-alert"
+  resource_group_name = local.alert_resource_group_name
+  scopes = [each.value.app_service_id]
+  window_size = "PT15M"
+  frequency = "PT5M"
+  action {
+    action_group_id = azurerm_monitor_action_group.slack_channel_email_action_group.id
+  }
+  criteria {
+    aggregation = "Average"
+    metric_name = "Http5xx"
+    metric_namespace = "Microsoft.Web/sites"
+    operator = "GreaterThan"
+    threshold = 0
+  }
+  tags = local.tags
+}
+
+resource "azurerm_monitor_metric_alert" "app-service-cpu-time-alert" {
+  # Function apps do not support the CpuTime metric, so don't create this alert for function apps
+  for_each = { 
+    for key, app in local.app_service_details :
+    key => app if !lookup(app, "is_function_app", false)
+  }  
+  name = "${var.prefix}-fh-appplan-${each.key}-cpu-time-alert"
+  resource_group_name = local.alert_resource_group_name
+  scopes = [each.value.app_service_id]
+  window_size = "PT15M"
+  frequency = "PT5M"
+  action {
+    action_group_id = azurerm_monitor_action_group.slack_channel_email_action_group.id
+  }
+  dynamic_criteria {
+    aggregation = "Total"
+    alert_sensitivity = "Medium"
+    metric_name = "CpuTime"
+    metric_namespace = "Microsoft.Web/sites"
+    operator = "GreaterThan"
+  }
+  tags = local.tags
+}
+
+resource "azurerm_monitor_metric_alert" "app-service-http-response-time-alert" {
+  for_each = local.app_service_details
+  name = "${var.prefix}-fh-appplan-${each.key}-http-response-time-alert"
+  resource_group_name = local.alert_resource_group_name
+  scopes = [each.value.app_service_id]
+  window_size = "PT15M"
+  frequency = "PT5M"
+  action {
+    action_group_id = azurerm_monitor_action_group.slack_channel_email_action_group.id
+  }
+  criteria {
+    aggregation = "Average"
+    metric_name = "HttpResponseTime"
+    metric_namespace = "Microsoft.Web/sites"
+    operator = "GreaterThan"
+    threshold = 10
   }
   tags = local.tags
 }
