@@ -96,12 +96,10 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
 
         AddTextToUrl(urlBuilder, filter.Text);
 
-        if (filter.AllChildrenYoungPeople == true)
+        if (filter.AgeRangeList is not null)
         {
-            urlBuilder.Append("&allChildrenYoungPeople=true");
+            urlBuilder.Append($"&ageRangeList={JsonSerializer.Serialize(filter.AgeRangeList)}");
         }
-
-        AddAgeToUrl(urlBuilder, filter.GivenAge);
 
         if (filter.ServiceDeliveries is not null)
         {
@@ -171,14 +169,6 @@ public class OrganisationClientService : ApiService, IOrganisationClientService
             .WithStatus(status)
             .WithPage(pageNumber, pageSize)
             .Build();
-    }
-
-    public static void AddAgeToUrl(StringBuilder url, int? givenAge)
-    {
-        if (givenAge is not null)
-        {
-            url.AppendLine($"&givenAge={givenAge}");
-        }
     }
 
     public static void AddTextToUrl(StringBuilder url, string? text)

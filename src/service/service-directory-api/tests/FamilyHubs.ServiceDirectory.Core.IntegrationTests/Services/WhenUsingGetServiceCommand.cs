@@ -63,6 +63,44 @@ public class WhenUsingGetServiceCommand : DataIntegrationTestBase
         results.Items[0].Should().BeEquivalentTo(expectedServiceNameDto);
     }
 
+    [Theory]
+    [InlineData("[[0,2]]", 9)]
+    [InlineData("[[3,5]]", 12)]
+    [InlineData("[[6,11]]", 11)]
+    [InlineData("[[12,15]]", 12)]
+    [InlineData("[[16,18]]", 10)]
+    [InlineData("[[19,24]]", 7)]
+    [InlineData("[[0,2],[19,24]]", 13)]
+    [InlineData("[[3,5],[16,18]]", 17)]
+    [InlineData("[[6,11],[12,15]]", 14)]
+    [InlineData("[[0,2],[6,11],[16,18]]", 20)]
+    [InlineData("[[3,5],[12,15],[19,24]]", 18)]
+    [InlineData(null, 24)]
+    [InlineData("[[0, 2],[3, 5],[6, 11],[12, 15],[16, 18],[19, 24]]", 22)]
+    public async Task ThenGetServicesByAge(string? ageRangeList, int expectedNumberOfServices)
+    {
+        //Arrange
+        OrganisationDetailsDto organisationDetailsDto = TestDataProvider.GetTestCountyCouncilWithAgeRangeServices();
+        await CreateOrganisationDetails(organisationDetailsDto);
+
+        var command = new GetServicesCommandBuilder()
+            .WithServiceType(ServiceType.FamilyExperience)
+            .WithServiceStatusType(ServiceStatusType.Active)
+            .WithDistrictCode("XTEST")
+            .WithPage(1, organisationDetailsDto.Services.Count)
+            .WithAgeRangeList(ageRangeList)
+            .Build();
+
+        var handler = new GetServicesCommandHandler(Configuration, TestDbContext, Mapper);
+
+        //Act
+        var results = await handler.Handle(command, CancellationToken.None);
+
+        //Assert
+        results.Should().NotBeNull();
+        results.Items.Count.Should().Be(expectedNumberOfServices);
+    }
+
     [Fact]
     public async Task ThenGetServiceThatArePaidFor()
     {
