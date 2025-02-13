@@ -144,22 +144,6 @@ public class WhenUsingOrganisationClientService
     }
 
     [Fact]
-    public void ThenCreateAddAgeToUrl()
-    {
-        //Arrange
-        const string expected = "&givenAge=18";
-        var organisationClientService = new OrganisationClientService(new HttpClient(), _featureManager);
-        var url = new StringBuilder();
-
-        //Act 
-        OrganisationClientService.AddAgeToUrl(url, 18);
-        var result = url.ToString();
-
-        //Assert
-        result.Trim().Should().Be(expected.Trim());
-    }
-
-    [Fact]
     public void ThenAddTextToUrl()
     {
         //Arrange

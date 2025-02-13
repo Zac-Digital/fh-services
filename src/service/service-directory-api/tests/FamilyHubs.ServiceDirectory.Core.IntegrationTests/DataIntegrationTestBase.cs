@@ -31,6 +31,7 @@ public abstract class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     protected OrganisationDetailsDto TestOrganisation { get; }
     protected OrganisationDetailsDto TestOrganisationFreeService { get; }
     protected OrganisationDto TestOrganisationWithoutAnyServices { get; }
+    protected OrganisationDto TestOrganisationWithAgeRangeServices { get; }
 
     private static readonly ILoggerFactory TestLoggerFactory
         = LoggerFactory.Create(builder => { builder.AddConsole(); });
@@ -45,6 +46,7 @@ public abstract class DataIntegrationTestBase : IDisposable, IAsyncDisposable
         TestOrganisation = TestDataProvider.GetTestCountyCouncilDto();
         TestOrganisationFreeService = TestDataProvider.GetTestCountyCouncilWithFreeServiceDto();
         TestOrganisationWithoutAnyServices = TestDataProvider.GetTestCountyCouncilWithoutAnyServices();
+        TestOrganisationWithAgeRangeServices = TestDataProvider.GetTestCountyCouncilWithAgeRangeServices();
 
         var serviceProvider = CreateNewServiceProvider();
 
@@ -69,8 +71,11 @@ public abstract class DataIntegrationTestBase : IDisposable, IAsyncDisposable
     {
         var organisationWithServices = Mapper.Map<Organisation>(organisationDto ?? TestOrganisation);
 
-        organisationWithServices.Locations.Add(organisationWithServices.Services.First().Locations.First());
-
+        if (organisationWithServices.Services[0].Locations.Count > 0)
+        {
+            organisationWithServices.Locations.Add(organisationWithServices.Services[0].Locations[0]); 
+        }
+        
         TestDbContext.Organisations.Add(organisationWithServices);
 
         await TestDbContext.SaveChangesAsync();

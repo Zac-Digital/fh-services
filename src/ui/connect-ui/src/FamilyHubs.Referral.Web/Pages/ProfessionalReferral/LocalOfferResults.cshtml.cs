@@ -17,6 +17,7 @@ using FamilyHubs.SharedKernel.Services.Postcode.Interfaces;
 using FamilyHubs.SharedKernel.Services.Postcode.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FamilyHubs.Referral.Web.Pages.ProfessionalReferral;
 
@@ -46,7 +47,17 @@ public class LocalOfferResultsModel : HeaderPageModel
         new() { Value = "4", Text = "16 to 18 years"},
         new() { Value = "5", Text = "19 to 24 years with SEND"}
     ];
-
+    
+    private static readonly Dictionary<string, int[]> AgeRangeMap = new()
+    {
+        { "0", [0, 2] },
+        { "1", [3, 5] },
+        { "2", [6, 11] },
+        { "3", [12, 15] },
+        { "4", [16, 18] },
+        { "5", [19, 24] }
+    };
+    
     public static List<SelectListItem> DistanceRange { get; } = 
     [
         new() { Value = "1", Text = "1 mile"},
@@ -212,6 +223,27 @@ public class LocalOfferResultsModel : HeaderPageModel
         const int maxPracticalDistanceInMeters = 212892;
         return maxPracticalDistanceInMeters;
     }
+    
+    private List<int[]>? GetAgeRangeList()
+    {
+        if (SelectedAges is null || SelectedAges.Count == 0) return null;
+
+        List<int[]> ageRangeList = [];
+
+        foreach (string selectedAge in SelectedAges)
+        {
+            bool isContained = AgeRangeMap.TryGetValue(selectedAge, out int[]? ageRange);
+            if (!isContained || ageRange is null)
+            {
+                _logger.LogWarning("Selected ages has an unexpected value: {SelectedAge}", SelectedAges);
+                SelectedAges = null;
+                return null;
+            }
+            ageRangeList.Add(ageRange);
+        }
+
+        return ageRangeList;
+    }
 
     private async Task<HttpResponseMessage?> SearchServices()
     {
@@ -227,9 +259,8 @@ public class LocalOfferResultsModel : HeaderPageModel
             DistrictCode = DistrictCode ?? null,
             Latitude = CurrentLatitude,
             Longitude = CurrentLongitude,
-            AllChildrenYoungPeople = null, // TODO: FHB-1307 - Part of Age Range Refactor
-            GivenAge = null,               // TODO: FHB-1307 - Part of Age Range Refactor
             Proximity = ConvertSelectedDistanceToMeters(),
+            AgeRangeList = GetAgeRangeList(),
             TaxonomyIds = SubcategorySelection is not null && SubcategorySelection.Any() ? string.Join(",", SubcategorySelection) : null,
             LanguageCode = SelectedLanguage != null && SelectedLanguage != AllLanguagesValue ? SelectedLanguage : null,
             DaysAvailable = DaysAvailable?.Any() == true ? string.Join(",", DaysAvailable) : null
