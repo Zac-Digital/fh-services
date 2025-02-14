@@ -1,3 +1,21 @@
+####################################################################################################
+#
+# Data sources
+#
+####################################################################################################
+
+# Azure data factory is managed outside of terraform
+data "azurerm_data_factory" "adf_dataf_default" {
+  name = "${var.prefix}-dataf-default"
+  resource_group_name = local.resource_group_name
+}
+
+####################################################################################################
+#
+# Locals
+#
+####################################################################################################
+
 locals {
   # All production alerts go into a separate silver monitor resource group otherwise add to the same resource group
   alert_resource_group_name = var.environment == "Prod" ? "${var.prefix}-silverMonitor" : local.resource_group_name
@@ -56,9 +74,19 @@ locals {
       is_function_app = true
     }
   }
+
+  adf_details = {
+    "fh_adf" = {
+      adf_id = data.azurerm_data_factory.adf_dataf_default.id
+    }
+  }
 }
 
+####################################################################################################
+#
 # Alert action group
+#
+####################################################################################################
 
 resource "azurerm_monitor_action_group" "slack_channel_email_action_group" {
   name = "${var.prefix}-fh-ag-slack-channel-email"
@@ -71,7 +99,11 @@ resource "azurerm_monitor_action_group" "slack_channel_email_action_group" {
   tags = local.tags
 }
 
-# App Insight alerts
+####################################################################################################
+#
+# App insight alerts
+#
+####################################################################################################
 
 resource "azurerm_monitor_metric_alert" "cpu_alert01" {
   name                  = "${var.prefix}-fh-cpu-alert-referral-ui"
@@ -233,7 +265,11 @@ resource "azurerm_monitor_metric_alert" "response-04" {
   tags = local.tags
 }
 
-# App Gateway alerts
+####################################################################################################
+#
+# App gateway alerts
+#
+####################################################################################################
 
 resource "azurerm_monitor_metric_alert" "app-gateway-total-time-alert" {
   for_each = local.gateway_details
@@ -376,7 +412,11 @@ resource "azurerm_monitor_metric_alert" "app-gateway-storage-error-availability-
   tags = local.tags
 }
 
+####################################################################################################
+#
 # App service plan alerts
+#
+####################################################################################################
 
 resource "azurerm_monitor_metric_alert" "app-service-plan-cpu-percentage-alert" {
   for_each = local.service_plan_details
@@ -438,7 +478,11 @@ resource "azurerm_monitor_metric_alert" "app-service-plan-memory-percentage-aler
   tags = local.tags
 }
 
+####################################################################################################
+#
 # App service alerts
+#
+####################################################################################################
 
 resource "azurerm_monitor_metric_alert" "app-service-server-errors-alert" {
   for_each = local.app_service_details
@@ -500,6 +544,33 @@ resource "azurerm_monitor_metric_alert" "app-service-http-response-time-alert" {
     metric_namespace = "Microsoft.Web/sites"
     operator = "GreaterThan"
     threshold = 10
+  }
+  tags = local.tags
+}
+
+####################################################################################################
+#
+# Azure Data Factory alerts
+#
+####################################################################################################
+
+resource "azurerm_monitor_metric_alert" "adf-failed-pipeline-runs-alert" {
+  for_each = local.adf_details
+  name = "${var.prefix}-fh-adf-${each.key}-failed-pipeline-runs-alert"
+  resource_group_name = local.alert_resource_group_name
+  scopes = [each.value.adf_id]
+  window_size = "PT30M"
+  frequency = "PT1M"
+  severity = 1
+  action {
+    action_group_id = azurerm_monitor_action_group.slack_channel_email_action_group.id
+  }
+  criteria {
+    aggregation = "Total"
+    metric_name = "PipelineFailedRuns"
+    metric_namespace = "Microsoft.DataFactory/factories"
+    operator = "GreaterThan"
+    threshold = 0
   }
   tags = local.tags
 }
