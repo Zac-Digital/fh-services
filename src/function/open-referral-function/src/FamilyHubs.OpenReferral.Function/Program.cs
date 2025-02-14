@@ -1,3 +1,4 @@
+using AutoMapper.EquivalencyExpression;
 using FamilyHubs.OpenReferral.Function.ClientServices;
 using FamilyHubs.OpenReferral.Function.Repository;
 using FamilyHubs.OpenReferral.Function.Services;
@@ -24,7 +25,7 @@ IHost host = new HostBuilder()
     {
         IConfiguration config = services.BuildServiceProvider().GetService<IConfiguration>()!;
 
-        services.AddAutoMapper(typeof(Program).Assembly);
+        services.AddAutoMapper(cfg => { cfg.AddCollectionMappers(); }, typeof(Program).Assembly);
 
         services.AddApplicationInsightsTelemetryWorkerService(config);
         services.ConfigureFunctionsApplicationInsights();

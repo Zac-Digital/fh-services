@@ -16,6 +16,12 @@ public class FunctionDbContext(DbContextOptions<FunctionDbContext> options) : Db
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         OpenReferralDbContextExtension.OnModelCreating(modelBuilder);
+        
+        // Configure cascade delete for all relationships
+        foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+        {
+            relationship.DeleteBehavior = DeleteBehavior.Cascade;
+        }
 
         base.OnModelCreating(modelBuilder);
     }

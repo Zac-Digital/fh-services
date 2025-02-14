@@ -1,5 +1,6 @@
 using System.Text.Json;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using FamilyHubs.OpenReferral.Function.Mappers;
 using FamilyHubs.OpenReferral.Function.Models;
 using FamilyHubs.OpenReferral.Function.Repository;
@@ -21,7 +22,12 @@ public class DedsServiceTests
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
         _context = new FunctionDbContext(options);
-        var config = new MapperConfiguration(cfg => cfg.AddProfile<ServiceDtoToServiceMapper>());
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddCollectionMappers();
+            cfg.CreateMap<ContactDto, Contact>().EqualityComparison((dto, o) => dto.OrId == o.OrId);
+            cfg.AddProfile<ServiceDtoToServiceMapper>();
+        });
         var mapper = config.CreateMapper();
         
         var logger = Substitute.For<ILogger<Function.Services.DedsService>>();
@@ -60,7 +66,7 @@ public class DedsServiceTests
     public async Task ShouldAddService_FromInternation3Dto()
     {
         // Arrange
-        var testFileData = await GetInternational3TestServiceFromFile();
+        var testFileData = await GetServiceDtoFromFile("TestData/Service_Clean.json");
         
         // Act
         var result = await _dedsService.UpsertService(testFileData, 1);
@@ -78,8 +84,8 @@ public class DedsServiceTests
     public async Task ShouldNotCreateService_IfItAlreadyExistsWithNoChanges()
     {
         // Arrange
-        var testFileDataOne = await GetInternational3TestServiceFromFile();
-        var testFileDataTwo = await GetInternational3TestServiceFromFile();
+        var testFileDataOne = await GetServiceDtoFromFile("TestData/Service_Clean.json");
+        var testFileDataTwo = await GetServiceDtoFromFile("TestData/Service_Clean.json");
         
         // Act
         var resultOne = await _dedsService.UpsertService(testFileDataOne, 1);
@@ -98,8 +104,8 @@ public class DedsServiceTests
     public async Task ShouldUpdateFromInternational3Dto_WhenThereAreChanges()
     {
         // Arrange
-        var testFileDataOne = await GetInternational3TestServiceFromFile();
-        var serviceUpdateTwo = await GetInternational3TestServiceFromFile(true);
+        var testFileDataOne = await GetServiceDtoFromFile("TestData/Service_Clean.json");
+        var serviceUpdateTwo = await GetServiceDtoFromFile("TestData/Service_Clean_Modified.json");
         
         // Act
         var resultOne = await _dedsService.UpsertService(testFileDataOne, 1);
@@ -122,6 +128,34 @@ public class DedsServiceTests
         
         // Asserts that a new location was added from the modified file
         Assert.Contains(new Guid("d40846b7-1cb1-46eb-8d02-87ac0965bdb6") , orgLocations.Select(x => x.OrId));
+    }
+    
+    [Fact]
+    public async Task ShouldRemoveCollectionItem_WhenItNoLongerExistsInDto()
+    {
+        // Arrange
+        var testFileDataOne = await GetServiceDtoFromFile("TestData/Service_Clean.json");
+        var serviceUpdateTwo = await GetServiceDtoFromFile("TestData/Service_Clean_One_Less_Contact.json");
+        
+        // Act
+        await _dedsService.UpsertService(testFileDataOne, 1);
+        var getService = await _dedsService.GetServiceByOpenReferralId(testFileDataOne.OrId);
+        var serviceLocations = getService!.ServiceAtLocations;
+        var serviceContacts = serviceLocations.SelectMany(x => x.Contacts);
+        Assert.Single(serviceContacts);
+        
+        // Act
+        await _dedsService.UpsertService(serviceUpdateTwo, 2);
+        var contacts = await _context.ContactDbSet.ToArrayAsync();
+        
+        
+        // Assert
+        getService = await _dedsService.GetServiceByOpenReferralId(testFileDataOne.OrId);
+        serviceLocations = getService!.ServiceAtLocations;
+        serviceContacts = serviceLocations.SelectMany(x => x.Contacts);
+        Assert.Empty(serviceContacts);
+        Assert.Single(getService.Contacts);
+        
     }
 
     [Fact]
@@ -146,20 +180,9 @@ public class DedsServiceTests
 
     }
     
-    private static async Task<ServiceDto> GetInternational3TestServiceFromFile(bool getModifiedVersion = false)
+    private static async Task<ServiceDto> GetServiceDtoFromFile(string filePath)
     {
-        // Read from Json file and deserialize to Service object
-        string json;
-        if (getModifiedVersion)
-        {
-            // Contains Service Name and Organisation Name 'changed'
-            // Contains a new location
-            json = await File.ReadAllTextAsync("TestData/Service_Clean_Modified.json");
-        }
-        else
-        {
-            json = await File.ReadAllTextAsync("TestData/Service_Clean.json");
-        }
+        var json = await File.ReadAllTextAsync(filePath);
         return JsonSerializer.Deserialize<ServiceDto>(json)!;
     }
 }
