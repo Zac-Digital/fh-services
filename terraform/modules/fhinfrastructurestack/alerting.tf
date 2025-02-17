@@ -42,17 +42,11 @@ locals {
     "fh_referral_api" = {
       app_service_id = azurerm_windows_web_app.fh_referral_api.id
     },
-    "open_referral_mock_api_web_app" = {
-      app_service_id = azurerm_windows_web_app.open_referral_mock_api_web_app.id
-    },
     "fh_notification_api" = {
       app_service_id = azurerm_windows_web_app.fh_notification_api.id
     },
     "fh_idam_api" = {
       app_service_id = azurerm_windows_web_app.fh_idam_api.id
-    },
-    "fh_idam_maintenance_ui" = {
-      app_service_id = azurerm_windows_web_app.fh_idam_maintenance_ui.id
     },
     "fh_referral_ui" = {
       app_service_id = azurerm_windows_web_app.fh_referral_ui.id
