@@ -219,3 +219,9 @@ variable "service_principals" {
   })
   description = "Group and enterprise object Ids for service principals."
 }
+
+variable "data_factory_exists" {
+  type = bool
+  description = "Whether the data factory exists or not for the environment. It's optional for test environments."
+  default = true
+}

@@ -37,4 +37,5 @@ module "fhinfrastructurestack" {
   find_domain = var.find_domain
   log_retention_in_days = var.log_retention_in_days
   pvt_endp_report_stg_api_ip_address = var.pvt_endp_report_stg_api_ip_address
+  data_factory_exists = var.data_factory_exists
 }

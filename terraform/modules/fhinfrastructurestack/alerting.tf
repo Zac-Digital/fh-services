@@ -4,8 +4,11 @@
 #
 ####################################################################################################
 
-# Azure data factory is managed outside of terraform
+# Azure data factory is managed outside of terraform and is an OPTIONAL environment component in
+# test environments
+
 data "azurerm_data_factory" "adf_dataf_default" {
+  count = var.data_factory_exists ? 1 : 0
   name = "${var.prefix}-dataf-default"
   resource_group_name = local.resource_group_name
 }
@@ -69,11 +72,11 @@ locals {
     }
   }
 
-  adf_details = {
+  adf_details = var.data_factory_exists ? {
     "fh_adf" = {
-      adf_id = data.azurerm_data_factory.adf_dataf_default.id
+      adf_id = data.azurerm_data_factory.adf_dataf_default[0].id
     }
-  }
+  } : {}
 }
 
 ####################################################################################################
