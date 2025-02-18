@@ -39,3 +39,4 @@ private_endpoint_ip_address = {
 }
 
 pvt_endp_report_stg_api_ip_address = "10.0.3.109"
+data_factory_exists = false
