@@ -219,3 +219,9 @@ variable "slack_support_channel_email" {
   type = string
   description = "The Slack channel email to send alerts to."
 }
+
+variable "data_factory_exists" {
+  type = bool
+  description = "Whether the data factory exists or not for the environment. It's optional for test environments."
+  default = true
+}
