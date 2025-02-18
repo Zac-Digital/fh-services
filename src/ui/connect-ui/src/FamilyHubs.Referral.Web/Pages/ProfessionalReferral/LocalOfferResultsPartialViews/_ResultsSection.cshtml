@@ -8,7 +8,7 @@
         <li tab-index="0">
             <h2 class="govuk-heading-s govuk-!-margin-bottom-3">
                 <a class="govuk-link" asp-page="/ProfessionalReferral/LocalOfferDetail" asp-route-serviceid="@item.Id"
-                   data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a>@item.DistanceText
+                   data-testid=@item.Name.ToLower().Replace(" ", "")>@item.Name</a><span class="govuk-!-font-weight-regular">@item.DistanceText</span>
             </h2>
             @if (!string.IsNullOrWhiteSpace(item.OrganisationName))
             {
