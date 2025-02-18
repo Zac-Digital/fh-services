@@ -44,7 +44,7 @@
 }
 
 /* Rotate the arrow upwards when the filter is expanded */
-.custom-filter .govuk-details[open] .govuk-details__summary::after {
+.custom-filter[open] .govuk-details__summary::after {
   transform: translateY(-50%) rotate(-135deg) !important; /* Rotate to upwards when expanded */
 }
 
