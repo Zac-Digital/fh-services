@@ -26,6 +26,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
+          
+      - name: Install & Configure SpatiaLite
+        if: ${{ inputs.working_directory == 'service/service-directory-api' || inputs.working_directory == 'service/referral-api' }}
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
+          sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
 
       - name: Install Stryker Mutator
         shell: bash
@@ -36,14 +44,12 @@ jobs:
         run: dotnet stryker --reporter "cleartext" --reporter "html" --reporter "markdown" -O StrykerOutput --concurrency `nproc`
 
       - name: Generate Stryker Report
-        if: always()
         shell: bash
         run: |
           echo '### ${{ inputs.job_name }} 🚀' >> $GITHUB_STEP_SUMMARY
           cat StrykerOutput/reports/mutation-report.md >> $GITHUB_STEP_SUMMARY
 
       - name: Upload HTML Report
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.job_name }}
