@@ -27,6 +27,18 @@ jobs:
         with:
           dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
           
+      - name: Install Stryker Mutator
+        shell: bash
+        run: dotnet tool install --global dotnet-stryker
+          
+#      - name: NuGet Package Cache
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/.nuget/packages
+#          key: ${{ runner.os }}-NuGet-${{ inputs.job_name }}-${{ hashFiles('**/*.csproj') }}
+#          restore-keys: |
+#            ${{ runner.os }}-NuGet-${{ inputs.job_name }}-${{ hashFiles('**/*.csproj') }}
+          
       - name: Install & Configure SpatiaLite
         if: ${{ inputs.working_directory == 'service/service-directory-api' || inputs.working_directory == 'service/referral-api' }}
         shell: bash
@@ -35,13 +47,9 @@ jobs:
           sudo apt-get install libspatialite-dev libsqlite3-mod-spatialite -y
           sudo ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"
 
-      - name: Install Stryker Mutator
-        shell: bash
-        run: dotnet tool install --global dotnet-stryker
-
       - name: Run Stryker Mutator
         shell: bash
-        run: dotnet stryker --reporter "cleartext" --reporter "html" --reporter "markdown" -O StrykerOutput --concurrency `nproc`
+        run: dotnet stryker --reporter "html" --reporter "markdown" -O StrykerOutput --concurrency `nproc`
 
       - name: Generate Stryker Report
         shell: bash
