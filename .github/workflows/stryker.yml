@@ -1,7 +1,7 @@
 name: DotNet Stryker (Full Report)
 on:
-  push: # TODO: Temporary while Developing
-    branches: # TODO: Temporary while Developing
+  push:           # TODO: Temporary while Developing
+    branches:     # TODO: Temporary while Developing
       - 'FHB-875' # TODO: Temporary while Developing
   # TODO: Schedule CRON Job
   pull_request:
@@ -20,136 +20,50 @@ jobs:
       matrix:
         working_directory:
           [
-            service/notification-api/src/FamilyHubs.Notification.Api,
-            service/notification-api/src/FamilyHubs.Notification.Client,
-            service/notification-api/src/FamilyHubs.Notification.Core,
-            service/notification-api/src/FamilyHubs.Notification.Data,
-            service/notification-api/shared/FamilyHubs.Notification.Api.Contracts,
-
-            service/idam-api/src/FamilyHubs.Idam.Api,
-            service/idam-api/src/FamilyHubs.Idam.Core,
-            service/idam-api/src/FamilyHubs.Idam.Data,
-
-            service/service-directory-api/src/FamilyHubs.ServiceDirectory.Api,
-            service/service-directory-api/src/FamilyHubs.ServiceDirectory.Core,
-            service/service-directory-api/src/FamilyHubs.ServiceDirectory.Data,
-
-            service/referral-api/src/FamilyHubs.Referral.Api,
-            service/referral-api/src/FamilyHubs.Referral.Core,
-            service/referral-api/src/FamilyHubs.Referral.Data,
-
-            service/report-api/src/FamilyHubs.Report.Api,
-            service/report-api/src/FamilyHubs.Report.Core,
-            service/report-api/src/FamilyHubs.Report.Data,
-
-            function/open-referral-function/src/FamilyHubs.OpenReferral.Function,
-
-            ui/connect-ui/src/FamilyHubs.Referral.Core,
-            ui/connect-ui/src/FamilyHubs.Referral.Infrastructure,
-            ui/connect-ui/src/FamilyHubs.Referral.Web,
-
-            ui/find-ui/src/FamilyHubs.ServiceDirectory.Core,
-            ui/find-ui/src/FamilyHubs.ServiceDirectory.Infrastructure,
-            ui/find-ui/src/FamilyHubs.ServiceDirectory.Web,
-
-            ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Core,
-            ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Data,
-            ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.UI,
-
-            ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Core,
-            ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Web,
-
-            shared/referral-shared/src/FamilyHubs.ReferralService.Shared,
-            
-            shared/service-directory-shared/src/FamilyHubs.ServiceDirectory.Shared,
-
-            shared/shared-kernel/src/EntityFrameworkCore.DataEncryption,
-            shared/shared-kernel/src/fh-shared-kernel.shared-kernel,
-
-            shared/web-components/src/FamilyHubs.SharedKernel.Razor
+            service/notification-api,
+            service/idam-api,
+            service/service-directory-api,
+            service/referral-api,
+            service/report-api,
+            function/open-referral-function,
+            ui/connect-ui,
+            ui/find-ui,
+            ui/idam-maintenance-ui,
+            ui/manage-ui,
+            shared/referral-shared,
+            shared/service-directory-shared,
+            shared/shared-kernel,
+            shared/web-components
           ]
         include:
-          - working_directory: service/notification-api/src/FamilyHubs.Notification.Api
-            job_name: "Notification - API"
-          - working_directory: service/notification-api/src/FamilyHubs.Notification.Client
-            job_name: "Notification - Client"
-          - working_directory: service/notification-api/src/FamilyHubs.Notification.Core
-            job_name: "Notification - Core"
-          - working_directory: service/notification-api/src/FamilyHubs.Notification.Data
-            job_name: "Notification - Data"
-          - working_directory: service/notification-api/src/FamilyHubs.Notification.Api.Contracts
-            job_name: "Notification - API - Contracts"
-
-          - working_directory: service/idam-api/src/FamilyHubs.Idam.Api
-            job_name: "IdAM - API"
-          - working_directory: service/idam-api/src/FamilyHubs.Idam.Core
-            job_name: "IdAM - Core"
-          - working_directory: service/idam-api/src/FamilyHubs.Idam.Data
-            job_name: "IdAM - Data"
-
-          - working_directory: service/service-directory-api/src/FamilyHubs.ServiceDirectory.Api
-            job_name: "Service Directory - API"
-          - working_directory: service/service-directory-api/src/FamilyHubs.ServiceDirectory.Core
-            job_name: "Service Directory - Core"
-          - working_directory: service/service-directory-api/src/FamilyHubs.ServiceDirectory.Data
-            job_name: "Service Directory - Data"
-
-          - working_directory: service/referral-api/src/FamilyHubs.Referral.Api
-            job_name: "Referral - API"
-          - working_directory: service/referral-api/src/FamilyHubs.Referral.Core
-            job_name: "Referral - Core"
-          - working_directory: service/referral-api/src/FamilyHubs.Referral.Data
-            job_name: "Referral - Data"
-
-          - working_directory: service/report-api/src/FamilyHubs.Report.Api
-            job_name: "Report - API"
-          - working_directory: service/report-api/src/FamilyHubs.Report.Core
-            job_name: "Report - Core"
-          - working_directory: service/report-api/src/FamilyHubs.Report.Data
-            job_name: "Report - Data"
-            
-          - working_directory: function/open-referral-function/src/FamilyHubs.OpenReferral.Function
-            job_name: "Open Referral - Function"
-
-          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Core
-            job_name: "Connect - Core"
-          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Infrastructure
-            job_name: "Connect - Infrastructure"
-          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Web
-            job_name: "Connect - Web"
-
-          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Core
-            job_name: "Find - Core"
-          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Infrastructure
-            job_name: "Find - Infrastructure"
-          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Web
-            job_name: "Find - Web"
-
-          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Core
-            job_name: "Maintenance UI - Core"
-          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Data
-            job_name: "Maintenance UI - Data"
-          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.UI
-            job_name: "Maintenance UI - UI"
-
-          - working_directory: ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Core
-            job_name: "Manage - Core"
-          - working_directory: ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Web
-            job_name: "Manage - Web"
-
-          - working_directory: shared/referral-shared/src/FamilyHubs.ReferralService.Shared
-            job_name: "Referral - Shared"
-
-          - working_directory: shared/service-directory-shared/src/FamilyHubs.ServiceDirectory.Shared
-            job_name: "Service Directory - Shared"
-
-          - working_directory: shared/shared-kernel/src/EntityFrameworkCore.DataEncryption
-            job_name: "Shared Kernel - Data Encryption"
-          - working_directory: shared/shared-kernel/src/fh-shared-kernel.shared-kernel
-            job_name: "Shared Kernel - Shared"
-            
-          - working_directory: shared/web-components/src/FamilyHubs.SharedKernel.Razor
-            job_name: "Web Components - Shared"
+          - working_directory: service/notification-api
+            job_name: "Notification API"
+          - working_directory: service/idam-api
+            job_name: "IdAM API"
+          - working_directory: service/service-directory-api
+            job_name: "Service Directory API"
+          - working_directory: service/referral-api
+            job_name: "Referral API"
+          - working_directory: service/report-api
+            job_name: "Report API"
+          - working_directory: function/open-referral-function
+            job_name: "Open Referral Function"
+          - working_directory: ui/connect-ui
+            job_name: "Connect UI"
+          - working_directory: ui/find-ui
+            job_name: "Find UI"
+          - working_directory: ui/idam-maintenance-ui
+            job_name: "IDAM Maintenance UI"
+          - working_directory: ui/manage-ui
+            job_name: "Manage UI"
+          - working_directory: shared/referral-shared
+            job_name: "Referral Shared"
+          - working_directory: shared/service-directory-shared
+            job_name: "Service Directory Shared"
+          - working_directory: shared/shared-kernel
+            job_name: "Kernel Shared"
+          - working_directory: shared/web-components
+            job_name: "Web Components Shared"
     uses: ./.github/workflows/stryker-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}
