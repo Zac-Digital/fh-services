@@ -40,7 +40,6 @@
   border-width: 0 2px 2px 0 !important; /* Creates the diagonal line */
   padding: 5px !important; /* Size of the arrow */
   display: inline-block !important; /* Ensure proper rendering */
-  transition: transform 0.3s ease !important; /* Smooth transition for rotation */
 }
 
 /* Rotate the arrow upwards when the filter is expanded */
