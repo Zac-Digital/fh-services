@@ -40,7 +40,6 @@ jobs:
 #            ${{ runner.os }}-NuGet-${{ inputs.job_name }}-${{ hashFiles('**/*.csproj') }}
           
       - name: Install & Configure SpatiaLite
-        if: ${{ startsWith('service/service-directory-api', inputs.working_directory) || startsWith('service/referral-api', inputs.working_directory)}}
         shell: bash
         run: |
           sudo apt-get update
