@@ -77,7 +77,7 @@ jobs:
             job_name: "Notification - Core"
           - working_directory: service/notification-api/src/FamilyHubs.Notification.Data
             job_name: "Notification - Data"
-          - working_directory: service/notification-api/src/FamilyHubs.Notification.Api.Contracts
+          - working_directory: service/notification-api/shared/FamilyHubs.Notification.Api.Contracts
             job_name: "Notification - API - Contracts"
             
           - working_directory: service/idam-api/src/FamilyHubs.Idam.Api
