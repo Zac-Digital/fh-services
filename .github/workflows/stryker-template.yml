@@ -53,5 +53,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.job_name }}
-          path: 'StrykerOutput/reports/mutation-report.html'
+          path: ${{ github.workspace }}/src/${{ inputs.working_directory }}/StrykerOutput/reports/mutation-report.html
           compression-level: '9'
