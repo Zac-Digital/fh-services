@@ -111,44 +111,44 @@ jobs:
           - working_directory: function/open-referral-function/src/FamilyHubs.OpenReferral.Function
             job_name: "Open Referral - Function"
             
-          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Core,
+          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Core
             job_name: "Connect - Core"
-          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Infrastructure,
+          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Infrastructure
             job_name: "Connect - Infrastructure"
-          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Web,
+          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Web
             job_name: "Connect - Web"
             
-          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Core,
+          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Core
             job_name: "Find - Core"
-          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Infrastructure,
+          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Infrastructure
             job_name: "Find - Infrastructure"
-          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Web,
+          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Web
             job_name: "Find - Web"
             
-          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Core,
+          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Core
             job_name: "Maintenance UI - Core"
-          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Data,
+          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Data
             job_name: "Maintenance UI - Data"
-          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.UI,
+          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.UI
             job_name: "Maintenance UI - UI"
             
-          - working_directory: ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Core,
+          - working_directory: ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Core
             job_name: "Manage - Core"
-          - working_directory: ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Web,
+          - working_directory: ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Web
             job_name: "Manage - Web"
             
-          - working_directory: shared/referral-shared/src/FamilyHubs.ReferralService.Shared,
+          - working_directory: shared/referral-shared/src/FamilyHubs.ReferralService.Shared
             job_name: "Referral - Shared"
             
-          - working_directory: shared/service-directory-shared/src/FamilyHubs.ServiceDirectory.Shared,
+          - working_directory: shared/service-directory-shared/src/FamilyHubs.ServiceDirectory.Shared
             job_name: "Service Directory - Shared"
             
-          - working_directory: shared/shared-kernel/src/EntityFrameworkCore.DataEncryption,
+          - working_directory: shared/shared-kernel/src/EntityFrameworkCore.DataEncryption
             job_name: "Shared Kernel - Data Encryption"
-          - working_directory: shared/shared-kernel/src/fh-shared-kernel.shared-kernel,
+          - working_directory: shared/shared-kernel/src/fh-shared-kernel.shared-kernel
             job_name: "Shared Kernel - Shared"
             
-          - working_directory: shared/web-components/src/FamilyHubs.SharedKernel.Razor,
+          - working_directory: shared/web-components/src/FamilyHubs.SharedKernel.Razor
             job_name: "Web Components - Shared"
     uses: ./.github/workflows/stryker-template.yml
     with:
