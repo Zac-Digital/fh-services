@@ -1,7 +1,7 @@
 name: DotNet Stryker (Full Report)
 on:
-  push:           # TODO: Temporary while Developing
-    branches:     # TODO: Temporary while Developing
+  push: # TODO: Temporary while Developing
+    branches: # TODO: Temporary while Developing
       - 'FHB-875' # TODO: Temporary while Developing
   # TODO: Schedule CRON Job
   pull_request:
@@ -15,117 +15,141 @@ concurrency:
 jobs:
   stryker-matrix:
     name: Stryker - ${{ matrix.job_name }}
-    strategy: 
+    strategy:
       fail-fast: false
       matrix:
         working_directory:
           [
-            service/notification-api/tests/FamilyHubs.Notification.Api.Contracts.Tests,
-            service/notification-api/tests/FamilyHubs.Notification.FunctionalTests,
-            service/notification-api/tests/FamilyHubs.Notification.IntegrationTests,
-            service/notification-api/tests/FamilyHubs.Notification.UnitTests,
+            service/notification-api/src/FamilyHubs.Notification.Api,
+            service/notification-api/src/FamilyHubs.Notification.Client,
+            service/notification-api/src/FamilyHubs.Notification.Core,
+            service/notification-api/src/FamilyHubs.Notification.Data,
+            service/notification-api/shared/FamilyHubs.Notification.Api.Contracts,
+
+            service/idam-api/src/FamilyHubs.Idam.Api,
+            service/idam-api/src/FamilyHubs.Idam.Core,
+            service/idam-api/src/FamilyHubs.Idam.Data,
+
+            service/service-directory-api/src/FamilyHubs.ServiceDirectory.Api,
+            service/service-directory-api/src/FamilyHubs.ServiceDirectory.Core,
+            service/service-directory-api/src/FamilyHubs.ServiceDirectory.Data,
+
+            service/referral-api/src/FamilyHubs.Referral.Api,
+            service/referral-api/src/FamilyHubs.Referral.Core,
+            service/referral-api/src/FamilyHubs.Referral.Data,
+
+            service/report-api/src/FamilyHubs.Report.Api,
+            service/report-api/src/FamilyHubs.Report.Core,
+            service/report-api/src/FamilyHubs.Report.Data,
+
+            function/open-referral-function/src/FamilyHubs.OpenReferral.Function,
+
+            ui/connect-ui/src/FamilyHubs.Referral.Core,
+            ui/connect-ui/src/FamilyHubs.Referral.Infrastructure,
+            ui/connect-ui/src/FamilyHubs.Referral.Web,
+
+            ui/find-ui/src/FamilyHubs.ServiceDirectory.Core,
+            ui/find-ui/src/FamilyHubs.ServiceDirectory.Infrastructure,
+            ui/find-ui/src/FamilyHubs.ServiceDirectory.Web,
+
+            ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Core,
+            ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Data,
+            ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.UI,
+
+            ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Core,
+            ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Web,
+
+            shared/referral-shared/src/FamilyHubs.ReferralService.Shared,
             
-            service/idam-api/tests/FamilyHubs.Idam.Api.FunctionalTests,
-            service/idam-api/tests/FamilyHubs.Idam.Api.UnitTests,
-            service/idam-api/tests/FamilyHubs.Idam.Core.IntegrationTests,
-            
-            service/service-directory-api/tests/FamilyHubs.ServiceDirectory.Api.FunctionalTests,
-            service/service-directory-api/tests/FamilyHubs.ServiceDirectory.Core.IntegrationTests,
-            service/service-directory-api/tests/FamilyHubs.ServiceDirectoryApi.UnitTests,
-            
-            service/referral-api/tests/FamilyHubs.ReferralApi.FunctionalTests,
-            service/referral-api/tests/FamilyHubs.ReferralApi.IntegrationTests,
-            service/referral-api/tests/FamilyHubs.ReferralApi.UnitTests,
-            
-            service/report-api/tests/FamilyHubs.ReportApi.FunctionalTests,
-            service/report-api/tests/FamilyHubs.ReportApi.UnitTests,
-            
-            function/open-referral-function/tests/FamilyHubs.OpenReferral.UnitTests,
-            
-            ui/connect-ui/tests/FamilyHubs.ReferralUi.UnitTests,
-            
-            ui/find-ui/tests/FamilyHubs.ServiceDirectory.UnitTests,
-            
-            ui/idam-maintenance-ui/tests/FamilyHubs.Idams.Maintenance.UnitTests,
-            
-            ui/manage-ui/Test/FamilyHubs.ServiceDirectory.Admin.Web.IntegrationTests,
-            ui/manage-ui/Test/FamilyHubs.ServiceDirectory.Admin.Web.UnitTests,
-            
-            shared/referral-shared/tests/FamilyHubs.ReferralService.Shared.Tests,
-            
-            shared/service-directory-shared/tests/FamilyHubs.ServiceDirectory.UnitTests,
-            
-            shared/shared-kernel/tests/EntityFrameworkCore.DataEncryption.Test,
-            shared/shared-kernel/tests/fh-shared-kernel.unit-tests,
-            
-            shared/web-components/tests/FamilyHubs.SharedKernel.Razor.UnitTests
+            shared/service-directory-shared/src/FamilyHubs.ServiceDirectory.Shared,
+
+            shared/shared-kernel/src/EntityFrameworkCore.DataEncryption,
+            shared/shared-kernel/src/fh-shared-kernel.shared-kernel,
+
+            shared/web-components/src/FamilyHubs.SharedKernel.Razor
           ]
         include:
-          - working_directory: service/notification-api/tests/FamilyHubs.Notification.Api.Contracts.Tests
-            job_name: "Notification API - Contracts - Unit Tests"
-          - working_directory: service/notification-api/tests/FamilyHubs.Notification.FunctionalTests
-            job_name: "Notification API - Functional Tests"
-          - working_directory: service/notification-api/tests/FamilyHubs.Notification.IntegrationTests
-            job_name: "Notification API - Integration Tests"
-          - working_directory: service/notification-api/tests/FamilyHubs.Notification.UnitTests
-            job_name: "Notification API - Unit Tests"
+          - working_directory: service/notification-api/src/FamilyHubs.Notification.Api
+            job_name: "Notification - API"
+          - working_directory: service/notification-api/src/FamilyHubs.Notification.Client
+            job_name: "Notification - Client"
+          - working_directory: service/notification-api/src/FamilyHubs.Notification.Core
+            job_name: "Notification - Core"
+          - working_directory: service/notification-api/src/FamilyHubs.Notification.Data
+            job_name: "Notification - Data"
+          - working_directory: service/notification-api/src/FamilyHubs.Notification.Api.Contracts
+            job_name: "Notification - API - Contracts"
+
+          - working_directory: service/idam-api/src/FamilyHubs.Idam.Api
+            job_name: "IdAM - API"
+          - working_directory: service/idam-api/src/FamilyHubs.Idam.Core
+            job_name: "IdAM - Core"
+          - working_directory: service/idam-api/src/FamilyHubs.Idam.Data
+            job_name: "IdAM - Data"
+
+          - working_directory: service/service-directory-api/src/FamilyHubs.ServiceDirectory.Api
+            job_name: "Service Directory - API"
+          - working_directory: service/service-directory-api/src/FamilyHubs.ServiceDirectory.Core
+            job_name: "Service Directory - Core"
+          - working_directory: service/service-directory-api/src/FamilyHubs.ServiceDirectory.Data
+            job_name: "Service Directory - Data"
+
+          - working_directory: service/referral-api/src/FamilyHubs.Referral.Api
+            job_name: "Referral - API"
+          - working_directory: service/referral-api/src/FamilyHubs.Referral.Core
+            job_name: "Referral - Core"
+          - working_directory: service/referral-api/src/FamilyHubs.Referral.Data
+            job_name: "Referral - Data"
+
+          - working_directory: service/report-api/src/FamilyHubs.Report.Api
+            job_name: "Report - API"
+          - working_directory: service/report-api/src/FamilyHubs.Report.Core
+            job_name: "Report - Core"
+          - working_directory: service/report-api/src/FamilyHubs.Report.Data
+            job_name: "Report - Data"
             
-          - working_directory: service/idam-api/tests/FamilyHubs.Idam.Api.FunctionalTests
-            job_name: "IdAM API - Functional Tests"
-          - working_directory: service/idam-api/tests/FamilyHubs.Idam.Api.UnitTests
-            job_name: "IdAM API - Unit Tests"
-          - working_directory: service/idam-api/tests/FamilyHubs.Idam.Core.IntegrationTests
-            job_name: "IdAM API - Integration Tests"
+          - working_directory: function/open-referral-function/src/FamilyHubs.OpenReferral.Function
+            job_name: "Open Referral - Function"
+
+          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Core
+            job_name: "Connect - Core"
+          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Infrastructure
+            job_name: "Connect - Infrastructure"
+          - working_directory: ui/connect-ui/src/FamilyHubs.Referral.Web
+            job_name: "Connect - Web"
+
+          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Core
+            job_name: "Find - Core"
+          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Infrastructure
+            job_name: "Find - Infrastructure"
+          - working_directory: ui/find-ui/src/FamilyHubs.ServiceDirectory.Web
+            job_name: "Find - Web"
+
+          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Core
+            job_name: "Maintenance UI - Core"
+          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.Data
+            job_name: "Maintenance UI - Data"
+          - working_directory: ui/idam-maintenance-ui/src/FamilyHubs.Idams.Maintenance.UI
+            job_name: "Maintenance UI - UI"
+
+          - working_directory: ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Core
+            job_name: "Manage - Core"
+          - working_directory: ui/manage-ui/src/FamilyHubs.ServiceDirectory.Admin.Web
+            job_name: "Manage - Web"
+
+          - working_directory: shared/referral-shared/src/FamilyHubs.ReferralService.Shared
+            job_name: "Referral - Shared"
+
+          - working_directory: shared/service-directory-shared/src/FamilyHubs.ServiceDirectory.Shared
+            job_name: "Service Directory - Shared"
+
+          - working_directory: shared/shared-kernel/src/EntityFrameworkCore.DataEncryption
+            job_name: "Shared Kernel - Data Encryption"
+          - working_directory: shared/shared-kernel/src/fh-shared-kernel.shared-kernel
+            job_name: "Shared Kernel - Shared"
             
-          - working_directory: service/service-directory-api/tests/FamilyHubs.ServiceDirectory.Api.FunctionalTests
-            job_name: "Service Directory API - Functional Tests"
-          - working_directory: service/service-directory-api/tests/FamilyHubs.ServiceDirectory.Core.IntegrationTests
-            job_name: "Service Directory API - Integration Tests"
-          - working_directory: service/service-directory-api/tests/FamilyHubs.ServiceDirectoryApi.UnitTests
-            job_name: "Service Directory API - Unit Tests"
-            
-          - working_directory: service/referral-api/tests/FamilyHubs.ReferralApi.FunctionalTests
-            job_name: "Referral API - Functional Tests"
-          - working_directory: service/referral-api/tests/FamilyHubs.ReferralApi.IntegrationTests
-            job_name: "Referral API - Integration Tests"
-          - working_directory: service/referral-api/tests/FamilyHubs.ReferralApi.UnitTests
-            job_name: "Referral API - Unit Tests"
-            
-          - working_directory: service/report-api/tests/FamilyHubs.ReportApi.FunctionalTests
-            job_name: "Report API - Functional Tests"
-          - working_directory: service/report-api/tests/FamilyHubs.ReportApi.UnitTests
-            job_name: "Report API - Unit Tests"
-            
-          - working_directory: function/open-referral-function/tests/FamilyHubs.OpenReferral.UnitTests
-            job_name: "Open Referral Function - Unit Tests"
-            
-          - working_directory: ui/connect-ui/tests/FamilyHubs.ReferralUi.UnitTests
-            job_name: "Connect UI - Unit Tests"
-            
-          - working_directory: ui/find-ui/tests/FamilyHubs.ServiceDirectory.UnitTests
-            job_name: "Find UI - Unit Tests"
-            
-          - working_directory: ui/idam-maintenance-ui/tests/FamilyHubs.Idams.Maintenance.UnitTests
-            job_name: "IdAM Maintenance UI - Unit Tests"
-            
-          - working_directory: ui/manage-ui/Test/FamilyHubs.ServiceDirectory.Admin.Web.IntegrationTests
-            job_name: "Manage UI - Integration Tests"
-          - working_directory: ui/manage-ui/Test/FamilyHubs.ServiceDirectory.Admin.Web.UnitTests
-            job_name: "Manage UI - Unit Tests"
-            
-          - working_directory: shared/referral-shared/tests/FamilyHubs.ReferralService.Shared.Tests,
-            job_name: "Referral Shared - Unit Tests"
-            
-          - working_directory: shared/service-directory-shared/tests/FamilyHubs.ServiceDirectory.UnitTests
-            job_name: "Service Directory Shared - Unit Tests"
-            
-          - working_directory: shared/shared-kernel/tests/EntityFrameworkCore.DataEncryption.Test
-            job_name: "Shared Kernel - Data Encryption - Unit Tests"
-          - working_directory: shared/shared-kernel/tests/fh-shared-kernel.unit-tests
-            job_name: "Shared Kernel - Unit Tests"
-            
-          - working_directory: shared/web-components/tests/FamilyHubs.SharedKernel.Razor.UnitTests
-            job_name: "Web Components Shared - Unit Tests"
+          - working_directory: shared/web-components/src/FamilyHubs.SharedKernel.Razor
+            job_name: "Web Components - Shared"
     uses: ./.github/workflows/stryker-template.yml
     with:
       working_directory: ${{ matrix.working_directory }}
