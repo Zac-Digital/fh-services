@@ -66,10 +66,6 @@ locals {
     "fh_sd_ui" = {
       app_service_id = azurerm_windows_web_app.fh_sd_ui.id
     },
-    "open_referral_function_app" = {
-      app_service_id = azurerm_windows_function_app.open_referral_function_app.id
-      is_function_app = true
-    }
   }
 
   adf_details = var.data_factory_exists ? {
