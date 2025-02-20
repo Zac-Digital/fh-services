@@ -108,8 +108,6 @@
                         @(location.LocationTypeCategory == LocationTypeCategory.FamilyHub ? "Yes" : "No")
                     </summary-row>
 
-                    <summary-row key="Accessibility details"  class="fh-pre-wrap">@string.Join("\n", location.AccessibilityForDisabilities.Select(ac => ac.Accessibility))</summary-row>
-
                     <summary-row key="Location details"  class="fh-pre-wrap">@location.Description</summary-row>
 
                     @{
