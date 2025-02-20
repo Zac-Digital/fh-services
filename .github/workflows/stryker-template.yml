@@ -1,0 +1,51 @@
+﻿name: DotNet Stryker Template
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        type: string
+        required: true
+      job_name:
+        required: true
+        type: string
+
+jobs:
+  stryker:
+    name: Stryker Mutator
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup .NET ${{ vars.DOTNET_VERSION_V8 }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
+
+      - name: Install Stryker Mutator
+        shell: bash
+        run: dotnet tool install --global dotnet-stryker
+
+      - name: Run Stryker Mutator
+        shell: bash
+        run: dotnet stryker --reporter "cleartext" --reporter "html" --reporter "markdown" -O StrykerOutput --concurrency `nproc`
+
+      - name: Generate Stryker Report
+        if: always()
+        shell: bash
+        run: |
+          echo '### ${{ inputs.job_name }} 🚀' >> $GITHUB_STEP_SUMMARY
+          cat StrykerOutput/reports/mutation-report.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.job_name }}
+          path: 'StrykerOutput/reports/mutation-report.html'
+          compression-level: '9'

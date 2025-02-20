@@ -13,40 +13,61 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  stryker:
-    name: Stryker Mutator
-    runs-on: ubuntu-24.04
-    defaults:
-      run:
-        working-directory: 'src/'
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
-
-      - name: Setup .NET ${{ vars.DOTNET_VERSION_V8 }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
-          
-      - name: Install Stryker Mutator
-        shell: bash
-        run: dotnet tool install dotnet-stryker --global
-        
-      - name: Run Stryker Mutator
-        shell: bash
-        run: dotnet stryker --reporter "cleartext" --reporter "html" --reporter "markdown" -O StrykerOutput --concurrency `nproc`
-        
-      - name: Generate Stryker Report
-        shell: bash
-        run: |
-          echo '### Stryker Report 🚀' >> $GITHUB_STEP_SUMMARY
-          cat StrykerOutput/reports/mutation-report.md >> $GITHUB_STEP_SUMMARY
-          
-      - name: Upload HTML Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'Stryker-Report'
-          path: 'StrykerOutput/reports/mutation-report.html'
-          compression-level: '9'
+  stryker-matrix:
+    name: Stryker - ${{ matrix.job_name }}
+    strategy: 
+      fail-fast: false
+      matrix:
+        working_directory:
+          [
+            service/notification-api,
+            service/idam-api,
+            service/service-directory-api,
+            service/referral-api,
+            service/report-api,
+            service/mock-hsda-api,
+            function/open-referral-function,
+            ui/connect-ui,
+            ui/find-ui,
+            ui/idam-maintenance-ui,
+            ui/manage-ui,
+            shared/referral-shared,
+            shared/service-directory-shared,
+            shared/shared-kernel,
+            shared/web-components
+          ]
+        include:
+          - working_directory: service/notification-api
+            job_name: "Notification API"
+          - working_directory: service/idam-api
+            job_name: "IDAM API"
+          - working_directory: service/service-directory-api
+            job_name: "Service Directory API"
+          - working_directory: service/referral-api
+            job_name: "Referral API"
+          - working_directory: service/report-api
+            job_name: "Report API"
+          - working_directory: service/mock-hsda-api
+            job_name: "Mock HSDA API"
+          - working_directory: function/open-referral-function
+            job_name: "Open Referral Function"
+          - working_directory: ui/connect-ui
+            job_name: "Connect UI"
+          - working_directory: ui/find-ui
+            job_name: "Find UI"
+          - working_directory: ui/idam-maintenance-ui
+            job_name: "IDAM Maintenance UI"
+          - working_directory: ui/manage-ui
+            job_name: "Manage UI"
+          - working_directory: shared/referral-shared
+            job_name: "Referral Shared"
+          - working_directory: shared/service-directory-shared
+            job_name: "Service Directory Shared"
+          - working_directory: shared/shared-kernel
+            job_name: "Kernel Shared"
+          - working_directory: shared/web-components
+            job_name: "Web Components Shared"
+    uses: ./.github/workflows/stryker-template.yml
+    with:
+      working_directory: ${{ matrix.working_directory }}
+      job_name: ${{ matrix.job_name }}
