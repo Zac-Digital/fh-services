@@ -1,0 +1,52 @@
+name: DotNet Stryker (Full Report)
+on:
+  push:           # TODO: Temporary while Developing
+    branches:     # TODO: Temporary while Developing
+      - 'FHB-875' # TODO: Temporary while Developing
+  # TODO: Schedule CRON Job
+  pull_request:
+    paths:
+      - '.github/workflows/stryker.yml'
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  stryker:
+    name: Stryker Mutator
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: 'src/'
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup .NET ${{ vars.DOTNET_VERSION_V8 }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ vars.DOTNET_VERSION_V8 }}
+          
+      - name: Install Stryker Mutator
+        shell: bash
+        run: dotnet tool install dotnet-stryker --global
+        
+      - name: Run Stryker Mutator
+        shell: bash
+        run: dotnet stryker --reporter "cleartext" --reporter "html" --reporter "markdown" -O StrykerOutput --concurrency `nproc`
+        
+      - name: Generate Stryker Report
+        shell: bash
+        run: |
+          echo '### Stryker Report 🚀' >> $GITHUB_STEP_SUMMARY
+          cat StrykerOutput/reports/mutation-report.md >> $GITHUB_STEP_SUMMARY
+          
+      - name: Upload HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'Stryker-Report'
+          path: 'StrykerOutput/reports/mutation-report.html'
+          compression-level: '9'
