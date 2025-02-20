@@ -40,11 +40,13 @@ jobs:
           
       - name: Warm-Up Build
         shell: bash
-        run: dotnet build --configuration Release
+        run: |
+          dotnet restore
+          dotnet build
 
       - name: Run Stryker Mutator
         shell: bash
-        run: dotnet stryker --configuration Release --reporter "html" --reporter "markdown" -O StrykerOutput --concurrency `nproc`
+        run: dotnet stryker --reporter "html" --reporter "markdown" -O StrykerOutput --concurrency `nproc`
 
       - name: Generate Stryker Report
         shell: bash
