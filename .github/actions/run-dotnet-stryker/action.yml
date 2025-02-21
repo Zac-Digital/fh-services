@@ -36,7 +36,7 @@ runs:
     - name: Generate Stryker Report
       shell: bash
       run: |
-        echo '### ${{ inputs.job_name }} 🚀' >> $GITHUB_STEP_SUMMARY
+        echo '### ${{ inputs.artifact }} 🚀' >> $GITHUB_STEP_SUMMARY
         cat ${{ inputs.working_directory }}/StrykerOutput/reports/mutation-report.md >> $GITHUB_STEP_SUMMARY
 
     - name: Upload HTML Report
