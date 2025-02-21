@@ -1,0 +1,4 @@
+{
+  "reporters": ["markdown", "html"],
+  "ignore-changes-in": ["Migrations", "acceptance-tests"]
+}

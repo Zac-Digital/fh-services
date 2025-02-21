@@ -36,5 +36,5 @@ jobs:
         uses: ./.github/actions/run-dotnet-stryker
         with:
           working_directory: ${{ github.workspace }}/src/${{ inputs.working_directory }}
-          config_path: ${{ github.workspace }}/.github/actions/run-dotnet-stryker/stryker-config.json
+          config_path: ${{ github.workspace }}/.github/actions/run-dotnet-stryker/stryker.config.json
           artifact: ${{ inputs.job_name }}
