@@ -64,9 +64,6 @@ jobs:
             job_name: "Kernel Shared"
           - working_directory: shared/web-components
             job_name: "Web Components Shared"      
-    with:
-      working_directory: ${{ matrix.working_directory }}
-      job_name: ${{ matrix.job_name }}
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Repository
