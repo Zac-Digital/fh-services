@@ -37,7 +37,7 @@ runs:
       shell: bash
       run: |
         echo '### ${{ inputs.job_name }} 🚀' >> $GITHUB_STEP_SUMMARY
-        cat StrykerOutput/reports/mutation-report.md >> $GITHUB_STEP_SUMMARY
+        cat ${{ inputs.working_directory }}/StrykerOutput/reports/mutation-report.md >> $GITHUB_STEP_SUMMARY
 
     - name: Upload HTML Report
       uses: actions/upload-artifact@v4
