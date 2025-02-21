@@ -1,8 +1,6 @@
 {
   "stryker-config": {
     "reporters": ["markdown", "html"],
-    "since": {
-      "ignore-changes-in": ["Migrations", "acceptance-tests"]
-    }
+    "mutate": ["!Migrations/**.cs", "!acceptance-tests/**.cs"]
   }
 }
