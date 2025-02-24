@@ -1,0 +1,6 @@
+{
+  "stryker-config": {
+    "reporters": ["progress", "markdown", "html"],
+    "mutate": ["!**/Migrations/*.cs", "!**/acceptance-tests/*.cs"]
+  }
+}
