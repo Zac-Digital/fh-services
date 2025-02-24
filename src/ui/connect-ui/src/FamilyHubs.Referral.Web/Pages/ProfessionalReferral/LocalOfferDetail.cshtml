@@ -119,7 +119,7 @@
                         @ByDayToDisplay(serviceAtLocationSchedule?.ByDay)
                     </summary-row>
 
-                    <summary-row key="Extra availability details"  class="fh-pre-wrap">@serviceAtLocationSchedule?.Description</summary-row>
+                    <summary-row key="Extra availability details"  class="fh-pre-wrap">@serviceAtLocationSchedule?.Description.GetDisplay()</summary-row>
 
                 </summary-list>
             }
@@ -133,7 +133,7 @@
                 <summary-row key="Days service is available">
                     @ByDayToDisplay(Model.ServiceSchedule.ByDay)
                 </summary-row>
-                <summary-row key="Extra availability details"  class="fh-pre-wrap">@Model.ServiceSchedule.Description</summary-row>
+                <summary-row key="Extra availability details"  class="fh-pre-wrap">@(Model.ServiceSchedule.Description.GetDisplay())</summary-row>
             </summary-list>
         }
 
