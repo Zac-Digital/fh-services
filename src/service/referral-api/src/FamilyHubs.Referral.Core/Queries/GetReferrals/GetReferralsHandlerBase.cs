@@ -78,7 +78,7 @@ public abstract class GetReferralsHandlerBase
     protected IQueryable<Data.Entities.Referral> OrderBy(IQueryable<Data.Entities.Referral> currentList, ReferralOrderBy? orderBy, bool? isAssending, bool isByReferrer = false) 
     {
         if (orderBy == null || isAssending == null)
-            return currentList;
+            return currentList.OrderBy(x => x.Id);
 
         switch(orderBy) 
         {

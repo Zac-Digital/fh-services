@@ -37,4 +37,27 @@ public class WhenUsingReferralsApiUnitTests : BaseWhenUsingReferralApiUnitTests
         retVal.Should().NotBeNull();
         retVal.Items.Count.Should().BeGreaterThan(0);
     }
+    
+    [Fact]
+    public async Task ThenReferralsByReferrerIdAreRetrieved()
+    {
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(HttpClient.BaseAddress + "api/referralsByReferrer/5?pageNumber=1&pageSize=10"),
+        };
+
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", new JwtSecurityTokenHandler().WriteToken(Token));
+
+        using var response = await HttpClient.SendAsync(request);
+
+        response.EnsureSuccessStatusCode();
+
+        var retVal = await JsonSerializer.DeserializeAsync<PaginatedList<ReferralDto>>(await response.Content.ReadAsStreamAsync(), options: new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        ArgumentNullException.ThrowIfNull(retVal);
+        retVal.Should().NotBeNull();
+        retVal.Items.Count.Should().BeGreaterThan(0);
+    }
 }
