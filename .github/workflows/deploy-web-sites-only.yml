@@ -8,7 +8,7 @@ concurrency:
 on:
   push:
     branches:
-      - feature/FHB-1295-claim-google-search-ownership
+      - feature/FHB-1295-google-search-ownership-and-basic-auth
   workflow_dispatch:
     inputs:
       environment:
