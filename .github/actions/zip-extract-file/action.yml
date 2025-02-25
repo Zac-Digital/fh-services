@@ -1,0 +1,51 @@
+name: Extract zip file
+description: Extracts a file from a zip archive if it exists
+
+inputs:
+  zip_file_path:
+    required: true
+    description: Path of zip file to extract file from
+
+  extract_file_name:
+    required: true
+    description: Name of file to extract
+
+  extract_file_output_path:
+    required: true
+    description: Destination of extraction file
+
+outputs:
+  file_exists:
+    value: ${{ steps.zip-extract.outputs.file_exists }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Extract zip file
+      id: zip-extract
+      shell: bash
+      run: |
+        ls "$ZIP_FILE"
+        if [[ -d "$ZIP_FILE" ]]; then
+            FIRST_ZIP_FILE=$(find "$ZIP_FILE" -maxdepth 1 -type f -name "*.zip" | sort | head -n 1)
+            if [[ -n "$FIRST_ZIP_FILE" ]]; then
+                ZIP_FILE=$FIRST_ZIP_FILE
+                echo "Name of first ZIP file in directory: $FIRST_ZIP_FILE"
+            else
+                echo "No ZIP files found in $ZIP_FILE"
+                exit 1
+            fi
+        fi
+        if unzip -l "$ZIP_FILE" | grep -q "$EXTRACT_FILE"; then
+          echo "Extracting $EXTRACT_FILE to $OUTPUT_PATH..."
+          unzip -j "$ZIP_FILE" "$EXTRACT_FILE" -d "$OUTPUT_PATH"
+          echo "file_exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "file_exists=false" >> $GITHUB_OUTPUT
+          echo "$EXTRACT_FILE not found in zip: $ZIP_FILE"
+        fi
+      env:
+        ZIP_FILE: ${{ inputs.zip_file_path }}
+        EXTRACT_FILE: ${{ inputs.extract_file_name }}
+        OUTPUT_PATH: ${{ inputs.extract_file_output_path }}
