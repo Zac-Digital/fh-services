@@ -13,7 +13,7 @@ To create an ADR:
 Please note that not all technical decisions are architectural decisions. An architectural decision relates to:
 
 - changes at the module (such as dotnet namespace) or component level (structural changes)
-- architectural characteristcs (also known as  NFRs or CFRs)
+- architectural characteristics (also known as  NFRs or CFRs)
 - dependencies
 - external interfaces
 - construction techniques
