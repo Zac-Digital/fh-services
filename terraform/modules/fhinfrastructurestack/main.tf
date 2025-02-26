@@ -2478,7 +2478,7 @@ resource "azurerm_storage_account" "storage_appgw_errorpage" {
 
 resource "azurerm_storage_container" "container_appgw_referral_ui" {
   name                  				= "${var.prefix}sacontappgwrefui"
-  storage_account_name  				= azurerm_storage_account.storage_appgw_errorpage.name
+  storage_account_id  				= azurerm_storage_account.storage_appgw_errorpage.id
   container_access_type 				= "blob"
 }
 
@@ -2504,7 +2504,7 @@ resource "azurerm_storage_blob" "blob_appgw_referral_ui_error403" {
 
 resource "azurerm_storage_container" "container_appgw_sd_admin_ui" {
   name                  				= "${var.prefix}sacontappgwsdadminui"
-  storage_account_name  				= azurerm_storage_account.storage_appgw_errorpage.name
+  storage_account_id  				= azurerm_storage_account.storage_appgw_errorpage.id
   container_access_type 				= "blob"
 }
 
@@ -2530,7 +2530,7 @@ resource "azurerm_storage_blob" "blob_appgw_sd_admin_ui_error403" {
 
 resource "azurerm_storage_container" "container_appgw_sd_ui" {
   name                  				= "${var.prefix}sacontappgwsdui"
-  storage_account_name  				= azurerm_storage_account.storage_appgw_errorpage.name
+  storage_account_id  				= azurerm_storage_account.storage_appgw_errorpage.id
   container_access_type 				= "blob"
 }
 
@@ -2576,7 +2576,7 @@ resource "azurerm_storage_account" "storage_db_logs" {
 
 resource "azurerm_storage_container" "container_db_va_logs" {
   name                  = "${var.prefix}sadbvalogs"
-  storage_account_name  = azurerm_storage_account.storage_db_logs.name
+  storage_account_id  = azurerm_storage_account.storage_db_logs.id
   container_access_type = "blob"
 }
 
