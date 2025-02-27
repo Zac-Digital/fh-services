@@ -7,7 +7,7 @@ dotenv.config();
 export default defineConfig<SerenityOptions>({
     testDir: './tests',
     /* Maximum time one test can run for, measured in milliseconds. */
-    timeout: 30_000,
+    timeout: 40_000,
     expect: {
         /**
          * The maximum time, in milliseconds, that expect() should wait for a condition to be met.
@@ -54,18 +54,27 @@ export default defineConfig<SerenityOptions>({
         trace: 'on-first-retry',
 
         // Capture screenshot only on failure
-        screenshot: 'only-on-failure'
+        screenshot: 'only-on-failure',
+
+        httpCredentials: {
+            username: process.env.USER_NAME,
+            password: process.env.PASSWORD,
+        }
     },
 
     /* Configure projects for major browsers */
     projects: [
+        { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
         {
             name: 'Chromium',
             use: {
                 ...devices['Desktop Chrome'],
-            }
+                storageState: 'playwright/.auth/user.json'
+            },
+            dependencies: ['setup']
         },
-        
+
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
         // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
         {
@@ -73,14 +82,18 @@ export default defineConfig<SerenityOptions>({
             use: {
                 ...devices['Desktop Firefox'],
                 ignoreHTTPSErrors: true,
+                storageState: 'playwright/.auth/user.json'
             },
+            dependencies: ['setup']
         },
         {
             name: 'Safari',
             use: {
                 ...devices['Desktop Safari'],
                 ignoreHTTPSErrors: true,
+                storageState: 'playwright/.auth/user.json'
             },
+            dependencies: ['setup']
         }
         //TODO: Get tests running on mobile safari/chrome - need some custom code to scroll elements into view.
         // {
