@@ -70,7 +70,6 @@ export default defineConfig<SerenityOptions>({
             name: 'Chromium',
             use: {
                 ...devices['Desktop Chrome'],
-                storageState: 'playwright/.auth/user.json'
             },
             dependencies: ['setup']
         },
@@ -82,7 +81,6 @@ export default defineConfig<SerenityOptions>({
             use: {
                 ...devices['Desktop Firefox'],
                 ignoreHTTPSErrors: true,
-                storageState: 'playwright/.auth/user.json'
             },
             dependencies: ['setup']
         },
@@ -91,7 +89,6 @@ export default defineConfig<SerenityOptions>({
             use: {
                 ...devices['Desktop Safari'],
                 ignoreHTTPSErrors: true,
-                storageState: 'playwright/.auth/user.json'
             },
             dependencies: ['setup']
         }
