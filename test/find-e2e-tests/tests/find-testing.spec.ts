@@ -16,7 +16,7 @@ describe('Find Tests', () => {
         await actorCalled('DfE_Find_User').attemptsTo(
             navigateToFind(),
             clickOnTheStartButton(),
-            enterPostcode('E1 2EN'),
+            enterPostcode('W1D 2JT'),
             clickOnPostcodeSearchButton(),
         );
     });
