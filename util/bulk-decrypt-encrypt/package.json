@@ -1,0 +1,14 @@
+{
+  "name": "bulk-decrypt-encrypt",
+  "description": "For each table and each row in a database, decrypt all encrypted columns with their old key, encrypt them with their new key, and then update the row.",
+  "type": "module",
+  "scripts": {
+    "rotate": "dotenvx run -f .env -- node bulk-decrypt-encrypt.js"
+  },
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.38.3",
+    "@tediousjs/connection-string": "^0.6.0",
+    "sequelize": "^6.37.5",
+    "tedious": "^18.6.1"
+  }
+}
