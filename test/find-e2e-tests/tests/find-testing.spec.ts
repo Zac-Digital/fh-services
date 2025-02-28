@@ -4,8 +4,8 @@ import {
     clickOnTheStartButton,
     enterPostcode,
     clickOnPostcodeSearchButton,
-    verifyLAServiceInformationInTheListOfServicesPage,
-    verifyVCFSServiceInformationInTheListOfServicesPage,
+    verifyLAServiceInformationInTheListOfServicesPageContains,
+    verifyVCFSServiceInformationInTheListOfServicesPageContains,
     clickOnTheLaService,
     verifyTheServiceDetailsPageContent, clickOnTheVcfsService
 } from './serenity-tools/find-index';
@@ -26,11 +26,18 @@ describe('Find Tests', () => {
         await actorCalled('DfE_Find_User').attemptsTo(
             navigateToFind(),
             clickOnTheStartButton(),
-            enterPostcode(' W1D 2JT'),
+            enterPostcode('W1D 2JT'),
             clickOnPostcodeSearchButton(),
-            verifyLAServiceInformationInTheListOfServicesPage(),
+            verifyLAServiceInformationInTheListOfServicesPageContains('Test LA'),
+            verifyLAServiceInformationInTheListOfServicesPageContains('Category'),
+            verifyLAServiceInformationInTheListOfServicesPageContains('Age range'),
+            verifyLAServiceInformationInTheListOfServicesPageContains('Where'),
+            verifyLAServiceInformationInTheListOfServicesPageContains('Cost'),
             clickOnTheLaService(),
-            verifyTheServiceDetailsPageContent(),
+            verifyTheServiceDetailsPageContent('Service details'),
+            verifyTheServiceDetailsPageContent('Location'),
+            verifyTheServiceDetailsPageContent('More details'),
+            verifyTheServiceDetailsPageContent('Contact details')
         );
     });
 
@@ -40,9 +47,16 @@ describe('Find Tests', () => {
             clickOnTheStartButton(),
             enterPostcode(' W1D 2JT'),
             clickOnPostcodeSearchButton(),
-            verifyVCFSServiceInformationInTheListOfServicesPage(),
+            verifyVCFSServiceInformationInTheListOfServicesPageContains('Test Organisation'),
+            verifyVCFSServiceInformationInTheListOfServicesPageContains('Category'),
+            verifyVCFSServiceInformationInTheListOfServicesPageContains('Age range'),
+            verifyVCFSServiceInformationInTheListOfServicesPageContains('Where'),
+            verifyVCFSServiceInformationInTheListOfServicesPageContains('Cost'),
             clickOnTheVcfsService(),
-            verifyTheServiceDetailsPageContent(),
+            verifyTheServiceDetailsPageContent('Service details'),
+            verifyTheServiceDetailsPageContent('Location'),
+            verifyTheServiceDetailsPageContent('More details'),
+            verifyTheServiceDetailsPageContent('Contact details')
         );
     });
 });
