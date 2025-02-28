@@ -1,5 +1,6 @@
 import {Page, Text} from '@serenity-js/web';
 import {Ensure, equals, includes} from '@serenity-js/assertions';
+import {Answerable} from "@serenity-js/core";
 import {laServiceInformation, serviceDetailsPage, vcfsServiceInformation} from './find-page-objects';
 
 //This is for illustrative purposes and will be removed when appropriate questions can be created. 
@@ -10,30 +11,21 @@ export const isTheFindPageDisplayed = () =>
         equals('Find support for your family - Find support for your family - GOV.UK'),
     )
 
-export const verifyLAServiceInformationInTheListOfServicesPage = () =>
+export const verifyLAServiceInformationInTheListOfServicesPageContains = (categoryName: Answerable<string>) =>
     Ensure.that(
         Text.of(laServiceInformation()),
-        includes('Category') &&
-        includes('Test         Organisation') &&
-        includes('Age Range') &&
-        includes('Where') &&
-        includes('Free')
-    );
-export const verifyVCFSServiceInformationInTheListOfServicesPage = () =>
-    Ensure.that(
-        Text.of(vcfsServiceInformation()),
-        includes('Category') &&
-        includes('Test      LA') &&
-        includes('Age range 16 to 18 years old') &&
-        includes('Where') &&
-        includes('Free')
+        includes(categoryName)
     );
 
-export const verifyTheServiceDetailsPageContent = () =>
+
+export const verifyVCFSServiceInformationInTheListOfServicesPageContains = (categoryName: Answerable<string>) =>
+    Ensure.that(
+        Text.of(vcfsServiceInformation()),
+        includes(categoryName)
+    );
+
+export const verifyTheServiceDetailsPageContent = (categoryName: Answerable<string>) =>
     Ensure.that(
         Text.of(serviceDetailsPage()),
-        includes('Service details') &&
-        includes('Location') &&
-        includes('More details') &&
-        includes('Contact details')
+        includes(categoryName)
     );     
