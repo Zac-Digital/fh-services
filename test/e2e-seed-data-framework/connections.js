@@ -21,7 +21,8 @@ function buildSequelizeConnection(connectionString) {
   const username = connectionStringParsed["user id"];
   const password = connectionStringParsed["password"];
   const host = connectionStringParsed["server"];
-
+  console.log(`Database target: ${host}, ${database}, ${username}, ${password}`);
+}
   return new Sequelize(database, username, password, {
     dialect: "mssql",
     host: host,
