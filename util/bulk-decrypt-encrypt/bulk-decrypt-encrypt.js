@@ -94,11 +94,15 @@ function decrypt(database, ciphertext) {
         KEY,
         IV
     );
-
-    let plaintext = decipher.update(ciphertext, 'base64', 'utf8');
-    plaintext += decipher.final('utf8');
     
-    return plaintext;
+    // Seems the only reliable way in JS to check if a string is encrypted is to just catch an exception trying to decrypt it.
+    try {
+        let plaintext = decipher.update(ciphertext, 'base64', 'utf8');
+        plaintext += decipher.final('utf8');
+        return plaintext;
+    } catch (_) {
+        return null;
+    }
 }
 
 function encrypt(database, plaintext) {
@@ -142,12 +146,21 @@ async function rotateIdamDb() {
     for (const tableItem of tableInfo[0]) {
         const tableName = `[${tableItem["TABLE_SCHEMA"]}].[${tableItem["TABLE_NAME"]}]`;
         
-        const columnInfo = await IDAM_DB.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'${tableItem["TABLE_NAME"]}'`);
-        
         const firstRow = await IDAM_DB.query(`SELECT TOP 1 * FROM ${tableName}`);
         
-        for (let column of firstRow[0]) {
-            console.log(column);
+        // Empty table
+        if (firstRow[1] === 0) continue;
+        
+        const columnInfo = await IDAM_DB.query(`SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'${tableItem["TABLE_NAME"]}'`);
+
+        for (const columnName of columnInfo[0]) {
+            const value = firstRow[0][0][columnName["COLUMN_NAME"]];
+            
+            const decryptedValue = decrypt(IDAM_DB, value);
+            
+            if (decryptedValue == null) continue;
+            
+            console.log(`${tableName} - ${columnName["COLUMN_NAME"]} - ${value} - ${decryptedValue}`);
         }
         
         /*
