@@ -11,20 +11,20 @@ export const isTheFindPageDisplayed = () =>
         equals('Find support for your family - Find support for your family - GOV.UK'),
     )
 
-export const verifyLAServiceInformationInTheListOfServicesPageContains = (categoryName: Answerable<string>) =>
+export const doesTheLAServiceInformationInTheListOfServicesPageContain = (categoryName: Answerable<string>) =>
     Ensure.that(
         Text.of(laServiceInformation()),
         includes(categoryName)
     );
 
 
-export const verifyVCFSServiceInformationInTheListOfServicesPageContains = (categoryName: Answerable<string>) =>
+export const doesTheVCFSServiceInformationInTheListOfServicesPageContains = (categoryName: Answerable<string>) =>
     Ensure.that(
         Text.of(vcfsServiceInformation()),
         includes(categoryName)
     );
 
-export const verifyTheServiceDetailsPageContent = (categoryName: Answerable<string>) =>
+export const doesTheServiceDetailsPageContentContain = (categoryName: Answerable<string>) =>
     Ensure.that(
         Text.of(serviceDetailsPage()),
         includes(categoryName)
