@@ -13,7 +13,7 @@ export const postcodeSearchBox = () =>
 
 export const postcodeSearchButton = () =>
     PageElement
-        .located(By.css("button[type='submit']"))
+.located(By.css("[data-testid='button-search']"))
         .describedAs('the search button');
 
 
