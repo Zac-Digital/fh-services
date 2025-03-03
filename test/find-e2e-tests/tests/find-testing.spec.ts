@@ -4,16 +4,16 @@ import {
     clickOnTheStartButton,
     enterPostcode,
     clickOnPostcodeSearchButton,
-    verifyLAServiceInformationInTheListOfServicesPageContains,
-    verifyVCFSServiceInformationInTheListOfServicesPageContains,
+    doesTheLAServiceInformationInTheListOfServicesPageContain,
+    doesTheVCFSServiceInformationInTheListOfServicesPageContains,
     clickOnTheLaService,
-    verifyTheServiceDetailsPageContent, clickOnTheVcfsService
+    doesTheServiceDetailsPageContentContain, clickOnTheVcfsService
 } from './serenity-tools/find-index';
 
 describe('Find Tests', () => {
 
-    it('should check a DfE Find User is able to search for services ', async ({actorCalled}) => {
-        await actorCalled('DfE_Find_User').attemptsTo(
+    it('should check a DfE_Find_User is able to search for services ', async ({actorCalled}) => {
+        await actorCalled('DfE_Find_User)').attemptsTo(
             navigateToFind(),
             clickOnTheStartButton(),
             enterPostcode('W1D 2JT'),
@@ -22,41 +22,41 @@ describe('Find Tests', () => {
     });
 
 
-    it('Verify LA Service information', async ({actorCalled}) => {
+    it('should check a DfE_Find_User is able verify LA Service information', async ({actorCalled}) => {
         await actorCalled('DfE_Find_User').attemptsTo(
             navigateToFind(),
             clickOnTheStartButton(),
             enterPostcode('W1D 2JT'),
             clickOnPostcodeSearchButton(),
-            verifyLAServiceInformationInTheListOfServicesPageContains('Test LA'),
-            verifyLAServiceInformationInTheListOfServicesPageContains('Category'),
-            verifyLAServiceInformationInTheListOfServicesPageContains('Age range'),
-            verifyLAServiceInformationInTheListOfServicesPageContains('Where'),
-            verifyLAServiceInformationInTheListOfServicesPageContains('Cost'),
+            doesTheLAServiceInformationInTheListOfServicesPageContain('Test LA'),
+            doesTheLAServiceInformationInTheListOfServicesPageContain('Category'),
+            doesTheLAServiceInformationInTheListOfServicesPageContain('Age range'),
+            doesTheLAServiceInformationInTheListOfServicesPageContain('Where'),
+            doesTheLAServiceInformationInTheListOfServicesPageContain('Cost'),
             clickOnTheLaService(),
-            verifyTheServiceDetailsPageContent('Service details'),
-            verifyTheServiceDetailsPageContent('Location'),
-            verifyTheServiceDetailsPageContent('More details'),
-            verifyTheServiceDetailsPageContent('Contact details')
+            doesTheServiceDetailsPageContentContain('Service details'),
+            doesTheServiceDetailsPageContentContain('Location'),
+            doesTheServiceDetailsPageContentContain('More details'),
+            doesTheServiceDetailsPageContentContain('Contact details')
         );
     });
 
-    it('Verify VCFS Service information', async ({actorCalled}) => {
+    it('should check a DfE_Find_User is able verify VCFS Service information', async ({actorCalled}) => {
         await actorCalled('DfE_Find_User').attemptsTo(
             navigateToFind(),
             clickOnTheStartButton(),
-            enterPostcode(' W1D 2JT'),
+            enterPostcode('W1D 2JT'),
             clickOnPostcodeSearchButton(),
-            verifyVCFSServiceInformationInTheListOfServicesPageContains('Test Organisation'),
-            verifyVCFSServiceInformationInTheListOfServicesPageContains('Category'),
-            verifyVCFSServiceInformationInTheListOfServicesPageContains('Age range'),
-            verifyVCFSServiceInformationInTheListOfServicesPageContains('Where'),
-            verifyVCFSServiceInformationInTheListOfServicesPageContains('Cost'),
+            doesTheVCFSServiceInformationInTheListOfServicesPageContains('Test Organisation'),
+            doesTheVCFSServiceInformationInTheListOfServicesPageContains('Category'),
+            doesTheVCFSServiceInformationInTheListOfServicesPageContains('Age range'),
+            doesTheVCFSServiceInformationInTheListOfServicesPageContains('Where'),
+            doesTheVCFSServiceInformationInTheListOfServicesPageContains('Cost'),
             clickOnTheVcfsService(),
-            verifyTheServiceDetailsPageContent('Service details'),
-            verifyTheServiceDetailsPageContent('Location'),
-            verifyTheServiceDetailsPageContent('More details'),
-            verifyTheServiceDetailsPageContent('Contact details')
+            doesTheServiceDetailsPageContentContain('Service details'),
+            doesTheServiceDetailsPageContentContain('Location'),
+            doesTheServiceDetailsPageContentContain('More details'),
+            doesTheServiceDetailsPageContentContain('Contact details')
         );
     });
 });

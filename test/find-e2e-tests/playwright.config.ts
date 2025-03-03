@@ -58,8 +58,8 @@ export default defineConfig<SerenityOptions>({
 
         // http credentials
         httpCredentials: {
-            username: process.env.USER_NAME,
-            password: process.env.PASSWORD,
+            username: process.env.WEB_AUTHENTICATION_USER_NAME,
+            password: process.env.WEB_AUTHENTICATION_PASSWORD,
         }
     },
 
