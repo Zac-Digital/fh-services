@@ -25,7 +25,7 @@ export const laServiceInformation = () =>
 
 export const laServiceLink = () =>
     PageElement
-.located(By.css("[data-testid='[e2e]testlaserviceone']"))
+        .located(By.css("[data-testid='[e2e]testlaserviceone']"))
         .describedAs('the Test LA Service One link');
 
 
@@ -37,7 +37,7 @@ export const vcfsServiceInformation = () =>
 
 export const vcfsServiceLink = () =>
     PageElement
-.located(By.css("[data-testid='[e2e]testvcfsserviceone']"))
+        .located(By.css("[data-testid='[e2e]testvcfsserviceone']"))
         .describedAs('the Test VCFS Service One link');
 
 
