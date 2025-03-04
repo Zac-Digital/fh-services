@@ -2,7 +2,7 @@ import {By, PageElement, Text} from '@serenity-js/web';
 
 export const startButton = () =>
     PageElement
-        .located(By.css(".govuk-button.govuk-button--start"))
+        .located(By.css("[data-testid='start-button']"))
         .describedAs('start Now Button');
 
 export const postcodeSearchBox = () =>
@@ -13,7 +13,7 @@ export const postcodeSearchBox = () =>
 
 export const postcodeSearchButton = () =>
     PageElement
-.located(By.css("[data-testid='button-search']"))
+        .located(By.css("[data-testid='button-search']"))
         .describedAs('the search button');
 
 
@@ -25,7 +25,7 @@ export const laServiceInformation = () =>
 
 export const laServiceLink = () =>
     PageElement
-        .located(By.css(".govuk-link[data-testid='[e2e]testlaserviceone']"))
+.located(By.css("[data-testid='[e2e]testlaserviceone']"))
         .describedAs('the Test LA Service One link');
 
 
@@ -37,7 +37,7 @@ export const vcfsServiceInformation = () =>
 
 export const vcfsServiceLink = () =>
     PageElement
-        .located(By.css(".govuk-link[data-testid='[e2e]testvcfsserviceone']"))
+.located(By.css("[data-testid='[e2e]testvcfsserviceone']"))
         .describedAs('the Test VCFS Service One link');
 
 
