@@ -35,6 +35,7 @@ describe('Single Directory Tests', () => {
             doesTheLAServiceInformationInTheListOfServicesPageContain('Cost'),
             clickOnTheLaService(),
             doesTheServiceDetailsPageContentContain('Service details'),
+            doesTheServiceDetailsPageContentContain('[E2E] Test Summary'),
             doesTheServiceDetailsPageContentContain('Location'),
             doesTheServiceDetailsPageContentContain('More details'),
             doesTheServiceDetailsPageContentContain('Contact details')
@@ -54,6 +55,7 @@ describe('Single Directory Tests', () => {
             doesTheVCFSServiceInformationInTheListOfServicesPageContains('Cost'),
             clickOnTheVcfsService(),
             doesTheServiceDetailsPageContentContain('Service details'),
+            doesTheServiceDetailsPageContentContain('[E2E] Test Summary'),
             doesTheServiceDetailsPageContentContain('Location'),
             doesTheServiceDetailsPageContentContain('More details'),
             doesTheServiceDetailsPageContentContain('Contact details')
