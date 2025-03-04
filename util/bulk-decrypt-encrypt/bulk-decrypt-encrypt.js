@@ -64,7 +64,12 @@ async function updateDatabaseWithNewEncryptedValues(DATABASE, TRANSACTION) {
 
     for (const tableItem of tableInfo[0]) {
         const tableName = `[${tableItem["TABLE_SCHEMA"]}].[${tableItem["TABLE_NAME"]}]`;
-        const pkColumns = pkGrouped[tableName].map(({ COLUMN_NAME }) => COLUMN_NAME);
+        const pkColumns = (pkGrouped[tableName] || []).map(({ COLUMN_NAME }) => COLUMN_NAME);
+
+        if (pkColumns.length == 0) {
+            console.info(`Could not detect PK for ${tableName}`);
+            continue;
+        }
 
         const rows = await DATABASE.query(`SELECT * FROM ${tableName}`, { transaction: TRANSACTION });
         
