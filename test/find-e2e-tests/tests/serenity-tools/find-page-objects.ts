@@ -43,6 +43,6 @@ export const vcfsServiceLink = () =>
 
 export const serviceDetailsPage = () =>
     PageElement
-        .located(By.css("main[id='main-content'] div[class='govuk-grid-column-two-thirds']"))
+        .located(By.id("main-content"))
         .describedAs('Service Details Page');
 
