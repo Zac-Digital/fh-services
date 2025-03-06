@@ -87,15 +87,4 @@ To discuss with:
 
 **Joshua Taylor (Family Hubs - Technical Architect)**
 
-- Option 1 doesn't require any changes or further work.
-- GitHub already does a lot to nicely render Markdown documents.
-- Agrees that aligning with the rest of the portfolio is worth considering
-- Option 2 vs Option 3 trade off: is corporate/DfE branding (adherence to DfE design key) more important than hosting costs?
-- Using a SSG means we can use GitHub pages, which is free, don't have to worry about hosting/anything else
-- Questions around the quality of the search functionality. Does Option 3 offer a better searching experience than Option 2 (by virtue of the face it's a server-side application)
-- Unless there's a steer for option 3 specifically, leans more towards option 2 due to the cost savings and simplicity, and we don't worry _too_ much about strict adherence to corporate branding (still looks like a DfE site)
-- Hesitant to put effort into making it use DfE's style specifically; agrees it's helpful to bring us into line with the rest of the portfolio
-- Dependent really on what key stakeholders want: if there's an element of key stakeholders wanting visual parity between our tech docs and GDS docs (The GDS Way for e.g.), then it makes sense to go with option 4.
-- tl;dr - Option 2 unless there's a specific steer from portfolio stakeholders
-
-TODO: summarise the above
+Sees value in aligning with the portfolio but prioritizes practicality. Option 2 (using a static site generator and free GitHub Pages) is favoured over Option 3 (server-side/hosted app) due to cost savings and simplicity, despite potential trade-offs in search functionality and strict DfE branding adherence. Hesitates to invest effort in tailoring to DfE's style when not necessarily required but acknowledges its benefits. Option 4 is considered if stakeholders prioritize visual consistency with GDS documentation. Overall, Option 2 is preferred unless stakeholders specifically push for another direction.
