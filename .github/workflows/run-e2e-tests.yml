@@ -64,7 +64,12 @@ jobs:
     defaults: 
       run: 
         working-directory: "test/${{ matrix.suite }}"
-    steps:
+    steps:        
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          
       # Single Directory can run in parallel but Manage currently cannot.
       - name: Get Test Worker Count
         id: worker-count
@@ -76,11 +81,6 @@ jobs:
             exit 0
           fi
           echo "WORKER_COUNT=1" >> $GITHUB_OUTPUT
-        
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref }}
           
       - name: Install NodeJS
         uses: actions/setup-node@v4
