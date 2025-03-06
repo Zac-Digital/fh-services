@@ -18,6 +18,8 @@ We are in the process of transferring technical documentation from Confluence, w
 1. Continue using GitHub's repository explorer
 2. Use DfE's [tech-docs-template](https://github.com/DFE-Digital/tech-docs-template)
 3. Use GovUK One Login's [tech-docs](https://github.com/govuk-one-login/tech-docs)
+4. Copy [Care Leaver's approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
+
 
 ## Consequences
 
@@ -36,14 +38,16 @@ We are in the process of transferring technical documentation from Confluence, w
 
 ### Option 3 - Use GovUK One Login's [tech-docs](https://github.com/govuk-one-login/tech-docs)
 
+* Requires additional components/architecture,
+
+
+### Option 4 - Copy [Care Leaver's approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
+
 * Requires additional components/architecture
 * Is themed to look like other Government technical documentation sites
 * Is a static site generator, meaning we can use GitHub pages to host the output HTML files
 * Isn't (yet) an officially recommended DfE approach, though it uses the same underlying technology (MKDOcs) as Option 3 - the only difference is the theme to make it look like other DfE technical docs
 * Is being used already on Care Leavers, meaning we're more in-line with other projects on the VC&F portfolio
-
-
-### Option 4 - Copy [Care Leaver's approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
 
 <!-- 
     For each of the options above, describe positive and negative consequences
@@ -71,3 +75,9 @@ To discuss with:
 - Developer
 - Josh
 - Other portfolio members
+
+**Harry Young (Care Leavers)**
+
+- It's possible to further adopt the DfE design kit in future, making option4 look even more like the classic DfE docs in option 3 (essentially solving the small gripe on things looking slightly different to the DfE docs)
+- Solution copied from https://github.com/ministryofjustice/mkdocs-tech-docs-template/tree/main/tech_docs_template originally and MOJ references removed
+- Further complexity in hosting a Ruby site; easier to just use MKDocs
