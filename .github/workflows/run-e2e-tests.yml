@@ -119,7 +119,7 @@ jobs:
         id: worker-count
         shell: bash
         run: |
-          if [ ${{ matrix.job_name }} -eq "E2E - Find UI" ]; then
+          if [ "${{ matrix.job_name }}" == "E2E - Find UI" ]; then
             NPROC = $(nproc)
             echo "WORKER_COUNT=$NPROC" >> $GITHUB_OUTPUT
             exit 0
