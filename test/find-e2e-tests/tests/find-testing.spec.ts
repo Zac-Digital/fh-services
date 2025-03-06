@@ -9,11 +9,12 @@ import {
     clickOnTheLaService,
     doesTheServiceDetailsPageContentContain, clickOnTheVcfsService
 } from './serenity-tools/find-index';
+import {GENERAL_PUBLIC_USER} from './actors-user-roles';
 
 describe('Single Directory Tests', () => {
 
-    it('should check a General Public User is able to search for services ', async ({actorCalled}) => {
-        await actorCalled('General_Public_User)').attemptsTo(
+    it(`should check a ${GENERAL_PUBLIC_USER} is able to search for services`, async ({actorCalled}) => {
+        await actorCalled(GENERAL_PUBLIC_USER).attemptsTo(
             navigateToFind(),
             clickOnTheStartButton(),
             enterPostcode('W1D 2JT'),
@@ -22,8 +23,8 @@ describe('Single Directory Tests', () => {
     });
 
 
-    it('should check a General Public User is able verify LA Service information', async ({actorCalled}) => {
-        await actorCalled('General_Public_User').attemptsTo(
+    it(`should check a ${GENERAL_PUBLIC_USER} is able verify LA Service information`, async ({actorCalled}) => {
+        await actorCalled(GENERAL_PUBLIC_USER).attemptsTo(
             navigateToFind(),
             clickOnTheStartButton(),
             enterPostcode('W1D 2JT'),
@@ -42,8 +43,8 @@ describe('Single Directory Tests', () => {
         );
     });
 
-    it('should check a General Public User is able verify VCFS Service information', async ({actorCalled}) => {
-        await actorCalled('General_Public_User').attemptsTo(
+    it(`should check a ${GENERAL_PUBLIC_USER} is able verify VCFS Service information`, async ({actorCalled}) => {
+        await actorCalled(GENERAL_PUBLIC_USER).attemptsTo(
             navigateToFind(),
             clickOnTheStartButton(),
             enterPostcode('W1D 2JT'),
