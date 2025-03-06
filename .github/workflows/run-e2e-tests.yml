@@ -70,18 +70,6 @@ jobs:
         with:
           ref: ${{ github.ref }}
           
-      # Single Directory can run in parallel but Manage currently cannot.
-      - name: Get Test Worker Count
-        id: worker-count
-        shell: bash
-        run: |
-          if [ "${{ matrix.job_name }}" == "E2E - Find UI" ]; then
-            NPROC=$(nproc)
-            echo "WORKER_COUNT=$NPROC" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-          echo "WORKER_COUNT=1" >> $GITHUB_OUTPUT
-          
       - name: Install NodeJS
         uses: actions/setup-node@v4
         with:
@@ -126,9 +114,17 @@ jobs:
           GOV_LOGIN_PASSWORD='${{ secrets.PLAYWRIGHT_GOVLOGIN_PASSWORD }}'
           EOF
           
+      # Single Directory can run in parallel but Manage currently cannot.
       - name: Run Playwright Test Suite
         shell: bash
-        run: npx playwright test --workers ${{ steps.worker-count.outputs.WORKER_COUNT }}
+        run: |
+          if [ "${{ matrix.job_name }}" == "E2E - Find UI" ]; then
+            NPROC=$(nproc)
+            echo "WORKER_COUNT=$NPROC" >> $GITHUB_OUTPUT
+          else
+            echo "WORKER_COUNT=1" >> $GITHUB_OUTPUT
+          fi
+          npx playwright test --workers $WORKER_COUNT
         
       - name: Upload Report
         uses: actions/upload-artifact@v4
