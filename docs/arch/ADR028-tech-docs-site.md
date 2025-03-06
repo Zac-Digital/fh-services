@@ -1,5 +1,5 @@
 
-# <!-- Identifier: --> ADR028 - Implement technical documentation site <!-- Title: --> TITLE
+# <!-- Identifier: --> ADR028 - Implement technical documentation site <!-- Title: --> 
 
 - **Status**: Draft
 - **Date**: 2025-03-05
@@ -10,6 +10,9 @@
 ...
 
 ## Context
+
+TODO:
+- Add that this came from the DfE (Ben V)
 
 We are in the process of transferring technical documentation from Confluence, which is accessible only to DfE users, to GitHub. This transition aims to enhance accessibility for others to understand and build upon our software, for which technical documentation plays an important role. Other projects within the VC&F portfolio have already adopted tools like static site generators to improve document viewing and searchability through a user-friendly interface, rather than having users depend on navigating the GitHub folder structure and using its search feature, which can be unintuitive (e.g. easy to accidentally search all of GitHub, rather than the specific directory containing documentation)
 
@@ -38,8 +41,7 @@ We are in the process of transferring technical documentation from Confluence, w
 
 ### Option 3 - Use GovUK One Login's [tech-docs](https://github.com/govuk-one-login/tech-docs)
 
-* Requires additional components/architecture,
-
+* Requires additional components/architecture
 
 ### Option 4 - Copy [Care Leaver's approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
 
@@ -75,9 +77,25 @@ To discuss with:
 - Developer
 - Josh
 - Other portfolio members
+- Ben Vandersteen
 
-**Harry Young (Care Leavers)**
+**Harry Young (Care Leavers - Software Engineer)**
 
 - It's possible to further adopt the DfE design kit in future, making option4 look even more like the classic DfE docs in option 3 (essentially solving the small gripe on things looking slightly different to the DfE docs)
 - Solution copied from https://github.com/ministryofjustice/mkdocs-tech-docs-template/tree/main/tech_docs_template originally and MOJ references removed
 - Further complexity in hosting a Ruby site; easier to just use MKDocs
+
+**Joshua Taylor (Family Hubs - Technical Architect)**
+
+- Option 1 doesn't require any changes or further work.
+- GitHub already does a lot to nicely render Markdown documents.
+- Agrees that aligning with the rest of the portfolio is worth considering
+- Option 2 vs Option 3 trade off: is corporate/DfE branding (adherence to DfE design key) more important than hosting costs?
+- Using a SSG means we can use GitHub pages, which is free, don't have to worry about hosting/anything else
+- Questions around the quality of the search functionality. Does Option 3 offer a better searching experience than Option 2 (by virtue of the face it's a server-side application)
+- Unless there's a steer for option 3 specifically, leans more towards option 2 due to the cost savings and simplicity, and we don't worry _too_ much about strict adherence to corporate branding (still looks like a DfE site)
+- Hesitant to put effort into making it use DfE's style specifically; agrees it's helpful to bring us into line with the rest of the portfolio
+- Dependent really on what key stakeholders want: if there's an element of key stakeholders wanting visual parity between our tech docs and GDS docs (The GDS Way for e.g.), then it makes sense to go with option 4.
+- tl;dr - Option 2 unless there's a specific steer from portfolio stakeholders
+
+TODO: summarise the above
