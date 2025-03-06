@@ -81,9 +81,7 @@ To discuss with:
 
 **Harry Young (Care Leavers - Software Engineer)**
 
-- It's possible to further adopt the DfE design kit in future, making option4 look even more like the classic DfE docs in option 3 (essentially solving the small gripe on things looking slightly different to the DfE docs)
-- Solution copied from https://github.com/ministryofjustice/mkdocs-tech-docs-template/tree/main/tech_docs_template originally and MOJ references removed
-- Further complexity in hosting a Ruby site; easier to just use MKDocs
+Option 4 could be enhanced later with the DfE design kit to closely resemble Option 3's formal DfE documentation style. The solution was adapted from an MOJ MkDocs tech docs template on GitHub, with MOJ references stripped out. Hosting a Ruby site adds unnecessary complexity, making MkDocs a simpler choice.
 
 **Joshua Taylor (Family Hubs - Technical Architect)**
 
