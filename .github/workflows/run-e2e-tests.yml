@@ -28,25 +28,25 @@ permissions:
   contents: read
 
 jobs:
-  pre-test-teardown:
-    name: Pre-Test Database Teardown
-    uses: ./.github/workflows/e2e-seed-database.yml
-    with:
-      environment: ${{ inputs.environment }}
-      action: 'Teardown'
-    secrets: inherit
-  
-  pre-test-setup:
-    needs: [ pre-test-teardown ]
-    name: Pre-Test Database Setup
-    uses: ./.github/workflows/e2e-seed-database.yml
-    with:
-      environment: ${{ inputs.environment }}
-      action: 'Setup'
-    secrets: inherit
+#  pre-test-teardown:
+#    name: Pre-Test Database Teardown
+#    uses: ./.github/workflows/e2e-seed-database.yml
+#    with:
+#      environment: ${{ inputs.environment }}
+#      action: 'Teardown'
+#    secrets: inherit
+#  
+#  pre-test-setup:
+#    needs: [ pre-test-teardown ]
+#    name: Pre-Test Database Setup
+#    uses: ./.github/workflows/e2e-seed-database.yml
+#    with:
+#      environment: ${{ inputs.environment }}
+#      action: 'Setup'
+#    secrets: inherit
   
   run-test-suite:
-    needs: [ pre-test-setup ]
+#    needs: [ pre-test-setup ]
     name: ${{ matrix.job_name }}
     strategy:
       fail-fast: false
@@ -114,10 +114,22 @@ jobs:
           GOV_LOGIN_PASSWORD='${{ secrets.PLAYWRIGHT_GOVLOGIN_PASSWORD }}'
           EOF
           
+      # Single Directory can run in parallel but Manage currently cannot.
+      - name: Get Test Worker Count
+        id: worker-count
+        shell: bash
+        run: |
+          if [ ${{ matrix.job_name }} -eq "E2E - Find UI" ]; then
+            NPROC = $(nproc)
+            echo "WORKER_COUNT=$NPROC" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "WORKER_COUNT=1" >> $GITHUB_OUTPUT
+          
       # Forced 1 Worker as Manage falls over in parallel execution in its current implementation.
       - name: Run Playwright Test Suite
         shell: bash
-        run: npx playwright test --workers 1
+        run: npx playwright test --workers ${{ steps.worker-count.outputs.WORKER_COUNT }}
         
       - name: Upload Report
         uses: actions/upload-artifact@v4
@@ -125,13 +137,3 @@ jobs:
         with:
           name: playwright-report-${{ matrix.suite }}
           path: "**/playwright-report/"
-  
-  # Intentionally doesn't run after test failure to facilitate analysis
-  post-test-teardown:
-    needs: [ run-test-suite ]
-    name: Post-Test Database Teardown
-    uses: ./.github/workflows/e2e-seed-database.yml
-    with:
-      environment: ${{ inputs.environment }}
-      action: 'Teardown'
-    secrets: inherit
