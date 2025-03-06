@@ -7,7 +7,7 @@
 
 ## Decision
 
-TODO
+...
 
 ## Context
 
@@ -20,6 +20,30 @@ We are in the process of transferring technical documentation from Confluence, w
 3. Use GovUK One Login's [tech-docs](https://github.com/govuk-one-login/tech-docs)
 
 ## Consequences
+
+### Option 1 - Continue using GitHub's repository explorer
+
+* Requires no additional components/architecture change
+* The GitHub UI presents the user with technical language and components they're not necessarily used to (technical README, various tabs at the top of the UI, license information, etc.), and does not make sense for someone who purely wants to read technical documentation
+* The GitHub search function defaults to searching the full repo, meaning code search results will be shown and not just document search results, potentially further confusing the users 
+
+### Option 2 - Use DfE's [tech-docs-template](https://github.com/DFE-Digital/tech-docs-template)
+
+* Requires additional components/architecture
+* Is a static site generator, meaning we can use GitHub pages to host the output HTML files
+* Is a solution recommended by the DfE
+* Doesn't look like other DfE technical docs, as the DfE design kit isn't used
+
+### Option 3 - Use GovUK One Login's [tech-docs](https://github.com/govuk-one-login/tech-docs)
+
+* Requires additional components/architecture
+* Is themed to look like other Government technical documentation sites
+* Is a static site generator, meaning we can use GitHub pages to host the output HTML files
+* Isn't (yet) an officially recommended DfE approach, though it uses the same underlying technology (MKDOcs) as Option 3 - the only difference is the theme to make it look like other DfE technical docs
+* Is being used already on Care Leavers, meaning we're more in-line with other projects on the VC&F portfolio
+
+
+### Option 4 - Copy [Care Leaver's approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
 
 <!-- 
     For each of the options above, describe positive and negative consequences
@@ -45,4 +69,5 @@ We are in the process of transferring technical documentation from Confluence, w
 To discuss with:
 - Tester
 - Developer
+- Josh
 - Other portfolio members
