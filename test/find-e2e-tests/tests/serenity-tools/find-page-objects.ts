@@ -19,7 +19,7 @@ export const postcodeSearchButton = () =>
 
 export const laServiceInformation = () =>
     PageElement
-        .located(By.css("body > div:nth-child(6) > main:nth-child(3) > form:nth-child(1) > div:nth-child(4) > div:nth-child(2) > ul:nth-child(1) > li:nth-child(1)"))
+        .located(By.css("[data-testid='service-area-[e2e]testlaserviceone']"))       
         .describedAs('Test LA Service One Detail Area');
 
 
@@ -31,7 +31,7 @@ export const laServiceLink = () =>
 
 export const vcfsServiceInformation = () =>
     PageElement
-        .located(By.css("body > div:nth-child(6) > main:nth-child(3) > form:nth-child(1) > div:nth-child(4) > div:nth-child(2) > ul:nth-child(1) > li:nth-child(7)"))
+        .located(By.css("[data-testid='service-area-[e2e]testvcfsserviceone']"))   
         .describedAs('Test VCFS Service One Detail Area');
 
 
