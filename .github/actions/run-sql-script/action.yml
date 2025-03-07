@@ -24,7 +24,7 @@ runs:
         $SqlFile = Get-ChildItem -Path ${{ inputs.sql_file_path }} -File -Filter *.sql
 
         try {
-          Invoke-Sqlcmd -ConnectionString $ConnectionString -InputFile $SqlFile -ErrorAction 'Stop'
+          Invoke-Sqlcmd -ConnectionString '$ConnectionString' -InputFile $SqlFile -ErrorAction 'Stop'
           $LogMessage = ($SqlFile.Name + " Executed Successfully.")
         }
         catch {
