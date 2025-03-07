@@ -1,5 +1,5 @@
 
-# <!-- Identifier: --> ADR028 - Implement technical documentation site <!-- Title: --> 
+# ADR028 - Implement technical documentation site
 
 - **Status**: Draft
 - **Date**: 2025-03-05
@@ -47,25 +47,6 @@ We are in the process of transferring technical documentation from Confluence, w
 * Is a static site generator, meaning we can use GitHub pages to host the output HTML files
 * Isn't (yet) an officially recommended DfE approach, though it uses the same underlying technology (MKDOcs) as Option 3 - the only difference is the theme to make it look like other DfE technical docs
 * Is being used already on Care Leavers, meaning we're more in-line with other projects on the VC&F portfolio
-
-<!-- 
-    For each of the options above, describe positive and negative consequences
-    of selecting that option. Create a new section for each option under a heading.
-
-    Remember a law of architecture: There are no solutions, only trade-offs. Make
-    sure to include any negative consequences of the selected option.
-
-    e.g.
-
-    ### Option 1 - XXX
-
-    - Consequence 1
-    - Consequence 2
-
-    ### Option 2 - XXX
-
-    etc.
--->
 
 ## Advice
 
