@@ -69,13 +69,6 @@ We are in the process of transferring technical documentation from Confluence, w
 
 ## Advice
 
-To discuss with:
-- Tester
-- Developer
-- Josh
-- Other portfolio members
-- Ben Vandersteen
-
 **Harry Young (Care Leavers - Software Engineer)**
 
 Option 4 could be enhanced later with the DfE design kit to closely resemble Option 3's formal DfE documentation style. The solution was adapted from an MOJ MkDocs tech docs template on GitHub, with MOJ references stripped out. Hosting a Ruby site adds unnecessary complexity, making MkDocs a simpler choice.
@@ -83,3 +76,6 @@ Option 4 could be enhanced later with the DfE design kit to closely resemble Opt
 **Joshua Taylor (Family Hubs - Technical Architect)**
 
 Sees value in aligning with the portfolio but prioritizes practicality. Option 2 (using a static site generator and free GitHub Pages) is favoured over Option 3 (server-side/hosted app) due to cost savings and simplicity, despite potential trade-offs in search functionality and strict DfE branding adherence. Hesitates to invest effort in tailoring to DfE's style when not necessarily required but acknowledges its benefits. Option 4 is considered if stakeholders prioritize visual consistency with GDS documentation. Overall, Option 2 is preferred unless stakeholders specifically push for another direction.
+
+**Ben Vandersteen (Lead Technical Architect - VC&F portfolio)**
+TODO.
