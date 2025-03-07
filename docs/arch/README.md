@@ -35,4 +35,5 @@ Please note that not all technical decisions are architectural decisions. An arc
 | ADR020 | [Create an ASP.NET API to stub local authorities during development](./ADR020-create-mock-api-to-stub-las.md) |
 | ADR025 | [Use SonarCloud in 'monitoring mode'](./ADR025-use-sonar-cloud.md) |
 | ADR026 | [Merge 'Find' into 'Connect'](./ADR026-merge-find-into-connect.md) |
+| ADR027 | [Build data warehouse for reporting metrics](./ADR027-build-data-warehouse.md) |
 | ADR029 | [Merge all API services and databases](./ADR029.md) |
