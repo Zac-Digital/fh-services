@@ -14,7 +14,7 @@
 TODO:
 - Add that this came from the DfE (Ben V)
 
-We are in the process of transferring technical documentation from Confluence, which is accessible only to DfE users, to GitHub. This transition aims to enhance accessibility for others to understand and build upon our software, for which technical documentation plays an important role. Other projects within the VC&F portfolio have already adopted tools like static site generators to improve document viewing and searchability through a user-friendly interface, rather than having users depend on navigating the GitHub folder structure and using its search feature, which can be unintuitive (e.g. easy to accidentally search all of GitHub, rather than the specific directory containing documentation)
+We are in the process of transferring technical documentation from Confluence, which is accessible only to DfE users, to GitHub. This transition aims to enhance accessibility for others to understand and build upon our software, for which technical documentation plays an important role. Other projects within the VC&F portfolio have already adopted tools like static site generators to improve document viewing and searchability through a user-friendly interface.
 
 ## Options considered
 
