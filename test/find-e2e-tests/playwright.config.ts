@@ -7,7 +7,7 @@ dotenv.config();
 export default defineConfig<SerenityOptions>({
     testDir: './tests',
     /* Maximum time one test can run for, measured in milliseconds. */
-    timeout: 30_000,
+    timeout: 40_000,
     expect: {
         /**
          * The maximum time, in milliseconds, that expect() should wait for a condition to be met.
@@ -56,26 +56,30 @@ export default defineConfig<SerenityOptions>({
         // Capture screenshot only on failure
         screenshot: 'only-on-failure',
 
-        // http credentials
         httpCredentials: {
-            username: process.env.WEB_AUTHENTICATION_USER_NAME,
-            password: process.env.WEB_AUTHENTICATION_PASSWORD,
+            username: process.env.USER_NAME,
+            password: process.env.PASSWORD,
         }
     },
 
     /* Configure projects for major browsers */
     projects: [
+        { name: 'setup', testMatch: /.*\.setup\.ts/ },
+
         {
             name: 'Chromium',
             use: {
                 ...devices['Desktop Chrome'],
             },
+            dependencies: ['setup']
         },
+
         {
             name: 'Mobile Chrome',
             use: {
                 ...devices['Pixel 5'],
             },
+            dependencies: ['setup']
         },
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
         // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
@@ -85,6 +89,7 @@ export default defineConfig<SerenityOptions>({
                 ...devices['Desktop Firefox'],
                 ignoreHTTPSErrors: true
             },
+            dependencies: ['setup']
         },
         {
             name: 'Safari',
@@ -92,8 +97,9 @@ export default defineConfig<SerenityOptions>({
                 ...devices['Desktop Safari'],
                 ignoreHTTPSErrors: true
             },
-        },
-        //TODO: Get tests running on mobile safari - need some custom code to scroll elements into view.
+            dependencies: ['setup']
+        }
+        //TODO: Get tests running on mobile safari/chrome - need some custom code to scroll elements into view.
         // {
         //     name: 'Mobile Safari',
         //     use: {
