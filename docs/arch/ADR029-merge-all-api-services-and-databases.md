@@ -168,7 +168,7 @@ complexity and reduce the costs of changing the service.
 
 - Deployment and environment provisioning pipelines would take less time to run,
   due to fewer components to create and deploy to -- although not to the extent
-  of option 1.
+  of options 1 and 4.
 
 - Static running costs for infrastructure will be saved, since fewer components
   are running -- although not to the extent of option 1.
