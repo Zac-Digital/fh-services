@@ -4,7 +4,7 @@
   "description": "FamilyHubs Frontend contains the code you need to start building a Family Hubs website on top of the GOVUK Design System",
   "main": "index.js",
   "scripts": {
-    "postinstall": "gulp populate-wwwroot"
+    "postinstall": "gulp populate-wwwroot && gulp assets"
   },
   "repository": {
     "type": "git",
