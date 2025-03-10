@@ -1,13 +1,13 @@
 
 # ADR028 - Implement technical documentation site
 
-- **Status**: Draft
+- **Status**: Adopted
 - **Date**: 2025-03-05
 - **Author**: Aaron Yarborough
 
 ## Decision
 
-...
+Implement option 4, which is a DfE-skinned version of the tech-docs-template outlined in Option 2.
 
 ## Context
 
@@ -18,7 +18,7 @@ We are in the process of transferring technical documentation from Confluence, w
 1. Continue using GitHub's repository explorer
 2. Use DfE's [tech-docs-template](https://github.com/DFE-Digital/tech-docs-template)
 3. Use GovUK One Login's [tech-docs](https://github.com/govuk-one-login/tech-docs)
-4. Copy [Care Leaver's approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
+4. (SELECTED) Copy [Care Leaver's approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
 
 
 ## Consequences
@@ -59,4 +59,5 @@ Option 4 could be enhanced later with the DfE design kit to closely resemble Opt
 Sees value in aligning with the portfolio but prioritizes practicality. Option 2 (using a static site generator and free GitHub Pages) is favoured over Option 3 (server-side/hosted app) due to cost savings and simplicity, despite potential trade-offs in search functionality and strict DfE branding adherence. Hesitates to invest effort in tailoring to DfE's style when not necessarily required but acknowledges its benefits. Option 4 is considered if stakeholders prioritize visual consistency with GDS documentation. Overall, Option 2 is preferred unless stakeholders specifically push for another direction.
 
 **Ben Vandersteen (Lead Technical Architect - VC&F portfolio)**
-TODO.
+
+Views the necessity of hosting and managing a server (option 2) as a drawback due to associated costs and overhead; prefers a simpler solution. Happy with the search functionality and overall styling of Option 4, and prefers this over option 2. As a side: considering merging changes from Option 4 into the repository for Option 2 to gain ownership of the tech-docs-template repository and has started the ball rolling on this.
