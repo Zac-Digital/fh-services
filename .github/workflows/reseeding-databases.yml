@@ -64,7 +64,7 @@ jobs:
             display_name: Service Directory
             keyvault_db_prefix: SD-DB
             sql_file_path: ./test/reset-scripts/reset-database.sql
-          - databases: ${{ inputs.environment == 'Test2' && 'report-staging-database' }}
+          - databases: ${{ inputs.environment != 'Test2' && 'report-staging-database' }}
             display_name: Report Staging
             keyvault_db_prefix: REPORT-STAGING-DB
             sql_file_path: ./test/reset-scripts/reset-report-staging-database.sql
