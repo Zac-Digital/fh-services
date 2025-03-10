@@ -64,12 +64,10 @@ jobs:
             display_name: Service Directory
             keyvault_db_prefix: SD-DB
             sql_file_path: ./test/reset-scripts/reset-database.sql
-          - databases: report-staging-database
+          - databases: ${{ inputs.environment != 'Test2' && report-staging-database }}
             display_name: Report Staging
             keyvault_db_prefix: REPORT-STAGING-DB
             sql_file_path: ./test/reset-scripts/reset-report-staging-database.sql
-        exclude:
-          - databases: ${{ inputs.environment == 'Test2' && 'report-staging-database' }}
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
