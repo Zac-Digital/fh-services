@@ -40,7 +40,7 @@ We are in the process of transferring technical documentation from Confluence, w
 
 * Requires additional components/architecture
 
-### Option 4 - Copy [Care Leaver's approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
+### Option 4 - Copy [Care Leavers' approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
 
 * Requires additional components/architecture
 * Is themed to look like other Government technical documentation sites
