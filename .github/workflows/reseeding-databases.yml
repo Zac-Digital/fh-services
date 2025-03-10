@@ -69,8 +69,7 @@ jobs:
             keyvault_db_prefix: REPORT-STAGING-DB
             sql_file_path: ./test/reset-scripts/reset-report-staging-database.sql
         exclude:
-          - databases: report-staging-database
-            if: ${{ inputs.environment == 'Test2' }}
+          - databases: ${{ inputs.environment == 'Test2' && 'report-staging-database' }}
     uses: ./.github/workflows/run-sql-script.yml
     with:
       environment: ${{ inputs.environment }}
