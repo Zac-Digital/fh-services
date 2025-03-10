@@ -25,28 +25,29 @@ We are in the process of transferring technical documentation from Confluence, w
 
 ### Option 1 - Continue using GitHub's repository explorer
 
-* Requires no additional components/architecture change
+* Requires no additional development or hosting costs, because no additional components/architecture changes would be required.
 * The GitHub UI presents the user with technical language and components they're not necessarily used to (technical README, various tabs at the top of the UI, license information, etc.), and does not make sense for someone who purely wants to read technical documentation
 * The GitHub search function defaults to searching the full repo, meaning code search results will be shown and not just document search results, potentially further confusing the users 
 
 ### Option 2 - Use DfE's [tech-docs-template](https://github.com/DFE-Digital/tech-docs-template)
 
-* Requires additional components/architecture
-* Is a static site generator, meaning we can use GitHub pages to host the output HTML files
-* Is a solution recommended by the DfE
-* Doesn't look like other DfE technical docs, as the DfE design kit isn't used
+* Requires setup of GitHub pages, but would not require any additional components or architecture changes, or any associated hosting costs.
+* Is a static site generator, meaning we can use GitHub pages to host the output HTML files.
+* Is a solution recommended by the DfE.
+* Doesn't look like other DfE technical docs, as the DfE design kit isn't used, though this doesn't seem to be a major consideration given received advice.
 
 ### Option 3 - Use GovUK One Login's [tech-docs](https://github.com/govuk-one-login/tech-docs)
 
-* Requires additional components/architecture
+* Requires hosting a web server with Ruby installed. This would require development work, new architectural components, and would require regular maintenance.
+* Uses official Gov UK and DfE design kit elements, bringing it in line with other GDS documentation sites.
 
 ### Option 4 - Copy [Care Leavers' approach using MKDocs](https://github.com/DFE-Digital/care-leavers/tree/main/resources/tech_docs_template)
 
-* Requires additional components/architecture
-* Is themed to look like other Government technical documentation sites
-* Is a static site generator, meaning we can use GitHub pages to host the output HTML files
-* Isn't (yet) an officially recommended DfE approach, though it uses the same underlying technology (MKDOcs) as Option 3 - the only difference is the theme to make it look like other DfE technical docs
-* Is being used already on Care Leavers, meaning we're more in-line with other projects on the VC&F portfolio
+* Requires setup of GitHub pages, but would not require any additional components or architecture changes, or any associated hosting costs.
+* Is themed to look like other Government technical documentation sites.
+* Is a static site generator, meaning we can use GitHub pages to host the output HTML files.
+* Isn't (yet) an officially recommended DfE approach, though it uses the same underlying technology (MKDOcs) as Option 3 - the only difference is the theme to make it look like other DfE technical docs.
+* Is being used already on Care Leavers, meaning we're more in-line with other projects on the VC&F portfolio.
 
 ## Advice
 
