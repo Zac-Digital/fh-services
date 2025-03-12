@@ -20,8 +20,7 @@ data "azurerm_data_factory" "adf_dataf_default" {
 ####################################################################################################
 
 locals {
-  # All production alerts go into a separate silver monitor resource group otherwise add to the same resource group
-  alert_resource_group_name = var.environment == "Prod" ? "${var.prefix}-silverMonitor" : local.resource_group_name
+  alert_resource_group_name = local.resource_group_name
   
   gateway_details = {
     "referral-ui" = {
