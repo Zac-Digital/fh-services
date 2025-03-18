@@ -37,6 +37,7 @@ export async function checkConnections() {
     await reportDb.authenticate();
   } catch (error) {
     console.error("Unable to establish connection to the database:", error);
+    process.exit(1);
   }
 
   console.log("Connections are OK!");
@@ -51,6 +52,7 @@ export async function closeConnections() {
     await reportDb.close();
   } catch (error) {
     console.error("Unable to close connection to the database:", error);
+    process.exit(1);
   }
 
   console.log("Connections Closed!");

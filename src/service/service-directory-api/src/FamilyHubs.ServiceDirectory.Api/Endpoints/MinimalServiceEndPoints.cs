@@ -25,7 +25,7 @@ public class MinimalServiceEndPoints
         app.MapGet("api/services-simple", (
             ServiceType? serviceType, ServiceStatusType? status,
             string? districtCode,
-            bool? allChildrenYoungPeople, int? givenAge,
+            string? ageRangeList,
             double? latitude, double? longitude, double? proximity,
             int? pageNumber, int? pageSize,
             string? text,
@@ -39,7 +39,7 @@ public class MinimalServiceEndPoints
             CancellationToken cancellationToken, ISender mediator) =>
         {
             var command = new GetServicesCommand(serviceType, status, districtCode,
-                allChildrenYoungPeople, givenAge, latitude, longitude, proximity, pageNumber, pageSize, text,
+                ageRangeList, latitude, longitude, proximity, pageNumber, pageSize, text,
                 serviceDeliveries, isPaidFor, taxonomyIds, languages, canFamilyChooseLocation, isFamilyHub, days);
             return mediator.Send(command, cancellationToken);
         })

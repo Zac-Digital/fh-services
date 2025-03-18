@@ -13,7 +13,7 @@ export default defineConfig<SerenityOptions>({
          * The maximum time, in milliseconds, that expect() should wait for a condition to be met.
          * For example in `await expect(locator).toHaveText();`
          */
-        timeout: 5000
+        timeout: 5000,
     },
     /* Run tests in files in parallel */
     fullyParallel: true,
@@ -32,7 +32,7 @@ export default defineConfig<SerenityOptions>({
                     specDirectory: './tests',
                     reporter: {
                         includeAbilityDetails: true,
-                    }
+                    },
                 }],
                 ['@serenity-js/core:ArtifactArchiver', {outputDirectory: 'target/site/serenity'}],
                 // '@serenity-js/core:StreamReporter',  // uncomment to enable debugging output
@@ -74,13 +74,20 @@ export default defineConfig<SerenityOptions>({
             dependencies: ['setup']
         },
 
+        {
+            name: 'Mobile Chrome',
+            use: {
+                ...devices['Pixel 5'],
+            },
+            dependencies: ['setup']
+        },
         // Firefox & Safari have a temporary workaround to ignore HTTPS errors due to a bug around TLS certificates.
         // Jira Ticket: https://dfedigital.atlassian.net.mcas.ms/browse/FHB-1180
         {
             name: 'Firefox',
             use: {
                 ...devices['Desktop Firefox'],
-                ignoreHTTPSErrors: true,
+                ignoreHTTPSErrors: true
             },
             dependencies: ['setup']
         },
@@ -88,7 +95,7 @@ export default defineConfig<SerenityOptions>({
             name: 'Safari',
             use: {
                 ...devices['Desktop Safari'],
-                ignoreHTTPSErrors: true,
+                ignoreHTTPSErrors: true
             },
             dependencies: ['setup']
         }
@@ -98,15 +105,9 @@ export default defineConfig<SerenityOptions>({
         //     use: {
         //         ...devices['iPhone 12'],
         //     },
-        // },
-        // {
-        //     name: 'Mobile Chrome',
-        //     use: {
-        //         ...devices['Pixel 5'],
-        //     },
-        // },
+        // }
     ],
 
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-    outputDir: 'test-results/'
+    outputDir: 'test-results/',
 });
