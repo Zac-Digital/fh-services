@@ -39,7 +39,7 @@ jobs:
           report-database,
           service-directory-database
         ]
-        include:  
+        include:
           - databases: idam-database
             display_name: IDAM
             keyvault_db_prefix: IDAM-DB
