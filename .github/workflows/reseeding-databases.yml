@@ -2,7 +2,7 @@ name: Reseed Databases
 run-name: Reseed databases in ${{ inputs.environment }}
 
 concurrency:
-  group: "${{ github.workflow }}-${{ github.ref }}-${{ inputs.environment }}"
+  group: "${{ github.workflow }}-${{ github.ref }}-${{ inputs.environment }}-Reseed"
   cancel-in-progress: true
 
 on:
