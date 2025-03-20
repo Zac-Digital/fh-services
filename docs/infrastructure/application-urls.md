@@ -1,15 +1,4 @@
-# Application URLs (PA)
-
-* [Dev](#ApplicationURLs(PA)-Dev)
-  + [APIs](#ApplicationURLs(PA)-APIs)
-* [Test](#ApplicationURLs(PA)-Test)
-  + [APIs](#ApplicationURLs(PA)-APIs.1)
-* [Test 2](#ApplicationURLs(PA)-Test2)
-  + [APIs](#ApplicationURLs(PA)-APIs.2)
-* [Pre-production](#ApplicationURLs(PA)-Pre-production)
-  + [APIs](#ApplicationURLs(PA)-APIs.3)
-* [Production](#ApplicationURLs(PA)-Production)
-  + [APIs](#ApplicationURLs(PA)-APIs.4)
+# Application URLs
 
 # Dev
 
