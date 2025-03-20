@@ -1,4 +1,6 @@
 using FamilyHubs.SharedKernel.Extensions;
+using FamilyHubs.SharedKernel.Razor.FeatureFlags;
+using Microsoft.FeatureManagement;
 using Serilog;
 
 namespace FamilyHubs.Referral.Web;
@@ -22,6 +24,10 @@ public static class Program
             builder.Configuration.ConfigureAzureKeyVault();
 
             builder.ConfigureHost();
+            
+            builder.Services.AddFeatureManagement(builder.Configuration)
+                .AddFeatureFilter<AlsoFilter>()
+                .AddFeatureFilter<EnabledFilter>();
 
             builder.Services.ConfigureServices(builder.Configuration);
 
