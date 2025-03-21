@@ -60,7 +60,7 @@ For the first time you run the project, or whenever database changes are made, y
 To do this, for each API* in the [src/service](/src/service/) folder, substituting where necessary:
 
 - CD into the `FamilyHubs.<PROJECT>.Data` folder.
-- Run the command: `dotnet ef database update --startup-project ../FamilyHubs.<PROJECT>.Api/FamilyHubs.<PROJECT>.Api.csproj` --project `FamilyHubs.<PROJECT>.Data.csproj`
+- Run the command: `dotnet ef database update --startup-project ../FamilyHubs.<PROJECT>.Api/FamilyHubs.<PROJECT>.Api.csproj --project FamilyHubs.<PROJECT>.Data.csproj`
 
 \* For the Mock HSDA API you can simply run `dotnet ef database update`
 
