@@ -40,7 +40,7 @@ See the `README.md` in [/local/README.md](/local/README.md) for instructions on 
 
 To build each project, you can navigate to the `SuperSolution.sln` root and run a `dotnet build`.
 
-Alternatively, you can navigate to an individual projects `.csproj` and `dotnet build` that.
+Alternatively, you can navigate to an individual projects' `.csproj` and `dotnet build` that.
 
 #### Appsettings
 
