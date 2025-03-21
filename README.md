@@ -28,7 +28,9 @@
 
 ### Docker
 
-TODO
+The project can be ran with Docker. Each API and UI contains a Dockerfile and is orchestrated by a Docker Compose file.
+
+See the `README.md` in [/local/README.md](/local/README.md) for instructions on how to run the project in Docker and seed test data into the database.
 
 ### Native
 
@@ -61,6 +63,8 @@ To do this, for each API* in the [src/service](/src/service/) folder, substituti
 - Run the command: `dotnet ef database update --startup-project ../FamilyHubs.<PROJECT>.Api/FamilyHubs.<PROJECT>.Api.csproj` --project `FamilyHubs.<PROJECT>.Data.csproj`
 
 \* For the Mock HSDA API you can simply run `dotnet ef database update`
+
+Once the databases are all up and running, you can optionally navigate to [/test/e2e-seed-data-framework](/test/e2e-seed-data-framework/). You will need to make a copy of `.env.local` and name it `.env`, and then fill out the connection strings as per your environment, as well as fill out the two local encryption keys that were generated from the IdAM Maintenance UI. Once done, run the seeding script with `npm run setup:dev`.
 
 #### Running
 
@@ -99,11 +103,11 @@ Changes to JS or CSS require gulp tasks to be ran in each UI and the shared web 
 
 #### The SpatiaLite Library
 
-We use SpatiaLite for geo-spatial calculations when running SQLite, such as when running the Functional/Integration tests in the Service Directory and Referral APIs. There is configuration required depending on the OS.
+We use SpatiaLite for geo-spatial calculations when running SQLite, such as when running the Functional/Integration tests in the Service Directory and Referral APIs. On some operating systems there is additional configuration required:
 
 ##### Windows
 
- - No configuration required.
+- No configuration required.
 
 ##### MacOS
 
@@ -111,6 +115,13 @@ We use SpatiaLite for geo-spatial calculations when running SQLite, such as when
  - When running tests, set the `DYLD_LIBRARY_PATH` environment variable to the path `libspatialite` is installed. At the time of writing this is `/opt/homebrew/Cellar/libspatialite/5.1.0_1/lib`.
  - If running tests in the terminal, this can be done by exporting the variable. E.g., `export DYLD_LIBRARY_PATH=/opt/homebrew/Cellar/libspatialite/5.1.0_1/lib` and then running `dotnet test`.
  - If running tests through your IDEs GUI, your mileage may vary as configuration is IDE-specific. For Rider it's under `Settings... -> Build, Execution, Deployment -> Unit Testing -> Test Runner`. In there there is an `Environment variables` section where you can add the Name and Value.
+
+
+ ##### Linux (Ubuntu)
+
+ - Update your package list: `apt update`
+ - Install SpatiaLite: `apt install libspatialite-dev libsqlite3-mod-spatialite`
+ - Update the shared library cache: `ldconfig "/usr/lib/x86_64-linux-gnu/mod_spatialite.so"`
 
 ## License
 
