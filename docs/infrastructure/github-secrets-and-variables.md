@@ -51,16 +51,16 @@ These are set by us and the values are unique to each environment.
 | `AZURE_CLIENT_SECRET` | The secret of the service principal, this in particular is only used by the Terraform as other workflows use federated credentials. | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
 | `AZURE_SUBSCRIPTION_ID` | The subscription ID of the service principal used to interface GitHub Actions with Azure. | `deploy-function.yml`, `deploy-service.yml`, `e2e-seed-database.yml`, `migrate-database.yml`, `provisioning.yml`, `run-acceptance-tests.yml`, `run-sql-script.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
 | `AZURE_TENANT_ID` | The tenant ID of the service principal used to interface GitHub Actions with Azure. | `deploy-function.yml`, `deploy-service.yml`, `e2e-seed-database.yml`, `migrate-database.yml`, `provisioning.yml`, `run-acceptance-tests.yml`, `run-sql-script.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
-| `PLAYWRIGHT_CONNECTION_STRING_REFERRAL_DATABASE` | B | C | D |
-| `PLAYWRIGHT_CONNECTION_STRING_REPORT_DATABASE` | B | C | D |
-| `PLAYWRIGHT_CONNECTION_STRING_SERVICE_DIRECTORY_DATABASE` | B | C | D |
-| `PLAYWRIGHT_REFERRAL_COLUMN_ENCRYPTION_KEY` | B | C | D |
-| `PLAYWRIGHT_REFERRAL_COLUMN_INITIALISATION_VECTOR` | B | C | D |
-| `TERRAFORM_APP_SQL_SERVER_USER` | B | C | D |
-| `TERRAFORM_APP_SQL_SERVER_PWD` | B | C | D |
-| `TERRAFORM_REPORT_SQL_SERVER_USER` | B | C | D |
-| `TERRAFORM_REPORT_SQL_SERVER_PWD` | B | C | D |
-| `TERRAFORM_SSL_CERTIFICATE_PWD` | B | C | D |
-| `TERRAFORM_SSL_CONNECT_PFX` | B | C | D |
-| `TERRAFORM_SSL_FIND_PFX` | B | C | D |
-| `TERRAFORM_SSL_MANAGE_PFX` | B | C | D |
+| `PLAYWRIGHT_CONNECTION_STRING_REFERRAL_DATABASE` | Used by the E2E seeding scripts to connect to the Referral database when creating E2E data, as part of the Playwright tests. | `e2e-seed-database.yml` | `Development`, `Test`, `Test2`, `Pre-production` |
+| `PLAYWRIGHT_CONNECTION_STRING_REPORT_DATABASE` | Used by the E2E seeding scripts to connect to the Report database when creating E2E data, as part of the Playwright tests. | `e2e-seed-database.yml` | `Development`, `Test`, `Test2`, `Pre-production` |
+| `PLAYWRIGHT_CONNECTION_STRING_SERVICE_DIRECTORY_DATABASE` | Used by the E2E seeding scripts to connect to the Service Directory database when creating E2E data, as part of the Playwright tests. | `e2e-seed-database.yml` | `Development`, `Test`, `Test2`, `Pre-production` |
+| `PLAYWRIGHT_REFERRAL_COLUMN_ENCRYPTION_KEY` | Used by the E2E seeding scripts to encrypt certain column data, as part of the Playwright tests. | `e2e-seed-database.yml` | `Development`, `Test`, `Test2`, `Pre-production` |
+| `PLAYWRIGHT_REFERRAL_COLUMN_INITIALISATION_VECTOR` | Used by the E2E seeding scripts to encrypt certain column data, as part of the Playwright tests. | `e2e-seed-database.yml` | `Development`, `Test`, `Test2`, `Pre-production` |
+| `TERRAFORM_APP_SQL_SERVER_USER` | Used as part of the configuration of the SQL server in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+| `TERRAFORM_APP_SQL_SERVER_PWD` | Used as part of the configuration of the SQL server in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+| `TERRAFORM_REPORT_SQL_SERVER_USER` | Used as part of the configuration of the Azure Data Factory SQL server in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+| `TERRAFORM_REPORT_SQL_SERVER_PWD` | Used as part of the configuration of the Azure Data Factory SQL server in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+| `TERRAFORM_SSL_CERTIFICATE_PWD` | Used as part of the configuration of the Web Apps' SSL certificates in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+| `TERRAFORM_SSL_CONNECT_PFX` | Used as part of the configuration of the Web Apps' SSL certificates in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+| `TERRAFORM_SSL_FIND_PFX` | Used as part of the configuration of the Web Apps' SSL certificates in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+| `TERRAFORM_SSL_MANAGE_PFX` | Used as part of the configuration of the Web Apps' SSL certificates in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
