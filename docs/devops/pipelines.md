@@ -2,9 +2,15 @@
 
 ## Build and Test
 
-The build and test workflow builds the code, runs unit tests - all in a parallel matrix. This is to improve the feedback loop for issues. This is triggered by PR changes to main or a release branch.
+The build and test workflow builds the code, runs unit tests - all in a parallel
+matrix. This is to improve the feedback loop for issues. This is triggered by PR
+changes to main or a release branch.
 
-Under the hood, it uses a template workflow that installs a report tool (Liquid Test Reports), optionally configures the Linux instance with support for Spatialite - a framework used by Sqlite to support our geo-spatial function. Then it performs the standard dotnet build and test tasks and generates a test report.
+Under the hood, it uses a template workflow that installs a report tool (Liquid
+Test Reports), optionally configures the Linux instance with support for
+Spatialite - a framework used by Sqlite to support our geo-spatial function.
+Then it performs the standard dotnet build and test tasks and generates a test
+report.
 
 ## Re-seeding Databases
 
@@ -14,7 +20,12 @@ We have a set of scripts to reseed the databases in a number of environments. Th
 * Test2
 * Pre-production
 
-The current deployment workflow, is enabled to reseed for test only. This will be extended to cover pre-production and, later development too. Also the current process is integrated into the deploy.yml file. Although the appropriate if statements are in place, along with a checkbox to disable reseeding, this really needs to be abstracted into its own workflow. This will provide the following benefits:
+The current deployment workflow, is enabled to reseed for test and
+pre-production only. This will be extended to cover development too. Also the
+current process is integrated into the deploy.yml file. Although the appropriate
+if statements are in place, along with a checkbox to disable reseeding, this
+really needs to be abstracted into its own workflow. This will provide the
+following benefits:
 
 * Deterministic reseeding. This is because before the database can be reseeded, it will need to be reset. Then migrations are run to bring the databases into their current state, followed by reseeding with the data required
 * Safety against accidental production destruction. We **do not** want to accidentally run the reset step of the databases against production. Currently we have a separate workflow, to mitigate this which only applies the re-seeding against the test environment.
@@ -56,18 +67,10 @@ We currently run SonarCloud in a “monitoring mode” of sorts. This means we d
 
 ## Deployment
 
-Please see [Deployment guide](/wiki/spaces/FHGUW/pages/4329930754/Deployment%2Bguide) for information.
+Please see [Deployment guide](https://dfedigital.atlassian.net/wiki/spaces/FHGUW/pages/4329930754/Deployment+guide) for information.
 
 ## GitHub Workflows
 
-We use GitHub to build, deploy, provision and analyse our application. There are principally 5 main workflows:
+We use GitHub to build, deploy, provision and analyse our application. Each of the 'triggered' workflows uses a combination of callable workflows and actions to carry out the pipeline actions.
 
-* Build and Test
-* Deployment
-* Provisioning
-* SonarCloud
-* Database Reseeding
-
-Each of these uses a combination of callable workflows and actions to carry out the pipeline actions. The following diagram shows the relationships:
-
-![](../img/Pipelines%20Family%20Hubs.png)
+Use the [GitHub Actions UI](https://github.com/DFE-Digital/fh-services/actions) workflow list to inspect workflow structures and relationships.
