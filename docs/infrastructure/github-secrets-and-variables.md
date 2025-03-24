@@ -64,3 +64,12 @@ These are set by us and the values are unique to each environment.
 | `TERRAFORM_SSL_CONNECT_PFX` | Used as part of the configuration of the Web Apps' SSL certificates in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
 | `TERRAFORM_SSL_FIND_PFX` | Used as part of the configuration of the Web Apps' SSL certificates in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
 | `TERRAFORM_SSL_MANAGE_PFX` | Used as part of the configuration of the Web Apps' SSL certificates in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+
+## Variables
+
+| Name | Use Case | Workflow(s) | Environment(s) |
+| --- | --- | --- | --- |
+| `AZURE_RESOURCE_PREFIX` | The prefix pattern of all resources in an environment, used to calculate the names of various Azure resources | `deploy-function.yml`, `deploy-service.yml`, `e2e-seed-database.yml`, `migrate-database.yml`, `provisioning.yml`, `run-acceptance-tests.yml`, `run-sql-script.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+| `PLAYWRIGHT_ENVIRONMENT_PREFIX` | The URL prefix of a test website, used in conjunction with the remainder of the URL to tell the Playwright tests where to point at | `run-e2e-tests.yml` | `Development`, `Test`, `Test2`, `Pre-production` |
+| `SLACK_SUPPORT_CHANNEL_EMAIL` | Used as part of the monitoring and alerting setup in the Terraform IaC | `provisioning.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
+| `WEB_APPS_REQUIRE_BASIC_AUTH` | Whether the Web App should be gated behind HTTP Basic Auth | `deploy-service.yml` | `Development`, `Test`, `Test2`, `Pre-production`, `Production` |
