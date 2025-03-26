@@ -1,4 +1,4 @@
-# Key Vault Confguration
+# Key Vault Configuration
 
 ## Available Key Vaults
 
@@ -58,7 +58,7 @@ This is the main key vault used by the services for storage of application secre
 | CONNECT-UI-GovUkOidcConfiguration--StubAuthentication--UseStubAuthentication | Boolean | Used for mocking authentication for local development | false |
 | CONNECT-UI-GovUkOidcConfiguration--StubAuthentication--UseStubClaims | Boolean | Used for mocking Claims for local development | false |
 | CONNECT-UI-Idams--Endpoint | URL |  Used for the Connect UI to access the IDAM API | https://s181t01-as-fh-idam-api.azurewebsites.net |
-| CONNECT-UI-Notification--Endpoint | URL | Used for the Connect UI to access the Nottification API - when referrals are created, updated or deleted emails are sent to relevant parties through this API | https://s181t01-as-fh-notification-api.azurewebsites.net/api/notify |
+| CONNECT-UI-Notification--Endpoint | URL | Used for the Connect UI to access the Notification API - when referrals are created, updated or deleted emails are sent to relevant parties through this API | https://s181t01-as-fh-notification-api.azurewebsites.net/api/notify |
 | CONNECT-UI-ReferralApiUrl | URL | Used to allow the Connect UI to perform CRUD operations on Referrals through the appropriate API endpoints | https://s181t01-as-fh-referral-api.azurewebsites.net/ |
 | CONNECT-UI-ServiceDirectoryUrl | URL | Used in the "Search for service" functionality to get the lists of services, locations etc | https://s181t01-as-fh-sd-api.azurewebsites.net/ |
 | CONNECT-UI-SqlServerCache--Connection | DB Connection | A cache database that persists encoded user session data | Server=tcp:s181t01-as-fh-sql-server.database.windows.net,1433;Initial Catalog=s181t01-fh-referral-db;Persist Security Info=False;User ID=\*\*\*;Password=\*\*\*;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30; |
